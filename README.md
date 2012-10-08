@@ -55,3 +55,15 @@ You now have everything you need to start authoring your Continous Delivery buil
 
 How does it work?
 -----------------
+
+When you run a build using PowerDelivery, your Build script in turn calls the included PowerDelivery script and first 
+figures out whether the build is running on your local computer or the server by inspecting the "onServer" argument 
+to the script. **You should never set this property when running a build on your own computer.** 
+
+Next, the build looks for a .csv file named after the environment you set using the TFS build properties, or in the case 
+where you are running off of your local computer, the "Environment" argument to the script. If no argument is provided, 
+this defaults to "Local". All the name/value pairs in the CSV file are loaded and then made available to your script.
+
+Next, depending on the environment the build is targeting, a sequence of functions in your build script are called that 
+you will write PowerShell statements in to do the automation. The matrix below shows the order of these functions and 
+which are called in each environment.
