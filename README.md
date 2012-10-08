@@ -19,15 +19,18 @@ Why Windows PowerShell?
 
 TFS is great at watching your source code repository for checkins and kicking off builds, but unless the features that 
 come with the build out of the box are enough for you, it requires significant customization to be suitable for a 
-Continous Delivery build platform. If you read Jez Humble's book he makes a much more detailed case about why it makes 
-sense to author your builds in a scripting language. I'll specifically state that using PowerShell allows you several 
-benefits. First, if you just use TFS to do builds, you can't run a build on your computer that does everything that 
-the server can. Second, if you want to really tap into automation you will be modifying the build's behavior greatly 
-and that requires recompilation of code in the case of MSBuild, or understanding the difficult Windows Workflow engine 
-that TFS leverages. Finally, to really automate as much as possible you will be setting up and tearing down software 
-and hardware infrastructure needed by your environments as well as doing typical build activities (compiling, database 
-changes) and most IT operations personnel are more familar with PowerShell than C# code or Windows Workflow foundation 
-as it is similar in use to bash shell scripting and the Windows Scripting host.
+Continous Delivery build platform. I highly recommend you read Jez Humble's book he makes a much more detailed case 
+about why it makes sense to author your builds in a scripting language. This information will come in handy as you run 
+across folks who may be confused as to why you wouldn't just do it all within TFS build itself and need to educate them.
+
+I'll summarize what's in the book to highlight the most important benefits. First, if you just use TFS to do builds, 
+you can't run a build on your computer that does everything that the server can. Second, if you want to really tap into 
+automation you will be modifying the build's behavior greatly and that requires recompilation of code in the case of 
+MSBuild, or understanding the difficult Windows Workflow engine that TFS leverages. Finally, to really automate as much 
+as possible you will be setting up and tearing down software and hardware infrastructure needed by your environments 
+as well as doing typical build activities (compiling, database changes) and most IT operations personnel are more 
+familar with PowerShell than C# code or Windows Workflow foundation as it is similar in use to bash shell scripting 
+and the Windows Scripting host.
 
 What's included?
 ----------------
