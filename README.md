@@ -24,7 +24,10 @@ sense to author your builds in a scripting language. I'll specifically state tha
 benefits. First, if you just use TFS to do builds, you can't run a build on your computer that does everything that 
 the server can. Second, if you want to really tap into automation you will be modifying the build's behavior greatly 
 and that requires recompilation of code in the case of MSBuild, or understanding the difficult Windows Workflow engine 
-that TFS leverages.
+that TFS leverages. Finally, to really automate as much as possible you will be setting up and tearing down software 
+and hardware infrastructure needed by your environments as well as doing typical build activities (compiling, database 
+changes) and most IT operations personnel are more familar with PowerShell than C# code or Windows Workflow foundation 
+as it is similar in use to bash shell scripting and the Windows Scripting host.
 
 What's included?
 ----------------
