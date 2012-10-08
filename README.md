@@ -44,3 +44,16 @@ How do I get started?
 ````````````````````````````````
 Set ExecutionPolicy RemoteSigned
 ````````````````````````````````
+
+4. Add the included .csv files to the root of your PowerDelivery-enabled TFS source control repository for any environments you want your build to support. It is highly recommended to at least have a separate local, commit, user acceptance testing (UAT) and production environment.
+5. Add the included Build.ps1 file to the root of your PowerDelivery-enabled TFS source control repository.
+6. Create a new build in TFS for your project named "Commit". When selecting a build template, create a new one based off the PowerDelivery.xaml and name it CommitTemplate.xaml.
+7. Configure the build properties for your new Commit build by pointing the "PowerShellScriptPath" property to Build.ps1 and setting the "Environment" property to "Commit".
+8. Create a new SQL server database and give full access to it to the account your TFS build will run under. See your administrator or whoever setup TFS if you need to figure this out.
+9. Configure the "PipelineDBConnectionString" property in your Commit build by providing the connection string to the database you just created. 
+10. Repeat steps 6 through 9 above for the other environments, reusing the same SQL pipeline database (only create the database once, set the property though for each build).
+
+You now have everything you need to start authoring your Continous Delivery builds.
+
+How does it work?
+-----------------
