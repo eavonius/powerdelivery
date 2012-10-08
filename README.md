@@ -73,3 +73,12 @@ this defaults to "Local". All the name/value pairs in the CSV file are loaded an
 Next, depending on the environment the build is targeting, a sequence of functions in your build script are called that 
 you will write PowerShell statements in to do the automation. The matrix below shows the order of these functions and 
 which are called in each environment.
+
+<table>
+  <tr>
+    <th>Function</th><th>Local</th><th>Commit</th><th>UAT/Demo</th><th>LoadTesting</th><th>Production</th>
+  </tr>
+  <tr>
+    <td>Compile</td><td>Yes</td><td>Yes</td><td>No</td><td>No</td><td>No</td>
+  </tr>
+</table>
