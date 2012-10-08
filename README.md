@@ -106,5 +106,19 @@ keep track of what the current TFS build changeset is deployed to that environme
 report can be used to view which changesets are currently in each environment and can be easily added to the homepage 
 of your TFS project portal.
 
+Running Builds
+--------------
+
+On your local computer, open a PowerShell prompt, change directory to wherever your local copy of Build.ps1 is for 
+the project using PowerDelivery, and use the command syntax below to run your build.
+
+````````````````````````
+.\Build.ps1 -environment &lt;Environment Name%gt;
+````````````````````````
+
+You can omit the environment parameter to perform a local build, and also target builds to any of the other environments 
+as well. Note that if you run builds targeting an environment other than local on your own computer, a record will not 
+be written to the Pipeline Database so use this for debugging and initial authoring purposes only.
+
 Writing Builds
 --------------
