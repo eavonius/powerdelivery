@@ -32,13 +32,15 @@ What's included?
 * A TFS build template written in Windows Workflow that strips out all but the basics and calls out to PowerShell to do the heavy lifting.
 * A PowerShell script that implements Continous Delivery logic and process needed by any build based on PowerDelivery.
 * A default Build script you can start with that includes hooks for the various steps in your build.
-* A set of comma-separated files to use for storing the environment configuration differences between your environments. For instance, your local computer, development, test, and production environment probably use a different database.
+* A set of comma-separated files to use for storing the configuration differences between your environments. For instance, your local computer, development, test, and production environment probably use a different database.
 
 How do I get started?
 ---------------------
 
-1. Add the BuildProcessTemplates and PowerShellModules directories to the root of any TFS source repository you want to enable PowerDelivery on.
+1. Add the BuildProcessTemplates and PowerShellModules directories included in PowerDelivery to the root of any TFS source repository you want to enable for Continuous Delivery.
 2. Download a copy of the PSake PowerShell extension from https://github.com/psake/psake and place it in a PSake subfolder of the PowerShellModules directory.
 3. Open a PowerShell console window on the TFS build server, any TFS build agents, and your local computer and execute the following command:
 
-  Set ExecutionPolicy RemoteSigned
+````````````````````````````````
+Set ExecutionPolicy RemoteSigned
+````````````````````````````````
