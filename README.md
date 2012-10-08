@@ -40,11 +40,9 @@ How do I get started?
 1. Add the BuildProcessTemplates and PowerShellModules directories included in PowerDelivery to the root of any TFS source repository you want to enable for Continuous Delivery.
 2. Download a copy of the PSake PowerShell extension from https://github.com/psake/psake and place it in a PSake subfolder of the PowerShellModules directory.
 3. Open a PowerShell console window on the TFS build server, any TFS build agents, and your local computer and execute the following command:
-
 ````````````````````````````````
 Set ExecutionPolicy RemoteSigned
 ````````````````````````````````
-
 4. Add the included .csv files to the root of your PowerDelivery-enabled TFS source control repository for any environments you want your build to support. It is highly recommended to at least have a separate local, commit, user acceptance testing (UAT) and production environment.
 5. Add the included Build.ps1 file to the root of your PowerDelivery-enabled TFS source control repository.
 6. Create a new build in TFS for your project named "Commit". When selecting a build template, create a new one based off the PowerDelivery.xaml and name it CommitTemplate.xaml.
