@@ -1,7 +1,8 @@
 powerdelivery
 =============
 
-Microsoft Team Foundation Server build template and Windows PowerShell framework for Continuous Delivery.
+Microsoft Team Foundation Server build template and Windows PowerShell framework for Continuous Delivery. **THIS PROJECT 
+IS NOT YET COMPLETE**.
 
 What is it?
 -----------
