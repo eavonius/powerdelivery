@@ -100,3 +100,11 @@ which are called in each environment.
     <td>TestCapacity</td><td>No</td><td>No</td><td>No</td><td>Yes</td><td>No</td>
   </tr>
 </table>
+
+At the end of a successful build on the server (any build other than Local) a row is written to the PipelineDatabase to 
+keep track of what the current TFS build changeset is deployed to that environment. The inclued SQL Reporting Services 
+report can be used to view which changesets are currently in each environment and can be easily added to the homepage 
+of your TFS project portal.
+
+Writing Builds
+--------------
