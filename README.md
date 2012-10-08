@@ -76,9 +76,27 @@ which are called in each environment.
 
 <table>
   <tr>
-    <th>Function</th><th>Local</th><th>Commit</th><th>UAT/Demo</th><th>LoadTesting</th><th>Production</th>
+    <th>Function</th><th>Local</th><th>Commit</th><th>UAT</th><th>LoadTesting</th><th>Production</th>
   </tr>
   <tr>
     <td>Compile</td><td>Yes</td><td>Yes</td><td>No</td><td>No</td><td>No</td>
+  </tr>
+  <tr>
+    <td>SetupEnvironment</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td>
+  </tr>
+  <tr>
+    <td>TestEnvironment</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td>
+  </tr>
+  <tr>
+    <td>Deploy</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td>
+  </tr>
+  <tr>
+    <td>TestUnits</td><td>Yes</td><td>Yes</td><td>No</td><td>No</td><td>No</td>
+  </tr>
+  <tr>
+    <td>TestAcceptance</td><td>Yes</td><td>Yes</td><td>No</td><td>No</td><td>No</td>
+  </tr>
+  <tr>
+    <td>TestCapacity</td><td>No</td><td>No</td><td>No</td><td>Yes</td><td>No</td>
   </tr>
 </table>
