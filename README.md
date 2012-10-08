@@ -112,9 +112,9 @@ Running Builds
 On your local computer, open a PowerShell prompt, change directory to wherever your local copy of Build.ps1 is for 
 the project using PowerDelivery, and use the command syntax below to run your build.
 
-````````````````````````
-.\Build.ps1 -environment &lt;Environment Name%gt;
-````````````````````````
+```````````````````````````````````````````
+.\Build.ps1 -environment <Environment Name>
+```````````````````````````````````````````
 
 You can omit the environment parameter to perform a local build, and also target builds to any of the other environments 
 as well. Note that if you run builds targeting an environment other than local on your own computer, a record will not 
