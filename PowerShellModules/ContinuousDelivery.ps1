@@ -4,13 +4,14 @@ $global:pdlvry_assemblyInfoFiles = @()
 $global:pdlvry_currentLocation = gl
 $global:pdlvry_noReleases = $true
 $global:pdlvry_envConfig = @()
+$global:pdlvry_buildSet = @()
 $global:pdlvry_environment = $environment
 $global:pdlvry_dropLocation = $dropLocation
 $global:pdlvry_changeSet = $changeSet
 $global:pdlvry_requestedBy = $requestedBy
 $global:pdlvry_teamProject = $teamProject
 $global:pdlvry_workspaceName = $workspaceName
-$global:pdlvry_piplineDB = $pipelineDB
+$global:pdlvry_appName = $appName
 
 function Require-NonNullField($variable, $errorMsg) {
 	if ($variable -eq $null -or $variable -eq '') {
@@ -27,6 +28,7 @@ if ($environment -eq $null -or $environment -eq '') {
 
 $buildConfig = "Debug"
 
+
 try {
 	if ($onServer -eq $true) {
 		Require-NonNullField -variable $appVersion -errorMsg "appVersion variable is required when running on TFS"
@@ -40,6 +42,13 @@ try {
 	}
 	else {
 		$requestedBy = whoami
+	}
+	
+	$buildAppVersion = "$appVersion"
+	
+	if ($environment -ne 'local') {
+		$changeSetNumber = $changeSet.Substring(1)
+		$buildAppVersion = "$appVersion.$changeSetNumber"
 	}
 
 	Write-ConsoleSpacer
@@ -62,14 +71,23 @@ try {
 	$ENV:Path += ";C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Performance Tools"
 	$ENV:Path += ";C:\Windows\Microsoft.NET\Framework\v4.0.30319"
 
+    if (Test-Path -Path "BuildEnvironment.csv") {
+		$global:pdlvry_buildSettings = Import-Csv "BuildEnvironment.csv"	
+	}
+	else {
+		throw "Build configuration file BuildEnvironment.csv not found."
+	}
+
 	if (Test-Path -Path "$($environment)Environment.csv") {
 		$global:pdlvry_envConfig = Import-Csv "$($environment)Environment.csv"	
 	}
 	else {
-		throw "Environment configuration file $($environment)Environment.csv not found."
+		throw "Build configuration file $($environment)Environment.csv not found."
 	}
 
 	Write-Host "Environment Configuration"
+	Write-Host "App Name: $appName"
+	Write-Host "App Version: $buildAppVersion"
 	ForEach ($envVar in $global:pdlvry_envConfig) {
 		Write-Host "$($envVar.Name): $($envVar.Value)"
 	}
@@ -155,24 +173,15 @@ try {
 	if ($onServer) {
 		if ($environment -ne 'Local') {
 			
-			# TODO: Update existing release in commit environment to reset environment
-			$existingCommitRelease = $releases | Where-Object {$_.Environment -eq $environment}
-			if ($existingCommitRelease) {
-				$existingCommitRelease.Environment = ""
-			}
+            $insertRelease = "INSERT INTO dbo.Releases (IsCapacityTested, TeamProject, DropLocation, Environment, IsUserAccepted, ChangeSet, RequestedBy, AppName, AppVersion) " + `
+                "VALUES(0, '$teamProject', '$dropLocation', '$environment', 0, '$changeSet', '$requestedBy', '$appName', '$buildAppVersion')"
 
-			$release = New-Object PSObject -Property @{"ChangeSet" = $changeSet; `
-													    "TeamProject" = $teamProject; `
-													    "RequestedBy" = $requestedBy; `
-													    "DropLocation" = $dropLocation; `
-													    "Environment" = $environment; `
-													    "IsUserAccepted" = $false; `
-													    "IsCapacityTested" = $false}
-			$releases += ,$release
-			Write-Output "Created release $($release)"
-			#$releases | Export-Csv -NoTypeInformation -Path "Releases.csv"
-			
-			# TODO: Write Database Row Here
+            $buildServer = Get-BuildEnvironmentSetting -name 'BuildServer'
+            $buildDatabase = Get-BuildEnvironmentSetting -name 'BuildDatabase'
+
+            Exec -errorMessage "Unable to insert release into build database" {
+                sqlcmd -E -S "$buildServer" -d "$buildDatabase" -q "$insertRelease"
+            }
 		}
 		if ($global:pdlvry_assemblyInfoFiles.length > 0) {
 			Exec -errorMessage "Unable to checkin changes to AssemblyInfo.cs versions" { 

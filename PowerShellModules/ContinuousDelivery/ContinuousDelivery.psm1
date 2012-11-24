@@ -36,13 +36,22 @@ function Get-BuildSetting($name) {
 	throw "Couldn't find build setting '$name'"
 }
 
+function Get-BuildEnvironmentSetting($name) {
+	ForEach ($envVar in $global:pdlvry_buildSettings) {
+		if ($envVar.Name -eq $name) {
+			return $envVar.Value
+		}
+	}
+	
+	throw "Couldn't find build environment setting '$name'"
+}
+
 function Update-AssemblyInfoFiles {
 	if ($environment -eq 'Development' -or $environment -eq 'Commit') {
 	    $assemblyVersionPattern = 'AssemblyVersion\("[0-9]+(\.([0-9]+|\*)){1,3}"\)'
 	    $fileVersionPattern = 'AssemblyFileVersion\("[0-9]+(\.([0-9]+|\*)){1,3}"\)'
-		$changeSetNumber = $changeSet.Substring(1)
-	    $assemblyVersion = 'AssemblyVersion(' + "$appVersion.$changeSetNumber" + ')'
-	    $fileVersion = 'AssemblyFileVersion(' + "$appVersion.$changeSetNumber" + ')'
+	    $assemblyVersion = 'AssemblyVersion(' + "$buildAppVersion" + ')'
+	    $fileVersion = 'AssemblyFileVersion(' + "$buildAppVersion" + ')'
 	    
 	    Get-ChildItem -r -filter AssemblyInfo.cs | ForEach-Object {
 	        $filename = $_.Directory.ToString() + '\' + $_.Name
@@ -56,5 +65,7 @@ function Update-AssemblyInfoFiles {
 	            % {$_ -replace $fileVersionPattern, $fileVersion }
 	        } | Set-Content $filename
 	    }
+		return $buildAppVersion
 	}
+	return ""
 }
