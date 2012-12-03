@@ -3,7 +3,7 @@ powerdelivery
 
 Microsoft Team Foundation Server build template and Windows PowerShell framework for Continuous Delivery.
 
-[Read the wiki](wiki)
+[Read the wiki](https://github.com/eavonius/powerdelivery)
 
 What is it?
 -----------
