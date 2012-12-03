@@ -69,3 +69,47 @@ function Update-AssemblyInfoFiles {
 	}
 	return ""
 }
+
+function Invoke-MSBuild($projectFile, $outDir, $properties, $toolsVersion, $verbosity, $ignoreProjectExtensions, $dotNetVersion = "4.0") {
+
+    $regKey = "HKLM:\Software\Microsoft\MSBuild\ToolsVersions\$dotNetVersion"
+    $regProperty = "MSBuildToolsPath"
+
+    $msbuildExe = Join-Path -path (Get-ItemProperty $regKey).$regProperty -childpath "msbuild.exe"
+
+    $msBuildCommand = "& ""$msbuildExe"""
+
+    if (strlen($outDir) -ne 0) {
+        $msBuildCommand += " ""/p:OutDir=""$outDir"""""
+    }
+    else {
+        $msBuildCommand += " ""/p:OutDir=""$(Get-BuildDropLocation)"""""
+    }
+
+    if ($properties -ne $null) {
+        if ($properties.length -gt 0) {
+            
+            $properties.Keys | % {
+                $msBuildCommand += " ""/p:$($_)=""$($properties.Item($_))"""""
+            }
+        }
+    }
+
+    if (strlen($toolsVersion) -ne 0) {
+        $msBuildCommand += " ""/tv:$toolsVersion"""
+    }
+
+    if (strlen($verbosity) -ne 0) {
+        $msBuildCommand += " ""/v:$verbosity"""
+    }
+
+    if (strlen($ignoreProjectExtensions) -ne 0) {
+        $msBuildCommand += " ""/ignore:$ignoreProjectExtensions"""
+    }
+
+    $msBuildCommand += " ""$projectFile"""
+
+    Write-Host $msBuildCommand
+
+    Invoke-Expression -Command $msBuildCommand
+}
