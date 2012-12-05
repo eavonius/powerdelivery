@@ -6,19 +6,19 @@ Param (
     [string]
     $name,
     [string]
-    $templateName = "Blank",
+    $template = "Blank",
     [string]
-    $tfsCollectionUri,
+    $collection,
     [string]
-    $tfsProjectName,
+    $project,
     [string]
-    $buildController,
+    $controller,
     [string]
     $vsVersion = "10.0"
 )
 
 Write-Host
-"New Project Generation Utility"
+"Add Builds Utility"
 Write-Host
 "powerdelivery - http://github.com/eavonius/powerdelivery"
 Write-Host
@@ -48,11 +48,11 @@ function RequireParam($param, $switch) {
 }
 
 RequireParam -param $name -switch  "-name"
-RequireParam -param $templateName -switch  "-templateName"
-RequireParam -param $tfsCollectionUri -switch  "-tfsCollectionUri"
-RequireParam -param $tfsProjectName -switch  "-tfsProjectName"
+RequireParam -param $template -switch  "-templateName"
+RequireParam -param $collection -switch  "-tfsCollectionUri"
+RequireParam -param $project -switch  "-tfsProjectName"
 RequireParam -param $vsVersion -switch "-vsVersion"
-RequireParam -param $buildController -switch "-buildController"
+RequireParam -param $controller -switch "-buildController"
 
 $vsInstallDir = Get-ItemProperty -Path "Registry::HKEY_USERS\.DEFAULT\Software\Microsoft\VisualStudio\$($vsVersion)_Config" -Name InstallDir       
 if ([string]::IsNullOrWhiteSpace($vsInstallDir)) {
@@ -78,7 +78,7 @@ $tfsVersionControlClientAssembly = Join-Path -Path $vsInstallDir.InstallDir -Chi
 [Reflection.Assembly]::LoadFile($tfsVersionControlClientAssembly) | Out-Null
 
 $buildsDir = Join-Path -Path $curDir -ChildPath "Builds"
-$outBaseDir = Join-Path -Path $buildsDir -ChildPath $tfsProjectName
+$outBaseDir = Join-Path -Path $buildsDir -ChildPath $project
 
 if (Test-Path -Path $outBaseDir) {
     Remove-Item -Path $outBaseDir -Force -Recurse | Out-Null
@@ -87,24 +87,24 @@ if (Test-Path -Path $outBaseDir) {
 mkdir -Force $outBaseDir | Out-Null
 cd $buildsDir
 
-"Removing existing workspace at $tfsCollectionUri if it exists..."
-tf workspace /delete "AddPowerDelivery" /collection:"$tfsCollectionUri" | Out-Null
+"Removing existing workspace at $collection if it exists..."
+tf workspace /delete "AddPowerDelivery" /collection:"$collection" | Out-Null
 
 if ($LASTEXITCODE -ne 0) {
     Write-Host "NOTE: Error above is normal. This occurs if there wasn't a mapped working folder already."
 }
 
 try {
-    "Creating TFS workspace for $tfsCollectionUri..."
-    tf workspace /new /noprompt "AddPowerDelivery" /collection:"$tfsCollectionUri"
+    "Creating TFS workspace for $collection..."
+    tf workspace /new /noprompt "AddPowerDelivery" /collection:"$collection"
 
-    "Getting files from project $tfsProjectName..."
-    tf get "$tfsProjectName\*" /recursive /overwrite /noprompt
+    "Getting files from project $project..."
+    tf get "$project\*" /recursive /overwrite /noprompt
 
-    $templateDir = Join-Path -Path $curDir -ChildPath "Templates\$templateName"
+    $templateDir = Join-Path -Path $curDir -ChildPath "Templates\$template"
 
     if (!(Test-Path -Path $templateDir)) {
-        Write-Error "Template '$templateName' does not exist."
+        Write-Error "Template '$template' does not exist."
         exit
     }
 
@@ -127,7 +127,7 @@ try {
 
     "Connecting to TFS server at $collectionUri to create builds..."
 
-    $projectCollection = [Microsoft.TeamFoundation.Client.TfsTeamProjectCollectionFactory]::GetTeamProjectCollection($tfsCollectionUri)
+    $projectCollection = [Microsoft.TeamFoundation.Client.TfsTeamProjectCollectionFactory]::GetTeamProjectCollection($collection)
     $buildServer = $projectCollection.GetService([Microsoft.TeamFoundation.Build.Client.IBuildServer])
 
     $buildDictionary = @{
@@ -145,13 +145,13 @@ try {
         $build = $null
 
         try {
-            $build = $buildServer.GetBuildDefinition($tfsProjectName, $buildName)
+            $build = $buildServer.GetBuildDefinition($project, $buildName)
             "Found build $buildName, updating..."
         }
         catch {
             "Creating build $buildName..."
             
-            $build = $buildServer.CreateBuildDefinition($tfsProjectName)
+            $build = $buildServer.CreateBuildDefinition($project)
         }
             
         $build.Name = $buildName
@@ -163,13 +163,13 @@ try {
             $build.ContinuousIntegrationType = [Microsoft.TeamFoundation.Build.Client.ContinuousIntegrationType]::None
         }
 
-        $build.BuildController = $buildServer.GetBuildController($buildController)
+        $build.BuildController = $buildServer.GetBuildController($controller)
 
         $buildFound = $false
 
-        $processTemplatePath = "`$/$tfsProjectName/BuildProcessTemplates/PowerDeliveryTemplate.xaml"
+        $processTemplatePath = "`$/$project/BuildProcessTemplates/PowerDeliveryTemplate.xaml"
 
-        $processTemplates = $buildServer.QueryProcessTemplates($tfsProjectName)
+        $processTemplates = $buildServer.QueryProcessTemplates($project)
 
         foreach ($processTemplate in $processTemplates) {
             if ($processTemplate.ServerPath -eq $processTemplatePath) {
@@ -182,7 +182,7 @@ try {
         if (!$buildFound) {
 
             "Creating build process template for $processTemplatePath..."
-            $processTemplate = $buildServer.CreateProcessTemplate($tfsProjectName, $processTemplatePath)
+            $processTemplate = $buildServer.CreateProcessTemplate($project, $processTemplatePath)
             $processTemplate.TemplateType = [Microsoft.TeamFoundation.Build.Client.ProcessTemplateType]::Custom
             "Saving process template..."
             $processTemplate.Save()
@@ -198,7 +198,7 @@ try {
         
         $processParams["Environment"] = $buildEnv
         
-        $scriptPath = "`$/$tfsProjectName/$name.ps1"
+        $scriptPath = "`$/$project/$name.ps1"
         $processParams["PowerShell Script Path"] = $scriptPath
         
         $build.ProcessParameters = [Microsoft.TeamFoundation.Build.Workflow.WorkflowHelpers]::SerializeProcessParameters($processParams)
@@ -206,9 +206,9 @@ try {
         $build.Save()
     }
     
-    "Delivery pipeline '$name' ready at $tfsCollectionUri for project '$tfsProjectName'" 
+    "Delivery pipeline '$name' ready at $collection for project '$project'" 
 }
 finally {
     cd $curDir
-    tf workspace /delete "AddPowerDelivery" /collection:"$tfsCollectionUri" | Out-Null
+    tf workspace /delete "AddPowerDelivery" /collection:"$collection" | Out-Null
 }
