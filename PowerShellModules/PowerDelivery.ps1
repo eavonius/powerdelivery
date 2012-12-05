@@ -149,6 +149,11 @@ try {
     InvokePowerDeliveryBuildAction -condition $true -methodName "TestEnvironment" -description "test environment" -status "Testing Environment"
     InvokePowerDeliveryBuildAction -condition $true -methodName "PostTestEnvironment" -description "post-test environment" -status "Post-Testing Environment"
     
+    # If not a local or commit build (compiling), 
+    # copy files from the changeset being promoted 
+    # out of the drop location of the previous 
+    # pipeline step and into the next one here.
+
     InvokePowerDeliveryBuildAction -condition $true -methodName "PreDeploy" -description "pre-deploy" -status "Pre-Deploying"
     InvokePowerDeliveryBuildAction -condition $true -methodName "Deploy" -description "deploy" -status "Deploying"
     InvokePowerDeliveryBuildAction -condition $true -methodName "PostDeploy" -description "post-deploy" -status "Post-Deploying Environment"
