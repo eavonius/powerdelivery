@@ -1,6 +1,6 @@
-﻿# NewProject.ps1
+﻿# AddBuilds.ps1
 #
-# Creates a new project from one of the templates and adds it to TFS.
+# Creates a new build from one of the templates and adds it to TFS.
 
 Param (
     [string]
