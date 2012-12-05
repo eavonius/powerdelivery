@@ -87,6 +87,33 @@ function Update-AssemblyInfoFiles($path) {
 	return ""
 }
 
+# Drops database when deploying against local or commit environment.
+#
+function Remove-Roundhouse($server, $database) {
+
+    $environment = Get-BuildEnvironment
+
+	if ($environment -eq "Local" -or $environment -eq "Commit") {
+		Write-Host "Dropping database $database on $server..."
+		Exec -ErrorAction Stop -Verbose { 
+			rh --silent /s=$server /d=$database /f=Databases\$database /env=$environment /o=Databases\$database\output /drop
+		}
+	}
+}
+
+# Runs database script migrations against a target database 
+# using RoundhousE to bring it up to the latest version of changes.
+#
+function Publish-Roundhouse($server, $database) {
+	
+    $environment = Get-BuildEnvironment
+
+	Write-Host "Running database migrations on $database on $server..."
+	Exec -ErrorAction Stop -Verbose { 
+		rh --silent /s=$server /d=$database /f=Databases\$database /env=$environment /o=Databases\$database\output /simple
+	}
+}
+
 function Get-CurrentBuildDetail {
 
     $vsInstallDir = Get-ItemProperty -Path Registry::HKEY_USERS\.DEFAULT\Software\Microsoft\VisualStudio\10.0_Config -Name InstallDir       
