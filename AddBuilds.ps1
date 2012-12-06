@@ -12,6 +12,8 @@ Param (
     [string]
     $project,
     [string]
+    $dropFolder,
+    [string]
     $controller,
     [string]
     $vsVersion = "10.0"
@@ -53,6 +55,7 @@ RequireParam -param $collection -switch  "-tfsCollectionUri"
 RequireParam -param $project -switch  "-tfsProjectName"
 RequireParam -param $vsVersion -switch "-vsVersion"
 RequireParam -param $controller -switch "-buildController"
+RequireParam -param $dropFolder -switch "-dropFolder"
 
 $vsInstallDir = Get-ItemProperty -Path "Registry::HKEY_USERS\.DEFAULT\Software\Microsoft\VisualStudio\$($vsVersion)_Config" -Name InstallDir       
 if ([string]::IsNullOrWhiteSpace($vsInstallDir)) {
@@ -178,6 +181,8 @@ try {
                 break
             }
         }
+
+        $build.DefaultDropLocation = $dropFolder
 
         if (!$buildFound) {
 
