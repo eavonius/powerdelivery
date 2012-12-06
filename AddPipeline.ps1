@@ -1,6 +1,6 @@
-﻿# AddBuilds.ps1
+﻿# AddPipeline.ps1
 #
-# Creates a new build from one of the templates and adds it to TFS.
+# Creates a pipeline of builds in TFS from a powerdelivery template.
 
 Param (
     [string]
@@ -80,7 +80,7 @@ $tfsVersionControlClientAssembly = Join-Path -Path $vsInstallDir.InstallDir -Chi
 [Reflection.Assembly]::LoadFile($tfsBuildWorkflowAssembly) | Out-Null
 [Reflection.Assembly]::LoadFile($tfsVersionControlClientAssembly) | Out-Null
 
-$buildsDir = Join-Path -Path $curDir -ChildPath "Builds"
+$buildsDir = Join-Path -Path $curDir -ChildPath "Pipelines"
 $outBaseDir = Join-Path -Path $buildsDir -ChildPath $project
 
 if (Test-Path -Path $outBaseDir) {
@@ -137,7 +137,7 @@ try {
         "$name - Commit" = "Commit";
         "$name - Test" = "Test";
         "$name - Demo" = "Demo";
-        "$name - CapacityTest" = "CapacityTest";
+        "$name - Capacity Test" = "CapacityTest";
         "$name - Production" = "Production";
     }
 
