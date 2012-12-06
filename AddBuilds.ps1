@@ -195,11 +195,9 @@ try {
         }
 
         $processParams = [Microsoft.TeamFoundation.Build.Workflow.WorkflowHelpers]::DeserializeProcessParameters($build.ProcessParameters)
-        
-        $processParams["Environment"] = $buildEnv
-        
-        $scriptPath = "`$/$project/$name.ps1"
-        $processParams["PowerShell Script Path"] = $scriptPath
+        $processParams["Environment"] = $buildEnv        
+        $scriptPath = "`$/$project/$($name).ps1"
+        $processParams["PowerShellScriptPath"] = $scriptPath
         
         $build.ProcessParameters = [Microsoft.TeamFoundation.Build.Workflow.WorkflowHelpers]::SerializeProcessParameters($processParams)
 
