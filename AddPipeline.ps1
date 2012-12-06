@@ -20,7 +20,7 @@ Param (
 )
 
 Write-Host
-"Add Builds Utility"
+"Add Pipeline Utility"
 Write-Host
 "powerdelivery - http://github.com/eavonius/powerdelivery"
 Write-Host
