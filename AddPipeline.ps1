@@ -136,7 +136,6 @@ try {
     $buildDictionary = @{
         "$name - Commit" = "Commit";
         "$name - Test" = "Test";
-        "$name - Demo" = "Demo";
         "$name - Capacity Test" = "CapacityTest";
         "$name - Production" = "Production";
     }
