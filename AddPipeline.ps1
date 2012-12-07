@@ -170,11 +170,17 @@ try {
         $buildFound = $false
 
         $processTemplatePath = "`$/$project/BuildProcessTemplates/PowerDeliveryTemplate.xaml"
+        $changeSetTemplatePath = "`$/$project/BuildProcessTemplates/PowerDeliveryChangeSetTemplate.xaml"
 
         $processTemplates = $buildServer.QueryProcessTemplates($project)
 
         foreach ($processTemplate in $processTemplates) {
-            if ($processTemplate.ServerPath -eq $processTemplatePath) {
+            if ($processTemplate.ServerPath -eq $processTemplatePath -and $buildEnv -eq "Commit") {
+                $build.Process = $processTemplate
+                $buildFound = $true
+                break
+            }
+            elseif ($processTemplate.ServerPath -eq $changeSetTemplatePath -and $buildEnv -ne "Commit") {
                 $build.Process = $processTemplate
                 $buildFound = $true
                 break
@@ -185,15 +191,22 @@ try {
 
         if (!$buildFound) {
 
-            "Creating build process template for $processTemplatePath..."
-            $processTemplate = $buildServer.CreateProcessTemplate($project, $processTemplatePath)
+            if ($buildEnv -eq "Commit") {
+                $templateToCreate = $processTemplatePath
+            }
+            else {
+                $templateToCreate = $changeSetTemplatePath
+            }
+
+            "Creating build process template for $templateToCreate..."
+            $processTemplate = $buildServer.CreateProcessTemplate($project, $templateToCreate)
             $processTemplate.TemplateType = [Microsoft.TeamFoundation.Build.Client.ProcessTemplateType]::Custom
             "Saving process template..."
             $processTemplate.Save()
             "Done"
 
             if ($processTemplate -eq $null) {
-                throw "Couldn't find a process template at $processTemplatePath"
+                throw "Couldn't find a process template at $templateToCreate"
             }
             $build.Process = $processTemplate
         }

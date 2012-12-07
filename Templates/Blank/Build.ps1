@@ -6,34 +6,22 @@
 
 Param (
 	[Switch] $onServer,
-	[Parameter()]
-	[String]
 	$dropLocation,
-	[Parameter()]
-	[String]
 	$changeSet,
-	[Parameter()]
-	[String]
 	$requestedBy,
-	[Parameter()]
-	[String]
 	$teamProject,
-	[Parameter()]
-	[String]
 	$workspaceName,
-	[String]
 	$environment,
-    [String]
     $buildUri,
-    [String]
-    $collectionUri
+    $collectionUri,
+    $promotedChangeset
 )
 
 $env:PSModulePath += ";.\PowerShellModules"
 
 $appVersion = '1.0.0'
-$appName = 'Your Application Name'
-$appScript = 'Build'
+$appName = '%BUILD_NAME%'
+$appScript = '%BUILD_NAME%'
 
 # Load settings you need for the entire build
 #
@@ -60,6 +48,18 @@ function PostCompile() {
 }
 
 
+function PreTestUnits() {
+}
+
+# Run automated unit tests
+#
+function TestUnits() {
+}
+
+function PostTestUnits() {
+}
+
+
 function PreSetupEnvironment() {
 }
 
@@ -72,21 +72,8 @@ function PostSetupEnvironment() {
 }
 
 
-function PreTestEnvironment() {
-}
-
-# Test modifications to the target environment
-#
-function TestEnvironment() {
-}
-
-function PostTestEnvironment() {
-}
-
-
 function PreDeploy() {
 }
-
 
 # Deploy your software assets to the target environment
 #
@@ -96,16 +83,16 @@ function Deploy() {
 function PostDeploy() {
 }
 
-
-function PreTestUnits() {
+function PreTestEnvironment() {
 }
 
-# Run automated unit tests
+
+# Test modifications to the target environment
 #
-function TestUnits() {
+function TestEnvironment() {
 }
 
-function PostTestUnits() {
+function PostTestEnvironment() {
 }
 
 

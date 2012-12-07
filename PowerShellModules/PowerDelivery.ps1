@@ -140,27 +140,27 @@ try {
     InvokePowerDeliveryBuildAction -condition ($environment -eq 'Commit' -or $environment -eq 'Local') -methodName "PreCompile" -description "pre-compilation" -status "Pre-Compiling"
     InvokePowerDeliveryBuildAction -condition ($environment -eq 'Commit' -or $environment -eq 'Local') -methodName "Compile" -description "compilation" -status "Compiling"
     InvokePowerDeliveryBuildAction -condition ($environment -eq 'Commit' -or $environment -eq 'Local') -methodName "PostCompile" -description "post-compilation" -status "Post-Compiling"
-    
-    InvokePowerDeliveryBuildAction -condition $true -methodName "PreSetupEnvironment" -description "pre-setup environment" -status "Pre-Setting Up Environment"
-    InvokePowerDeliveryBuildAction -condition $true -methodName "SetupEnvironment" -description "setup environment" -status "Setting Up Environment"
-    InvokePowerDeliveryBuildAction -condition $true -methodName "PostSetupEnvironment" -description "post-setup environment" -status "Post-Setting Up Environment"
-    
-    InvokePowerDeliveryBuildAction -condition $true -methodName "PreTestEnvironment" -description "pre-test environment" -status "Pre-Testing Environment"
-    InvokePowerDeliveryBuildAction -condition $true -methodName "TestEnvironment" -description "test environment" -status "Testing Environment"
-    InvokePowerDeliveryBuildAction -condition $true -methodName "PostTestEnvironment" -description "post-test environment" -status "Post-Testing Environment"
+
+    InvokePowerDeliveryBuildAction -condition ($environment -eq 'Commit' -or $environment -eq 'Local') -methodName "PreTestUnits" -description "pre-unit testing" -status "Pre-Testing Units"
+    InvokePowerDeliveryBuildAction -condition ($environment -eq 'Commit' -or $environment -eq 'Local') -methodName "TestUnits" -description "unit testing" -status "Testing Units"
+    InvokePowerDeliveryBuildAction -condition ($environment -eq 'Commit' -or $environment -eq 'Local') -methodName "PostTestUnits" -description "post-unit testing" -status "Post-Testing Units"
     
     # If not a local or commit build (compiling), 
     # copy files from the changeset being promoted 
     # out of the drop location of the previous 
     # pipeline step and into the next one here.
 
+    InvokePowerDeliveryBuildAction -condition $true -methodName "PreSetupEnvironment" -description "pre-setup environment" -status "Pre-Setting Up Environment"
+    InvokePowerDeliveryBuildAction -condition $true -methodName "SetupEnvironment" -description "setup environment" -status "Setting Up Environment"
+    InvokePowerDeliveryBuildAction -condition $true -methodName "PostSetupEnvironment" -description "post-setup environment" -status "Post-Setting Up Environment"
+        
     InvokePowerDeliveryBuildAction -condition $true -methodName "PreDeploy" -description "pre-deploy" -status "Pre-Deploying"
     InvokePowerDeliveryBuildAction -condition $true -methodName "Deploy" -description "deploy" -status "Deploying"
     InvokePowerDeliveryBuildAction -condition $true -methodName "PostDeploy" -description "post-deploy" -status "Post-Deploying Environment"
 
-    InvokePowerDeliveryBuildAction -condition ($environment -eq 'Commit' -or $environment -eq 'Local') -methodName "PreTestUnits" -description "pre-unit testing" -status "Pre-Testing Units"
-    InvokePowerDeliveryBuildAction -condition ($environment -eq 'Commit' -or $environment -eq 'Local') -methodName "TestUnits" -description "unit testing" -status "Testing Units"
-    InvokePowerDeliveryBuildAction -condition ($environment -eq 'Commit' -or $environment -eq 'Local') -methodName "PostTestUnits" -description "post-unit testing" -status "Post-Testing Units"
+    InvokePowerDeliveryBuildAction -condition $true -methodName "PreTestEnvironment" -description "pre-test environment" -status "Pre-Testing Environment"
+    InvokePowerDeliveryBuildAction -condition $true -methodName "TestEnvironment" -description "test environment" -status "Testing Environment"
+    InvokePowerDeliveryBuildAction -condition $true -methodName "PostTestEnvironment" -description "post-test environment" -status "Post-Testing Environment"
 
     InvokePowerDeliveryBuildAction -condition ($environment -eq 'Commit' -or $environment -eq 'Local') -methodName "PreTestAcceptance" -description "pre-acceptance testing" -status "Pre-Testing Acceptance"
     InvokePowerDeliveryBuildAction -condition ($environment -eq 'Commit' -or $environment -eq 'Local') -methodName "TestAcceptance" -description "acceptance testing" -status "Testing Acceptance"

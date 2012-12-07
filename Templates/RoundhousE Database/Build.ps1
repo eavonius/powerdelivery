@@ -6,27 +6,15 @@
 
 Param (
 	[Switch] $onServer,
-	[Parameter()]
-	[String]
 	$dropLocation,
-	[Parameter()]
-	[String]
 	$changeSet,
-	[Parameter()]
-	[String]
 	$requestedBy,
-	[Parameter()]
-	[String]
 	$teamProject,
-	[Parameter()]
-	[String]
 	$workspaceName,
-	[String]
 	$environment,
-    [String]
     $buildUri,
-    [String]
-    $collectionUri
+    $collectionUri,
+    $promotedChangeset
 )
 
 $env:PSModulePath += ";.\PowerShellModules"
