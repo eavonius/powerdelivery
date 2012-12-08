@@ -5,6 +5,6 @@ A framework that uses [Microsoft Team Foundation Server](http://msdn.microsoft.c
 
 ### [Read the wiki](https://github.com/eavonius/powerdelivery/wiki)
 
-== License
+## License
 
-powerdelivery is released under the {MIT License}[http://www.opensource.org/licenses/MIT].
+powerdelivery is released under the [MIT License](http://www.opensource.org/licenses/MIT).
