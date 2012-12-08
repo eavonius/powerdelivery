@@ -1,5 +1,10 @@
 Import-Module PowerDelivery -Force
 
+if ($(get-host).version.major -lt 3) {
+    Write-Error "Powershell 3.0 or greater is required."
+    exit
+}
+
 if (!$dropLocation.EndsWith('\')) {
 	$dropLocation = "$($dropLocation)\"
 }

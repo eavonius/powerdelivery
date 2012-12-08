@@ -68,6 +68,7 @@ else {
 
 $refAssemblies = "ReferenceAssemblies\v2.0"
 $privateAssemblies = "PrivateAssemblies"
+$tfsAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$refAssemblies\Microsoft.TeamFoundation.dll"
 $tfsClientAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$refAssemblies\Microsoft.TeamFoundation.Client.dll"
 $tfsBuildClientAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$refAssemblies\Microsoft.TeamFoundation.Build.Client.dll"
 $tfsBuildWorkflowAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$privateAssemblies\Microsoft.TeamFoundation.Build.Workflow.dll"
@@ -117,12 +118,19 @@ try {
     Copy-Item -Path (Join-Path -Path $curDir -ChildPath "BuildProcessTemplates") -Recurse -Destination "$outBaseDir" -Force
     Copy-Item -Path (Join-Path -Path $curDir -ChildPath "PowerShellModules") -Recurse -Destination "$outBaseDir" -Force
 
-    Move-Item -Path "$outBaseDir\Build.ps1" -Destination "$outBaseDir\$name.ps1" -Force
+    $newScriptName = "$outBaseDir\$name.ps1"
+
+    Move-Item -Path "$outBaseDir\Build.ps1" -Destination "$newScriptName" -Force
     Move-Item -Path "$outBaseDir\BuildLocalEnvironment.csv" -Destination "$outBaseDir\$($name)LocalEnvironment.csv" -Force
     Move-Item -Path "$outBaseDir\BuildCommitEnvironment.csv" -Destination "$outBaseDir\$($name)CommitEnvironment.csv" -Force
     Move-Item -Path "$outBaseDir\BuildTestEnvironment.csv" -Destination "$outBaseDir\$($name)TestEnvironment.csv" -Force
     Move-Item -Path "$outBaseDir\BuildCapacityTestEnvironment.csv" -Destination "$outBaseDir\$($name)CapacityTestEnvironment.csv" -Force
     Move-Item -Path "$outBaseDir\BuildProductionEnvironment.csv" -Destination "$outBaseDir\$($name)ProductionEnvironment.csv" -Force
+
+    "Replacing build template variables..."
+    (Get-Content "$newScriptName") | Foreach-Object {
+        $_ -replace '%BUILD_NAME%', $name
+    } | Set-Content "$newScriptName"
 
     "Checking in changed or new files to source control..."
     tf add *.* /noprompt /recursive
@@ -132,6 +140,13 @@ try {
 
     $projectCollection = [Microsoft.TeamFoundation.Client.TfsTeamProjectCollectionFactory]::GetTeamProjectCollection($collection)
     $buildServer = $projectCollection.GetService([Microsoft.TeamFoundation.Build.Client.IBuildServer])
+    $structure = $projectCollection.GetService([Microsoft.TeamFoundation.Server.ICommonStructureService])
+
+    $projectInfo = $structure.GetProjectFromName($project)
+    if (!$projectInfo) {
+        Write-Error "Project $project not found in TFS collection $collection"
+        exit
+    }
 
     $buildDictionary = @{
         "$name - Commit" = "Commit";
@@ -220,7 +235,28 @@ try {
 
         $build.Save()
     }
-    
+
+    $groupSecurity = $projectCollection.GetService([Microsoft.TeamFoundation.Server.IGroupSecurityService])
+    $appGroups = $groupSecurity.ListApplicationGroups($projectInfo.Uri)
+
+    $buildDictionary.Values | ForEach-Object {
+        $envName = $_
+        if ($envName -ne 'Commit') {
+            $groupName = "$name $envName Builders"
+            $group = $null
+            $appGroups | ForEach-Object {
+                if ($_.AccountName -eq $groupName) {
+                    $group = $_
+                }
+            }
+
+            if (!$group) {
+                "Creating TFS security group $groupName..."
+                $groupSecurity.CreateApplicationGroup($projectInfo.Uri, $groupName, "Members of this group can queue $name builds targeting the $envName environment.") | Out-Null
+            }
+        }
+    }
+
     "Delivery pipeline '$name' ready at $collection for project '$project'" 
 }
 finally {
