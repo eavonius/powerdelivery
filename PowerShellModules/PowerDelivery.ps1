@@ -13,7 +13,6 @@ $global:pdlvry_assemblyInfoFiles = @()
 $global:pdlvry_currentLocation = gl
 $global:pdlvry_noReleases = $true
 $global:pdlvry_envConfig = @()
-$global:pdlvry_buildSet = @()
 $global:pdlvry_environment = $environment
 $global:pdlvry_dropLocation = $dropLocation
 $global:pdlvry_changeSet = $changeSet
@@ -41,12 +40,14 @@ if ($environment -eq $null -or $environment -eq '') {
 $buildConfig = "Debug"
 
 function InvokePowerDeliveryBuildAction($condition, $methodName, $description, $status) {
-    if (Get-Command $methodName -ErrorAction SilentlyContinue and $condition) {
-        Write-ConsoleSpacer
-		Write-Host "$status..."
-        Write-ConsoleSpacer
-        Invoke-Expression $methodName
-		Set-Location $global:pdlvry_currentLocation
+    if (Get-Command $methodName -ErrorAction SilentlyContinue) {
+        if ($condition) {
+            Write-ConsoleSpacer
+		    Write-Host "$status..."
+            Write-ConsoleSpacer
+            Invoke-Expression $methodName
+		    Set-Location $global:pdlvry_currentLocation
+        }
 	}
 	else {
 		Write-Host "No $methodName() function found in script, skipping $description phase..."
@@ -68,7 +69,7 @@ try {
         Require-NonNullField -variable $collectionUri -errorMsg "-collectionUri parameter is required when running on TFS"
         Require-NonNullField -variable $buildUri -errorMsg "-buildUri parameter is required when running on TFS"
         Require-NonNullField -variable $dropLocation -errorMsg "-dropLocation parameter is required when running on TFS"
-		
+	
 		$buildConfig = "Release"
 	}
 	else {
@@ -110,13 +111,6 @@ try {
 
 	#$ENV:Path += ";C:\Windows\Microsoft.NET\Framework\v4.0.30319"
 
-    if (Test-Path -Path "PowerDeliveryEnvironment.csv") {
-		$global:pdlvry_buildSettings = Import-Csv "PowerDeliveryEnvironment.csv"	
-	}
-	else {
-		throw "Build configuration file PowerDeliveryEnvironment.csv not found."
-	}
-
 	$envConfigFileName = $appScript + $environment + "Environment.csv"
 
 	if (Test-Path -Path $envConfigFileName) {
@@ -154,6 +148,8 @@ try {
     # copy files from the changeset being promoted 
     # out of the drop location of the previous 
     # pipeline step and into the next one here.
+    
+    #Copy-Item -Path "$priorBuildDropLocation\*" -Destination "$dropLocation" -Force
 
     InvokePowerDeliveryBuildAction -condition $true -methodName "PreSetupEnvironment" -description "pre-setup environment" -status "Pre-Setting Up Environment"
     InvokePowerDeliveryBuildAction -condition $true -methodName "SetupEnvironment" -description "setup environment" -status "Setting Up Environment"
@@ -174,26 +170,6 @@ try {
     InvokePowerDeliveryBuildAction -condition ($environment -eq 'CapacityTest') -methodName "PreTestCapacity" -description "pre-capacity testing" -status "Pre-Testing Capacity"
     InvokePowerDeliveryBuildAction -condition ($environment -eq 'CapacityTest') -methodName "TestCapacity" -description "capacity testing" -status "Testing Capacity"
     InvokePowerDeliveryBuildAction -condition ($environment -eq 'CapacityTest') -methodName "PostTestCapacity" -description "post-capacity testing" -status "Post-Testing Capacity"
-
-	if ($onServer) {
-		if ($environment -ne 'Local') {
-			
-            $insertRelease = "INSERT INTO dbo.Releases (IsCapacityTested, TeamProject, DropLocation, Environment, IsUserAccepted, ChangeSet, RequestedBy, AppName, AppVersion) " + `
-                "VALUES(0, '$teamProject', '$dropLocation', '$environment', 0, '$changeSet', '$requestedBy', '$appName', '$buildAppVersion')"
-
-            $buildServer = Get-BuildEnvironmentSetting -name 'BuildServer'
-            $buildDatabase = Get-BuildEnvironmentSetting -name 'BuildDatabase'
-
-            Exec -errorMessage "Unable to insert release into build database" {
-                sqlcmd -E -S "$buildServer" -d "$buildDatabase" -q "$insertRelease"
-            }
-		}
-		if ($global:pdlvry_assemblyInfoFiles.length > 0) {
-			Exec -errorMessage "Unable to checkin changes to AssemblyInfo.cs versions" { 
-				tf checkin /force /noprompt /author:"$requestedBy" /comment:"Updated AssemblyInfo.cs version information." | Out-Null
-			}
-		}
-	}
 
 	Write-Host "Build succeeded!" -ForegroundColor DarkGreen
 }

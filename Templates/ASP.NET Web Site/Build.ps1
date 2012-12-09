@@ -15,7 +15,7 @@ Param (
 	$environment,
     $buildUri,
     $collectionUri,
-    $promotedChangeset
+    $priorBuild
 )
 
 $env:PSModulePath += ";.\PowerShellModules"

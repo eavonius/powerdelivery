@@ -52,16 +52,6 @@ function Get-BuildSetting($name) {
 	throw "Couldn't find build setting '$name'"
 }
 
-function Get-BuildEnvironmentSetting($name) {
-	ForEach ($envVar in $global:pdlvry_buildSettings) {
-		if ($envVar.Name -eq $name) {
-			return $envVar.Value
-		}
-	}
-	
-	throw "Couldn't find build environment setting '$name'"
-}
-
 function Update-AssemblyInfoFiles($path) {
 	if ($environment -eq 'Development' -or $environment -eq 'Commit') {
         $buildAppVersion = Get-BuildAppVersion
@@ -74,8 +64,8 @@ function Update-AssemblyInfoFiles($path) {
 	        $filename = $_.Directory.ToString() + '\' + $_.Name
 			$global:pdlvry_assemblyInfoFiles += ,$filename
 	        $filename + " -> $appVersion.$changeSetNumber"
-	        Exec -errorMessage "Unable to checkout $filename from TFS" { 
-				tf checkout $filename | Out-Null
+	        Exec -errorMessage "Unable to update file attributes on $filename" { 
+                attrib -r "$filename"
 			}
 	        (Get-Content $filename) | ForEach-Object {
 	            % {$_ -replace $assemblyVersionPattern, $assemblyVersion } |
