@@ -92,13 +92,17 @@ try {
 	
     $envMessage += "Requested By: $requestedBy`r`n"
     $envMessage += "Environment: $environment`r`n"
-    $envMessage += "Running on TFS Build: $onServer`r`n"
 	
 	if ($onServer) {
+        $envMessage += "Team Collection: $collectionUri`r`n"
+        $envMessage += "Team Project: $teamProject`r`n"
+        $envMessage += "Change Set: $changeSet`r`n"
         $envMessage += "Drop Location: $dropLocation`r`n"
-        $envMessage += "TFS Team Project: $teamProject`r`n"
-        $envMessage += "TFS Change Set: $changeSet`r`n"
-        $envMessage += "TFS Workspace: $workspaceName`r`n"
+        $buildNumber = $buildUri.Substring($buildUri.LastIndexOf("/") + 1)
+        $envMessage += "Build Number: $buildNumber`r`n"
+        if ($environment -ne "Local" -and $environment -ne "Commit") {
+            $envMessage += "Prior Build: $priorBuild`r`n"
+        }
 	}
 
     $vsInstallDir = Get-ItemProperty -Path Registry::HKEY_USERS\.DEFAULT\Software\Microsoft\VisualStudio\10.0_Config -Name InstallDir
@@ -108,8 +112,6 @@ try {
     else {
         $ENV:Path += ";$($vsInstallDir.InstallDir)"
     }
-
-	#$ENV:Path += ";C:\Windows\Microsoft.NET\Framework\v4.0.30319"
 
 	$envConfigFileName = $appScript + $environment + "Environment.csv"
 
@@ -124,7 +126,7 @@ try {
         $envMessage += "$($envVar.Name): $($envVar.Value)`r`n"
 	}
 
-    Write-Host $envMessage
+    Write-Host $envMessage -NoNewline
 
     if ($onServer) {
         Write-BuildSummaryMessage -name "build_environment" -header "Build Environment" -message $envMessage
@@ -144,12 +146,52 @@ try {
     InvokePowerDeliveryBuildAction -condition ($environment -eq 'Commit' -or $environment -eq 'Local') -methodName "TestUnits" -description "unit testing" -status "Testing Units"
     InvokePowerDeliveryBuildAction -condition ($environment -eq 'Commit' -or $environment -eq 'Local') -methodName "PostTestUnits" -description "post-unit testing" -status "Post-Testing Units"
     
-    # If not a local or commit build (compiling), 
-    # copy files from the changeset being promoted 
-    # out of the drop location of the previous 
-    # pipeline step and into the next one here.
+    $projectCollection = $null
+    $buildServer = $null
+    $structure = $null
+
+    if ($environment -ne "Local" -and $environment -ne "Commit" -and $onServer) {
+
+        # copy files from the build being promoted 
+        # out of the drop location of the previous 
+        # pipeline environment and into the next one here.
+
+        $vsVersion = "10.0"
+
+        $vsInstallDir = Get-ItemProperty -Path "Registry::HKEY_USERS\.DEFAULT\Software\Microsoft\VisualStudio\$($vsVersion)_Config" -Name InstallDir       
+        if ([string]::IsNullOrWhiteSpace($vsInstallDir)) {
+            throw "No version of Visual Studio with the same tools as your version of TFS is installed on the build server."
+        }
+        else {
+            Write-Host "Adding $($vsInstallDir.InstallDir) to the PATH..."
+            $ENV:Path += ";$($vsInstallDir.InstallDir)"
+        }
+
+        $refAssemblies = "ReferenceAssemblies\v2.0"
+        $privateAssemblies = "PrivateAssemblies"
+        $tfsAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$refAssemblies\Microsoft.TeamFoundation.dll"
+        $tfsClientAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$refAssemblies\Microsoft.TeamFoundation.Client.dll"
+        $tfsBuildClientAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$refAssemblies\Microsoft.TeamFoundation.Build.Client.dll"
+        $tfsBuildWorkflowAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$privateAssemblies\Microsoft.TeamFoundation.Build.Workflow.dll"
+        $tfsVersionControlClientAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$refAssemblies\Microsoft.TeamFoundation.VersionControl.Client.dll"
     
-    #Copy-Item -Path "$priorBuildDropLocation\*" -Destination "$dropLocation" -Force
+        "Loading TFS reference assemblies..."
+
+        [Reflection.Assembly]::LoadFile($tfsClientAssembly) | Out-Null
+        [Reflection.Assembly]::LoadFile($tfsBuildClientAssembly) | Out-Null
+        [Reflection.Assembly]::LoadFile($tfsBuildWorkflowAssembly) | Out-Null
+        [Reflection.Assembly]::LoadFile($tfsVersionControlClientAssembly) | Out-Null
+
+        $projectCollection = [Microsoft.TeamFoundation.Client.TfsTeamProjectCollectionFactory]::GetTeamProjectCollection($collectionUri)
+        $buildServer = $projectCollection.GetService([Microsoft.TeamFoundation.Build.Client.IBuildServer])
+        $structure = $projectCollection.GetService([Microsoft.TeamFoundation.Server.ICommonStructureService])
+
+        $priorBuildDetail = $buildServer.GetBuild("vstfs:///Build/Build/$priorBuild")
+        $priorBuildDrop = $priorBuildDetail.DropLocation
+
+        Write-Host "Copying prior build drop location output..."
+        Copy-Item -Path "$priorBuildDrop\*" -Recurse -Destination "$dropLocation"
+    }
 
     InvokePowerDeliveryBuildAction -condition $true -methodName "PreSetupEnvironment" -description "pre-setup environment" -status "Pre-Setting Up Environment"
     InvokePowerDeliveryBuildAction -condition $true -methodName "SetupEnvironment" -description "setup environment" -status "Setting Up Environment"
@@ -173,13 +215,8 @@ try {
 
 	Write-Host "Build succeeded!" -ForegroundColor DarkGreen
 }
-Catch [System.Exception] {
+catch {
 	Set-Location $global:pdlvry_currentLocation
-	ForEach ($assemblyInfoFile in $global:pdlvry_assemblyInfoFiles) {
-		Exec -errorMessage "Unable to undo checkout of $assemblyInfoFile" { 
-			tf undo $assemblyInfoFile | Out-Null
-		}
-	}
 	Write-Host "Build Failed!" -ForegroundColor Red
 	throw
 }
