@@ -120,4 +120,4 @@ function PostTestCapacity() {
 }
 
 
-.\PowerShellModules\PowerDelivery.ps1
+.\PowerShellModules\PowerDelivery\PowerDelivery.ps1

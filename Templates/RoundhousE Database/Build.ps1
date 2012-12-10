@@ -51,4 +51,4 @@ function Deploy() {
     Publish-Roundhouse -server $dbServerName -database $databaseName
 }
 
-.\PowerShellModules\PowerDelivery.ps1
+.\PowerShellModules\PowerDelivery\PowerDelivery.ps1

@@ -60,6 +60,15 @@ function Get-BuildSetting($name) {
 	throw "Couldn't find build setting '$name'"
 }
 
+function Mount-IfUNC($path) {
+	
+	if ($path.StartsWith("\\")) {
+		$uncPathWithoutBackslashes = $path.Substring(2)
+		$pathSegments = $uncPathWithoutBackslashes -split "\\"
+		$uncPath = "\\$($pathSegments[0])\$($pathSegments[1])"
+	}
+}
+
 function Update-AssemblyInfoFiles($path) {
 	if ($environment -eq 'Development' -or $environment -eq 'Commit') {
         $buildAppVersion = Get-BuildAppVersion
