@@ -51,9 +51,6 @@ function InvokePowerDeliveryBuildAction($condition, $methodName, $description, $
 		    Set-Location $global:pdlvry_currentLocation
         }
 	}
-	else {
-		Write-Host "No $methodName() function found in script, skipping $description phase..."
-	}
 }
 
 try {

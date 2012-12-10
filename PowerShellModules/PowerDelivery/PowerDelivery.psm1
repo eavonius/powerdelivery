@@ -102,7 +102,7 @@ function Remove-Roundhouse($server, $database) {
 
 	if ($environment -eq "Local" -or $environment -eq "Commit") {
 		Write-Host "Dropping database $database on $server..."
-		Exec -ErrorAction Stop -Verbose { 
+		Exec -ErrorAction Stop { 
 			rh --silent /s=$server /d=$database /f=Databases\$database /env=$environment /o=Databases\$database\output /drop
 		}
 	}
@@ -116,7 +116,7 @@ function Publish-Roundhouse($server, $database) {
     $environment = Get-BuildEnvironment
 
 	Write-Host "Running database migrations on $database on $server..."
-	Exec -ErrorAction Stop -Verbose { 
+	Exec -ErrorAction Stop { 
 		rh --silent /s=$server /d=$database /f=Databases\$database /env=$environment /o=Databases\$database\output /simple
 	}
 }
@@ -158,7 +158,7 @@ function Write-BuildSummaryMessage($name, $header, $message) {
     }
 }
 
-function Invoke-MSBuild($projectFile, $outDir, $properties, $toolsVersion, `
+function Invoke-MSBuild($projectFile, $properties, $toolsVersion, `
                         $verbosity = "m", $buildConfiguration = "Debug", $flavor = "x86", `
                         $ignoreProjectExtensions, $dotNetVersion = "4.0") {
 
@@ -169,15 +169,6 @@ function Invoke-MSBuild($projectFile, $outDir, $properties, $toolsVersion, `
 
     $msBuildCommand = "& ""$msbuildExe"""
     $msBuildCommand += " ""/nologo"""
-
-    $buildOutputDir = "PowerDeliveryBuildOutput\"
-
-    if ([string]::IsNullOrWhiteSpace($outDir)) {
-        Remove-Item -Path "$buildOutputDir*"
-        $outDir = $buildOutputDir
-    }
-        
-    $msBuildCommand += " ""/p:OutDir=$outDir"""
 
     if ($properties -ne $null) {
         if ($properties.length -gt 0) {
@@ -206,7 +197,6 @@ function Invoke-MSBuild($projectFile, $outDir, $properties, $toolsVersion, `
 
     Write-Host "Compiling MSBuild Project:"
     Write-Host "Project File: $projectFile"
-    Write-Host "Output Directory: $outDir"
     Write-Host "Configuration: $buildConfiguration"
     Write-Host "Platform(s): $flavor"
     Write-Host "Build .NET Version: $dotNetVersion"
@@ -227,9 +217,9 @@ function Invoke-MSBuild($projectFile, $outDir, $properties, $toolsVersion, `
     }
 
     try {
-        Invoke-Expression -Command $msBuildCommand
-
-        Copy-Item -Recurse -Filter *.* $buildOutputDir Get-BuildDropLocation
+        Exec {
+            Invoke-Expression $msBuildCommand
+        }
     }
     finally {
         if (Get-BuildOnServer) {
@@ -244,7 +234,7 @@ function Invoke-MSBuild($projectFile, $outDir, $properties, $toolsVersion, `
             Write-Host "Uploading MSBuild information to TFS for $tfsPath"
 
             $buildProjectNode = [Microsoft.TeamFoundation.Build.Client.InformationNodeConverters]::AddBuildProjectNode(`
-                $buildDetail.Information, [DateTime]::Now, $buildConfiguration, $projectFileName, $flavor, $tfsPath, [DateTime]::Now, "Default")
+                $buildDetail.Information, [DateTime]::Now, $buildConfiguration, $projectFile, $flavor, $tfsPath, [DateTime]::Now, "Default")
 
             $buildProjectNode.Save()
 
