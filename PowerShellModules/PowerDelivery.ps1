@@ -23,6 +23,8 @@ $global:pdlvry_appName = $appName
 $global:pdlvry_collectionUri = $collectionUri
 $global:pdlvry_buildUri = $buildUri
 $global:pdlvry_onServer = $onServer
+$global:pdlvry_buildNumber = $null
+$global:pdlvry_buildName = $null
 
 function Require-NonNullField($variable, $errorMsg) {
 	if ($variable -eq $null -or $variable -eq '') {
@@ -97,12 +99,22 @@ try {
         $envMessage += "Team Collection: $collectionUri`r`n"
         $envMessage += "Team Project: $teamProject`r`n"
         $envMessage += "Change Set: $changeSet`r`n"
-        $envMessage += "Drop Location: $dropLocation`r`n"
+        
+        $buildNameSegments = $dropLocation.split('\') | where {$_}
+        $buildNameIndex = $buildNameSegments.length - 1
+        $buildName = $buildNameSegments[$buildNameIndex]
+        $global:pdlvry_buildName = $buildName
+        $envMessage += "Build Name: $buildName`r`n"
+
         $buildNumber = $buildUri.Substring($buildUri.LastIndexOf("/") + 1)
+        $global:pdlvry_buildNumber = $buildNumber
         $envMessage += "Build Number: $buildNumber`r`n"
+        
         if ($environment -ne "Local" -and $environment -ne "Commit") {
             $envMessage += "Prior Build: $priorBuild`r`n"
         }
+
+        $envMessage += "Drop Location: $dropLocation`r`n"
 	}
 
     $vsInstallDir = Get-ItemProperty -Path Registry::HKEY_USERS\.DEFAULT\Software\Microsoft\VisualStudio\10.0_Config -Name InstallDir

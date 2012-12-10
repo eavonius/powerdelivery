@@ -42,6 +42,14 @@ function Get-BuildUri() {
     return $global:pdlvry_buildUri
 }
 
+function Get-BuildNumber() {
+    return $global:pdlvry_buildNumber
+}
+
+function Get-BuildName() {
+    return $global:pdlvry_buildName
+}
+
 function Get-BuildSetting($name) {
 	ForEach ($envVar in $global:pdlvry_envConfig) {
 		if ($envVar.Name -eq $name) {

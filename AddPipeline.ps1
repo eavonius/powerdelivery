@@ -84,10 +84,7 @@ $tfsVersionControlClientAssembly = Join-Path -Path $vsInstallDir.InstallDir -Chi
 $buildsDir = Join-Path -Path $curDir -ChildPath "Pipelines"
 $outBaseDir = Join-Path -Path $buildsDir -ChildPath $project
 
-if (Test-Path -Path $outBaseDir) {
-    Remove-Item -Path $outBaseDir -Force -Recurse | Out-Null
-}
-
+del -Path $buildsDir -Force -Recurse | Out-Null
 mkdir -Force $outBaseDir | Out-Null
 cd $buildsDir
 
@@ -114,7 +111,6 @@ try {
 
     "$templateDir -> $outBaseDir"
     Copy-Item -Recurse -Path "$templateDir\*" -Destination $outBaseDir -Force | Out-Null
-    Copy-Item -Path (Join-Path -Path $curDir -ChildPath "PowerDeliveryEnvironment.csv") -Destination "$outBaseDir" -Force
     Copy-Item -Path (Join-Path -Path $curDir -ChildPath "BuildProcessTemplates") -Recurse -Destination "$outBaseDir" -Force
     Copy-Item -Path (Join-Path -Path $curDir -ChildPath "PowerShellModules") -Recurse -Destination "$outBaseDir" -Force
 
@@ -133,8 +129,8 @@ try {
     } | Set-Content "$newScriptName"
 
     "Checking in changed or new files to source control..."
-    tf add *.* /noprompt /recursive
-    tf checkin /noprompt /recursive
+    tf add *.* /noprompt /recursive | Out-Null
+    tf checkin /noprompt /recursive | Out-Null
 
     "Connecting to TFS server at $collectionUri to create builds..."
 
@@ -262,4 +258,5 @@ try {
 finally {
     cd $curDir
     tf workspace /delete "AddPowerDelivery" /collection:"$collection" | Out-Null
+    del -Path $buildsDir -Force -Recurse |Out-Null
 }
