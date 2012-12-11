@@ -60,6 +60,24 @@ function Get-BuildSetting($name) {
 	throw "Couldn't find build setting '$name'"
 }
 
+function Invoke-EnvironmentCommand($server, $command, $credential) {
+    $invokeExpression = $null
+    if ($server -ne $null -and $credential -ne $null) {
+        "Executing remote command on $server with credentials - $command"
+        $invokeExpression = "Invoke-Command -ComputerName $server -ScriptBlock { $command } -Authentication CredSSP -credential $credential"
+    }
+    elseif ($server -ne $null) {
+        "Executing remote command on $server - $command"
+        $invokeExpression = "Invoke-Command -ComputerName $server -ScriptBlock { $command }"
+    }
+    else {
+        $command
+        $invokeExpression = "Invoke-Expression $command"
+    }
+
+    Invoke-Expression -Command $invokeExpression -ErrorAction Stop
+}
+
 function Mount-IfUNC($path) {
 	
 	if ($path.StartsWith("\\")) {
@@ -247,25 +265,52 @@ function Invoke-MSBuild($projectFile, $properties, $toolsVersion, `
     }
 }
 
-function Publish-SSAS($asFiles, $logFile, $server, $credentials, $sqlVersion = '11.0') {
+function Publish-SSAS($asDatabase, $computer, $tabularServer, $sqlVersion = '11.0') {
 
-    $utilityInstallDir = Get-ItemProperty -Path "Registry::HKEY_CURRENT_USER\Software\Microsoft\SQL Server Management Studio\$($sqlVersion)_Config" -Name MsEnvLocation
-    
-    $deploySSASCommand = "& ""$msEnvLocation\Microsoft.AnalysisServices.Deployment.exe"" ""$asFiles"" ""/s:"" ""$logFile"""
-    
-    Write-Host "Publishing SSAS models in $asFiles to $server using SQL $sqlVersion..."
+    #$utilityInstallDir = Invoke-EnvironmentCommand -server $server -credential $credential `
+        #-command "Get-ItemProperty -Path ""Registry::HKEY_CURRENT_USER\Software\Microsoft\SQL Server Management Studio\$($sqlVersion)_Config"" -Name InstallDir"
 
-    if ($server -ne $null -and $credentials -ne $null) {
-        Invoke-Command -ComputerName $server -Script { $deploySSASCommand } -Authentication CredSSP -Credential credentials
-    }
-    elsif ($server -ne $null) {
-        Invoke-Command -ComputerName $server -Script { $deploySSASCommand }
-    }
-    else {
-        Invoke-Expression $deploySSASCommand
-    }
+    $asUtilityPath = "C:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn\ManagementStudio\Microsoft.AnalysisServices.Deployment.exe"
 
-    if ($LASTEXITCODE -ne 0) {
-        throw "Error deploying one or more model. See $logFile for more details."
-    }
+    $asModelName = [System.IO.Path]::GetFileNameWithoutExtension($asDatabase)
+    $asFilesDir = [System.IO.Path]::GetDirectoryName($asDatabase)
+    $xmlaPath = Join-Path -Path $asFilesDir -ChildPath "$($asModelName).xmla"
+
+    $remoteCommand = "& ""$asUtilityPath"" ""$asDatabase"" ""/d"" ""/o:$xmlaPath"" | Out-Null"
+
+    Invoke-EnvironmentCommand -server $computer -command $remoteCommand
+
+    $remoteCommand = "Invoke-ASCMD -server ""$tabularServer"" -inputFile ""$xmlaPath"""
+
+    Invoke-EnvironmentCommand -server $computer -command $remoteCommand
+}
+
+function Set-SSASConnection($serverName, $tabularServer, $databaseName, $datasourceID, $connectionName, $connectionString) {
+
+    $query = @"
+    <Alter ObjectExpansion=""ObjectProperties"" xmlns=""http://schemas.microsoft.com/analysisservices/2003/engine"">
+	    <Object>
+		    <DatabaseID>$databaseName</DatabaseID>
+		    <DataSourceID>$datasourceID</DataSourceID>
+	    </Object>
+	    <ObjectDefinition>
+		    <DataSource xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" 
+					    xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" 
+					    xmlns:ddl2=""http://schemas.microsoft.com/analysisservices/2003/engine/2"" 
+					    xmlns:ddl2_2=""http://schemas.microsoft.com/analysisservices/2003/engine/2/2"" 
+					    xmlns:ddl100_100=""http://schemas.microsoft.com/analysisservices/2008/engine/100/100"" 
+					    xmlns:ddl200=""http://schemas.microsoft.com/analysisservices/2010/engine/200"" 
+					    xmlns:ddl200_200=""http://schemas.microsoft.com/analysisservices/2010/engine/200/200"" 
+					    xmlns:ddl300=""http://schemas.microsoft.com/analysisservices/2011/engine/300"" 
+					    xmlns:ddl300_300=""http://schemas.microsoft.com/analysisservices/2011/engine/300/300"" 
+					    xsi:type=""RelationalDataSource"">
+			    <Name>$connectionName</Name>
+			    <ConnectionString>$connectionString</ConnectionString>
+		    </DataSource>
+	    </ObjectDefinition>
+    </Alter>
+"@
+
+    $command = "Invoke-ASCMD -server $tabularServer -query ""$query"""
+    Invoke-EnvironmentCommand -server $serverName -command $command
 }
