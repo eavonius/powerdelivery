@@ -16,7 +16,11 @@ Param (
     [string]
     $controller,
     [string]
-    $vsVersion = "10.0"
+    $vsVersion = "10.0",
+    [switch]
+    $force,
+    [switch]
+    $upgrade
 )
 
 Write-Host
@@ -100,7 +104,12 @@ try {
     tf workspace /new /noprompt "AddPowerDelivery" /collection:"$collection"
 
     "Getting files from project $project..."
-    tf get "$project\*" /recursive /overwrite /noprompt
+    tf get "$project\*" /recursive /noprompt
+
+    if ($upgrade) {
+        "Upgrading powerdelivery PowerShell module..."
+        tf checkout "$project\PowerShellModules\PowerDelivery\*.*"
+    }
 
     $templateDir = Join-Path -Path $curDir -ChildPath "Templates\$template"
 
@@ -129,8 +138,8 @@ try {
     } | Set-Content "$newScriptName"
 
     "Checking in changed or new files to source control..."
-    tf add *.* /noprompt /recursive | Out-Null
-    tf checkin /noprompt /recursive | Out-Null
+    tf add "$project\*.*" /noprompt /recursive | Out-Null
+    tf checkin "$project\*.*" /noprompt /recursive | Out-Null
 
     "Connecting to TFS server at $collectionUri to create builds..."
 

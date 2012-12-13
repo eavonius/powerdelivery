@@ -32,7 +32,7 @@ function Require-NonNullField($variable, $errorMsg) {
 	}
 }
 
-Write-ConsoleSpacer
+Write-Host
 Write-Host "powerdelivery - https://github.com/eavonius/powerdelivery"
 
 if ($environment -eq $null -or $environment -eq '') {
@@ -44,9 +44,10 @@ $buildConfig = "Debug"
 function InvokePowerDeliveryBuildAction($condition, $methodName, $description, $status) {
     if (Get-Command $methodName -ErrorAction SilentlyContinue) {
         if ($condition) {
-            Write-ConsoleSpacer
+            Write-Host
 		    Write-Host "$status..."
             Write-ConsoleSpacer
+            Write-Host
             Invoke-Expression $methodName
 		    Set-Location $global:pdlvry_currentLocation
         }
@@ -84,35 +85,48 @@ try {
 
     $global:pdlvry_buildAppVersion = $buildAppVersion
 
-	Write-ConsoleSpacer
+	Write-Host
+    "Application"
+    Write-ConsoleSpacer
 
-    $envMessage += "App Name: $appName`r`n"
-    $envMessage += "App Version: $buildAppVersion`r`n"
-	
-    $envMessage += "Requested By: $requestedBy`r`n"
-    $envMessage += "Environment: $environment`r`n"
-	
+    $appProperties = @{"App Name" = $appName; "App Version" = $buildAppVersion}
+
+    Format-Table -InputObject $appProperties -AutoSize -HideTableHeaders
+
+    "Parameters"
+    Write-ConsoleSpacer
+
+    $scriptParams = @{}
+
+    $scriptParams["Requested By"] = $requestedBy
+    $scriptParams["Environment"] = $environment
+
 	if ($onServer) {
-        $envMessage += "Team Collection: $collectionUri`r`n"
-        $envMessage += "Team Project: $teamProject`r`n"
-        $envMessage += "Change Set: $changeSet`r`n"
+        $scriptParams["Team Collection"] = $collectionUri
+        $scriptParams["Team Project"] = $teamProject
+        $scriptParams["Change Set"] = $changeSet
         
         $buildNameSegments = $dropLocation.split('\') | where {$_}
         $buildNameIndex = $buildNameSegments.length - 1
         $buildName = $buildNameSegments[$buildNameIndex]
         $global:pdlvry_buildName = $buildName
-        $envMessage += "Build Name: $buildName`r`n"
+        $scriptParams["Build Name"] = $buildName
 
         $buildNumber = $buildUri.Substring($buildUri.LastIndexOf("/") + 1)
         $global:pdlvry_buildNumber = $buildNumber
-        $envMessage += "Build Number: $buildNumber`r`n"
+        $scriptParams["Build Number"] = $buildNumber
         
         if ($environment -ne "Local" -and $environment -ne "Commit") {
-            $envMessage += "Prior Build: $priorBuild`r`n"
+            $scriptParams["Prior Build"] = $priorBuild
         }
 
-        $envMessage += "Drop Location: $dropLocation`r`n"
+        $scriptParams["Drop Location"] = $dropLocation
 	}
+
+    $tableFormat = @{Expression={$_.Key};Label="Key";Width=50}, `
+                   @{Expression={$_.Value};Label="Value";Width=75}
+
+    $scriptParams | Format-Table $tableFormat -HideTableHeaders
 
     $vsInstallDir = Get-ItemProperty -Path Registry::HKEY_USERS\.DEFAULT\Software\Microsoft\VisualStudio\10.0_Config -Name InstallDir
     if ([string]::IsNullOrWhiteSpace($vsInstallDir)) {
@@ -131,14 +145,13 @@ try {
 		throw "Build configuration file $envConfigFileName not found."
 	}
 
-	ForEach ($envVar in $global:pdlvry_envConfig) {
-        $envMessage += "$($envVar.Name): $($envVar.Value)`r`n"
-	}
+    $tableFormat = @{Expression={$_.Name};Label="Name";Width=50}, `
+                   @{Expression={$_.Value};Label="Value";Width=75}
 
-    Write-Host $envMessage -NoNewline
-
-    if ($onServer) {
-        Write-BuildSummaryMessage -name "build_environment" -header "Build Environment" -message $envMessage
+    if ($global:pdlvry_envConfig.length > 0) {
+        "Environment"
+        Write-ConsoleSpacer
+        $global:pdlvry_envConfig | Format-Table $tableFormat -HideTableHeaders
     }
 
 	$releases = @()
