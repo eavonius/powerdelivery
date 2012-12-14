@@ -17,6 +17,8 @@ Param (
     $controller,
     [string]
     $vsVersion = "10.0",
+	[string]
+	$tfsVersion = "2010",
     [switch]
     $force,
     [switch]
@@ -189,8 +191,13 @@ try {
 
         $buildFound = $false
 
-        $processTemplatePath = "`$/$project/BuildProcessTemplates/PowerDeliveryTemplate.xaml"
+		$processTemplatePath = "`$/$project/BuildProcessTemplates/PowerDeliveryTemplate.xaml"
         $changeSetTemplatePath = "`$/$project/BuildProcessTemplates/PowerDeliveryChangeSetTemplate.xaml"
+
+		if ($tfsVersion -eq "2012") {
+        	$processTemplatePath = "`$/$project/BuildProcessTemplates/PowerDeliveryTemplate.11.xaml"
+			$changeSetTemplatePath = "`$/$project/BuildProcessTemplates/PowerDeliveryChangeSetTemplate.11.xaml"
+		}
 
         $processTemplates = $buildServer.QueryProcessTemplates($project)
 
