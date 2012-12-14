@@ -1,3 +1,5 @@
+[Reflection.Assembly]::LoadWithPartialName('Microsoft.SqlServer.SMO') | Out-Null
+
 function Write-ConsoleSpacer() {
     Write-Host "============================================================================================="
 }
@@ -61,21 +63,93 @@ function Get-BuildSetting($name) {
 }
 
 function Invoke-EnvironmentCommand($server, $command, $credential) {
+
     $invokeExpression = $null
     if ($server -ne $null -and $credential -ne $null) {
-        "Executing remote command on $server with credentials - $command"
+		Write-Host
+		"Command on $($server): $command"
         $invokeExpression = "Invoke-Command -ComputerName $server -ScriptBlock { $command } -Authentication CredSSP -credential $credential"
     }
     elseif ($server -ne $null) {
-        "Executing remote command on $server - $command"
+		"Command on $($server): $command"
         $invokeExpression = "Invoke-Command -ComputerName $server -ScriptBlock { $command }"
     }
     else {
         $command
         $invokeExpression = "Invoke-Expression $command"
     }
+	
+    return Invoke-Expression -Command $invokeExpression -ErrorAction Stop
+}
 
-    Invoke-Expression -Command $invokeExpression -ErrorAction Stop
+function Invoke-SSISPackage($package, $server, $version = "110", $packageArgs) {
+
+	$getSqlInstallDir = "Get-ItemProperty -Path Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SQL Server\110 -Name VerSpecificRootDir"
+	$sqlInstallDir = Invoke-EnvironmentCommand -server $server -command $getSqlInstallDir
+
+	if ([string]::IsNullOrWhiteSpace($sqlInstallDir)) {
+        throw "SQL $version does not appear to be installed on $server."
+    }
+	
+	$dtExecPath = Join-Path -Path $sqlInstallDir -ChildPath "DTS\Binn\Dtexec.exe"
+	
+	$packageExecStatement = "& ""$dtExecPath"" /File '$package'"
+	
+	if ($packageArgs) {
+		$packageExecStatment += " $packageArgs"
+	}
+	
+	Invoke-EnvironmentCommand -server $server -command $packageExecStatement
+}
+
+function Stop-SqlJobs($serverName, $jobs) {
+
+	Write-Host
+    "Disabling SQL jobs with pattern $($jobs)* on $serverName"
+	Write-Host
+
+    $dataMartServer = New-Object Microsoft.SqlServer.Management.SMO.Server("$serverName")
+    $dataMartJobs = $dataMartServer.jobserver.jobs | where-object {$_.Isenabled -eq $true -and  $_.name -like "$($jobs)*"}
+
+    $jobRunning = $false
+    $jobName = ''
+
+    foreach ($dataMartJob in $dataMartJobs)	{	
+        $jobName = $dataMartJob.Name
+        if ($dataMartJob.CurrentRunStatus.ToString() -ne 'Idle') {
+            $jobRunning = $true
+            break
+        }	
+        else {	
+            $dataMartJob.IsEnabled = $false
+            $dataMartJob.Alter()
+            "Job '$jobName' successfully disabled."
+        }
+    }
+
+    if ($jobRunning) {
+        foreach ($dataMartJob in $dataMartJobs)	{	
+            $dataMartJob.IsEnabled = $true
+            $dataMartJob.Alter()
+        }
+        throw "Job '$jobName' is still running, stopping build."
+    }
+}
+
+function Start-SqlJobs($serverName, $jobs) {
+
+	Write-Host
+    "Enabling SQL jobs with pattern $($jobs)* on $serverName"
+	Write-Host
+
+    $dataMartServer = New-Object Microsoft.SqlServer.Management.SMO.Server("$serverName")
+    $dataMartJobs = $dataMartServer.jobserver.jobs | where-object {$_.name -like "$($jobs)*"}
+    foreach ($dataMartJob in $dataMartJobs)	{	
+        $jobName = $dataMartJob.Name
+        $dataMartJob.IsEnabled = $true
+        $dataMartJob.Alter()
+        "Job '$jobName' successfully enabled."
+    }
 }
 
 function Mount-IfUNC($path) {
@@ -117,11 +191,12 @@ function Update-AssemblyInfoFiles($path) {
 function Remove-Roundhouse($server, $database) {
 
     $environment = Get-BuildEnvironment
+	$scriptsDir = Join-Path -Path (Get-BuildDropLocation) -ChildPath "Databases\$database"
 
 	if ($environment -eq "Local" -or $environment -eq "Commit") {
 		Write-Host "Dropping database $database on $server..."
 		Exec -ErrorAction Stop { 
-			rh --silent /s=$server /d=$database /f=Databases\$database /env=$environment /o=Databases\$database\output /drop
+			rh --silent /s=$server /d=$database /f="$scriptsDir" /env=$environment /o=Databases\$database\output /drop
 		}
 	}
 }
@@ -132,10 +207,11 @@ function Remove-Roundhouse($server, $database) {
 function Publish-Roundhouse($server, $database) {
 	
     $environment = Get-BuildEnvironment
+	$scriptsDir = Join-Path -Path (Get-BuildDropLocation) -ChildPath "Databases\$database"
 
 	Write-Host "Running database migrations on $database on $server..."
 	Exec -ErrorAction Stop { 
-		rh --silent /s=$server /d=$database /f=Databases\$database /env=$environment /o=Databases\$database\output /simple
+		rh --silent /s=$server /d=$database /f="$scriptsDir" /env=$environment /o=Databases\$database\output /simple
 	}
 }
 
@@ -211,20 +287,22 @@ function Invoke-MSBuild($projectFile, $properties, $toolsVersion, `
 
     $msBuildCommand += " ""$projectFile"""
 
-    Write-ConsoleSpacer
-
-    Write-Host "Compiling MSBuild Project:"
-    Write-Host "Project File: $projectFile"
-    Write-Host "Configuration: $buildConfiguration"
-    Write-Host "Platform(s): $flavor"
-    Write-Host "Build .NET Version: $dotNetVersion"
+	Write-Host
+    "Compiling MSBuild Project:"
+	Write-ConsoleSpacer
+	Write-Host
+	
+    "Project File: $projectFile"
+    "Configuration: $buildConfiguration"
+    "Platform(s): $flavor"
+    "Build .NET Version: $dotNetVersion"
 
     if (![string]::IsNullOrWhiteSpace($ignoreProjectExtensions)) {
-        Write-Host "Ignoring Extensions: $ignoreProjectExtensions"
+        "Ignoring Extensions: $ignoreProjectExtensions"
     }
 
     if (![string]::IsNullOrWhiteSpace($toolsVersion)) {
-        Write-Host "Tools Version: $toolsVersion"
+        "Tools Version: $toolsVersion"
     }
 
     if ($properties -ne $null) {
@@ -249,7 +327,7 @@ function Invoke-MSBuild($projectFile, $properties, $toolsVersion, `
             $projectFileName = [System.IO.Path]::GetFileName($projectFile)
             $tfsPath = "`$/$($projectFile.Replace('\', '/'))"
 
-            Write-Host "Uploading MSBuild information to TFS for $tfsPath"
+            "Uploading MSBuild information to TFS for $tfsPath"
 
             $buildProjectNode = [Microsoft.TeamFoundation.Build.Client.InformationNodeConverters]::AddBuildProjectNode(`
                 $buildDetail.Information, [DateTime]::Now, $buildConfiguration, $projectFile, $flavor, $tfsPath, [DateTime]::Now, "Default")
@@ -258,7 +336,7 @@ function Invoke-MSBuild($projectFile, $properties, $toolsVersion, `
 
             $buildDetail.Information.Save()
 
-            Write-Host "TFS build information saved."
+            "TFS build information saved."
         }
 
         Write-ConsoleSpacer
@@ -285,7 +363,7 @@ function Publish-SSAS($asDatabase, $computer, $tabularServer, $sqlVersion = '11.
     Invoke-EnvironmentCommand -server $computer -command $remoteCommand
 }
 
-function Set-SSASConnection($serverName, $tabularServer, $databaseName, $datasourceID, $connectionName, $connectionString) {
+function Set-SSASConnection($computer, $tabularServer, $databaseName, $datasourceID, $connectionName, $connectionString) {
 
     $query = @"
     <Alter ObjectExpansion=""ObjectProperties"" xmlns=""http://schemas.microsoft.com/analysisservices/2003/engine"">
@@ -312,5 +390,5 @@ function Set-SSASConnection($serverName, $tabularServer, $databaseName, $datasou
 "@
 
     $command = "Invoke-ASCMD -server $tabularServer -query ""$query"""
-    Invoke-EnvironmentCommand -server $serverName -command $command
+    Invoke-EnvironmentCommand -server $computer -command $command
 }

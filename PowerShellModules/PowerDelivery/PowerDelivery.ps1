@@ -148,11 +148,9 @@ try {
     $tableFormat = @{Expression={$_.Name};Label="Name";Width=50}, `
                    @{Expression={$_.Value};Label="Value";Width=75}
 
-    if ($global:pdlvry_envConfig.length > 0) {
-        "Environment"
-        Write-ConsoleSpacer
-        $global:pdlvry_envConfig | Format-Table $tableFormat -HideTableHeaders
-    }
+    "Environment"
+    Write-ConsoleSpacer
+    $global:pdlvry_envConfig | Format-Table $tableFormat -HideTableHeaders
 
 	$releases = @()
 
