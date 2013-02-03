@@ -79,7 +79,7 @@
         </scg:Dictionary>
       </sap:WorkflowViewStateService.ViewState>
       <mtbwa:InvokeForReason DisplayName="Update Build Number for Triggered Builds" sap:VirtualizedContainerService.HintSize="486,146" Reason="Triggered">
-        <mtbwa:UpdateBuildNumber BuildNumberFormat="[&quot;$(BuildDefinitionName)_$(Date:yyyyMMdd)$(Rev:.r)&quot;]" DisplayName="Update Build Number" sap:VirtualizedContainerService.HintSize="200,22" />
+        <mtbwa:UpdateBuildNumber BuildNumberFormat="$(BuildDefinitionName)_$(Date:yyyyMMdd)$(Rev:.r)" DisplayName="Update Build Number" sap:VirtualizedContainerService.HintSize="200,22" />
       </mtbwa:InvokeForReason>
       <Sequence DisplayName="Create Drop Location" sap:VirtualizedContainerService.HintSize="486,456" mtbwt:BuildTrackingParticipant.Importance="None">
         <sap:WorkflowViewStateService.ViewState>

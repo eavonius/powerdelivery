@@ -1,2 +1,3 @@
 Name,Value
-SiteServerName,LocalServerName
+DBServerName,localhost
+DatabaseName,MyDatabase

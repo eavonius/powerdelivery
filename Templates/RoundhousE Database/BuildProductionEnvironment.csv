@@ -1,2 +1,3 @@
 Name,Value
-SiteServerName,ProductionServerName
+DBServerName,ProductionDBServerName
+DatabaseName,MyDatabase

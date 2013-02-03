@@ -1,2 +1,3 @@
 Name,Value
-SiteServerName,CommitServerName
+DBServerName,CommitDBServerName
+DatabaseName,MyDatabase

@@ -1,2 +1,3 @@
 Name,Value
-SiteServerName,TestServerName
+DBServerName,TestDBServerName
+DatabaseName,MyDatabase
