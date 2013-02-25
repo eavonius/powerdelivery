@@ -215,6 +215,26 @@ function Publish-Roundhouse($server, $database) {
 	}
 }
 
+function Roundhouse($database, $server, $scriptsDir, $restorePath, $restoreOptions) {
+
+    $environment = Get-BuildEnvironment
+
+	Write-Host "Running database migrations on $server\$database"
+
+    $command = "rh --silent /vf=""sql"" /s=$server /d=$database /f=""$scriptsDir"" /env=$environment /o=Databases\$database\output /simple"
+    
+    if ($environment -ne 'Production' -and ![String]::IsNullOrWhitespace($restorePath)) {
+        $command += " --restore --restorefrompath=""$restorePath"""
+        if (![String]::IsNullOrWhiteSpace($restoreOptions)) {
+            $command += " --restorecustomoptions=""$restoreOptions"""
+        }
+    }
+
+	Exec -ErrorAction Stop { 
+	    Invoke-Expression -Command $command	
+	}
+}
+
 function Get-CurrentBuildDetail {
 
     $vsInstallDir = Get-ItemProperty -Path Registry::HKEY_USERS\.DEFAULT\Software\Microsoft\VisualStudio\10.0_Config -Name InstallDir       
@@ -252,8 +272,8 @@ function Write-BuildSummaryMessage($name, $header, $message) {
     }
 }
 
-function Invoke-MSBuild($projectFile, $properties, $toolsVersion, `
-                        $verbosity = "m", $buildConfiguration = "Debug", $flavor = "x86", `
+function Invoke-MSBuild($projectFile, $properties, $target, $toolsVersion, `
+                        $verbosity = "m", $buildConfiguration = "Debug", $flavor = "AnyCPU", `
                         $ignoreProjectExtensions, $dotNetVersion = "4.0") {
 
     $regKey = "HKLM:\Software\Microsoft\MSBuild\ToolsVersions\$dotNetVersion"
@@ -285,6 +305,10 @@ function Invoke-MSBuild($projectFile, $properties, $toolsVersion, `
         $msBuildCommand += " ""/ignore:$ignoreProjectExtensions"""
     }
 
+	if (![string]::IsNullOrWhiteSpace($target)) {
+		$msBuildCommand += " ""/T:$target"""
+	}
+
     $msBuildCommand += " ""$projectFile"""
 
 	Write-Host
@@ -304,6 +328,10 @@ function Invoke-MSBuild($projectFile, $properties, $toolsVersion, `
     if (![string]::IsNullOrWhiteSpace($toolsVersion)) {
         "Tools Version: $toolsVersion"
     }
+
+	if (![string]::IsNullOrWhiteSpace($target)) {
+		"Target: $target"
+	}
 
     if ($properties -ne $null) {
         if ($properties.length -gt 0) {
@@ -329,8 +357,13 @@ function Invoke-MSBuild($projectFile, $properties, $toolsVersion, `
 
             "Uploading MSBuild information to TFS for $tfsPath"
 
+            $publishTarget = "Default"
+            if (![string]::IsNullOrWhiteSpace($target)) {
+		        $publishTarget = $target
+	        }
+
             $buildProjectNode = [Microsoft.TeamFoundation.Build.Client.InformationNodeConverters]::AddBuildProjectNode(`
-                $buildDetail.Information, [DateTime]::Now, $buildConfiguration, $projectFile, $flavor, $tfsPath, [DateTime]::Now, "Default")
+                $buildDetail.Information, [DateTime]::Now, $buildConfiguration, $projectFile, $flavor, $tfsPath, [DateTime]::Now, $publishTarget)
 
             $buildProjectNode.Save()
 
