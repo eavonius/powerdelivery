@@ -161,6 +161,48 @@ function Mount-IfUNC($path) {
 	}
 }
 
+function Invoke-MSTest($list, $vsmdi, $settings, $results, $platform) {
+
+    $currentDirectory = Get-Location
+	$environment = Get-BuildEnvironment
+	$dropLocation = Get-BuildDropLocation
+
+	$localResults = "$currentDirectory\$results"
+	$dropResults = "$dropLocation\$results"
+
+    if ([String]::IsNullOrWhiteSpace($platform)) {
+		$platform = AnyCPU
+	}
+
+	try {
+        # Run acceptance tests out of local directory
+        Exec {
+            mstest /testmetadata:"$dropLocation\$vsmdi" `
+                   /testlist:"$list" `
+                   /testsettings:"$dropLocation\$settings" `
+                   /resultsfile:"$localResults"
+                   /usestderr /nologo
+        }
+    }
+    finally {
+        if (Test-Path $localResults -PathType Leaf) {
+
+            copy $localResults $dropResults
+
+            # Publish acceptance test results for this build to the TFS server
+            Exec {
+                mstest /publish:"$(Get-CollectionUri)" `
+                       /teamproject:"$(Get-BuildTeamProject)" `
+                       /publishbuild:"$(Get-BuildName)" `
+                       /publishresultsfile:"$dropResults" `
+                       /flavor:$environment `
+                       /platform:$platform `
+					   /nologo
+            }
+        }
+    }
+}
+
 function Update-AssemblyInfoFiles($path) {
 	if ($environment -eq 'Development' -or $environment -eq 'Commit') {
         $buildAppVersion = Get-BuildAppVersion
