@@ -54,73 +54,66 @@
   <this:Process.PowerShellScriptPath>
     <InArgument x:TypeArguments="x:String" />
   </this:Process.PowerShellScriptPath>
+  <sap2010:WorkflowViewState.IdRef>TfsBuild.Process_1</sap2010:WorkflowViewState.IdRef>
   <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
-  <Sequence mtbwt:BuildTrackingParticipant.Importance="None" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+  <Sequence sap2010:WorkflowViewState.IdRef="Sequence_9" mtbwt:BuildTrackingParticipant.Importance="None" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
     <Sequence.Variables>
       <Variable x:TypeArguments="mtbc:IBuildDetail" Name="BuildDetail" />
     </Sequence.Variables>
-    <mtbwa:GetBuildDetail DisplayName="Get the Build" Result="[BuildDetail]" sap2010:WorkflowViewState.IdRef="GetBuildDetail_1" />
-    <Sequence DisplayName="Update Drop Location" mtbwt:BuildTrackingParticipant.Importance="Low">
-      <mtbwa:InvokeForReason DisplayName="Update Build Number for Triggered Builds" Reason="Triggered">
-        <mtbwa:UpdateBuildNumber BuildNumberFormat=""$(BuildDefinitionName)_$(Date:yyyyMMdd)$(Rev:.r)"" DisplayName="Update Build Number" sap2010:WorkflowViewState.IdRef="UpdateBuildNumber_1" />
-        <sap2010:WorkflowViewState.IdRef>InvokeForReason_1</sap2010:WorkflowViewState.IdRef>
+    <mtbwa:GetBuildDetail DisplayName="Get the Build" sap2010:WorkflowViewState.IdRef="GetBuildDetail_1" Result="[BuildDetail]" />
+    <Sequence DisplayName="Update Drop Location" sap2010:WorkflowViewState.IdRef="Sequence_2" mtbwt:BuildTrackingParticipant.Importance="Low">
+      <mtbwa:InvokeForReason DisplayName="Update Build Number for Triggered Builds" sap2010:WorkflowViewState.IdRef="InvokeForReason_1" Reason="Triggered">
+        <mtbwa:UpdateBuildNumber BuildNumberFormat="$(BuildDefinitionName)_$(Date:yyyyMMdd)$(Rev:.r)" DisplayName="Update Build Number" sap2010:WorkflowViewState.IdRef="UpdateBuildNumber_1" />
       </mtbwa:InvokeForReason>
-      <Sequence DisplayName="Create Drop Location" mtbwt:BuildTrackingParticipant.Importance="None">
-        <If Condition="[String.IsNullOrEmpty(BuildDetail.DropLocationRoot)]" DisplayName="If DropLocationRoot is empty" mtbwt:BuildTrackingParticipant.Importance="Low">
+      <Sequence DisplayName="Create Drop Location" sap2010:WorkflowViewState.IdRef="Sequence_1" mtbwt:BuildTrackingParticipant.Importance="None">
+        <If Condition="[String.IsNullOrEmpty(BuildDetail.DropLocationRoot)]" DisplayName="If DropLocationRoot is empty" sap2010:WorkflowViewState.IdRef="If_1" mtbwt:BuildTrackingParticipant.Importance="Low">
           <If.Then>
-            <Throw DisplayName="Throw EmptyDropLocationRootException" Exception="[New Microsoft.TeamFoundation.Build.Workflow.Activities.EmptyDropLocationRootException(BuildDetail.BuildDefinition.Name)]" mtbwt:BuildTrackingParticipant.Importance="Low" sap2010:WorkflowViewState.IdRef="Throw_1" />
+            <Throw DisplayName="Throw EmptyDropLocationRootException" Exception="[New Microsoft.TeamFoundation.Build.Workflow.Activities.EmptyDropLocationRootException(BuildDetail.BuildDefinition.Name)]" sap2010:WorkflowViewState.IdRef="Throw_1" mtbwt:BuildTrackingParticipant.Importance="Low" />
           </If.Then>
-          <sap2010:WorkflowViewState.IdRef>If_1</sap2010:WorkflowViewState.IdRef>
         </If>
-        <mtbwa:SetBuildProperties DisplayName="Set Drop Location" DropLocation="[BuildDetail.DropLocationRoot + &quot;\&quot; + BuildDetail.BuildDefinition.Name + &quot;\&quot; + BuildDetail.BuildNumber]" mtbwt:BuildTrackingParticipant.Importance="Low" PropertiesToSet="DropLocation" sap2010:WorkflowViewState.IdRef="SetBuildProperties_1" />
-        <mtbwa:CreateDirectory Directory="[BuildDetail.DropLocation]" DisplayName="Create the Drop Location" mtbwt:BuildTrackingParticipant.Importance="Normal" sap2010:WorkflowViewState.IdRef="CreateDirectory_1" />
-        <sap2010:WorkflowViewState.IdRef>Sequence_1</sap2010:WorkflowViewState.IdRef>
+        <mtbwa:SetBuildProperties DisplayName="Set Drop Location" DropLocation="[BuildDetail.DropLocationRoot + &quot;\&quot; + BuildDetail.BuildDefinition.Name + &quot;\&quot; + BuildDetail.BuildNumber]" sap2010:WorkflowViewState.IdRef="SetBuildProperties_1" mtbwt:BuildTrackingParticipant.Importance="Low" PropertiesToSet="DropLocation" />
+        <mtbwa:CreateDirectory Directory="[BuildDetail.DropLocation]" DisplayName="Create the Drop Location" sap2010:WorkflowViewState.IdRef="CreateDirectory_1" mtbwt:BuildTrackingParticipant.Importance="Normal" />
       </Sequence>
-      <sap2010:WorkflowViewState.IdRef>Sequence_2</sap2010:WorkflowViewState.IdRef>
     </Sequence>
-    <mtbwa:AgentScope DataToIgnore="" DisplayName="Run On Agent" MaxExecutionTime="[AgentSettings.MaxExecutionTime]" MaxWaitTime="[AgentSettings.MaxWaitTime]" ReservationSpec="[AgentSettings.GetAgentReservationSpec()]" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+    <mtbwa:AgentScope DataToIgnore="" DisplayName="Run On Agent" sap2010:WorkflowViewState.IdRef="AgentScope_1" MaxExecutionTime="[AgentSettings.MaxExecutionTime]" MaxWaitTime="[AgentSettings.MaxWaitTime]" ReservationSpec="[AgentSettings.GetAgentReservationSpec()]" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
       <mtbwa:AgentScope.Variables>
         <Variable x:TypeArguments="x:String" Name="BuildDirectory" />
         <Variable x:TypeArguments="mtbc:IBuildAgent" Name="BuildAgent" />
         <Variable x:TypeArguments="mtvc1:Workspace" Name="Workspace" />
         <Variable x:TypeArguments="x:String" Name="WorkspaceName" />
       </mtbwa:AgentScope.Variables>
-      <Sequence DisplayName="Initialize Variables" mtbwt:BuildTrackingParticipant.Importance="Low">
-        <mtbwa:GetBuildAgent DisplayName="Get the Agent" mtbwt:BuildTrackingParticipant.Importance="Low" Result="[BuildAgent]" sap2010:WorkflowViewState.IdRef="GetBuildAgent_1" />
-        <mtbwa:GetBuildDirectory DisplayName="Get the Build Directory" mtbwt:BuildTrackingParticipant.Importance="Low" Result="[BuildDirectory]" sap2010:WorkflowViewState.IdRef="GetBuildDirectory_1" />
-        <Assign x:TypeArguments="x:String" DisplayName="Initialize Workspace Name" mtbwt:BuildTrackingParticipant.Importance="Low" To="[WorkspaceName]" Value="[String.Format(&quot;{0}_{1}_{2}&quot;, BuildDetail.BuildDefinition.Id, Microsoft.TeamFoundation.LinkingUtilities.DecodeUri(BuildAgent.Uri.AbsoluteUri).ToolSpecificId, BuildAgent.ServiceHost.Name)]" sap2010:WorkflowViewState.IdRef="Assign`1_1" />
-        <If Condition="[WorkspaceName.Length &gt; Microsoft.TeamFoundation.VersionControl.Common.RepositoryConstants.MaxWorkspaceNameSize]" DisplayName="If WorkspaceName &gt; MaxSize" mtbwt:BuildTrackingParticipant.Importance="Low">
+      <Sequence DisplayName="Initialize Variables" sap2010:WorkflowViewState.IdRef="Sequence_4" mtbwt:BuildTrackingParticipant.Importance="Low">
+        <mtbwa:GetBuildAgent DisplayName="Get the Agent" sap2010:WorkflowViewState.IdRef="GetBuildAgent_1" mtbwt:BuildTrackingParticipant.Importance="Low" Result="[BuildAgent]" />
+        <mtbwa:GetBuildDirectory DisplayName="Get the Build Directory" sap2010:WorkflowViewState.IdRef="GetBuildDirectory_1" mtbwt:BuildTrackingParticipant.Importance="Low" Result="[BuildDirectory]" />
+        <Assign x:TypeArguments="x:String" DisplayName="Initialize Workspace Name" sap2010:WorkflowViewState.IdRef="Assign`1_1" mtbwt:BuildTrackingParticipant.Importance="Low" To="[WorkspaceName]" Value="[String.Format(&quot;{0}_{1}_{2}&quot;, BuildDetail.BuildDefinition.Id, Microsoft.TeamFoundation.LinkingUtilities.DecodeUri(BuildAgent.Uri.AbsoluteUri).ToolSpecificId, BuildAgent.ServiceHost.Name)]" />
+        <If Condition="[WorkspaceName.Length &gt; Microsoft.TeamFoundation.VersionControl.Common.RepositoryConstants.MaxWorkspaceNameSize]" DisplayName="If WorkspaceName &gt; MaxSize" sap2010:WorkflowViewState.IdRef="If_2" mtbwt:BuildTrackingParticipant.Importance="Low">
           <If.Then>
-            <Sequence mtbwt:BuildTrackingParticipant.Importance="None">
-              <mtbwa:WriteBuildWarning Message="[String.Format(&quot;The workspace name '{0}' exceeds the maximum allowed limit of '{1}' characters. Truncating it to match the maximum limit.&quot;, WorkspaceName, Microsoft.TeamFoundation.VersionControl.Common.RepositoryConstants.MaxWorkspaceNameSize)]" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces" sap2010:WorkflowViewState.IdRef="WriteBuildWarning_1" />
-              <Assign x:TypeArguments="x:String" DisplayName="Truncate WorkspaceName to MaxSize" mtbwt:BuildTrackingParticipant.Importance="Low" To="[WorkspaceName]" Value="[WorkspaceName.Substring(0, Microsoft.TeamFoundation.VersionControl.Common.RepositoryConstants.MaxWorkspaceNameSize).TrimEnd()]" sap2010:WorkflowViewState.IdRef="Assign`1_2" />
-              <sap2010:WorkflowViewState.IdRef>Sequence_3</sap2010:WorkflowViewState.IdRef>
+            <Sequence sap2010:WorkflowViewState.IdRef="Sequence_3" mtbwt:BuildTrackingParticipant.Importance="None">
+              <mtbwa:WriteBuildWarning sap2010:WorkflowViewState.IdRef="WriteBuildWarning_1" Message="[String.Format(&quot;The workspace name '{0}' exceeds the maximum allowed limit of '{1}' characters. Truncating it to match the maximum limit.&quot;, WorkspaceName, Microsoft.TeamFoundation.VersionControl.Common.RepositoryConstants.MaxWorkspaceNameSize)]" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces" />
+              <Assign x:TypeArguments="x:String" DisplayName="Truncate WorkspaceName to MaxSize" sap2010:WorkflowViewState.IdRef="Assign`1_2" mtbwt:BuildTrackingParticipant.Importance="Low" To="[WorkspaceName]" Value="[WorkspaceName.Substring(0, Microsoft.TeamFoundation.VersionControl.Common.RepositoryConstants.MaxWorkspaceNameSize).TrimEnd()]" />
             </Sequence>
           </If.Then>
-          <sap2010:WorkflowViewState.IdRef>If_2</sap2010:WorkflowViewState.IdRef>
         </If>
-        <sap2010:WorkflowViewState.IdRef>Sequence_4</sap2010:WorkflowViewState.IdRef>
       </Sequence>
-      <If Condition="[Not String.IsNullOrEmpty(PowerShellScriptPath)]" DisplayName="If Not String.IsNullOrEmpty(PowerShellScriptPath)">
+      <If Condition="[Not String.IsNullOrEmpty(PowerShellScriptPath)]" DisplayName="If Not String.IsNullOrEmpty(PowerShellScriptPath)" sap2010:WorkflowViewState.IdRef="If_3">
         <If.Then>
-          <Sequence>
-            <Sequence DisplayName="Delete Workspace and Sources Directory" mtbwt:BuildTrackingParticipant.Importance="Low">
-              <mtbwa:DeleteWorkspace DeleteLocalItems="[True]" DisplayName="Delete Workspace" mtbwt:BuildTrackingParticipant.Importance="Normal" Name="[WorkspaceName]" sap2010:WorkflowViewState.IdRef="DeleteWorkspace_1" />
-              <mtbwa:DeleteDirectory Directory="[BuildDirectory]" DisplayName="Delete Sources Directory" mtbwt:BuildTrackingParticipant.Importance="Normal" sap2010:WorkflowViewState.IdRef="DeleteDirectory_1" />
-              <sap2010:WorkflowViewState.IdRef>Sequence_5</sap2010:WorkflowViewState.IdRef>
+          <Sequence sap2010:WorkflowViewState.IdRef="Sequence_8">
+            <Sequence DisplayName="Delete Workspace and Sources Directory" sap2010:WorkflowViewState.IdRef="Sequence_5" mtbwt:BuildTrackingParticipant.Importance="Low">
+              <mtbwa:DeleteWorkspace DeleteLocalItems="[True]" DisplayName="Delete Workspace" sap2010:WorkflowViewState.IdRef="DeleteWorkspace_1" mtbwt:BuildTrackingParticipant.Importance="Normal" Name="[WorkspaceName]" />
+              <mtbwa:DeleteDirectory Directory="[BuildDirectory]" DisplayName="Delete Sources Directory" sap2010:WorkflowViewState.IdRef="DeleteDirectory_1" mtbwt:BuildTrackingParticipant.Importance="Normal" />
             </Sequence>
-            <mtbwa:CreateWorkspace BuildDirectory="[BuildDirectory]" Comment="[&quot;Workspace Created by Team Build&quot;]" DisplayName="Create Workspace" Name="[WorkspaceName]" Result="[Workspace]" SourcesDirectory="[BuildDirectory]" sap2010:WorkflowViewState.IdRef="CreateWorkspace_1" />
-            <mtbwa:SyncWorkspace DisplayName="Get Workspace" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces" Workspace="[Workspace]" sap2010:WorkflowViewState.IdRef="SyncWorkspace_1" />
-            <TryCatch>
+            <mtbwa:CreateWorkspace BuildDirectory="[BuildDirectory]" Comment="[&quot;Workspace Created by Team Build&quot;]" DisplayName="Create Workspace" sap2010:WorkflowViewState.IdRef="CreateWorkspace_1" Name="[WorkspaceName]" Result="[Workspace]" SourcesDirectory="[BuildDirectory]" />
+            <mtbwa:SyncWorkspace DisplayName="Get Workspace" sap2010:WorkflowViewState.IdRef="SyncWorkspace_1" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces" Workspace="[Workspace]" />
+            <TryCatch sap2010:WorkflowViewState.IdRef="TryCatch_1">
               <TryCatch.Try>
-                <Sequence>
-                  <mtbwa:InvokeProcess Arguments="[String.Format(&quot;-NoLogo -NonInteractive &quot;&quot;&amp; '{0}\{1}' -onServer -environment '{7}' -changeSet '{2}' -requestedBy '{3}' -teamProject '{4}' -workspaceName '{5}' -buildUri '{8}' -collectionUri '{9}' -dropLocation '{6}'&quot;&quot;&quot;, BuildDirectory, PowerShellScriptPath.Replace(&quot;$/&quot; + BuildDetail.TeamProject + &quot;/&quot;, &quot;&quot;).Replace(&quot;/&quot;, &quot;\\&quot;), BuildDetail.SourceGetVersion, BuildDetail.RequestedBy, BuildDetail.TeamProject, WorkspaceName, BuildDetail.DropLocation, Environment, BuildDetail.Uri, BuildDetail.BuildDefinition.BuildServer.TeamProjectCollection.Uri)]" DisplayName="Run PowerDelivery Script" FileName="[Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Windows), &quot;System32\WindowsPowerShell\v1.0\powershell.exe&quot;)]" WorkingDirectory="[String.Format(&quot;{0}\{1}&quot;, BuildDirectory, System.IO.Path.GetDirectoryName(PowerShellScriptPath.Replace(&quot;$/&quot; + BuildDetail.TeamProject + &quot;/&quot;, &quot;&quot;).Replace(&quot;/&quot;, &quot;\\&quot;)))]">
+                <Sequence sap2010:WorkflowViewState.IdRef="Sequence_6">
+                  <mtbwa:InvokeProcess Arguments="[String.Format(&quot;-NoLogo -NonInteractive &quot;&quot;&amp; '{0}\{1}' -onServer -environment '{7}' -changeSet '{2}' -requestedBy '{3}' -teamProject '{4}' -workspaceName '{5}' -buildUri '{8}' -collectionUri '{9}' -dropLocation '{6}'&quot;&quot;&quot;, BuildDirectory, PowerShellScriptPath.ToLower().Replace(&quot;$/&quot; + BuildDetail.TeamProject.ToLower() + &quot;/&quot;, &quot;&quot;).Replace(&quot;/&quot;, &quot;\\&quot;), BuildDetail.SourceGetVersion, BuildDetail.RequestedBy, BuildDetail.TeamProject, WorkspaceName, BuildDetail.DropLocation, Environment, BuildDetail.Uri, BuildDetail.BuildDefinition.BuildServer.TeamProjectCollection.Uri)]" DisplayName="Run PowerDelivery Script" FileName="[Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Windows), &quot;System32\WindowsPowerShell\v1.0\powershell.exe&quot;)]" sap2010:WorkflowViewState.IdRef="InvokeProcess_1" WorkingDirectory="[String.Format(&quot;{0}\{1}&quot;, BuildDirectory.ToLower(), System.IO.Path.GetDirectoryName(PowerShellScriptPath.ToLower().Replace(&quot;$/&quot; + BuildDetail.TeamProject.ToLower() + &quot;/&quot;, &quot;&quot;).Replace(&quot;/&quot;, &quot;\\&quot;)))]">
                     <mtbwa:InvokeProcess.ErrorDataReceived>
                       <ActivityAction x:TypeArguments="x:String">
                         <ActivityAction.Argument>
                           <DelegateInArgument x:TypeArguments="x:String" Name="errOutput" />
                         </ActivityAction.Argument>
-                        <mtbwa:WriteBuildError Message="[errOutput]" sap2010:WorkflowViewState.IdRef="WriteBuildError_1" />
+                        <mtbwa:WriteBuildError sap2010:WorkflowViewState.IdRef="WriteBuildError_1" Message="[errOutput]" />
                       </ActivityAction>
                     </mtbwa:InvokeProcess.ErrorDataReceived>
                     <mtbwa:InvokeProcess.OutputDataReceived>
@@ -128,46 +121,36 @@
                         <ActivityAction.Argument>
                           <DelegateInArgument x:TypeArguments="x:String" Name="stdOutput" />
                         </ActivityAction.Argument>
-                        <mtbwa:WriteBuildMessage Importance="[Microsoft.TeamFoundation.Build.Client.BuildMessageImportance.High]" Message="[stdOutput]" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces" sap2010:WorkflowViewState.IdRef="WriteBuildMessage_1" />
+                        <mtbwa:WriteBuildMessage sap2010:WorkflowViewState.IdRef="WriteBuildMessage_1" Importance="[Microsoft.TeamFoundation.Build.Client.BuildMessageImportance.High]" Message="[stdOutput]" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces" />
                       </ActivityAction>
                     </mtbwa:InvokeProcess.OutputDataReceived>
-                    <sap2010:WorkflowViewState.IdRef>InvokeProcess_1</sap2010:WorkflowViewState.IdRef>
                   </mtbwa:InvokeProcess>
-                  <sap2010:WorkflowViewState.IdRef>Sequence_6</sap2010:WorkflowViewState.IdRef>
                 </Sequence>
               </TryCatch.Try>
               <TryCatch.Catches>
-                <Catch x:TypeArguments="s:Exception">
+                <Catch x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="Catch`1_1">
                   <ActivityAction x:TypeArguments="s:Exception">
                     <ActivityAction.Argument>
                       <DelegateInArgument x:TypeArguments="s:Exception" Name="ex" />
                     </ActivityAction.Argument>
-                    <Sequence>
-                      <Rethrow DisplayName="Rethrow the exception so the build will stop" mtbwt:BuildTrackingParticipant.Importance="Low" sap2010:WorkflowViewState.IdRef="Rethrow_1" />
-                      <sap2010:WorkflowViewState.IdRef>Sequence_7</sap2010:WorkflowViewState.IdRef>
+                    <Sequence sap2010:WorkflowViewState.IdRef="Sequence_7">
+                      <Rethrow DisplayName="Rethrow the exception so the build will stop" sap2010:WorkflowViewState.IdRef="Rethrow_1" mtbwt:BuildTrackingParticipant.Importance="Low" />
                     </Sequence>
                   </ActivityAction>
-                  <sap2010:WorkflowViewState.IdRef>Catch`1_1</sap2010:WorkflowViewState.IdRef>
                 </Catch>
               </TryCatch.Catches>
-              <sap2010:WorkflowViewState.IdRef>TryCatch_1</sap2010:WorkflowViewState.IdRef>
             </TryCatch>
-            <sap2010:WorkflowViewState.IdRef>Sequence_8</sap2010:WorkflowViewState.IdRef>
           </Sequence>
         </If.Then>
-        <sap2010:WorkflowViewState.IdRef>If_3</sap2010:WorkflowViewState.IdRef>
       </If>
-      <mtbwa:SetBuildProperties CompilationStatus="[Microsoft.TeamFoundation.Build.Client.BuildPhaseStatus.Succeeded]" DisplayName="Set CompilationStatus to Succeeded" PropertiesToSet="CompilationStatus" sap2010:WorkflowViewState.IdRef="SetBuildProperties_2" />
-      <mtbwa:SetBuildProperties DisplayName="Set TestStatus to Succeeded" PropertiesToSet="TestStatus" TestStatus="[Microsoft.TeamFoundation.Build.Client.BuildPhaseStatus.Succeeded]" sap2010:WorkflowViewState.IdRef="SetBuildProperties_3" />
-      <sap2010:WorkflowViewState.IdRef>AgentScope_1</sap2010:WorkflowViewState.IdRef>
+      <mtbwa:SetBuildProperties CompilationStatus="[Microsoft.TeamFoundation.Build.Client.BuildPhaseStatus.Succeeded]" DisplayName="Set CompilationStatus to Succeeded" sap2010:WorkflowViewState.IdRef="SetBuildProperties_2" PropertiesToSet="CompilationStatus" />
+      <mtbwa:SetBuildProperties DisplayName="Set TestStatus to Succeeded" sap2010:WorkflowViewState.IdRef="SetBuildProperties_3" PropertiesToSet="TestStatus" TestStatus="[Microsoft.TeamFoundation.Build.Client.BuildPhaseStatus.Succeeded]" />
     </mtbwa:AgentScope>
-    <sap2010:WorkflowViewState.IdRef>Sequence_9</sap2010:WorkflowViewState.IdRef>
-    <sads:DebugSymbol.Symbol>d05EOlxQcm9qZWN0c1xwb3dlcmRlbGl2ZXJ5XEJ1aWxkUHJvY2Vzc1RlbXBsYXRlc1xQb3dlckRlbGl2ZXJ5MjAxMlRlbXBsYXRlLnhhbWxIAYkDAckDAQMBYQHwAgECOgOmAQ4CAQE+BT6DAQIBXD8FUBACAU9RBaMBGAIBAj4+Pk0CAV1AB0MfAgFZRAdOEgIBUFGCAVGfAQIBBlFTUXUCAQVRsAFR2wECAQNYB2cSAgE3aAefAQwCAQugAQegAYYCAgEJoQEHoQHxAQIBB0EJQaQBAgFaRQlKDgIBVUsJS9YCAgFTTAlM1wECAVFZCVm0AQIBTFoJWsoBAgFJWwlblgMCAUVcCWUOAgE4aBVoRwIBDGoLnAEWAgEOoAEzoAF3AgEKoQFzoQG3AQIBCEE0QUkCAVtFF0VNAgFWRw1HqQICAVdLUEvNAQIBVEwqTEYCAVJZcVl/AgFNWn9akQECAUpbnwFb5gICAUhbhwFbmAECAUZcF1yMAQIBOV4NYhgCATtrDW8YAgEucA1wowICASVxDXHuAQIBH3INmgEYAgEPR1FHzAECAVhfD1/NAwIBQWAPYN4CAgE8bA9s3wECATNtD23TAQIBL3AzcEUCASxwTnB9AgErcLsBcMgBAgEqcNoBcOwBAgEocKIBcLMBAgEmcawBcbkBAgEhdBGJARwCARKRARWUASACARBfMF+wAgIBQ2CtAWCuAgIBP2CVAWCmAQIBPWw3bD8CATZslwFsqAECATRtMG1CAgExdROHASkCAROSAReSAbkBAgERdTJ1qQUCAR112gV18gYCARx1hAd16AgCARuDARmDAbUCAgEXexl7fAIBFIMBiwGDAZgBAgEZgwE9gwGCAQIBGHs4e0UCARU=</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>d1dEOlxQcm9qZWN0c1xQb3dlckRlbGl2ZXJ5QVNQTkVUTVZDNFxCdWlsZFByb2Nlc3NUZW1wbGF0ZXNcUG93ZXJEZWxpdmVyeVRlbXBsYXRlLjExLnhhbWxIAYkDAckDAQMBYQHwAgECOwOWAQ4CAQE/BT+DAQIBd0AFTRACAWROBZQBGAIBAj9xP4ABAgF4QQdDHwIBdEQHTBICAWVOsQFOzgECAQdOggFOpAECAQVO3wFOigICAQNVB2ESAgFJYgeRAQwCAQ2SAQeSAYYCAgELkwEHkwHxAQIBCUIJQsEBAgF1RQlJDgIBbkoJStYCAgFpSwlL1wECAWZWCVa0AQIBYVcJV8oBAgFeWAlYlgMCAVdZCWAOAgFKYhViRwIBDmQLjwEWAgEQkgEzkgF3AgEMkwGqAZMB7gECAQpCNEJmAgF2RRdFTQIBb0cNR6kCAgFxSlBKzQECAWpLKktGAgFnVqMBVrEBAgFiV7UBV8cBAgFfWMwBWJMDAgFaWLQBWMUBAgFYWRdZjAECAUtbDV4YAgFNZQ1oGAIBQGkNaaMCAgE2ag1q7gECAS9rDY4BGAIBEUdRR8wBAgFyXA9czQMCAVNdD13eAgIBTmYPZt8BAgFFZw9n0wECAUFpM2lFAgE+aU5pfQIBPWnvAWn8AQIBO2mOAmmgAgIBOWnWAWnnAQIBN2reAWrrAQIBMW0RgAEcAgEUiAEVigEgAgESXGZc5gICAVVd2gFd2wICAVFdwgFd0wECAU9mN2Y/AgFIZssBZtwBAgFGZzBnQgIBQ24TfykCARWJAReJAbkBAgETbjJuvQUCASJu7gVuhgcCASFuygduzAkCAR18GXy1AgIBGXQZdHwCARZ8wQF8zgECARt8c3y4AQIBGnRsdHkCARc=</sads:DebugSymbol.Symbol>
   </Sequence>
-  <sap2010:WorkflowViewState.IdRef>TfsBuild.Process_1</sap2010:WorkflowViewState.IdRef>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
-      <sap2010:ViewStateData Id="GetBuildDetail_1" sap:VirtualizedContainerService.HintSize="508,22" />
+      <sap2010:ViewStateData Id="GetBuildDetail_1" sap:VirtualizedContainerService.HintSize="587,22" />
       <sap2010:ViewStateData Id="UpdateBuildNumber_1" sap:VirtualizedContainerService.HintSize="200,22" />
       <sap2010:ViewStateData Id="InvokeForReason_1" sap:VirtualizedContainerService.HintSize="486,146" />
       <sap2010:ViewStateData Id="Throw_1" sap:VirtualizedContainerService.HintSize="200,22" />
@@ -181,7 +164,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Sequence_2" sap:VirtualizedContainerService.HintSize="508,766">
+      <sap2010:ViewStateData Id="Sequence_2" sap:VirtualizedContainerService.HintSize="587,766">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -200,8 +183,8 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="If_2" sap:VirtualizedContainerService.HintSize="464,316" />
-      <sap2010:ViewStateData Id="Sequence_4" sap:VirtualizedContainerService.HintSize="565,626">
+      <sap2010:ViewStateData Id="If_2" sap:VirtualizedContainerService.HintSize="464,356" />
+      <sap2010:ViewStateData Id="Sequence_4" sap:VirtualizedContainerService.HintSize="565,666">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -218,11 +201,11 @@
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
       <sap2010:ViewStateData Id="CreateWorkspace_1" sap:VirtualizedContainerService.HintSize="418,22" />
-      <sap2010:ViewStateData Id="SyncWorkspace_1" sap:VirtualizedContainerService.HintSize="418,22" />
+      <sap2010:ViewStateData Id="SyncWorkspace_1" sap:VirtualizedContainerService.HintSize="418,146" />
       <sap2010:ViewStateData Id="WriteBuildError_1" sap:VirtualizedContainerService.HintSize="200,22" />
       <sap2010:ViewStateData Id="WriteBuildMessage_1" sap:VirtualizedContainerService.HintSize="200,22" />
-      <sap2010:ViewStateData Id="InvokeProcess_1" sap:VirtualizedContainerService.HintSize="234,190" />
-      <sap2010:ViewStateData Id="Sequence_6" sap:VirtualizedContainerService.HintSize="256,314">
+      <sap2010:ViewStateData Id="InvokeProcess_1" sap:VirtualizedContainerService.HintSize="234,270" />
+      <sap2010:ViewStateData Id="Sequence_6" sap:VirtualizedContainerService.HintSize="256,394">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -237,7 +220,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Catch`1_1" sap:VirtualizedContainerService.HintSize="404,175">
+      <sap2010:ViewStateData Id="Catch`1_1" sap:VirtualizedContainerService.HintSize="404,215">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">False</x:Boolean>
@@ -245,26 +228,26 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="TryCatch_1" sap:VirtualizedContainerService.HintSize="418,759" />
-      <sap2010:ViewStateData Id="Sequence_8" sap:VirtualizedContainerService.HintSize="440,1255">
+      <sap2010:ViewStateData Id="TryCatch_1" sap:VirtualizedContainerService.HintSize="418,919" />
+      <sap2010:ViewStateData Id="Sequence_8" sap:VirtualizedContainerService.HintSize="440,1539">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="If_3" sap:VirtualizedContainerService.HintSize="565,1363" />
+      <sap2010:ViewStateData Id="If_3" sap:VirtualizedContainerService.HintSize="565,1687" />
       <sap2010:ViewStateData Id="SetBuildProperties_2" sap:VirtualizedContainerService.HintSize="565,22" />
       <sap2010:ViewStateData Id="SetBuildProperties_3" sap:VirtualizedContainerService.HintSize="565,22" />
-      <sap2010:ViewStateData Id="AgentScope_1" sap:VirtualizedContainerService.HintSize="508,55" />
-      <sap2010:ViewStateData Id="Sequence_9" sap:VirtualizedContainerService.HintSize="530,1047">
+      <sap2010:ViewStateData Id="AgentScope_1" sap:VirtualizedContainerService.HintSize="587,2641" />
+      <sap2010:ViewStateData Id="Sequence_9" sap:VirtualizedContainerService.HintSize="609,3633">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="TfsBuild.Process_1" sap:VirtualizedContainerService.HintSize="570,1127">
+      <sap2010:ViewStateData Id="TfsBuild.Process_1" sap:VirtualizedContainerService.HintSize="649,3713">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="ShouldExpandAll">True</x:Boolean>
