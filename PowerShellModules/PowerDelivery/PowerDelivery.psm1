@@ -280,9 +280,11 @@ function Roundhouse($database, $server, $scriptsDir, $restorePath, $restoreOptio
 function Get-CurrentBuildDetail {
 
     $vsInstallDir = Get-ItemProperty -Path Registry::HKEY_USERS\.DEFAULT\Software\Microsoft\VisualStudio\10.0_Config -Name InstallDir       
-    $tfsClientAssemblyPath = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "ReferenceAssemblies\v2.0\Microsoft.TeamFoundation.Client.dll"
+	$tfsAssemblyPath = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "ReferenceAssemblies\v2.0\Microsoft.TeamFoundation.dll"
+	$tfsClientAssemblyPath = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "ReferenceAssemblies\v2.0\Microsoft.TeamFoundation.Client.dll"
     $tfsBuildClientAssemblyPath = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "ReferenceAssemblies\v2.0\Microsoft.TeamFoundation.Build.Client.dll"
-
+	
+	[Reflection.Assembly]::LoadFile($tfsAssemblyPath) | Out-Null
     [Reflection.Assembly]::LoadFile($tfsClientAssemblyPath) | Out-Null
     [Reflection.Assembly]::LoadFile($tfsBuildClientAssemblyPath) | Out-Null
 
@@ -318,6 +320,10 @@ function Invoke-MSBuild($projectFile, $properties, $target, $toolsVersion, `
                         $verbosity = "m", $buildConfiguration = "Debug", $flavor = "AnyCPU", `
                         $ignoreProjectExtensions, $dotNetVersion = "4.0") {
 
+	$dropLocation = Get-BuildDropLocation
+	$logFolder = Join-Path $dropLocation "Logs"
+	mkdir -Force $logFolder | Out-Null
+
     $regKey = "HKLM:\Software\Microsoft\MSBuild\ToolsVersions\$dotNetVersion"
     $regProperty = "MSBuildToolsPath"
 
@@ -350,6 +356,10 @@ function Invoke-MSBuild($projectFile, $properties, $target, $toolsVersion, `
 	if (![string]::IsNullOrWhiteSpace($target)) {
 		$msBuildCommand += " ""/T:$target"""
 	}
+	
+	$logFile = [IO.Path]::GetFileNameWithoutExtension($projectFile) + ".log"
+	
+	$msBuildCommand += " ""/l:FileLogger,Microsoft.Build.Engine;logfile=$logFile"""
 
     $msBuildCommand += " ""$projectFile"""
 
@@ -383,7 +393,7 @@ function Invoke-MSBuild($projectFile, $properties, $target, $toolsVersion, `
     }
 
     try {
-        Exec {
+        Exec -errorMessage "Invocation of MSBuild project $projectFile failed." {
             Invoke-Expression $msBuildCommand
         }
     }
@@ -403,9 +413,63 @@ function Invoke-MSBuild($projectFile, $properties, $target, $toolsVersion, `
             if (![string]::IsNullOrWhiteSpace($target)) {
 		        $publishTarget = $target
 	        }
+			
+			$logFilename = [IO.Path]::GetFileName($logFile)
+			$logDestFile = Join-Path $logFolder $logFilename
+			
+			copy $logFile $logDestFile
 
             $buildProjectNode = [Microsoft.TeamFoundation.Build.Client.InformationNodeConverters]::AddBuildProjectNode(`
                 $buildDetail.Information, [DateTime]::Now, $buildConfiguration, $projectFile, $flavor, $tfsPath, [DateTime]::Now, $publishTarget)
+				
+			$errorCount = 0
+			$warningCount = 0
+						
+			Get-Content $logFile | Where-Object {$_ -like "*error*"} | ForEach-Object { 
+				if ($_ -match "^.*(?=: error)") {
+					$errorCount++
+					
+					$parensStart   = $Matches[0].IndexOf('(')
+					$parensEnd     = $Matches[0].IndexOf(')')
+					$lineSep       = $Matches[0].IndexOf(',')
+					
+					$fileName      = $Matches[0].Substring(0, $parensStart)
+					$lineNumber    = $Matches[0].Substring($parensStart + 1, $lineSep - ($parensStart + 1))
+					$lineCharacter = $Matches[0].Substring($lineSep + 1, $parensEnd - ($lineSep + 1))
+					
+					$errorStart    = $_.IndexOf(": error")
+					
+					[Microsoft.TeamFoundation.Build.Client.InformationNodeConverters]::AddBuildError(`
+						$buildProjectNode.Node.Children, "Compilation", $fileName, $lineNumber, $lineCharacter, "", $_.Substring($errorStart + 2), [DateTime]::Now)
+				}
+			}
+			
+			Get-Content $logFile | Where-Object {$_ -like "*warning*"} | ForEach-Object { 
+				if ($_ -match "^.*(?=: warning)") {
+					$warningCount++
+					
+					$parensStart   = $Matches[0].IndexOf('(')
+					$parensEnd     = $Matches[0].IndexOf(')')
+					$lineSep       = $Matches[0].IndexOf(',')
+					
+					$fileName      = $Matches[0].Substring(0, $parensStart)
+					$lineNumber    = $Matches[0].Substring($parensStart + 1, $lineSep - ($parensStart + 1))
+					$lineCharacter = $Matches[0].Substring($lineSep + 1, $parensEnd - ($lineSep + 1))
+					
+					$warningStart    = $_.IndexOf(": warning")
+					
+					[Microsoft.TeamFoundation.Build.Client.InformationNodeConverters]::AddBuildWarning(`
+						$buildProjectNode.Node.Children, $fileName, $lineNumber, $lineCharacter, "", $_.Substring($warningStart + 2), [DateTime]::Now, "Compilation")
+				}
+			}
+			
+			$buildProjectNode.CompilationErrors = $errorCount
+			$buildProjectNode.CompilationWarnings = $warningCount
+
+			$logDestUri = New-Object -TypeName System.Uri -ArgumentList $logDestFile
+
+			[Microsoft.TeamFoundation.Build.Client.InformationNodeConverters]::AddExternalLink(`
+				$buildProjectNode.Node.Children, "Log File", $logDestUri)
 
             $buildProjectNode.Save()
 

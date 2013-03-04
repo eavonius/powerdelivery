@@ -236,6 +236,11 @@ try {
 	Write-Host "Build succeeded!" -ForegroundColor DarkGreen
 }
 catch {
+	if ($onServer) {
+		$buildDetail = Get-CurrentBuildDetail
+		$buildDetail.FinalizeStatus([Microsoft.TeamFoundation.Build.Client.BuildStatus]::Failed)
+	}
+
 	Set-Location $global:pdlvry_currentLocation
 	Write-Host "Build Failed!" -ForegroundColor Red
 	throw
