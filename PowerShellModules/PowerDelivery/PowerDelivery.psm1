@@ -429,15 +429,24 @@ function Invoke-MSBuild($projectFile, $properties, $target, $toolsVersion, `
 				if ($_ -match "^.*(?=: error)") {
 					$errorCount++
 					
-					$parensStart   = $Matches[0].IndexOf('(')
-					$parensEnd     = $Matches[0].IndexOf(')')
-					$lineSep       = $Matches[0].IndexOf(',')
+					$parensStart = $Matches[0].IndexOf('(')
+					$parensEnd = $Matches[0].IndexOf(')')
+					$lineSep = $Matches[0].IndexOf(',')
 					
-					$fileName      = $Matches[0].Substring(0, $parensStart)
-					$lineNumber    = $Matches[0].Substring($parensStart + 1, $lineSep - ($parensStart + 1))
-					$lineCharacter = $Matches[0].Substring($lineSep + 1, $parensEnd - ($lineSep + 1))
+					$errorStart = $_.IndexOf(": error")
 					
-					$errorStart    = $_.IndexOf(": error")
+					$fileName = ""
+					$lineNumber = 0
+					$lineCharacter = 0
+					
+					if ($parensStart -eq -1 -or $parensEnd -eq -1) {
+						$fileName = $Matches[0].Substring(0, $errorStart)
+					}
+					else {
+						$fileName = $Matches[0].Substring(0, $parensStart)
+						$lineNumber = $Matches[0].Substring($parensStart + 1, $lineSep - ($parensStart + 1))
+						$lineCharacter = $Matches[0].Substring($lineSep + 1, $parensEnd - ($lineSep + 1))
+					}
 					
 					[Microsoft.TeamFoundation.Build.Client.InformationNodeConverters]::AddBuildError(`
 						$buildProjectNode.Node.Children, "Compilation", $fileName, $lineNumber, $lineCharacter, "", $_.Substring($errorStart + 2), [DateTime]::Now)
@@ -448,15 +457,24 @@ function Invoke-MSBuild($projectFile, $properties, $target, $toolsVersion, `
 				if ($_ -match "^.*(?=: warning)") {
 					$warningCount++
 					
-					$parensStart   = $Matches[0].IndexOf('(')
-					$parensEnd     = $Matches[0].IndexOf(')')
-					$lineSep       = $Matches[0].IndexOf(',')
+					$parensStart = $Matches[0].IndexOf('(')
+					$parensEnd = $Matches[0].IndexOf(')')
+					$lineSep = $Matches[0].IndexOf(',')
 					
-					$fileName      = $Matches[0].Substring(0, $parensStart)
-					$lineNumber    = $Matches[0].Substring($parensStart + 1, $lineSep - ($parensStart + 1))
-					$lineCharacter = $Matches[0].Substring($lineSep + 1, $parensEnd - ($lineSep + 1))
+					$warningStart = $_.IndexOf(": warning")
 					
-					$warningStart    = $_.IndexOf(": warning")
+					$fileName = ""
+					$lineNumber = 0
+					$lineCharacter = 0
+					
+					if ($parensStart -eq -1 -or $parensEnd -eq -1) {
+						$fileName = $Matches[0].Substring(0, $warningStart)
+					}
+					else {
+						$fileName = $Matches[0].Substring(0, $parensStart)
+						$lineNumber = $Matches[0].Substring($parensStart + 1, $lineSep - ($parensStart + 1))
+						$lineCharacter = $Matches[0].Substring($lineSep + 1, $parensEnd - ($lineSep + 1))
+					}
 					
 					[Microsoft.TeamFoundation.Build.Client.InformationNodeConverters]::AddBuildWarning(`
 						$buildProjectNode.Node.Children, $fileName, $lineNumber, $lineCharacter, "", $_.Substring($warningStart + 2), [DateTime]::Now, "Compilation")
