@@ -171,16 +171,16 @@ function Invoke-MSTest($list, $vsmdi, $settings, $results, $platform) {
 	$dropResults = "$dropLocation\$results"
 
     if ([String]::IsNullOrWhiteSpace($platform)) {
-		$platform = AnyCPU
+		$platform = 'AnyCPU'
 	}
 
 	try {
         # Run acceptance tests out of local directory
-        Exec {
-            mstest /testmetadata:"$dropLocation\$vsmdi" `
+        Exec -errorMessage "Error running tests in list $list using $vsmdi" {
+            mstest /testmetadata:"$currentDirectory\$vsmdi" `
                    /testlist:"$list" `
-                   /testsettings:"$dropLocation\$settings" `
-                   /resultsfile:"$localResults"
+                   /testsettings:"$currentDirectory\$settings" `
+                   /resultsfile:"$localResults" `
                    /usestderr /nologo
         }
     }
@@ -190,7 +190,7 @@ function Invoke-MSTest($list, $vsmdi, $settings, $results, $platform) {
             copy $localResults $dropResults
 
             # Publish acceptance test results for this build to the TFS server
-            Exec {
+            Exec -errorMessage "Error publishing test results for $dropResults" {
                 mstest /publish:"$(Get-CollectionUri)" `
                        /teamproject:"$(Get-BuildTeamProject)" `
                        /publishbuild:"$(Get-BuildName)" `
@@ -201,6 +201,15 @@ function Invoke-MSTest($list, $vsmdi, $settings, $results, $platform) {
             }
         }
     }
+}
+
+function Enable-WebDeploy($webComputer, $webDeployDir, $webSite, $webPort, $webPassword, $runtimeVersion = '4.0') {
+
+    $webDeployScriptsDir = "$webDeployDir\Scripts"
+
+    # Setup the site to allow remote Web Deployment
+    $siteSetupArgs = "-siteName $webSite -publishSettingSavePath C:\Inetpub\$webSite -publishSettingFileName $($webSite).publishsettings -sitePhysicalPath C:\Inetpub\$webSite -sitePort $webPort -siteAppPoolName $webSite -deploymentUserName $webSite -deploymentUserPassword '$($webPassword)' -managedRunTimeVersion v$runtimeVersion"
+    $setupSiteResult = Invoke-Expression -Command "Invoke-Command -ComputerName $webComputer -ScriptBlock { & ""$webDeployScriptsDir\SetupSiteForPublish.ps1"" $siteSetupArgs }"
 }
 
 function Update-AssemblyInfoFiles($path) {
@@ -279,11 +288,15 @@ function Roundhouse($database, $server, $scriptsDir, $restorePath, $restoreOptio
 
 function Get-CurrentBuildDetail {
 
+    Write-Host "Getting TFS dir"
+
     $vsInstallDir = Get-ItemProperty -Path Registry::HKEY_USERS\.DEFAULT\Software\Microsoft\VisualStudio\10.0_Config -Name InstallDir       
 	$tfsAssemblyPath = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "ReferenceAssemblies\v2.0\Microsoft.TeamFoundation.dll"
 	$tfsClientAssemblyPath = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "ReferenceAssemblies\v2.0\Microsoft.TeamFoundation.Client.dll"
     $tfsBuildClientAssemblyPath = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "ReferenceAssemblies\v2.0\Microsoft.TeamFoundation.Build.Client.dll"
 	
+    Write-Host "Loading TFS assemblies"
+
 	[Reflection.Assembly]::LoadFile($tfsAssemblyPath) | Out-Null
     [Reflection.Assembly]::LoadFile($tfsClientAssemblyPath) | Out-Null
     [Reflection.Assembly]::LoadFile($tfsBuildClientAssemblyPath) | Out-Null

@@ -238,7 +238,11 @@ try {
 catch {
 	if ($onServer) {
 		$buildDetail = Get-CurrentBuildDetail
-		$buildDetail.FinalizeStatus([Microsoft.TeamFoundation.Build.Client.BuildStatus]::Failed)
+        try {
+		    $buildDetail.FinalizeStatus([Microsoft.TeamFoundation.Build.Client.BuildStatus]::Failed)
+        }
+        finally {
+        }
 	}
 
 	Set-Location $global:pdlvry_currentLocation
