@@ -33,7 +33,7 @@ function Require-NonNullField($variable, $errorMsg) {
 }
 
 Write-Host
-Write-Host "powerdelivery - https://github.com/eavonius/powerdelivery"
+"powerdelivery - https://github.com/eavonius/powerdelivery"
 
 if ($environment -eq $null -or $environment -eq '') {
 	$environment = "Local"
@@ -45,7 +45,7 @@ function InvokePowerDeliveryBuildAction($condition, $methodName, $description, $
     if (Get-Command $methodName -ErrorAction SilentlyContinue) {
         if ($condition) {
             Write-Host
-		    Write-Host "$status..."
+		    "$status..."
             Write-ConsoleSpacer
             Write-Host
             Invoke-Expression $methodName
@@ -183,7 +183,7 @@ try {
             throw "No version of Visual Studio with the same tools as your version of TFS is installed on the build server."
         }
         else {
-            Write-Host "Adding $($vsInstallDir.InstallDir) to the PATH..."
+            "Adding $($vsInstallDir.InstallDir) to the PATH..."
             $ENV:Path += ";$($vsInstallDir.InstallDir)"
         }
 
@@ -209,7 +209,7 @@ try {
         $priorBuildDetail = $buildServer.GetBuild("vstfs:///Build/Build/$priorBuild")
         $priorBuildDrop = $priorBuildDetail.DropLocation
 
-        Write-Host "Copying prior build drop location output..."
+        "Copying prior build drop location output..."
         Copy-Item -Path "$priorBuildDrop\*" -Recurse -Destination "$dropLocation"
     }
 

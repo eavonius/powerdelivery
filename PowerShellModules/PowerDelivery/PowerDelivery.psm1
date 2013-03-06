@@ -1,7 +1,7 @@
 [Reflection.Assembly]::LoadWithPartialName('Microsoft.SqlServer.SMO') | Out-Null
 
 function Write-ConsoleSpacer() {
-    Write-Host "============================================================================================="
+    "============================================================================================="
 }
 
 function Get-BuildOnServer() {
@@ -236,7 +236,7 @@ function Remove-Roundhouse($server, $database) {
 	$scriptsDir = Join-Path -Path (Get-BuildDropLocation) -ChildPath "Databases\$database"
 
 	if ($environment -eq "Local" -or $environment -eq "Commit") {
-		Write-Host "Dropping database $database on $server..."
+		"Dropping database $database on $server..."
 		Exec -ErrorAction Stop { 
 			rh --silent /s=$server /d=$database /f="$scriptsDir" /env=$environment /o=Databases\$database\output /drop
 		}
@@ -251,7 +251,7 @@ function Publish-Roundhouse($server, $database) {
     $environment = Get-BuildEnvironment
 	$scriptsDir = Join-Path -Path (Get-BuildDropLocation) -ChildPath "Databases\$database"
 
-	Write-Host "Running database migrations on $database on $server..."
+	"Running database migrations on $database on $server..."
 	Exec -ErrorAction Stop { 
 		rh --silent /s=$server /d=$database /f="$scriptsDir" /env=$environment /o=Databases\$database\output /simple
 	}
@@ -261,7 +261,7 @@ function Roundhouse($database, $server, $scriptsDir, $restorePath, $restoreOptio
 
     $environment = Get-BuildEnvironment
 
-	Write-Host "Running database migrations on $server\$database"
+	"Running database migrations on $server\$database"
 
     $command = "rh --silent /vf=""sql"" /s=$server /d=$database /f=""$scriptsDir"" /env=$environment /o=Databases\$database\output /simple"
     
@@ -290,13 +290,13 @@ function Get-CurrentBuildDetail {
 
     $collectionUri = Get-CollectionUri
 
-    Write-Host "Connecting to TFS server at $collectionUri..."
+    "Connecting to TFS server at $collectionUri..."
 
     $projectCollection = [Microsoft.TeamFoundation.Client.TfsTeamProjectCollectionFactory]::GetTeamProjectCollection($collectionUri)
     $buildServer = $projectCollection.GetService([Microsoft.TeamFoundation.Build.Client.IBuildServer])
 
     $buildUri = Get-BuildUri
-    Write-Host "Opening Information for Build $buildUri..."
+    "Opening Information for Build $buildUri..."
 
     return $buildServer.GetBuild($buildUri)
 }
@@ -385,10 +385,13 @@ function Invoke-MSBuild($projectFile, $properties, $target, $toolsVersion, `
 		"Target: $target"
 	}
 
+	$tableFormat = @{Expression={$_.Key};Label="Key";Width=50}, `
+                   @{Expression={$_.Value};Label="Value";Width=75}
+
     if ($properties -ne $null) {
         if ($properties.length -gt 0) {
-            Write-Host "Build Properties:"
-            Write-Host $properties
+            "Build Properties:"
+			$properties | Format-Table $tableFormat -HideTableHeaders
         }
     }
 
@@ -448,7 +451,7 @@ function Invoke-MSBuild($projectFile, $properties, $target, $toolsVersion, `
 						$lineCharacter = $Matches[0].Substring($lineSep + 1, $parensEnd - ($lineSep + 1))
 					}
 					
-					[Microsoft.TeamFoundation.Build.Client.InformationNodeConverters]::AddBuildError(`
+					$buildError = [Microsoft.TeamFoundation.Build.Client.InformationNodeConverters]::AddBuildError(`
 						$buildProjectNode.Node.Children, "Compilation", $fileName, $lineNumber, $lineCharacter, "", $_.Substring($errorStart + 2), [DateTime]::Now)
 				}
 			}
@@ -476,7 +479,7 @@ function Invoke-MSBuild($projectFile, $properties, $target, $toolsVersion, `
 						$lineCharacter = $Matches[0].Substring($lineSep + 1, $parensEnd - ($lineSep + 1))
 					}
 					
-					[Microsoft.TeamFoundation.Build.Client.InformationNodeConverters]::AddBuildWarning(`
+					$buildWarning = [Microsoft.TeamFoundation.Build.Client.InformationNodeConverters]::AddBuildWarning(`
 						$buildProjectNode.Node.Children, $fileName, $lineNumber, $lineCharacter, "", $_.Substring($warningStart + 2), [DateTime]::Now, "Compilation")
 				}
 			}
@@ -486,7 +489,7 @@ function Invoke-MSBuild($projectFile, $properties, $target, $toolsVersion, `
 
 			$logDestUri = New-Object -TypeName System.Uri -ArgumentList $logDestFile
 
-			[Microsoft.TeamFoundation.Build.Client.InformationNodeConverters]::AddExternalLink(`
+			$logFileLink = [Microsoft.TeamFoundation.Build.Client.InformationNodeConverters]::AddExternalLink(`
 				$buildProjectNode.Node.Children, "Log File", $logDestUri)
 
             $buildProjectNode.Save()
