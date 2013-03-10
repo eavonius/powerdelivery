@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>PowerDelivery</id>
+        <version>1.0.17</version>
+        <title>PowerDelivery</title>
+        <authors>Jayme Edwards</authors>
+        <owners />
+        <projectUrl>http://eavonius.github.com/powerdelivery/</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>A deployment framework helping you to continuously deliver software to your customers using Microsoft Team Foundation Server and Windows PowerShell.</description>
+        <summary>PowerShell/TFS continuous delivery framework.</summary>
+        <language>es-US</language>
+        <dependencies>
+            <dependency id="psake" version="4.2.0.1" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="PowerDelivery\PowerDelivery.psm1" target="tools\PowerDelivery\PowerDelivery.psm1" />
+        <file src="PowerDelivery\PowerDelivery.psd1" target="tools\PowerDelivery\PowerDelivery.psd1" />
+        <file src="PowerDelivery\BuildProcessTemplates\PowerDeliveryChangeSetTemplate.11.xaml" target="tools\PowerDelivery\BuildProcessTemplates\PowerDeliveryChangeSetTemplate.11.xaml" />
+        <file src="PowerDelivery\BuildProcessTemplates\PowerDeliveryChangeSetTemplate.xaml" target="tools\PowerDelivery\BuildProcessTemplates\PowerDeliveryChangeSetTemplate.xaml" />
+        <file src="PowerDelivery\BuildProcessTemplates\PowerDeliveryTemplate.11.xaml" target="tools\PowerDelivery\BuildProcessTemplates\PowerDeliveryTemplate.11.xaml" />
+        <file src="PowerDelivery\BuildProcessTemplates\PowerDeliveryTemplate.xaml" target="tools\PowerDelivery\BuildProcessTemplates\PowerDeliveryTemplate.xaml" />
+        <file src="PowerDelivery\Templates\ASP.NET Web Site\Build.ps1" target="tools\PowerDelivery\Templates\ASP.NET Web Site\Build.ps1" />
+        <file src="PowerDelivery\Templates\ASP.NET Web Site\BuildCapacityTestEnvironment.csv" target="tools\PowerDelivery\Templates\ASP.NET Web Site\BuildCapacityTestEnvironment.csv" />
+        <file src="PowerDelivery\Templates\ASP.NET Web Site\BuildCommitEnvironment.csv" target="tools\PowerDelivery\Templates\ASP.NET Web Site\BuildCommitEnvironment.csv" />
+        <file src="PowerDelivery\Templates\ASP.NET Web Site\BuildLocalEnvironment.csv" target="tools\PowerDelivery\Templates\ASP.NET Web Site\BuildLocalEnvironment.csv" />
+        <file src="PowerDelivery\Templates\ASP.NET Web Site\BuildProductionEnvironment.csv" target="tools\PowerDelivery\Templates\ASP.NET Web Site\BuildProductionEnvironment.csv" />
+        <file src="PowerDelivery\Templates\ASP.NET Web Site\BuildTestEnvironment.csv" target="tools\PowerDelivery\Templates\ASP.NET Web Site\BuildTestEnvironment.csv" />
+        <file src="PowerDelivery\Templates\Blank\Build.ps1" target="tools\PowerDelivery\Templates\Blank\Build.ps1" />
+        <file src="PowerDelivery\Templates\Blank\BuildCapacityTestEnvironment.csv" target="tools\PowerDelivery\Templates\Blank\BuildCapacityTestEnvironment.csv" />
+        <file src="PowerDelivery\Templates\Blank\BuildCommitEnvironment.csv" target="tools\PowerDelivery\Templates\Blank\BuildCommitEnvironment.csv" />
+        <file src="PowerDelivery\Templates\Blank\BuildLocalEnvironment.csv" target="tools\PowerDelivery\Templates\Blank\BuildLocalEnvironment.csv" />
+        <file src="PowerDelivery\Templates\Blank\BuildProductionEnvironment.csv" target="tools\PowerDelivery\Templates\Blank\BuildProductionEnvironment.csv" />
+        <file src="PowerDelivery\Templates\Blank\BuildTestEnvironment.csv" target="tools\PowerDelivery\Templates\Blank\BuildTestEnvironment.csv" />
+        <file src="PowerDelivery\Templates\RoundhousE Database\Build.ps1" target="tools\PowerDelivery\Templates\RoundhousE Database\Build.ps1" />
+        <file src="PowerDelivery\Templates\RoundhousE Database\BuildCapacityTestEnvironment.csv" target="tools\PowerDelivery\Templates\RoundhousE Database\BuildCapacityTestEnvironment.csv" />
+        <file src="PowerDelivery\Templates\RoundhousE Database\BuildCommitEnvironment.csv" target="tools\PowerDelivery\Templates\RoundhousE Database\BuildCommitEnvironment.csv" />
+        <file src="PowerDelivery\Templates\RoundhousE Database\BuildLocalEnvironment.csv" target="tools\PowerDelivery\Templates\RoundhousE Database\BuildLocalEnvironment.csv" />
+        <file src="PowerDelivery\Templates\RoundhousE Database\BuildProductionEnvironment.csv" target="tools\PowerDelivery\Templates\RoundhousE Database\BuildProductionEnvironment.csv" />
+        <file src="PowerDelivery\Templates\RoundhousE Database\BuildTestEnvironment.csv" target="tools\PowerDelivery\Templates\RoundhousE Database\BuildTestEnvironment.csv" />
+        <file src="chocolateyInstall.ps1" target="tools\chocolateyInstall.ps1" />
+        <file src="init.ps1" target="tools\init.ps1" />
+    </files>
+</package>
