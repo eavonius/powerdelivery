@@ -1027,74 +1027,78 @@ function Add-Pipeline {
         [Parameter(Mandatory=0)][switch] $force = $false,
         [Parameter(Mandatory=0)][switch] $upgrade = $false
     )
+	
+	$originalDir = Get-Location
+	
+	$moduleDir = $PSScriptRoot	
+	
+	$curDir = [System.IO.Path]::GetFullPath($moduleDir)
+	
+	try {
+	    Write-Host
+	    "Add Pipeline Utility"
+	    Write-Host
+	    "powerdelivery - http://github.com/eavonius/powerdelivery"
+	    Write-Host
 
-    Write-Host
-    "Add Pipeline Utility"
-    Write-Host
-    "powerdelivery - http://github.com/eavonius/powerdelivery"
-    Write-Host
+	    if ($(get-host).version.major -lt 3) {
+	        "Powershell 3.0 or greater is required."
+	        exit
+	    }
 
-    if ($(get-host).version.major -lt 3) {
-        "Powershell 3.0 or greater is required."
-        exit
-    }
+	    function RequireParam($param, $switch) {
+	        if ([string]::IsNullOrWhiteSpace($param)) {
+	            Write-Error "$switch was not supplied"
+	            exit
+	        }
+	    }
 
-    $curDir = Get-Location
+	    RequireParam -param $name -switch  "-name"
+	    RequireParam -param $template -switch  "-templateName"
+	    RequireParam -param $collection -switch  "-tfsCollectionUri"
+	    RequireParam -param $project -switch  "-tfsProjectName"
+	    RequireParam -param $vsVersion -switch "-vsVersion"
+	    RequireParam -param $controller -switch "-buildController"
+	    RequireParam -param $dropFolder -switch "-dropFolder"
 
-    function RequireParam($param, $switch) {
-        if ([string]::IsNullOrWhiteSpace($param)) {
-            Write-Error "$switch was not supplied"
-            exit
-        }
-    }
+	    $vsInstallDir = Get-ItemProperty -Path "Registry::HKEY_USERS\.DEFAULT\Software\Microsoft\VisualStudio\$($vsVersion)_Config" -Name InstallDir       
+	    if ([string]::IsNullOrWhiteSpace($vsInstallDir)) {
+	        throw "No version of Visual Studio with the same tools as your version of TFS is installed on the build server."
+	    }
+	    else {
+	        Write-Host "Adding $($vsInstallDir.InstallDir) to the PATH..."
+	        $ENV:Path += ";$($vsInstallDir.InstallDir)"
+	    }
 
-    RequireParam -param $name -switch  "-name"
-    RequireParam -param $template -switch  "-templateName"
-    RequireParam -param $collection -switch  "-tfsCollectionUri"
-    RequireParam -param $project -switch  "-tfsProjectName"
-    RequireParam -param $vsVersion -switch "-vsVersion"
-    RequireParam -param $controller -switch "-buildController"
-    RequireParam -param $dropFolder -switch "-dropFolder"
+	    $refAssemblies = "ReferenceAssemblies\v2.0"
+	    $privateAssemblies = "PrivateAssemblies"
+	    $tfsAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$refAssemblies\Microsoft.TeamFoundation.dll"
+	    $tfsClientAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$refAssemblies\Microsoft.TeamFoundation.Client.dll"
+	    $tfsBuildClientAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$refAssemblies\Microsoft.TeamFoundation.Build.Client.dll"
+	    $tfsBuildWorkflowAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$privateAssemblies\Microsoft.TeamFoundation.Build.Workflow.dll"
+	    $tfsVersionControlClientAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$refAssemblies\Microsoft.TeamFoundation.VersionControl.Client.dll"
 
-    $vsInstallDir = Get-ItemProperty -Path "Registry::HKEY_USERS\.DEFAULT\Software\Microsoft\VisualStudio\$($vsVersion)_Config" -Name InstallDir       
-    if ([string]::IsNullOrWhiteSpace($vsInstallDir)) {
-        throw "No version of Visual Studio with the same tools as your version of TFS is installed on the build server."
-    }
-    else {
-        Write-Host "Adding $($vsInstallDir.InstallDir) to the PATH..."
-        $ENV:Path += ";$($vsInstallDir.InstallDir)"
-    }
+	    "Loading TFS reference assemblies..."
 
-    $refAssemblies = "ReferenceAssemblies\v2.0"
-    $privateAssemblies = "PrivateAssemblies"
-    $tfsAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$refAssemblies\Microsoft.TeamFoundation.dll"
-    $tfsClientAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$refAssemblies\Microsoft.TeamFoundation.Client.dll"
-    $tfsBuildClientAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$refAssemblies\Microsoft.TeamFoundation.Build.Client.dll"
-    $tfsBuildWorkflowAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$privateAssemblies\Microsoft.TeamFoundation.Build.Workflow.dll"
-    $tfsVersionControlClientAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$refAssemblies\Microsoft.TeamFoundation.VersionControl.Client.dll"
+	    [Reflection.Assembly]::LoadFile($tfsClientAssembly) | Out-Null
+	    [Reflection.Assembly]::LoadFile($tfsBuildClientAssembly) | Out-Null
+	    [Reflection.Assembly]::LoadFile($tfsBuildWorkflowAssembly) | Out-Null
+	    [Reflection.Assembly]::LoadFile($tfsVersionControlClientAssembly) | Out-Null
 
-    "Loading TFS reference assemblies..."
+	    $buildsDir = Join-Path -Path $curDir -ChildPath "Pipelines"
+	    $outBaseDir = Join-Path -Path $buildsDir -ChildPath $project
 
-    [Reflection.Assembly]::LoadFile($tfsClientAssembly) | Out-Null
-    [Reflection.Assembly]::LoadFile($tfsBuildClientAssembly) | Out-Null
-    [Reflection.Assembly]::LoadFile($tfsBuildWorkflowAssembly) | Out-Null
-    [Reflection.Assembly]::LoadFile($tfsVersionControlClientAssembly) | Out-Null
+	    del -Path $buildsDir -Force -Recurse | Out-Null
+	    mkdir -Force $outBaseDir | Out-Null
+	    cd $buildsDir
 
-    $buildsDir = Join-Path -Path $curDir -ChildPath "Pipelines"
-    $outBaseDir = Join-Path -Path $buildsDir -ChildPath $project
+	    "Removing existing workspace at $collection if it exists..."
+	    tf workspace /delete "AddPowerDelivery" /collection:"$collection" | Out-Null
 
-    del -Path $buildsDir -Force -Recurse | Out-Null
-    mkdir -Force $outBaseDir | Out-Null
-    cd $buildsDir
+	    if ($LASTEXITCODE -ne 0) {
+	        Write-Host "NOTE: Error above is normal. This occurs if there wasn't a mapped working folder already."
+	    }
 
-    "Removing existing workspace at $collection if it exists..."
-    tf workspace /delete "AddPowerDelivery" /collection:"$collection" | Out-Null
-
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "NOTE: Error above is normal. This occurs if there wasn't a mapped working folder already."
-    }
-
-    try {
         "Creating TFS workspace for $collection..."
         tf workspace /new /noprompt "AddPowerDelivery" /collection:"$collection"
 
@@ -1262,6 +1266,7 @@ function Add-Pipeline {
         cd $curDir
         tf workspace /delete "AddPowerDelivery" /collection:"$collection" | Out-Null
         del -Path $buildsDir -Force -Recurse |Out-Null
+		cd $originalDir
     }
 }
 

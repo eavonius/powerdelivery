@@ -1,3 +1,2 @@
-﻿cuninst PowerDelivery
-cpack PowerDelivery.nuspec
+﻿cpack PowerDelivery.nuspec
 cinst PowerDelivery -force -source %cd%
