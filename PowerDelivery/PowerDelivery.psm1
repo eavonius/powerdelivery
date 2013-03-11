@@ -10,7 +10,7 @@ principles and deploy product assets into multiple environments.
 [Reflection.Assembly]::LoadWithPartialName('Microsoft.SqlServer.SMO') | Out-Null
 
 function Write-ConsoleSpacer() {
-    "============================================================================================="
+    "================================================================"
 }
 
 function Get-BuildOnServer {
@@ -380,15 +380,6 @@ function Invoke-Roundhouse {
 
 function Get-CurrentBuildDetail {
 
-    $vsInstallDir = Get-ItemProperty -Path Registry::HKEY_USERS\.DEFAULT\Software\Microsoft\VisualStudio\10.0_Config -Name InstallDir       
-	$tfsAssemblyPath = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "ReferenceAssemblies\v2.0\Microsoft.TeamFoundation.dll"
-	$tfsClientAssemblyPath = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "ReferenceAssemblies\v2.0\Microsoft.TeamFoundation.Client.dll"
-    $tfsBuildClientAssemblyPath = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "ReferenceAssemblies\v2.0\Microsoft.TeamFoundation.Build.Client.dll"
-
-	[Reflection.Assembly]::LoadFile($tfsAssemblyPath) | Out-Null
-    [Reflection.Assembly]::LoadFile($tfsClientAssemblyPath) | Out-Null
-    [Reflection.Assembly]::LoadFile($tfsBuildClientAssemblyPath) | Out-Null
-
     $collectionUri = Get-CollectionUri
 
     "Connecting to TFS server at $collectionUri..."
@@ -421,6 +412,30 @@ function Write-BuildSummaryMessage {
 
         $buildDetail.Information.Save()
     }
+}
+
+function LoadTFS($vsVersion = "10.0") {
+
+    $vsInstallDir = Get-ItemProperty -Path "Registry::HKEY_USERS\.DEFAULT\Software\Microsoft\VisualStudio\$($vsVersion)_Config" -Name InstallDir       
+    if ([string]::IsNullOrWhiteSpace($vsInstallDir)) {
+        throw "No version of Visual Studio with the same tools as your version of TFS is installed on the build server."
+    }
+    else {
+        $ENV:Path += ";$($vsInstallDir.InstallDir)"
+    }
+
+    $refAssemblies = "ReferenceAssemblies\v2.0"
+    $privateAssemblies = "PrivateAssemblies"
+    $tfsAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$refAssemblies\Microsoft.TeamFoundation.dll"
+    $tfsClientAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$refAssemblies\Microsoft.TeamFoundation.Client.dll"
+    $tfsBuildClientAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$refAssemblies\Microsoft.TeamFoundation.Build.Client.dll"
+    $tfsBuildWorkflowAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$privateAssemblies\Microsoft.TeamFoundation.Build.Workflow.dll"
+    $tfsVersionControlClientAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$refAssemblies\Microsoft.TeamFoundation.VersionControl.Client.dll"
+
+    [Reflection.Assembly]::LoadFile($tfsClientAssembly) | Out-Null
+    [Reflection.Assembly]::LoadFile($tfsBuildClientAssembly) | Out-Null
+    [Reflection.Assembly]::LoadFile($tfsBuildWorkflowAssembly) | Out-Null
+    [Reflection.Assembly]::LoadFile($tfsVersionControlClientAssembly) | Out-Null
 }
 
 function Invoke-MSBuild {
@@ -836,6 +851,7 @@ function Invoke-Powerdelivery {
     $powerdelivery.onServer = $onServer
     $powerdelivery.buildNumber = $null
     $powerdelivery.buildName = $null
+	$powerdelivery.priorBuild = $priorBuild
 
     Write-Host
     "powerdelivery - https://github.com/eavonius/powerdelivery"
@@ -853,6 +869,36 @@ function Invoke-Powerdelivery {
             Require-NonNullField -variable $collectionUri -errorMsg "-collectionUri parameter is required when running on TFS"
             Require-NonNullField -variable $buildUri -errorMsg "-buildUri parameter is required when running on TFS"
             Require-NonNullField -variable $dropLocation -errorMsg "-dropLocation parameter is required when running on TFS"
+			
+			if ($powerdelivery.environment -ne "Local") {
+			
+				LoadTFS
+				
+				$powerdelivery.collection = [Microsoft.TeamFoundation.Client.TfsTeamProjectCollectionFactory]::GetTeamProjectCollection($collectionUri)
+		        $powerdelivery.buildServer = $powerdelivery.collection.GetService([Microsoft.TeamFoundation.Build.Client.IBuildServer])
+		        $powerdelivery.structure = $powerdelivery.collection.GetService([Microsoft.TeamFoundation.Server.ICommonStructureService])
+				
+				$buildServerVersion = $powerdelivery.buildServer.BuildServerVersion
+				
+				if ($buildServerVersion -eq 'v3') {
+					$powerdelivery.tfsVersion = '2010'
+				}
+				elseif ($buildServerVersion -eq 'v4') {
+					$powerdelivery.tfsVersion = '2012'
+				}
+				else {
+					throw "TFS server must be version 2010 or 2012, a different version was detected."
+				}
+
+		        $powerdelivery.projectInfo = $powerdelivery.structure.GetProjectFromName($teamProject)
+		        if (!$powerdelivery.projectInfo) {
+		            Write-Error "Project '$teamProject' not found in TFS collection '$collectionUri'"
+		            exit
+		        }
+				
+				$powerdelivery.groupSecurity = $powerdelivery.collection.GetService([Microsoft.TeamFoundation.Server.IGroupSecurityService])
+		        $powerdelivery.appGroups = $powerdelivery.groupSecurity.ListApplicationGroups($powerdelivery.projectInfo.Uri)
+			}
 	    }
 	    else {
 		    $powerdelivery.requestedBy = whoami
@@ -930,9 +976,62 @@ function Invoke-Powerdelivery {
 	    Write-ConsoleSpacer
 	    $powerdelivery.envConfig | Format-Table $tableFormat -HideTableHeaders
 
-	    $releases = @()
+		if ($powerdelivery.environment -ne "Commit" -and $powerdelivery.onServer -eq $true) {
 
-	    #mkdir (Join-Path -Path $powerdelivery.currentLocation -ChildPath 'PowerDeliveryBuildOutput') -Force | Out-Null
+			$groupName = "$appScript $environment Builders"
+
+			$buildGroup = $null
+			$permitted = $false
+			
+			$sidSearchFactor = [Microsoft.TeamFoundation.Server.SearchFactor]::Sid
+			$accountNameSearchFactor = [Microsoft.TeamFoundation.Server.SearchFactor]::AccountName
+			$expandedQueryMembership = [Microsoft.TeamFoundation.Server.QueryMembership]::Expanded
+			
+			$requestingIdentity = $powerdelivery.groupSecurity.ReadIdentity($accountNameSearchFactor, $powerdelivery.requestedBy, $expandedQueryMembership)
+			
+			$powerdelivery.appGroups | ForEach-Object {
+                if (($_.AccountName.ToLower() -eq $groupName.ToLower()) -and $buildGroup -eq $null) {
+					$buildGroup = $_
+					$groupMembers = $powerdelivery.groupSecurity.ReadIdentities($sidSearchFactor, $buildGroup.Sid, $expandedQueryMembership)					
+					foreach ($member in $groupMembers) {
+						foreach ($memberSid in $member.Members) {
+							if ($memberSid -eq $requestingIdentity.Sid) {
+								$permitted = $true
+							}
+						}
+					}
+                }
+            }
+			
+			if (!$buildGroup) {
+                throw "TFS Security group '$groupName' not found for project '$teamProject'. This group must exist to verify the user requesting the build is a member."
+            }
+			
+			if (!$permitted) {
+				throw "User '$($powerdelivery.requestedBy)' who queued build must be a member of TFS Security group '$groupName' to build targeting the '$environment' environment."
+			}
+			
+	        $powerdelivery.priorBuild = $powerdelivery.buildServer.GetBuild("vstfs:///Build/Build/$priorBuild")
+			
+			if ($powerdelivery.priorBuild -eq $null) {
+				throw "Build to promote '$priorBuild' could not be found. Are you sure you specified the build number of a prior build?"
+			}
+			
+			$priorBuildName = $powerdelivery.priorBuild.BuildDefinition.Name.ToLower()
+			
+			if (!$priorBuildName.StartsWith($appScript.ToLower())) {
+				throw "Prior build '$priorBuildName' is for a different product. Please specify the build number of a prior build for the same product."
+			}
+			
+			if ($environment -eq 'Production') {
+				if (!$priorBuildName.EndsWith('- test')) {
+					throw "Attempt to target production with a non-test build. Please specify the build number of a prior Test environment build to promote it to production."
+				}
+			}
+			elseif (!$priorBuildName.EndsWith('- commit')) {
+				throw "Attempt to promote a non-commit build. Please specify the build number of a prior Commit environment build to promote it into this environment."
+			}
+		}
 
 		InvokePowerDeliveryBuildAction -condition $true -stage $powerdelivery.init -description "initialization" -status "Initializing"
 	    InvokePowerDeliveryBuildAction -condition ($powerdelivery.environment -eq 'Commit' -or $powerdelivery.environment -eq 'Local') -stage $powerdelivery.compile -description "compilation" -status "Compiling"
@@ -943,45 +1042,7 @@ function Invoke-Powerdelivery {
 	    $structure = $null
 
 	    if ($powerdelivery.environment -ne "Local" -and $powerdelivery.environment -ne "Commit" -and $powerdelivery.onServer) {
-
-	        # copy files from the build being promoted 
-	        # out of the drop location of the previous 
-	        # pipeline environment and into the next one here.
-
-	        $vsVersion = "10.0"
-
-	        $vsInstallDir = Get-ItemProperty -Path "Registry::HKEY_USERS\.DEFAULT\Software\Microsoft\VisualStudio\$($vsVersion)_Config" -Name InstallDir       
-	        if ([string]::IsNullOrWhiteSpace($vsInstallDir)) {
-	            throw "No version of Visual Studio with the same tools as your version of TFS is installed on the build server."
-	        }
-	        else {
-	            "Adding $($vsInstallDir.InstallDir) to the PATH..."
-	            $ENV:Path += ";$($vsInstallDir.InstallDir)"
-	        }
-
-	        $refAssemblies = "ReferenceAssemblies\v2.0"
-	        $privateAssemblies = "PrivateAssemblies"
-	        $tfsAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$refAssemblies\Microsoft.TeamFoundation.dll"
-	        $tfsClientAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$refAssemblies\Microsoft.TeamFoundation.Client.dll"
-	        $tfsBuildClientAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$refAssemblies\Microsoft.TeamFoundation.Build.Client.dll"
-	        $tfsBuildWorkflowAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$privateAssemblies\Microsoft.TeamFoundation.Build.Workflow.dll"
-	        $tfsVersionControlClientAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$refAssemblies\Microsoft.TeamFoundation.VersionControl.Client.dll"
-
-	        "Loading TFS reference assemblies..."
-
-	        [Reflection.Assembly]::LoadFile($tfsClientAssembly) | Out-Null
-	        [Reflection.Assembly]::LoadFile($tfsBuildClientAssembly) | Out-Null
-	        [Reflection.Assembly]::LoadFile($tfsBuildWorkflowAssembly) | Out-Null
-	        [Reflection.Assembly]::LoadFile($tfsVersionControlClientAssembly) | Out-Null
-
-	        $projectCollection = [Microsoft.TeamFoundation.Client.TfsTeamProjectCollectionFactory]::GetTeamProjectCollection($powerdelivery.collectionUri)
-	        $buildServer = $projectCollection.GetService([Microsoft.TeamFoundation.Build.Client.IBuildServer])
-	        $structure = $projectCollection.GetService([Microsoft.TeamFoundation.Server.ICommonStructureService])
-
-	        $priorBuildDetail = $buildServer.GetBuild("vstfs:///Build/Build/$priorBuild")
-	        $priorBuildDrop = $priorBuildDetail.DropLocation
-
-	        "Copying prior build drop location output..."
+	        $priorBuildDrop = $powerdelivery.priorBuild.DropLocation
 	        Copy-Item -Path "$priorBuildDrop\*" -Recurse -Destination $powerdelivery.dropLocation
 	    }
 
@@ -1021,7 +1082,6 @@ function Add-Pipeline {
         [Parameter(Mandatory=1)][string] $controller,
         [Parameter(Mandatory=0)][string] $template = "Blank",
         [Parameter(Mandatory=0)][string] $vsVersion = "10.0",
-        [Parameter(Mandatory=0)][string] $tfsVersion = "2010",
         [Parameter(Mandatory=0)][switch] $force = $false,
         [Parameter(Mandatory=0)][switch] $upgrade = $false
     )
@@ -1059,29 +1119,7 @@ function Add-Pipeline {
 	    RequireParam -param $controller -switch "-buildController"
 	    RequireParam -param $dropFolder -switch "-dropFolder"
 
-	    $vsInstallDir = Get-ItemProperty -Path "Registry::HKEY_USERS\.DEFAULT\Software\Microsoft\VisualStudio\$($vsVersion)_Config" -Name InstallDir       
-	    if ([string]::IsNullOrWhiteSpace($vsInstallDir)) {
-	        throw "No version of Visual Studio with the same tools as your version of TFS is installed on the build server."
-	    }
-	    else {
-	        Write-Host "Adding $($vsInstallDir.InstallDir) to the PATH..."
-	        $ENV:Path += ";$($vsInstallDir.InstallDir)"
-	    }
-
-	    $refAssemblies = "ReferenceAssemblies\v2.0"
-	    $privateAssemblies = "PrivateAssemblies"
-	    $tfsAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$refAssemblies\Microsoft.TeamFoundation.dll"
-	    $tfsClientAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$refAssemblies\Microsoft.TeamFoundation.Client.dll"
-	    $tfsBuildClientAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$refAssemblies\Microsoft.TeamFoundation.Build.Client.dll"
-	    $tfsBuildWorkflowAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$privateAssemblies\Microsoft.TeamFoundation.Build.Workflow.dll"
-	    $tfsVersionControlClientAssembly = Join-Path -Path $vsInstallDir.InstallDir -ChildPath "$refAssemblies\Microsoft.TeamFoundation.VersionControl.Client.dll"
-
-	    "Loading TFS reference assemblies..."
-
-	    [Reflection.Assembly]::LoadFile($tfsClientAssembly) | Out-Null
-	    [Reflection.Assembly]::LoadFile($tfsBuildClientAssembly) | Out-Null
-	    [Reflection.Assembly]::LoadFile($tfsBuildWorkflowAssembly) | Out-Null
-	    [Reflection.Assembly]::LoadFile($tfsVersionControlClientAssembly) | Out-Null
+		LoadTFS -vsVersion $vsVersion
 
 	    $buildsDir = Join-Path -Path $curDir -ChildPath "Pipelines"
 	    $outBaseDir = Join-Path -Path $buildsDir -ChildPath $project
@@ -1138,6 +1176,18 @@ function Add-Pipeline {
         $buildServer = $projectCollection.GetService([Microsoft.TeamFoundation.Build.Client.IBuildServer])
         $structure = $projectCollection.GetService([Microsoft.TeamFoundation.Server.ICommonStructureService])
 
+		$buildServerVersion = $powerdelivery.buildServer.BuildServerVersion
+				
+		if ($buildServerVersion -eq 'v3') {
+			$powerdelivery.tfsVersion = '2010'
+		}
+		elseif ($buildServerVersion -eq 'v4') {
+			$powerdelivery.tfsVersion = '2012'
+		}
+		else {
+			throw "TFS server must be version 2010 or 2012, a different version was detected."
+		}
+
         $projectInfo = $structure.GetProjectFromName($project)
         if (!$projectInfo) {
             Write-Error "Project $project not found in TFS collection $collection"
@@ -1183,7 +1233,7 @@ function Add-Pipeline {
 		    $processTemplatePath = "`$/$project/BuildProcessTemplates/PowerDeliveryTemplate.xaml"
             $changeSetTemplatePath = "`$/$project/BuildProcessTemplates/PowerDeliveryChangeSetTemplate.xaml"
 
-		    if ($tfsVersion -eq "2012") {
+		    if ($powerdelivery.tfsVersion -eq 2012) {
         	    $processTemplatePath = "`$/$project/BuildProcessTemplates/PowerDeliveryTemplate.11.xaml"
 			    $changeSetTemplatePath = "`$/$project/BuildProcessTemplates/PowerDeliveryChangeSetTemplate.11.xaml"
 		    }
