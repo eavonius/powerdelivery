@@ -87,7 +87,7 @@ function Get-BuildName {
 
 function Get-BuildSetting {
     [CmdletBinding()]
-    param([Parameter(Mandatory=1)][string] $name)
+    param([Parameter(Position=0,Mandatory=1)][string] $name)
 
 	ForEach ($envVar in $powerdelivery.envConfig) {
 		if ($envVar.Name -eq $name) {
@@ -249,7 +249,7 @@ function Invoke-MSTest {
         }
     }
     finally {
-        if (Test-Path $localResults -PathType Leaf) {
+        if ((Test-Path $localResults -PathType Leaf) -and $powerdelivery.onServer) {
 
             copy $localResults $dropResults
 
@@ -841,8 +841,6 @@ function Invoke-Powerdelivery {
     "powerdelivery - https://github.com/eavonius/powerdelivery"
 	Write-Host
 	$appScript = [System.IO.Path]::GetFileNameWithoutExtension($buildScript)
-	"Running $appScript in " + $powerdelivery.currentLocation
-	Write-Host    
 
     try {
 		if ($onServer -eq $true) {
@@ -878,7 +876,7 @@ function Invoke-Powerdelivery {
 	    "Application"
 	    Write-ConsoleSpacer
 
-	    $appProperties = @{"App Name" = $scriptName; "App Version" = $powerdelivery.buildAppVersion}
+	    $appProperties = @{"App Name" = $appScript; "App Version" = $powerdelivery.buildAppVersion}
 
 	    Format-Table -InputObject $appProperties -AutoSize -HideTableHeaders
 
@@ -898,7 +896,7 @@ function Invoke-Powerdelivery {
 	        $buildNameSegments = $powerdelivery.dropLocation.split('\') | where {$_}
 	        $buildNameIndex = $buildNameSegments.length - 1
 	        $buildName = $buildNameSegments[$buildNameIndex]
-	        $powerdelivery.buildName = $powerdelivery.buildName
+	        $powerdelivery.buildName = $buildName
 	        $scriptParams["Build Name"] = $powerdelivery.buildName
 
 	        $buildNumber = $powerdelivery.buildUri.Substring($buildUri.LastIndexOf("/") + 1)
