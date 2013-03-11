@@ -60,7 +60,7 @@
       <x:Boolean x:Key="ShouldExpandAll">True</x:Boolean>
     </scg:Dictionary>
   </sap:WorkflowViewStateService.ViewState>
-  <Sequence sad:XamlDebuggerXmlReader.FileName="PowerDeliveryTemplate.xaml" sap:VirtualizedContainerService.HintSize="609,3269" mtbwt:BuildTrackingParticipant.Importance="None" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+  <Sequence sad:XamlDebuggerXmlReader.FileName="C:\Source\MarketSurvey\BuildProcessTemplates\PowerDeliveryTemplate.xaml" sap:VirtualizedContainerService.HintSize="609,3269" mtbwt:BuildTrackingParticipant.Importance="None" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
     <Sequence.Variables>
       <Variable x:TypeArguments="mtbc:IBuildDetail" Name="BuildDetail" />
     </Sequence.Variables>
@@ -151,7 +151,7 @@
                       <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                     </scg:Dictionary>
                   </sap:WorkflowViewStateService.ViewState>
-                  <mtbwa:InvokeProcess Arguments="[String.Format(&quot;-NoLogo -NonInteractive &quot;&quot;&amp; '{0}\{1}' -onServer -environment '{7}' -changeSet '{2}' -requestedBy '{3}' -teamProject '{4}' -workspaceName '{5}' -buildUri '{8}' -collectionUri '{9}' -dropLocation '{6}'&quot;&quot;&quot;, BuildDirectory, PowerShellScriptPath.ToLower().Replace(&quot;$/&quot; + BuildDetail.TeamProject.ToLower() + &quot;/&quot;, &quot;&quot;).Replace(&quot;/&quot;, &quot;\\&quot;), BuildDetail.SourceGetVersion, BuildDetail.RequestedBy, BuildDetail.TeamProject, WorkspaceName, BuildDetail.DropLocation, Environment, BuildDetail.Uri, BuildDetail.BuildDefinition.BuildServer.TeamProjectCollection.Uri)]" DisplayName="Run PowerDelivery Script" FileName="[Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Windows), &quot;System32\WindowsPowerShell\v1.0\powershell.exe&quot;)]" sap:VirtualizedContainerService.HintSize="234,190" WorkingDirectory="[String.Format(&quot;{0}\{1}&quot;, BuildDirectory, System.IO.Path.GetDirectoryName(PowerShellScriptPath.ToLower().Replace(&quot;$/&quot; + BuildDetail.TeamProject.ToLower() + &quot;/&quot;, &quot;&quot;).Replace(&quot;/&quot;, &quot;\\&quot;)))]">
+                  <mtbwa:InvokeProcess Arguments="[String.Format(&quot;-NoLogo -NonInteractive -Command &quot;&quot;&amp; {{Invoke-Powerdelivery '{0}\\{1}' $true '{2}' '{3}' '{4}' '{5}' '{6}' '{7}' '{8}' '{9}'}}&quot;&quot;&quot;, BuildDirectory, PowerShellScriptPath.ToLower().Replace(&quot;$/&quot; + BuildDetail.TeamProject.ToLower() + &quot;/&quot;, &quot;&quot;).Replace(&quot;/&quot;, &quot;\\&quot;), BuildDetail.DropLocation, BuildDetail.SourceGetVersion, BuildDetail.RequestedBy, BuildDetail.TeamProject, WorkspaceName, Environment, BuildDetail.Uri, BuildDetail.BuildDefinition.BuildServer.TeamProjectCollection.Uri)]" DisplayName="Run PowerDelivery Script" FileName="[Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Windows), &quot;System32\WindowsPowerShell\v1.0\powershell.exe&quot;)]" sap:VirtualizedContainerService.HintSize="234,190" WorkingDirectory="[String.Format(&quot;{0}\{1}&quot;, BuildDirectory, System.IO.Path.GetDirectoryName(PowerShellScriptPath.ToLower().Replace(&quot;$/&quot; + BuildDetail.TeamProject.ToLower() + &quot;/&quot;, &quot;&quot;).Replace(&quot;/&quot;, &quot;\\&quot;)))]">
                     <mtbwa:InvokeProcess.ErrorDataReceived>
                       <ActivityAction x:TypeArguments="x:String">
                         <ActivityAction.Argument>
@@ -175,7 +175,7 @@
                 <Catch x:TypeArguments="s:Exception" sap:VirtualizedContainerService.HintSize="404,175">
                   <sap:WorkflowViewStateService.ViewState>
                     <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                      <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                       <x:Boolean x:Key="IsPinned">False</x:Boolean>
                     </scg:Dictionary>
                   </sap:WorkflowViewStateService.ViewState>
