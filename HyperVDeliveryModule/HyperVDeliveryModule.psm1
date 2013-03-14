@@ -1,7 +1,5 @@
 function Invoke-HyperVDeliveryModuleSetupEnvironment {
 
-	Write-Host "FUX"
-
 	$modulesFolder = Get-BuildDeliveryModulesFolder
 	$projectsFile = Join-Path $modulesFolder "HyperV.csv"
 	
@@ -10,6 +8,14 @@ function Invoke-HyperVDeliveryModuleSetupEnvironment {
 			$invokeArgs = @{}
 			
 			<#
+			
+			$vmComputer = "localhost"
+			$vmName = "PowerDeliveryASPNETMVC4_Dev"
+			$vmMemory = "1073741824" # 1gb
+			$vmSize = "21474836480" #20gb
+			$vmNewVHDPath = "D:\VMs\Hyper-V\PowerDeliveryASPNETMVC4_Dev\Virtual Hard Disks\PowerDeliveryASPNETMVC4_Dev.vhdx"
+			$vmRootPath = "D:\VMs\Hyper-V"
+			
 			if ($_.ProjectFile) {
 				$invokeArgs.Add('projectFile', $_.ProjectFile)
 			}
@@ -37,13 +43,7 @@ function Invoke-HyperVDeliveryModuleSetupEnvironment {
 			
 			& Invoke-MSBuild @invokeArgs
 			
-			$vmComputer = "localhost"
-			$vmName = "PowerDeliveryASPNETMVC4_Dev"
-			$vmMemory = "1073741824" # 1gb
-			$vmSize = "21474836480" #20gb
-			$vmNewVHDPath = "D:\VMs\Hyper-V\PowerDeliveryASPNETMVC4_Dev\Virtual Hard Disks\PowerDeliveryASPNETMVC4_Dev.vhdx"
-			$vmRootPath = "D:\VMs\Hyper-V"
-
+			
 			$vm = Get-VM -Name $vmName -ErrorAction Ignore
 			if ($vm) {
 				"Found existing virtual Machine $vmName."
