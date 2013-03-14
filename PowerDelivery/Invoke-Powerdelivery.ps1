@@ -265,7 +265,7 @@ function Invoke-Powerdelivery {
 	    }
 
 	    $tableFormat = @{Expression={$_.Name};Label="Name";Width=50}, `
-	                   @{Expression={$_.Value};Label="Value";Width=75}
+	                   @{Expression={if ($_.Name.EndsWith("Password")) { '********' } else { $_.Value }};Label="Value";Width=75}
 
 	    "Environment"
 	    Write-ConsoleSpacer
@@ -275,13 +275,15 @@ function Invoke-Powerdelivery {
         $envMessage = @()
         $powerdelivery.envConfig | ForEach-Object {
             $value = $_.Value
-            if ($_.Name -contains "password") {
-                $value = "********"
+            if ($_.Name.EndsWith("Password")) {
+                $value = '********'
             }
             $envMessage += "$($_.Name): $value"
         }
 
-        Write-BuildSummaryMessage -name "Environment" -header "Environment Configuration" -message ($envMessage -join "`n")
+        $envMessage = ($envMessage -join "`n")
+
+        Write-BuildSummaryMessage -name "Environment" -header "Environment Configuration" -message $envMessage 
 
 		"Delivery Modules"
 		Write-ConsoleSpacer
