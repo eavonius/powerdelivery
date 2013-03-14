@@ -78,9 +78,9 @@ function Resolve-Error ($ErrorRecord=$Error[0])
    }
 }
 
-$scriptDir = Split-Path $MyInvocation.MyCommand.Path
-gci $scriptDir -Filter "*.ps1" | ForEach-Object { . (Join-Path $scriptDir $_.Name) }
-
 $script:powerdelivery = @{}
 $powerdelivery.build_success = $true
 $powerdelivery.pipeline = $null
+
+$scriptDir = Split-Path $MyInvocation.MyCommand.Path
+gci $scriptDir -Filter "*.ps1" | ForEach-Object { . (Join-Path $scriptDir $_.Name) }

@@ -1,8 +1,8 @@
 <#
-.Description
+.Synopsis
 Runs unit tests using mstest.exe.
 
-.Synopsis
+.Description
 The Invoke-MSTest cmdlet is used to run unit or acceptance tests using mstest.exe. You should always use this cmdlet instead of a direct call to mstest.exe or existing cmdlets you may have found online when working with powerdelivery.
 
 This cmdlet provides the following essential continuous delivery features:

@@ -1,3 +1,40 @@
+<#
+.Synopsis
+Adds a powerdelivery build pipeline to a TFS project.
+
+.Description
+You can enable a Microsoft Team Foundation Server project to use powerdelivery in under a minute using this cmdlet. It allows you to select from one of several included templates as a starting point, and creates builds targeting each environment on Team Foundation Server with a powerdelivery PowerShell script for you to automate deployment. You can run this cmdlet multiple times specifying a different name each time to create a delivery pipeline for each software product you wish to deploy independently.
+
+.Example
+Add-Pipeline -name "MyApp" -collection "http://your-tfsserver/tfs" -project "My Project" -controller "MyController" -dropFolder "\\SERVER\share"
+
+.Parameter name
+The name of the product or component that will be delivered by this pipeline.
+
+.Parameter collection
+The URI of the TFS collection to add powerdelivery to.
+
+.Parameter project
+The TFS project to add powerdelivery to.
+
+.Parameter dropFolder
+The folder compiled assets should go into from the pipeline.
+
+.Parameter controller
+The name of the TFS build controller the pipeline should use.
+
+.Parameter template
+Optional. The name of a directory within the "Templates" directory of wherever you installed powerdelivery to (usually C:\Chocolatey\lib\powerdelivery<version>). The default is "Blank". A template minimally must have the following files:
+
+Build.ps1
+BuildLocalEnvironment.csv
+BuildCommitEnvironment.csv
+BuildTestEnvironment.csv
+BuildCapacityTestEnvironment.csv
+BuildProductionEnvironment.csv
+
+Check out the templates page on the wiki (https://github.com/eavonius/powerdelivery/wiki/Templates) for more about which to use.
+#>
 function Add-Pipeline {
     [CmdletBinding()]
     param (
@@ -7,9 +44,7 @@ function Add-Pipeline {
         [Parameter(Mandatory=1)][string] $dropFolder,
         [Parameter(Mandatory=1)][string] $controller,
         [Parameter(Mandatory=0)][string] $template = "Blank",
-        [Parameter(Mandatory=0)][string] $vsVersion = "10.0",
-        [Parameter(Mandatory=0)][switch] $force = $false,
-        [Parameter(Mandatory=0)][switch] $upgrade = $false
+        [Parameter(Mandatory=0)][string] $vsVersion = "10.0"
     )
 	
 	$originalDir = Get-Location
