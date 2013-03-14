@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>PowerDelivery</id>
-        <version>2.0.5</version>
+        <version>2.0.6</version>
         <title>PowerDelivery</title>
         <authors>Jayme Edwards</authors>
         <owners />
@@ -11,13 +11,45 @@
         <description>A deployment framework helping you to continuously deliver software to your customers using Microsoft Team Foundation Server and Windows PowerShell.</description>
         <summary>PowerShell/TFS continuous delivery framework.</summary>
         <language>es-US</language>
-        <dependencies>
-            <dependency id="psake" version="4.2.0.1" />
-        </dependencies>
+        <dependencies />
     </metadata>
     <files>
         <file src="PowerDelivery\PowerDelivery.psm1" target="tools\PowerDelivery\PowerDelivery.psm1" />
         <file src="PowerDelivery\PowerDelivery.psd1" target="tools\PowerDelivery\PowerDelivery.psd1" />
+		<file src="PowerDelivery\Add-Pipeline.ps1" target="tools\PowerDelivery\Add-Pipeline.ps1" />
+		<file src="PowerDelivery\Enable-WebDeploy.ps1" target="tools\PowerDelivery\Enable-WebDeploy.ps1" />
+		<file src="PowerDelivery\Exec.ps1" target="tools\PowerDelivery\Exec.ps1" />
+		<file src="PowerDelivery\Get-BuildAppVersion.ps1" target="tools\PowerDelivery\Get-BuildAppVersion.ps1" />
+		<file src="PowerDelivery\Get-BuildAssets.ps1" target="tools\PowerDelivery\Get-BuildAssets.ps1" />
+		<file src="PowerDelivery\Get-BuildChangeSet.ps1" target="tools\PowerDelivery\Get-BuildChangeSet.ps1" />
+		<file src="PowerDelivery\Get-BuildDeliveryModulesFolder.ps1" target="tools\PowerDelivery\Get-BuildDeliveryModulesFolder.ps1" />
+		<file src="PowerDelivery\Get-BuildDropLocation.ps1" target="tools\PowerDelivery\Get-BuildDropLocation.ps1" />
+		<file src="PowerDelivery\Get-BuildEnvironment.ps1" target="tools\PowerDelivery\Get-BuildEnvironment.ps1" />
+		<file src="PowerDelivery\Get-BuildName.ps1" target="tools\PowerDelivery\Get-BuildName.ps1" />
+		<file src="PowerDelivery\Get-BuildNumber.ps1" target="tools\PowerDelivery\Get-BuildNumber.ps1" />
+		<file src="PowerDelivery\Get-BuildOnServer.ps1" target="tools\PowerDelivery\Get-BuildOnServer.ps1" />
+		<file src="PowerDelivery\Get-BuildRequestedBy.ps1" target="tools\PowerDelivery\Get-BuildRequestedBy.ps1" />
+		<file src="PowerDelivery\Get-BuildSetting.ps1" target="tools\PowerDelivery\Get-BuildSetting.ps1" />
+		<file src="PowerDelivery\Get-BuildTeamProject.ps1" target="tools\PowerDelivery\Get-BuildTeamProject.ps1" />
+		<file src="PowerDelivery\Get-BuildUri.ps1" target="tools\PowerDelivery\Get-BuildUri.ps1" />
+		<file src="PowerDelivery\Get-BuildWorkspaceName.ps1" target="tools\PowerDelivery\Get-BuildWorkspaceName.ps1" />
+		<file src="PowerDelivery\Get-CollectionUri.ps1" target="tools\PowerDelivery\Get-CollectionUri.ps1" />
+		<file src="PowerDelivery\Import-DeliveryModule.ps1" target="tools\PowerDelivery\Import-DeliveryModule.ps1" />
+		<file src="PowerDelivery\Invoke-EnvironmentCommand.ps1" target="tools\PowerDelivery\Invoke-EnvironmentCommand.ps1" />
+		<file src="PowerDelivery\Invoke-MSBuild.ps1" target="tools\PowerDelivery\Invoke-MSBuild.ps1" />
+		<file src="PowerDelivery\Invoke-MSTest.ps1" target="tools\PowerDelivery\Invoke-MSTest.ps1" />
+		<file src="PowerDelivery\Invoke-Powerdelivery.ps1" target="tools\PowerDelivery\Invoke-Powerdelivery.ps1" />
+		<file src="PowerDelivery\Invoke-Roundhouse.ps1" target="tools\PowerDelivery\Invoke-Roundhouse.ps1" />
+		<file src="PowerDelivery\Invoke-SSISPackage.ps1" target="tools\PowerDelivery\Invoke-SSISPackage.ps1" />
+		<file src="PowerDelivery\Publish-BuildAssets.ps1" target="tools\PowerDelivery\Publish-BuildAssets.ps1" />
+		<file src="PowerDelivery\Publish-SSAS.ps1" target="tools\PowerDelivery\Publish-SSAS.ps1" />
+		<file src="PowerDelivery\Set-SSASConnection.ps1" target="tools\PowerDelivery\Set-SSASConnection.ps1" />
+		<file src="PowerDelivery\Start-SqlJobs.ps1" target="tools\PowerDelivery\Start-SqlJobs.ps1" />
+		<file src="PowerDelivery\Stop-SqlJobs.ps1" target="tools\PowerDelivery\Stop-SqlJobs.ps1" />
+		<file src="PowerDelivery\Update-AssemblyInfoFiles.ps1" target="tools\PowerDelivery\Update-AssemblyInfoFiles.ps1" />
+		<file src="PowerDelivery\Write-BuildSummaryMessage.ps1" target="tools\PowerDelivery\Write-BuildSummaryMessage.ps1" />
+		<file src="HyperVDeliveryModule\HyperVDeliveryModule.psm1" target="tools\HyperVDeliveryModule\HyperVDeliveryModule.psm1" />
+		<file src="MSBuildDeliveryModule\MSBuildDeliveryModule.psm1" target="tools\MSBuildDeliveryModule\MSBuildDeliveryModule.psm1" />
         <file src="PowerDelivery\BuildProcessTemplates\PowerDeliveryChangeSetTemplate.11.xaml" target="tools\PowerDelivery\BuildProcessTemplates\PowerDeliveryChangeSetTemplate.11.xaml" />
         <file src="PowerDelivery\BuildProcessTemplates\PowerDeliveryChangeSetTemplate.xaml" target="tools\PowerDelivery\BuildProcessTemplates\PowerDeliveryChangeSetTemplate.xaml" />
         <file src="PowerDelivery\BuildProcessTemplates\PowerDeliveryTemplate.11.xaml" target="tools\PowerDelivery\BuildProcessTemplates\PowerDeliveryTemplate.11.xaml" />
