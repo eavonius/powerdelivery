@@ -193,6 +193,7 @@ function Invoke-MSBuild {
 
             $buildDetail.Information.Save()
 
+			Write-BuildSummaryMessage -name "Compile" -header "Compilations" -message "MSBuild: $projectFile ($flavor - $buildConfiguration)"
             "TFS build information saved."
         }
 

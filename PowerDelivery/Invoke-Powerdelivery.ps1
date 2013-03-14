@@ -4,23 +4,42 @@ function InvokePowerDeliveryModuleHook($blockName, $stage) {
 		$functionName = "Invoke-$($moduleName)DeliveryModule$stage$blockName"
 		if (Get-Command $functionName -ErrorAction SilentlyContinue) {
 			& $functionName
+			return $true
 		}
 	}
+	return $false
 }
 
 function InvokePowerDeliveryBuildAction($condition, $stage, $description, $status, $blockName) {
 	if ($condition) {
+		$actionPerformed = $false
+		
 		Write-Host
 		"$status..."
     	Write-ConsoleSpacer
     	Write-Host
+		
 		try {
-			InvokePowerDeliveryModuleHook $blockName 'Pre'
+			if (InvokePowerDeliveryModuleHook $blockName 'Pre') {
+				$actionPerformed = $true
+			}
 		    if ($stage) {
 	        	& $stage
+				$actionPerformed = $true
 			}			
-			InvokePowerDeliveryModuleHook $blockName 'Post'
-            Write-BuildSummaryMessage -name $blockName -header $description -message "Successful."
+			if (InvokePowerDeliveryModuleHook $blockName 'Post') {
+				$actionPerformed = $true
+			}
+			
+			$message = "No actions performed."
+			
+			if ($actionPerformed) {
+				$message = "Successful."
+			}
+
+			if ($blockName -ne 'Init') {
+				Write-BuildSummaryMessage -name $blockName -header $description -message $message
+			}
 		}
 		finally {
 		   	Set-Location $powerdelivery.currentLocation
@@ -349,8 +368,8 @@ function Invoke-Powerdelivery {
 		}
 
 		InvokePowerDeliveryBuildAction -condition $true -stage $powerdelivery.init -description "Initialization" -status "Initializing" -blockName "Init"
-	    InvokePowerDeliveryBuildAction -condition ($powerdelivery.environment -eq 'Commit' -or $powerdelivery.environment -eq 'Local') -stage $powerdelivery.compile -description "Compilation" -status "Compiling" -blockName "Compile"
-	    InvokePowerDeliveryBuildAction -condition ($powerdelivery.environment -eq 'Commit' -or $powerdelivery.environment -eq 'Local') -stage $powerdelivery.testUnits -description "Unit Testing" -status "Testing Units" -blockName "TestUnits"
+	    InvokePowerDeliveryBuildAction -condition ($powerdelivery.environment -eq 'Commit' -or $powerdelivery.environment -eq 'Local') -stage $powerdelivery.compile -description "Compilations" -status "Compiling" -blockName "Compile"
+	    InvokePowerDeliveryBuildAction -condition ($powerdelivery.environment -eq 'Commit' -or $powerdelivery.environment -eq 'Local') -stage $powerdelivery.testUnits -description "Unit Tests" -status "Testing Units" -blockName "TestUnits"
 		
 		$projectCollection = $null
 	    $buildServer = $null
@@ -361,11 +380,11 @@ function Invoke-Powerdelivery {
 	        Copy-Item -Path "$priorBuildDrop\*" -Recurse -Destination $powerdelivery.dropLocation
 	    }
 
-	    InvokePowerDeliveryBuildAction -condition $true -stage $powerdelivery.setupEnvironment -description "Environment Setup" -status "Setting Up Environment" -blockName "SetupEnvironment"
-	    InvokePowerDeliveryBuildAction -condition $true -stage $powerdelivery.deploy -description "Deployment" -status "Deploying" -blockName "Deploy"
-	    InvokePowerDeliveryBuildAction -condition $true -stage $powerdelivery.testEnvironment -description "Testing of Environment" -status "Testing Environment" -blockName "TestEnvironment"
-	    InvokePowerDeliveryBuildAction -condition ($environment -eq 'Commit' -or $environment -eq 'Local') -stage $powerdelivery.testAcceptance -description "Testing of Acceptance" -status "Testing Acceptance" -blockName "TestAcceptance"
-	    InvokePowerDeliveryBuildAction -condition ($environment -eq 'CapacityTest') -stage $powerdelivery.testCapacity -description "Testing of Capacity" -status "Testing Capacity" -blockName "TestCapacity"
+	    InvokePowerDeliveryBuildAction -condition $true -stage $powerdelivery.setupEnvironment -description "Environment Changes" -status "Setting Up Environment" -blockName "SetupEnvironment"
+	    InvokePowerDeliveryBuildAction -condition $true -stage $powerdelivery.deploy -description "Deployments" -status "Deploying" -blockName "Deploy"
+	    InvokePowerDeliveryBuildAction -condition $true -stage $powerdelivery.testEnvironment -description "Environment Tests" -status "Testing Environment" -blockName "TestEnvironment"
+	    InvokePowerDeliveryBuildAction -condition ($environment -eq 'Commit' -or $environment -eq 'Local') -stage $powerdelivery.testAcceptance -description "Acceptance Tests" -status "Testing Acceptance" -blockName "TestAcceptance"
+	    InvokePowerDeliveryBuildAction -condition ($environment -eq 'CapacityTest') -stage $powerdelivery.testCapacity -description "Capacity Tests" -status "Testing Capacity" -blockName "TestCapacity"
         
 	    Write-Host "Build succeeded!" -ForegroundColor DarkGreen
     }

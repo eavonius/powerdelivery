@@ -14,5 +14,9 @@ function Publish-BuildAssets {
 	
 	mkdir -Force $destinationPath | Out-Null
 	
+	gci -Path $path -Filter $filter | ForEach-Object { 
+		Write-BuildSummaryMessage -name "Assets" -header "Published Assets" -message $path
+	}
+	
 	copy -Filter $filter -Force -Path $sourcePath -Destination $destinationPath
 }
