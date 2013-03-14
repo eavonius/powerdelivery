@@ -37,15 +37,17 @@ function Get-CurrentBuildDetail {
     return $buildServer.GetBuild($buildUri)
 }
 
-function LoadTFS($vsVersion = "10.0") {
+function LoadTFS($vsVersion = "11.0") {
 
-    $vsInstallDir = Get-ItemProperty -Path "Registry::HKEY_USERS\.DEFAULT\Software\Microsoft\VisualStudio\$($vsVersion)_Config" -Name InstallDir       
+    $vsInstallDir = Get-ItemProperty -Path "Registry::HKEY_USERS\.DEFAULT\Software\Microsoft\VisualStudio\11.0_Config" -Name InstallDir       
     if ([string]::IsNullOrWhiteSpace($vsInstallDir)) {
-        throw "No version of Visual Studio with the same tools as your version of TFS is installed on the build server."
+        $vsInstallDir = Get-ItemProperty -Path "Registry::HKEY_USERS\.DEFAULT\Software\Microsoft\VisualStudio\10.0_Config" -Name InstallDir       
+        if ([string]::IsNullOrWhiteSpace($vsInstallDir)) {
+            throw "No version of Visual Studio with the same tools as your version of TFS is installed on the build server."
+        }
     }
-    else {
-        $ENV:Path += ";$($vsInstallDir.InstallDir)"
-    }
+ 
+    $ENV:Path += ";$($vsInstallDir.InstallDir)"
 
     $refAssemblies = "ReferenceAssemblies\v2.0"
     $privateAssemblies = "PrivateAssemblies"
