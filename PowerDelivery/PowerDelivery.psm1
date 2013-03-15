@@ -24,7 +24,7 @@ function Mount-IfUNC {
 
 function Get-CurrentBuildDetail {
 
-    $collectionUri = Get-CollectionUri
+    $collectionUri = Get-BuildCollectionUri
 
     "Connecting to TFS server at $collectionUri..."
 

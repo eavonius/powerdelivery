@@ -47,6 +47,19 @@ function InvokePowerDeliveryBuildAction($condition, $stage, $description, $statu
 	}
 }
 
+<#
+.Synopsis
+Contains code that will execute during the Init stage of the delivery pipeline build script.
+
+.Description
+Contains code that will execute during the Init stage of the delivery pipeline build script.
+
+.Parameter action
+The block of script containing the code to execute.
+
+.Example
+Init { DoStuff() }
+#>
 function Init {
 	[CmdletBinding()]
 	param([Parameter(Position=0, Mandatory=1)][scriptblock] $action)
@@ -54,6 +67,19 @@ function Init {
 	$powerdelivery.init = $action
 }
 
+<#
+.Synopsis
+Contains code that will execute during the Compile stage of the delivery pipeline build script.
+
+.Description
+Contains code that will execute during the Compile stage of the delivery pipeline build script.
+
+.Parameter action
+The block of script containing the code to execute.
+
+.Example
+Compile { DoStuff() }
+#>
 function Compile {
 	[CmdletBinding()]
 	param([Parameter(Position=0, Mandatory=1)][scriptblock] $action)
@@ -61,6 +87,19 @@ function Compile {
 	$powerdelivery.compile = $action
 }
 
+<#
+.Synopsis
+Contains code that will execute during the Deploy stage of the delivery pipeline build script.
+
+.Description
+Contains code that will execute during the Deploy stage of the delivery pipeline build script.
+
+.Parameter action
+The block of script containing the code to execute.
+
+.Example
+Deploy { DoStuff() }
+#>
 function Deploy {
 	[CmdletBinding()]
 	param([Parameter(Position=0, Mandatory=1)][scriptblock] $action)
@@ -68,6 +107,19 @@ function Deploy {
 	$powerdelivery.deploy = $action
 }
 
+<#
+.Synopsis
+Contains code that will execute during the SetupEnvironment stage of the delivery pipeline build script.
+
+.Description
+Contains code that will execute during the SetupEnvironment stage of the delivery pipeline build script.
+
+.Parameter action
+The block of script containing the code to execute.
+
+.Example
+SetupEnvironment { DoStuff() }
+#>
 function SetupEnvironment {
 	[CmdletBinding()]
 	param([Parameter(Position=0, Mandatory=1)][scriptblock] $action)
@@ -75,6 +127,19 @@ function SetupEnvironment {
 	$powerdelivery.setupEnvironment = $action
 }
 
+<#
+.Synopsis
+Contains code that will execute during the TestEnvironment stage of the delivery pipeline build script.
+
+.Description
+Contains code that will execute during the TestEnvironment stage of the delivery pipeline build script.
+
+.Parameter action
+The block of script containing the code to execute.
+
+.Example
+TestEnvironment { DoStuff() }
+#>
 function TestEnvironment {
 	[CmdletBinding()]
 	param([Parameter(Position=0, Mandatory=1)][scriptblock] $action)
@@ -82,6 +147,19 @@ function TestEnvironment {
 	$powerdelivery.testEnvironment = $action
 }
 
+<#
+.Synopsis
+Contains code that will execute during the TestUnits stage of the delivery pipeline build script.
+
+.Description
+Contains code that will execute during the TestUnits stage of the delivery pipeline build script.
+
+.Parameter action
+The block of script containing the code to execute.
+
+.Example
+TestUnits { DoStuff() }
+#>
 function TestUnits {
 	[CmdletBinding()]
 	param([Parameter(Position=0, Mandatory=1)][scriptblock] $action)
@@ -89,6 +167,19 @@ function TestUnits {
 	$powerdelivery.testUnits = $action
 }
 
+<#
+.Synopsis
+Contains code that will execute during the TestAcceptance stage of the delivery pipeline build script.
+
+.Description
+Contains code that will execute during the TestAcceptance stage of the delivery pipeline build script.
+
+.Parameter action
+The block of script containing the code to execute.
+
+.Example
+TestAcceptance { DoStuff() }
+#>
 function TestAcceptance {
 	[CmdletBinding()]
 	param([Parameter(Position=0, Mandatory=1)][scriptblock] $action)
@@ -96,6 +187,19 @@ function TestAcceptance {
 	$powerdelivery.testAcceptance = $action
 }
 
+<#
+.Synopsis
+Contains code that will execute during the TestCapacity stage of the delivery pipeline build script.
+
+.Description
+Contains code that will execute during the TestCapacity stage of the delivery pipeline build script.
+
+.Parameter action
+The block of script containing the code to execute.
+
+.Example
+TestCapacity { DoStuff() }
+#>
 function TestCapacity {
 	[CmdletBinding()]
 	param([Parameter(Position=0, Mandatory=1)][scriptblock] $action)
@@ -103,6 +207,22 @@ function TestCapacity {
 	$powerdelivery.testCapacity = $action
 }
 
+<#
+.Synopsis
+Declares a continous delivery pipeline at the top of a powerdelivery build script.
+
+.Description
+Declares a continous delivery pipeline at the top of a powerdelivery build script.
+
+.Parameter scriptName
+The name of the script being executed. Should match the .ps1 filename (without extension).
+
+.Parameter version
+The version of the product being delivered. Should include 3 version specifiers (e.g. 1.0.5)
+
+.Example
+Pipeline "MyApp" -Version "1.0.5"
+#>
 function Pipeline {
 	[CmdletBinding()]
 	param(
@@ -126,6 +246,21 @@ function Pipeline {
     $powerdelivery.buildAppVersion = $buildAppVersion
 }
 
+<#
+.Synopsis
+Runs a continuous delivery build script using powerdelivery.
+
+.Description
+Runs a continuous delivery build script using powerdelivery. You should only ever
+specify the first parameter of this function when running this function on your own 
+computer. All other parameters are used by the TFS server.
+
+.Example
+Invoke-PowerDelivery .\MyProduct.ps1
+
+.Parameter buildScript
+The relative path to to a local powerdelivery build script to run.
+#>
 function Invoke-Powerdelivery {
     [CmdletBinding()]
     param(

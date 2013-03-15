@@ -65,7 +65,7 @@ function Invoke-MSTest {
 
             # Publish acceptance test results for this build to the TFS server
             Exec -errorMessage "Error publishing test results for $dropResults" {
-                mstest /publish:"$(Get-CollectionUri)" `
+                mstest /publish:"$(Get-BuildCollectionUri)" `
                        /teamproject:"$(Get-BuildTeamProject)" `
                        /publishbuild:"$(Get-BuildName)" `
                        /publishresultsfile:"$dropResults" `

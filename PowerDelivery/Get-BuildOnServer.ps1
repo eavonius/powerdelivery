@@ -1,12 +1,15 @@
 <#
+.Synopsis
+Gets whether the build is running on the TFS server.
+
 .Description
 Returns whether the build is executing on the build server or not.
 
 .Outputs
-string - Whether the build is executing on the build server or not.
+Whether the build is executing on the build server or not.
 
 .Example
-$script:buildOnServer = Get-BuildOnServer
+$onServer = Get-BuildOnServer
 #>
 function Get-BuildOnServer {
     [CmdletBinding()]

@@ -1,3 +1,23 @@
+<#
+.Synopsis
+Copies build assets from the drop location to the build working directory.
+
+.Description
+Copies build assets from the drop location to the build working directory. You should specify 
+relative paths for this command.
+
+.Parameter path
+The relative remote path of assets at the drop location that should be copied locally.
+
+.Parameter destination
+The relative local path to copy the assets to.
+
+.Parameter filter
+Optional. A filter for the file extensions that should be included.
+
+.Example
+Get-BuildAssets "SomeDir\SomeFiles" "SomeDir" -Filter *.*
+#>
 function Get-BuildAssets {
 	[CmdletBinding()]
 	param(

@@ -1,3 +1,27 @@
+<#
+.Synopsis
+Deploys a SQL Server analysis services model.
+
+.Description
+The Publish-SSAS cmdlet will deploy a SQL analysis services .asdatabase file to a server.
+
+Before you call the cmdlet, copy the .asdatabase from the drop location of your build to a UNC share on the SSAS server.
+
+.Parameter computer
+The computer running SSAS.
+
+.Parameter tabularServer
+The server name of the SSAS instance.
+
+.Parameter asDatabase
+The .asdatabase file to deploy. Is a path local to the SSAS server.
+
+.Parameter version
+Optional. The version of SQL to use. Default is "11.0"
+
+.Example
+Publish-SSAS -computer "MyServer" -tabularServer "MyServer\INSTANCE" -asDatabase "MyProject\bin\Debug\MyModel.asdatabase"
+#>
 function Publish-SSAS {
     [CmdletBinding()]
     param(

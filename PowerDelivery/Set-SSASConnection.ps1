@@ -1,3 +1,31 @@
+<#
+.Synopsis
+Sets a connection string on a deployed Microsoft SQL Server Analysis Services model.
+
+.Description
+Sets a connection string on a deployed Microsoft SQL Server Analysis Services model.
+
+.Parameter computer
+The computer on which the connection will be changed.
+
+.Parameter tabularServer
+The instance of the SSAS server to change the connection on.
+
+.Parameter databaseName
+The name of the SSAS database/model to change the connection on.
+
+.Parameter datasourceID
+The GUID of the connection to change.
+
+.Parameter connectionName
+The name of the connection to change.
+
+.Parameter connectionString
+The value to change the connection to.
+
+.Example
+Set-SSASConnection -computer "localhost" -tabularServer "localhost\TABULAR" -databaseName "MyModel" -datasourceID "{4CC0937D-61D3-421E-B607-B3E36D1D09B5}" -connectionString "Initial Catalog=MyDB;Server=localhost;Trusted Connection=yes"
+#>
 function Set-SSASConnection {
     [CmdletBinding()]
     param(
