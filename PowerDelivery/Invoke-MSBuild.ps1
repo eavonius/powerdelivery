@@ -101,7 +101,7 @@ function Invoke-MSBuild {
     $msBuildCommand += " ""$projectFile"""
 
 	Write-Host
-    "Compiling MSBuild Project:"
+    Write-Host "Compiling MSBuild Project:"
 	Write-ConsoleSpacer
 	Write-Host
 	

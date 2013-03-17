@@ -65,21 +65,6 @@ function Add-Pipeline {
 	        exit
 	    }
 
-	    function RequireParam($param, $switch) {
-	        if ([string]::IsNullOrWhiteSpace($param)) {
-	            Write-Error "$switch was not supplied"
-	            exit
-	        }
-	    }
-
-	    RequireParam -param $name -switch  "-name"
-	    RequireParam -param $template -switch  "-templateName"
-	    RequireParam -param $collection -switch  "-tfsCollectionUri"
-	    RequireParam -param $project -switch  "-tfsProjectName"
-	    RequireParam -param $vsVersion -switch "-vsVersion"
-	    RequireParam -param $controller -switch "-buildController"
-	    RequireParam -param $dropFolder -switch "-dropFolder"
-
 		LoadTFS -vsVersion $vsVersion
 
 	    $buildsDir = Join-Path -Path $curDir -ChildPath "Pipelines"
@@ -116,12 +101,28 @@ function Add-Pipeline {
         $newScriptName = "$outBaseDir\$name.ps1"
 
         Move-Item -Path "$outBaseDir\Build.ps1" -Destination "$newScriptName" -Force
-        Move-Item -Path "$outBaseDir\BuildLocalEnvironment.csv" -Destination "$outBaseDir\$($name)LocalEnvironment.csv" -Force
-        Move-Item -Path "$outBaseDir\BuildCommitEnvironment.csv" -Destination "$outBaseDir\$($name)CommitEnvironment.csv" -Force
-        Move-Item -Path "$outBaseDir\BuildTestEnvironment.csv" -Destination "$outBaseDir\$($name)TestEnvironment.csv" -Force
-        Move-Item -Path "$outBaseDir\BuildCapacityTestEnvironment.csv" -Destination "$outBaseDir\$($name)CapacityTestEnvironment.csv" -Force
-        Move-Item -Path "$outBaseDir\BuildProductionEnvironment.csv" -Destination "$outBaseDir\$($name)ProductionEnvironment.csv" -Force
-
+		
+		$buildDictionary = @{
+            "$name - Commit" = "Commit";
+            "$name - Test" = "Test";
+            "$name - Capacity Test" = "CapacityTest";
+            "$name - Production" = "Production";
+        }
+		
+		$envExtensions = @(".yml", ".csv")
+		
+		$buildDictionary.Values | ForEach-Object {
+			$envName = $_
+			$envExtensions | ForEach-Object {
+				$envExtension = $_
+				$sourcePath = "$outBaseDir\Build$($envName)Environment$($envExtension)"
+				$destPath = "$outBaseDir\$($name)$($envName)Environment$($envExtension)"
+				if (Test-Path $sourcePath) {
+					Move-Item -Force $sourcePath $destPath
+				}
+			}
+		}
+		
         "Replacing build template variables..."
         (Get-Content "$newScriptName") | Foreach-Object {
             $_ -replace '%BUILD_NAME%', $name
@@ -153,13 +154,6 @@ function Add-Pipeline {
         if (!$projectInfo) {
             Write-Error "Project $project not found in TFS collection $collection"
             exit
-        }
-
-        $buildDictionary = @{
-            "$name - Commit" = "Commit";
-            "$name - Test" = "Test";
-            "$name - Capacity Test" = "CapacityTest";
-            "$name - Production" = "Production";
         }
 
         $buildDictionary.GETENUMERATOR() | % {

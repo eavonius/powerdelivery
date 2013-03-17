@@ -1,35 +1,50 @@
 function Invoke-MSBuildDeliveryModulePreCompile {
 
 	$modulesFolder = Get-BuildDeliveryModulesFolder
-	$projectsFile = Join-Path $modulesFolder "MSBuild.csv"
+	$projectsFile = Join-Path $modulesFolder "MSBuild.yml"
 	
-	if (Test-Path $projectsFile) {
-		Import-Csv $projectsFile | ForEach-Object {
+	if (Test-Path $projectsFile) {		
+		$projects = Get-Yaml -FromFile $projectsFile
+		
+		$projects.Keys | ForEach-Object {
 			$invokeArgs = @{}
 			
-			if ($_.ProjectFile) {
-				$invokeArgs.Add('projectFile', $_.ProjectFile)
+			$project = $projects[$_]
+			
+			if ($project.ProjectFile) {
+				$invokeArgs.Add('projectFile', $project.ProjectFile)
 			}
 			
-			if ($_.Target) {
-				$invokeArgs.Add('target', $_.Target)
+			if ($project.Target) {
+				$invokeArgs.Add('target', $project.Target)
 			}
 			
-			if ($_.Target) {
-				$invokeArgs.Add('target', $_.Target)
+			if ($project.BuildConfiguration) {
+				$invokeArgs.Add('buildConfiguration', $project.BuildConfiguration)
 			}
 			
-			if ($_.ToolsVersion) {
-				$invokeArgs.Add('verbosity', $_.Verbosity)
+			if ($project.ToolsVersion) {
+				$invokeArgs.Add('toolsVersoin', $project.ToolsVersion)
 			}
 			
-			if ($_.BuildConfig) {
-				$invokeArgs.Add('target', $_.Target)
+			if ($project.Verbosity) {
+				$invokeArgs.Add('verbosity', $project.Verbosity)
 			}
 			
-			if ($_.Properties) {
-				$properties = ConvertFrom-StringData $_.Properties
-				$invokeArgs.Add('properties', $properties)
+			if ($project.Flavor) {
+				$invokeArgs.Add('target', $project.Flavor)
+			}
+			
+			if ($project.IgnoreProjectExtensions) {
+				$invokeArgs.Add('target', $project.IgnoreProjectExtensions)
+			}
+			
+			if ($project.DotNetVersion) {
+				$invokeArgs.Add('target', $project.DotNetVersion)
+			}
+			
+			if ($project.Properties) {
+				$invokeArgs.Add('properties', $project.Properties)
 			}
 			
 			& Invoke-MSBuild @invokeArgs
