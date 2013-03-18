@@ -24,11 +24,13 @@ function Import-DeliveryModule {
 	[CmdletBinding()]
 	param([Parameter(Position=0,Mandatory=1)][string] $name)
 	
-	if ($global:g_powerdelivery_delivery_modules -eq $null) {
-		$global:g_powerdelivery_delivery_modules = @()
-	}
+	$functionName = "Initialize-$($name)DeliveryModule"
 	
-	if ($global:g_powerdelivery_delivery_modules -notcontains $name) {
-		$global:g_powerdelivery_delivery_modules += $name
+	if (Get-Command $functionName -ErrorAction SilentlyContinue) {
+		& $functionName
+		$powerdelivery.deliveryModules += $name
+	}
+	else {
+		throw "Delivery Module $name could not be loaded. Unable to find function $functionName in loaded PowerShell modules."
 	}
 }

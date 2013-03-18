@@ -94,9 +94,21 @@ function Invoke-MSBuild {
 		$msBuildCommand += " ""/T:$target"""
 	}
 	
-	$logFile = [IO.Path]::GetFileNameWithoutExtension($projectFile) + ".log"
+	$projectFileBase = [IO.Path]::GetFileNameWithoutExtension($projectFile)
+	$logFile = "$($projectFileBase).log"
 	
 	$msBuildCommand += " ""/l:FileLogger,Microsoft.Build.Engine;logfile=$logFile"""
+
+	<#
+	if ($powerdelivery.onServer) {
+		$outDir = Join-Path $currentDirectory "Binaries\$projectFileBase"
+		$msBuildCommand += " ""/p:TeamBuildOutDir=$outDir"""		
+	}
+	else {
+		$outDir = Join-Path $dropLocation "Binaries\$projectFileBase"
+		$msBuildCommand += " ""/p:OutDir=$outDir"""
+	}
+	#>
 
     $msBuildCommand += " ""$projectFile"""
 
@@ -121,7 +133,7 @@ function Invoke-MSBuild {
 	if (![string]::IsNullOrWhiteSpace($target)) {
 		"Target: $target"
 	}
-
+	
 	$tableFormat = @{Expression={$_.Key};Label="Key";Width=50}, `
                    @{Expression={$_.Value};Label="Value";Width=75}
 

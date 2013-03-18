@@ -8,6 +8,7 @@ Pipeline 'PowerDeliveryASPNETMVC4' -Version '1.0.0'
 
 Import-DeliveryModule MSBuild
 Import-DeliveryModule HyperV
+Import-DeliveryModule Chocolatey
 
 Init { 
 	$script:currentDirectory  = Get-Location
@@ -22,7 +23,8 @@ Init {
 	$script:webSite     	  = Get-BuildSetting -name WebSite
 	$script:connectionString  = Get-BuildSetting -name ConnectionString
 		
-	$script:webDeployPath 		   = 'PowerDeliveryASPNETMVC4\DeploymentPackage'
+	$script:webDeployDir 		   = "C:\Program Files\IIS\Microsoft Web Deploy v3"
+	$script:webDeployPath 		   = "PowerDeliveryASPNETMVC4\DeploymentPackage"
 	$script:webDeployZipFile  	   = Join-Path $webDeployPath PowerDeliveryASPNETMVC4.zip
 }
 
@@ -31,15 +33,10 @@ Compile {
 }
 
 Deploy {
-    $webDeployDir = "C:\Program Files\IIS\Microsoft Web Deploy v3"
-    $webDeployScriptsDir = "$webDeployDir\Scripts"
-
-	Write-BuildSummaryMessage -name "Deploy" -header "Deployments" -message "WebDeploy: $webDeployZipFile -> $webURL ($webComputer)"
-
 	if ($webComputer -ne 'localhost') {
-   		$siteSetupArgs = "-siteName $webSite -publishSettingSavePath C:\Inetpub\$webSite -publishSettingFileName $($webSite).publishsettings -sitePhysicalPath C:\Inetpub\$webSite -sitePort $webPort -siteAppPoolName $webSite -deploymentUserName $webSite -deploymentUserPassword '$($webPassword)' -managedRunTimeVersion v4.0"
-   		$setupSiteResult = Invoke-Expression -Command "Invoke-Command -ComputerName $webComputer -ScriptBlock { & ""$webDeployScriptsDir\SetupSiteForPublish.ps1"" $siteSetupArgs }"
-
+	
+		Enable-WebDeploy -webComputer $webComputer -webDeployDir $webDeployDir -webPort $webPort -webSite $webSite -webPassword $webPassword
+	
 		Get-BuildAssets $webDeployZipFile $webDeployPath
 
 	    $publishSettingsFile = "$currentDirectory\$($webSite).publishsettings"
@@ -58,8 +55,9 @@ Deploy {
 	    Restore-WDPackage -Package $webDeployZipFile `
 	                      -DestinationPublishSettings $publishSettingsFile `
 	                      -Parameters $deployParams
-
 	}
 	
-    #Invoke-Roundhouse $dbServer $dbName Databases\PowerDeliveryASPNETMVCV4
+	Write-BuildSummaryMessage -name "Deploy" -header "Deployments" -message "WebDeploy: $webDeployZipFile -> $webURL ($webComputer)"
+	
+    Invoke-Roundhouse $dbServer $dbName Databases\PowerDeliveryASPNETMVCV4
 }

@@ -32,15 +32,12 @@ function Invoke-Powerdelivery {
 	$ErrorActionPreference = 'Stop'
 
 	function InvokePowerDeliveryModuleHook($blockName, $stage) {
-		$global:g_powerdelivery_delivery_modules | % {
-			$moduleName = $_
-			$functionName = "Invoke-$($moduleName)DeliveryModule$stage$blockName"
-			if (Get-Command $functionName -ErrorAction SilentlyContinue) {
-				& $functionName
-				$powerdelivery.hookResult = $true
-			}
+		$actionPerformed = $false
+		$powerdelivery.moduleHooks["$stage$blockName"] | % { 
+			& $_ 
+			$actionPerformed = $true
 		}
-		$powerdelivery.hookResult = $false
+		$powerdelivery.hookResult = $actionPerformed
 	}
 
 	function InvokePowerDeliveryBuildAction($condition, $stage, $description, $status, $blockName) {
@@ -85,7 +82,19 @@ function Invoke-Powerdelivery {
     if (!$dropLocation.EndsWith('\')) {
 	    $dropLocation = "$($dropLocation)\"
     }
+	
+	$powerdelivery.moduleHooks = @{
+		"PreInit" = @(); "PostInit" = @();
+		"PreCompile" = @(); "PostCompile" = @();
+		"PreSetupEnvironment" = @(); "PostSetupEnvironment" = @();
+		"PreTestEnvironment" = @(); "PostTestEnvironment" = @();
+		"PreDeploy" = @(); "PostDeploy" = @();
+		"PreTestAcceptance" = @(); "PostTestAcceptance" = @();
+		"PreTestUnits" = @(); "PostTestUnits" = @();
+		"PreTestCapacity" = @(); "PostTestCapacity" = @()
+	}
 
+	$powerdelivery.deliveryModules = @()
     $powerdelivery.assemblyInfoFiles = @()
     $powerdelivery.currentLocation = gl
     $powerdelivery.noReleases = $true
@@ -267,7 +276,9 @@ function Invoke-Powerdelivery {
 		Write-ConsoleSpacer
 		$powerdelivery.deliveryModulesFolder = Join-Path $powerdelivery.currentLocation "$($appScript)DeliveryModuleConfig"
 
-		$global:g_powerdelivery_delivery_modules | Format-Table $tableFormat -HideTableHeaders
+		if ($powerdelivery.deliveryModules) {
+			$powerdelivery.deliveryModules | Format-Table $tableFormat -HideTableHeaders
+		}
 
 		if ($powerdelivery.environment -ne "Commit" -and $powerdelivery.onServer -eq $true) {
 
