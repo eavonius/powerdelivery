@@ -1,0 +1,8 @@
+DBServer: localhost
+DBName: PowerDeliveryASPNETMVC4_Commit
+WebPassword: aBcD3fg33
+WebComputer: localhost
+WebPort: 8082
+WebURL: http://localhost:8082/
+WebSite: PowerDeliveryASPNETMVC4_Commit
+ConnectionString: Data Source=localhost;Initial Catalog=PowerDeliveryASPNETMVC4_Commit;Integrated Security=SSPI

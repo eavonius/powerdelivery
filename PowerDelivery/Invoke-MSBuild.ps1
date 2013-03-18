@@ -170,7 +170,7 @@ function Invoke-MSBuild {
 			$errorCount = 0
 			$warningCount = 0
 						
-			Get-Content $logFile | Where-Object {$_ -like "*error*"} | ForEach-Object { 
+			Get-Content $logFile | Where-Object {$_ -like "*error*"} | % { 
 				if ($_ -match "^.*(?=: error)") {
 					$errorCount++
 					
@@ -198,7 +198,7 @@ function Invoke-MSBuild {
 				}
 			}
 			
-			Get-Content $logFile | Where-Object {$_ -like "*warning*"} | ForEach-Object { 
+			Get-Content $logFile | Where-Object {$_ -like "*warning*"} | % { 
 				if ($_ -match "^.*(?=: warning)") {
 					$warningCount++
 					

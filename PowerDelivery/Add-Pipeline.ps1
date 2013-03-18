@@ -111,9 +111,9 @@ function Add-Pipeline {
 		
 		$envExtensions = @(".yml", ".csv")
 		
-		$buildDictionary.Values | ForEach-Object {
+		$buildDictionary.Values | % {
 			$envName = $_
-			$envExtensions | ForEach-Object {
+			$envExtensions | % {
 				$envExtension = $_
 				$sourcePath = "$outBaseDir\Build$($envName)Environment$($envExtension)"
 				$destPath = "$outBaseDir\$($name)$($envName)Environment$($envExtension)"
@@ -124,7 +124,7 @@ function Add-Pipeline {
 		}
 		
         "Replacing build template variables..."
-        (Get-Content "$newScriptName") | Foreach-Object {
+        (Get-Content "$newScriptName") | % {
             $_ -replace '%BUILD_NAME%', $name
         } | Set-Content "$newScriptName"
 
@@ -245,12 +245,12 @@ function Add-Pipeline {
         $groupSecurity = $projectCollection.GetService([Microsoft.TeamFoundation.Server.IGroupSecurityService])
         $appGroups = $groupSecurity.ListApplicationGroups($projectInfo.Uri)
 
-        $buildDictionary.Values | ForEach-Object {
+        $buildDictionary.Values | % {
             $envName = $_
             if ($envName -ne 'Commit') {
                 $groupName = "$name $envName Builders"
                 $group = $null
-                $appGroups | ForEach-Object {
+                $appGroups | % {
                     if ($_.AccountName -eq $groupName) {
                         $group = $_
                     }

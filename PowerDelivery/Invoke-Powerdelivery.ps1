@@ -32,7 +32,7 @@ function Invoke-Powerdelivery {
 	$ErrorActionPreference = 'Stop'
 
 	function InvokePowerDeliveryModuleHook($blockName, $stage) {
-		$global:g_powerdelivery_delivery_modules | ForEach-Object {
+		$global:g_powerdelivery_delivery_modules | % {
 			$moduleName = $_
 			$functionName = "Invoke-$($moduleName)DeliveryModule$stage$blockName"
 			if (Get-Command $functionName -ErrorAction SilentlyContinue) {
@@ -250,7 +250,7 @@ function Invoke-Powerdelivery {
 			}
 		}
 		else {
-	        $powerdelivery.envConfig | ForEach-Object {
+	        $powerdelivery.envConfig | % {
 	            $value = $_.Value
 	            if ($_.Name.EndsWith("Password")) {
 	                $value = '********'
@@ -282,7 +282,7 @@ function Invoke-Powerdelivery {
 			
 			$requestingIdentity = $powerdelivery.groupSecurity.ReadIdentity($accountNameSearchFactor, $powerdelivery.requestedBy, $expandedQueryMembership)
 			
-			$powerdelivery.appGroups | ForEach-Object {
+			$powerdelivery.appGroups | % {
                 if (($_.AccountName.ToLower() -eq $groupName.ToLower()) -and $buildGroup -eq $null) {
 					$buildGroup = $_
 					$groupMembers = $powerdelivery.groupSecurity.ReadIdentities($sidSearchFactor, $buildGroup.Sid, $expandedQueryMembership)					

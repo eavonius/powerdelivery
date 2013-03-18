@@ -28,14 +28,14 @@ function Update-AssemblyInfoFiles {
 	    $assemblyVersion = "AssemblyVersion(""$buildAppVersion"")"
 	    $fileVersion = "AssemblyFileVersion(""$buildAppVersion"")"
 	    
-	    Get-ChildItem -r -Path $path -filter AssemblyInfo.cs | ForEach-Object {
+	    Get-ChildItem -r -Path $path -filter AssemblyInfo.cs | % {
 	        $filename = $_.Directory.ToString() + '\' + $_.Name
 			$powerdelivery.assemblyInfoFiles += ,$filename
 	        $filename + " -> $appVersion.$changeSetNumber"
 	        Exec -errorMessage "Unable to update file attributes on $filename" { 
                 attrib -r "$filename"
 			}
-	        (Get-Content $filename) | ForEach-Object {
+	        (Get-Content $filename) | % {
 	            % {$_ -replace $assemblyVersionPattern, $assemblyVersion } |
 	            % {$_ -replace $fileVersionPattern, $fileVersion }
 	        } | Set-Content $filename
