@@ -1,8 +1,28 @@
-DBServer: localhost
-DBName: PowerDeliveryASPNETMVC4_Commit
-WebPassword: aBcD3fg33
-WebComputer: localhost
-WebPort: 8082
-WebURL: http://localhost:8082/
-WebSite: PowerDeliveryASPNETMVC4_Commit
-ConnectionString: Data Source=localhost;Initial Catalog=PowerDeliveryASPNETMVC4_Commit;Integrated Security=SSPI
+Settings:
+    DBServer: localhost
+    DBName: PowerDeliveryASPNETMVC4_Commit
+
+MSBuild:
+    PowerDeliveryASPNETMVC4:
+        ProjectFile: PowerDeliveryASPNETMVC4.sln
+        Properties: 
+            DeployOnBuild: true
+            PublishProfile: Default
+
+WebDeploy:
+    PowerDeliveryASPNETMVC4:
+        WebComputer: localhost
+        WebPort: 8082
+        WebSite: PowerDeliveryASPNETMVC4_Commit
+        WebPassword: "!hafoi^45"
+        WebURL: http://localhost:8082/
+        Package: PowerDeliveryASPNETMVC4\DeploymentPackage\PowerDeliveryASPNETMVC4.zip
+        Parameters:
+            "IIS Web Application Name": PowerDeliveryASPNETMVC4_Commit
+            "DefaultConnection-Web.config Connection String": Data Source=localhost;Initial Catalog=PowerDeliveryASPNETMVC4_Commit;Integrated Security=SSPI
+
+Roundhouse:
+    PowerDeliveryASPNETMVC4:
+        Server: localhost
+        Database: PowerDeliveryASPNETMVC4_Commit
+        ScriptsDir: Databases\PowerDeliveryASPNETMVC4

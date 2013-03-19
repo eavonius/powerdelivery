@@ -1,5 +1,0 @@
-PowerDeliveryASPNETMVC4:
-  ProjectFile: PowerDeliveryASPNETMVC4.sln
-  Properties: 
-    DeployOnBuild: true
-    PublishProfile: Default

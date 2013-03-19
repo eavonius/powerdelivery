@@ -59,8 +59,8 @@ Optional. A string of options to pass to the RESTORE T-SQL statement performed. 
 function Invoke-Roundhouse {
     [CmdletBinding()]
     param(
-        [Parameter(Position=0,Mandatory=1)][string] $database, 
-        [Parameter(Position=1,Mandatory=1)][string] $server, 
+        [Parameter(Position=0,Mandatory=1)][string] $server, 
+        [Parameter(Position=1,Mandatory=1)][string] $database, 
         [Parameter(Position=2,Mandatory=1)][string] $scriptsDir, 
         [Parameter(Position=3,Mandatory=0)][string] $restorePath, 
         [Parameter(Position=4,Mandatory=0)][string] $restoreOptions

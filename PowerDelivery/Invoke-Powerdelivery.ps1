@@ -174,7 +174,8 @@ function Invoke-Powerdelivery {
 
 	    if (Test-Path -Path $yamlFile) {
 			$yamlPath = (Resolve-Path ".\$($yamlFile)")
-			$powerdelivery.envConfig = Get-Yaml -FromFile $yamlPath
+			$powerdelivery.yamlConfig = Get-Yaml -FromFile $yamlPath
+			$powerdelivery.envConfig = $powerdelivery.yamlConfig.Settings
 	    }
 	    elseif (Test-Path -Path $csvFile) {
 			$powerdelivery.is_yaml = $false
@@ -274,10 +275,9 @@ function Invoke-Powerdelivery {
 
 		"Delivery Modules"
 		Write-ConsoleSpacer
-		$powerdelivery.deliveryModulesFolder = Join-Path $powerdelivery.currentLocation "$($appScript)DeliveryModuleConfig"
 
 		if ($powerdelivery.deliveryModules) {
-			$powerdelivery.deliveryModules | Format-Table $tableFormat -HideTableHeaders
+			$powerdelivery.deliveryModules -join ','
 		}
 
 		if ($powerdelivery.environment -ne "Commit" -and $powerdelivery.onServer -eq $true) {

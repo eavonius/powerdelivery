@@ -56,7 +56,7 @@ function Invoke-MSBuild {
         [Parameter(Position=7,Mandatory=0)][string] $ignoreProjectExtensions, 
         [Parameter(Position=8,Mandatory=0)][string] $dotNetVersion = "4.0"
     )
-
+	
 	$dropLocation = Get-BuildDropLocation
 	$logFolder = Join-Path $dropLocation "Logs"
 	mkdir -Force $logFolder | Out-Null
@@ -143,13 +143,16 @@ function Invoke-MSBuild {
 			$properties | Format-Table $tableFormat -HideTableHeaders
         }
     }
+	
+	$currentDirectory = Get-Location
 
     if (Get-BuildOnServer) {
 			
 		$fullProjectFile = [System.IO.Path]::Combine($currentDirectory, [System.IO.Path]::GetFileName($projectFile))
-	    Update-AssemblyInfoFiles -path ([System.IO.Path]::GetDirectoryName($fullProjectFile))
+		$shortPath = [System.IO.Path]::GetDirectoryName($fullProjectFile)
+		
+	    Update-AssemblyInfoFiles -path $shortPath
 	}
-
 
     try {
         Exec -errorMessage "Invocation of MSBuild project $projectFile failed." {
