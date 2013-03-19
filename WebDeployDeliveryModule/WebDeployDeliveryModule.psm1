@@ -74,7 +74,7 @@ function Initialize-WebDeployDeliveryModule {
 								  -DestinationPublishSettings $publishSettingsFile `
 								  -Parameters $deployment.Parameters
 				
-				Write-BuildSummaryMessage -name "Deploy" -header "Deployments" -message "WebDeploy: $($deployment.Package) -> $(deployment.webURL) ($($deployment.webComputer))"
+				Write-BuildSummaryMessage -name "Deploy" -header "Deployments" -message "WebDeploy: $($deployment.Package) -> $($deployment.webURL) ($($deployment.webComputer))"
 			}
 		}
 	}
