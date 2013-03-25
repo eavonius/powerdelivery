@@ -14,6 +14,10 @@
         <dependencies />
     </metadata>
     <files>
+		<file src="AssetsDeliveryModule\AssetsDeliveryModule.psm1" target="tools\AssetsDeliveryModule\AssetsDeliveryModule.psm1" />
+		<file src="ChocolateyDeliveryModule\ChocolateyDeliveryModule.psm1" target="tools\ChocolateyDeliveryModule\ChocolateyDeliveryModule.psm1" />
+		<file src="HyperVDeliveryModule\HyperVDeliveryModule.psm1" target="tools\HyperVDeliveryModule\HyperVDeliveryModule.psm1" />
+		<file src="MSBuildDeliveryModule\MSBuildDeliveryModule.psm1" target="tools\MSBuildDeliveryModule\MSBuildDeliveryModule.psm1" />
         <file src="PowerDelivery\PowerDelivery.psm1" target="tools\PowerDelivery\PowerDelivery.psm1" />
         <file src="PowerDelivery\PowerDelivery.psd1" target="tools\PowerDelivery\PowerDelivery.psd1" />
 		<file src="PowerDelivery\Add-Pipeline.ps1" target="tools\PowerDelivery\Add-Pipeline.ps1" />
@@ -49,12 +53,6 @@
 		<file src="PowerDelivery\Stop-SqlJobs.ps1" target="tools\PowerDelivery\Stop-SqlJobs.ps1" />
 		<file src="PowerDelivery\Update-AssemblyInfoFiles.ps1" target="tools\PowerDelivery\Update-AssemblyInfoFiles.ps1" />
 		<file src="PowerDelivery\Write-BuildSummaryMessage.ps1" target="tools\PowerDelivery\Write-BuildSummaryMessage.ps1" />
-		<file src="AssetsDeliveryModule\ChocolateyDeliveryModule.psm1" target="tools\HyperVDeliveryModule\AssetsDeliveryModule.psm1" />
-		<file src="HyperVDeliveryModule\ChocolateyDeliveryModule.psm1" target="tools\HyperVDeliveryModule\ChocolateyDeliveryModule.psm1" />
-		<file src="HyperVDeliveryModule\HyperVDeliveryModule.psm1" target="tools\HyperVDeliveryModule\HyperVDeliveryModule.psm1" />
-		<file src="MSBuildDeliveryModule\MSBuildDeliveryModule.psm1" target="tools\MSBuildDeliveryModule\MSBuildDeliveryModule.psm1" />
-		<file src="MSBuildDeliveryModule\WebDeployDeliveryModule.psm1" target="tools\MSBuildDeliveryModule\WebDeployDeliveryModule.psm1" />
-		<file src="MSBuildDeliveryModule\RoundhouseDeliveryModule.psm1" target="tools\MSBuildDeliveryModule\RoundhouseDeliveryModule.psm1" />
         <file src="PowerDelivery\BuildProcessTemplates\PowerDeliveryChangeSetTemplate.11.xaml" target="tools\PowerDelivery\BuildProcessTemplates\PowerDeliveryChangeSetTemplate.11.xaml" />
         <file src="PowerDelivery\BuildProcessTemplates\PowerDeliveryChangeSetTemplate.xaml" target="tools\PowerDelivery\BuildProcessTemplates\PowerDeliveryChangeSetTemplate.xaml" />
         <file src="PowerDelivery\BuildProcessTemplates\PowerDeliveryTemplate.11.xaml" target="tools\PowerDelivery\BuildProcessTemplates\PowerDeliveryTemplate.11.xaml" />
@@ -77,6 +75,18 @@
         <file src="PowerDelivery\Templates\RoundhousE Database\BuildLocalEnvironment.csv" target="tools\PowerDelivery\Templates\RoundhousE Database\BuildLocalEnvironment.csv" />
         <file src="PowerDelivery\Templates\RoundhousE Database\BuildProductionEnvironment.csv" target="tools\PowerDelivery\Templates\RoundhousE Database\BuildProductionEnvironment.csv" />
         <file src="PowerDelivery\Templates\RoundhousE Database\BuildTestEnvironment.csv" target="tools\PowerDelivery\Templates\RoundhousE Database\BuildTestEnvironment.csv" />
+		<file src="PowerYaml\PowerYaml.psm1" target="tools\PowerYaml\PowerYaml.psm1" />
+		<file src="PowerYaml\LICENSE" target="tools\PowerYaml\LICENSE" />
+		<file src="PowerYaml\Functions\Casting.ps1" target="tools\PowerYaml\Functions\Casting.ps1" />
+		<file src="PowerYaml\Functions\Shadow-Copy.ps1" target="tools\PowerYaml\Functions\Shadow-Copy.ps1" />
+		<file src="PowerYaml\Functions\Validator-Functions.ps1" target="tools\PowerYaml\Functions\Validator-Functions.ps1" />
+		<file src="PowerYaml\Functions\YamlDotNet-Integration.ps1" target="tools\PowerYaml\Functions\YamlDotNet-Integration.ps1" />
+		<file src="PowerYaml\Libs\YamlDotNet.Configuration.dll" target="tools\PowerYaml\Libs\YamlDotNet.Configuration.dll" />
+		<file src="PowerYaml\Libs\YamlDotNet.Converters.dll" target="tools\PowerYaml\Libs\YamlDotNet.Converters.dll" />
+		<file src="PowerYaml\Libs\YamlDotNet.Core.dll" target="tools\PowerYaml\Libs\YamlDotNet.Core.dll" />
+		<file src="PowerYaml\Libs\YamlDotNet.RepresentationModel.dll" target="tools\PowerYaml\Libs\YamlDotNet.RepresentationModel.dll" />
+		<file src="WebDeployDeliveryModule\WebDeployDeliveryModule.psm1" target="tools\WebDeployDeliveryModule\WebDeployDeliveryModule.psm1" />
+		<file src="RoundhouseDeliveryModule\RoundhouseDeliveryModule.psm1" target="tools\RoundhouseDeliveryModule\RoundhouseDeliveryModule.psm1" />
         <file src="chocolateyInstall.ps1" target="tools\chocolateyInstall.ps1" />
         <file src="init.ps1" target="tools\init.ps1" />
     </files>
