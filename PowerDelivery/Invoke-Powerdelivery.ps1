@@ -68,10 +68,6 @@ function Invoke-Powerdelivery {
 				if ($actionPerformed) {
 					$message = "Successful."
 				}
-
-				if ($blockName -ne 'Init') {
-					Write-BuildSummaryMessage -name $blockName -header $description -message $message
-				}
 			}
 			finally {
 			   	Set-Location $powerdelivery.currentLocation

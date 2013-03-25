@@ -13,6 +13,7 @@ namespace PowerDeliveryASPNETMVC4.Tests.Controllers
     public class HomeControllerTest
     {
         [TestMethod]
+        [TestCategory("Unit")]
         public void Index()
         {
             // Arrange
@@ -26,6 +27,7 @@ namespace PowerDeliveryASPNETMVC4.Tests.Controllers
         }
 
         [TestMethod]
+        [TestCategory("Unit")]
         public void About()
         {
             // Arrange
@@ -39,6 +41,7 @@ namespace PowerDeliveryASPNETMVC4.Tests.Controllers
         }
 
         [TestMethod]
+        [TestCategory("Unit")]
         public void Contact()
         {
             // Arrange

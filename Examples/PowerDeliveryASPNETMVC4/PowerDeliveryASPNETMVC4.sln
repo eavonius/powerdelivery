@@ -7,12 +7,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerDeliveryASPNETMVC4.Tes
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1485046D-46FC-4877-BEC9-7F02726A62E2}"
 	ProjectSection(SolutionItems) = preProject
+		AcceptanceTests.testsettings = AcceptanceTests.testsettings
 		PowerdeliveryASPNETMVC4.ps1 = PowerdeliveryASPNETMVC4.ps1
-		PowerdeliveryASPNETMVC4CapacityTestEnvironment.csv = PowerdeliveryASPNETMVC4CapacityTestEnvironment.csv
-		PowerdeliveryASPNETMVC4CommitEnvironment.csv = PowerdeliveryASPNETMVC4CommitEnvironment.csv
-		PowerdeliveryASPNETMVC4LocalEnvironment.csv = PowerdeliveryASPNETMVC4LocalEnvironment.csv
-		PowerdeliveryASPNETMVC4ProductionEnvironment.csv = PowerdeliveryASPNETMVC4ProductionEnvironment.csv
-		PowerdeliveryASPNETMVC4TestEnvironment.csv = PowerdeliveryASPNETMVC4TestEnvironment.csv
+		PowerdeliveryASPNETMVC4CapacityTestEnvironment.yml = PowerdeliveryASPNETMVC4CapacityTestEnvironment.yml
+		PowerdeliveryASPNETMVC4CommitEnvironment.yml = PowerdeliveryASPNETMVC4CommitEnvironment.yml
+		PowerdeliveryASPNETMVC4LocalEnvironment.yml = PowerdeliveryASPNETMVC4LocalEnvironment.yml
+		PowerdeliveryASPNETMVC4ProductionEnvironment.yml = PowerdeliveryASPNETMVC4ProductionEnvironment.yml
+		PowerdeliveryASPNETMVC4TestEnvironment.yml = PowerdeliveryASPNETMVC4TestEnvironment.yml
+		UnitTests.testsettings = UnitTests.testsettings
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{7809DB1C-95A2-4213-8EDC-041F78DD2271}"
@@ -22,9 +24,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{7809DB
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerDeliveryASPNETMVC4.Acceptance", "PowerDeliveryASPNETMVC4.Acceptance\PowerDeliveryASPNETMVC4.Acceptance.csproj", "{34211467-C2AD-494C-915E-C50476D79CD9}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 3
+		SccNumberOfProjects = 4
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = http://catauslb65crm1:8080/tfs/defaultcollection
 		SccLocalPath0 = .
@@ -34,6 +38,9 @@ Global
 		SccProjectUniqueName2 = PowerDeliveryASPNETMVC4\\PowerDeliveryASPNETMVC4.csproj
 		SccProjectName2 = PowerDeliveryASPNETMVC4
 		SccLocalPath2 = PowerDeliveryASPNETMVC4
+		SccProjectUniqueName3 = PowerDeliveryASPNETMVC4.Acceptance\\PowerDeliveryASPNETMVC4.Acceptance.csproj
+		SccProjectName3 = PowerDeliveryASPNETMVC4.Acceptance
+		SccLocalPath3 = PowerDeliveryASPNETMVC4.Acceptance
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Commit|Any CPU = Commit|Any CPU
@@ -63,6 +70,16 @@ Global
 		{00517CD9-5D1F-4BF1-AC09-D78FA20BD405}.Release|Any CPU.Build.0 = Release|Any CPU
 		{00517CD9-5D1F-4BF1-AC09-D78FA20BD405}.Test|Any CPU.ActiveCfg = Test|Any CPU
 		{00517CD9-5D1F-4BF1-AC09-D78FA20BD405}.Test|Any CPU.Build.0 = Test|Any CPU
+		{34211467-C2AD-494C-915E-C50476D79CD9}.Commit|Any CPU.ActiveCfg = Release|Any CPU
+		{34211467-C2AD-494C-915E-C50476D79CD9}.Commit|Any CPU.Build.0 = Release|Any CPU
+		{34211467-C2AD-494C-915E-C50476D79CD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34211467-C2AD-494C-915E-C50476D79CD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34211467-C2AD-494C-915E-C50476D79CD9}.Production|Any CPU.ActiveCfg = Release|Any CPU
+		{34211467-C2AD-494C-915E-C50476D79CD9}.Production|Any CPU.Build.0 = Release|Any CPU
+		{34211467-C2AD-494C-915E-C50476D79CD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34211467-C2AD-494C-915E-C50476D79CD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34211467-C2AD-494C-915E-C50476D79CD9}.Test|Any CPU.ActiveCfg = Release|Any CPU
+		{34211467-C2AD-494C-915E-C50476D79CD9}.Test|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

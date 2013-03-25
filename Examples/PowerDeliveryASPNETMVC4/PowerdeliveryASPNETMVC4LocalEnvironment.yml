@@ -9,6 +9,17 @@ MSBuild:
             DeployOnBuild: true
             PublishProfile: Default
 
+Assets:
+    WebSite:
+        Path: PowerDeliveryASPNETMVC4\DeploymentPackage\PowerDeliveryASPNETMVC4.zip
+        Destination: PowerDeliveryASPNETMVC4\DeploymentPackage
+    AcceptanceTests:
+        Path: PowerDeliveryASPNETMVC4.Acceptance\bin\Debug\*.* 
+        Destination: AcceptanceTests
+    UnitTests:
+        Path: PowerDeliveryASPNETMVC4.Tests\bin\Debug\*.* 
+        Destination: UnitTests
+
 WebDeploy:
     PowerDeliveryASPNETMVC4:
         WebComputer: localhost
@@ -25,4 +36,4 @@ Roundhouse:
     PowerDeliveryASPNETMVC4:
         Server: localhost
         Database: PowerDeliveryASPNETMVC4_Local
-        ScriptsDir: Databases\PowerDeliveryASPNETMVC4
+        ScriptsDir: PowerDeliveryASPNETMVC4DB

@@ -81,5 +81,7 @@ function Invoke-Roundhouse {
 
 	Exec -ErrorAction Stop { 
 	    Invoke-Expression -Command $command	
+		
+		Write-BuildSummaryMessage -name "Deploy" -header "Deployments" -message "Roundhouse: $scriptsDir -> $database ($server)"
 	}
 }
