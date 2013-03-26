@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>PowerDelivery</id>
-        <version>2.0.9</version>
+        <version>2.1.0</version>
         <title>PowerDelivery</title>
         <authors>Jayme Edwards</authors>
         <owners />
@@ -14,9 +14,9 @@
         <dependencies />
     </metadata>
     <files>
-		<file src="AssetsDeliveryModule\AssetsDeliveryModule.psm1" target="tools\AssetsDeliveryModule\AssetsDeliveryModule.psm1" />
-		<file src="ChocolateyDeliveryModule\ChocolateyDeliveryModule.psm1" target="tools\ChocolateyDeliveryModule\ChocolateyDeliveryModule.psm1" />
+		<file src="HyperVDeliveryModule\HyperVDeliveryModule.psd1" target="tools\HyperVDeliveryModule\HyperVDeliveryModule.psd1" />
 		<file src="HyperVDeliveryModule\HyperVDeliveryModule.psm1" target="tools\HyperVDeliveryModule\HyperVDeliveryModule.psm1" />
+		<file src="MSBuildDeliveryModule\MSBuildDeliveryModule.psd1" target="tools\MSBuildDeliveryModule\MSBuildDeliveryModule.psd1" />
 		<file src="MSBuildDeliveryModule\MSBuildDeliveryModule.psm1" target="tools\MSBuildDeliveryModule\MSBuildDeliveryModule.psm1" />
         <file src="PowerDelivery\PowerDelivery.psm1" target="tools\PowerDelivery\PowerDelivery.psm1" />
         <file src="PowerDelivery\PowerDelivery.psd1" target="tools\PowerDelivery\PowerDelivery.psd1" />
@@ -85,7 +85,9 @@
 		<file src="PowerYaml\Libs\YamlDotNet.Converters.dll" target="tools\PowerYaml\Libs\YamlDotNet.Converters.dll" />
 		<file src="PowerYaml\Libs\YamlDotNet.Core.dll" target="tools\PowerYaml\Libs\YamlDotNet.Core.dll" />
 		<file src="PowerYaml\Libs\YamlDotNet.RepresentationModel.dll" target="tools\PowerYaml\Libs\YamlDotNet.RepresentationModel.dll" />
+		<file src="WebDeployDeliveryModule\WebDeployDeliveryModule.psd1" target="tools\WebDeployDeliveryModule\WebDeployDeliveryModule.psd1" />
 		<file src="WebDeployDeliveryModule\WebDeployDeliveryModule.psm1" target="tools\WebDeployDeliveryModule\WebDeployDeliveryModule.psm1" />
+		<file src="RoundhouseDeliveryModule\RoundhouseDeliveryModule.psd1" target="tools\RoundhouseDeliveryModule\RoundhouseDeliveryModule.psd1" />
 		<file src="RoundhouseDeliveryModule\RoundhouseDeliveryModule.psm1" target="tools\RoundhouseDeliveryModule\RoundhouseDeliveryModule.psm1" />
         <file src="chocolateyInstall.ps1" target="tools\chocolateyInstall.ps1" />
         <file src="init.ps1" target="tools\init.ps1" />

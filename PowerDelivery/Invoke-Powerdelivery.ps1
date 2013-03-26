@@ -50,6 +50,14 @@ function Invoke-Powerdelivery {
 	    	Write-Host
 			
 			try {
+				if ($blockName -eq "Init") {
+					$chocolateyPackages = "packages.config"
+					if (Test-Path $chocolateyPackages) {
+						Exec -errorMessage "Error installing chocolatey packages" {
+							cinst $chocolateyPackages
+						}
+					}
+				}
 				InvokePowerDeliveryModuleHook $blockName 'Pre'
 				if ($powerdelivery.hookResult) {
 					$actionPerformed = $true
@@ -58,6 +66,29 @@ function Invoke-Powerdelivery {
 		        	& $stage
 					$actionPerformed = $true
 				}			
+				if ($blockName -eq "Compile") {
+					$yamlConfig = Get-BuildYamlConfig
+					$assetOperations = $yamlConfig.Assets
+
+					if ($assetOperations) {
+						$assetOperations.Keys | % {
+							$invokeArgs = @{}
+
+							$assetOperation = $assetOperations[$_]
+							
+							if ($assetOperation.Path) {
+								$invokeArgs.Add('path', $assetOperation.Path)
+							}
+							if ($assetOperation.Destination) {
+								$invokeArgs.Add('destination', $assetOperation.Destination)
+							}
+							if ($assetOperation.Filter) {
+								$invokeArgs.Add('filter', $assetOperation.Filter)
+							}
+							& Publish-BuildAssets @invokeArgs
+						}
+					}
+				}
 				InvokePowerDeliveryModuleHook $blockName 'Post'
 				if ($powerdelivery.hookResult) {
 					$actionPerformed = $true
@@ -109,7 +140,8 @@ function Invoke-Powerdelivery {
 	$powerdelivery.priorBuild = $priorBuild
 
     Write-Host
-    "powerdelivery - https://github.com/eavonius/powerdelivery"
+	$powerdelivery.version = Get-Module powerdelivery | select version | ForEach-Object { $_.Version.ToString() }
+    "powerdelivery $($powerdelivery.version) - https://github.com/eavonius/powerdelivery"
 	Write-Host
 	$appScript = [System.IO.Path]::GetFileNameWithoutExtension($buildScript)
 
@@ -273,7 +305,21 @@ function Invoke-Powerdelivery {
 		Write-ConsoleSpacer
 
 		if ($powerdelivery.deliveryModules) {
-			$powerdelivery.deliveryModules -join ','
+			$deliveryModules = @()
+			$powerdelivery.deliveryModules | ForEach-Object {
+				$moduleVersion = $null
+				try {
+					$moduleVersion = Get-Module "$($_)DeliveryModule" | select version | ForEach-Object { $_.Version.ToString() }
+				}
+				catch { }
+				$moduleString = $_
+				if ($moduleVersion) {
+					$moduleString = "$($_) ($moduleVersion)"
+				}
+				$deliveryModules += $moduleString
+				Write-BuildSummaryMessage -name "DeliveryModules" -header "Delivery Modules"  -message $moduleString
+			}
+			$deliveryModules -join ", "
 		}
 
 		if ($powerdelivery.environment -ne "Commit" -and $powerdelivery.onServer -eq $true) {

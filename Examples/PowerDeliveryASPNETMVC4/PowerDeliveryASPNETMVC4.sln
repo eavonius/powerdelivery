@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1485046D-46FC-4877-BEC9-7F02726A62E2}"
 	ProjectSection(SolutionItems) = preProject
 		AcceptanceTests.testsettings = AcceptanceTests.testsettings
+		packages.config = packages.config
 		PowerdeliveryASPNETMVC4.ps1 = PowerdeliveryASPNETMVC4.ps1
 		PowerdeliveryASPNETMVC4CapacityTestEnvironment.yml = PowerdeliveryASPNETMVC4CapacityTestEnvironment.yml
 		PowerdeliveryASPNETMVC4CommitEnvironment.yml = PowerdeliveryASPNETMVC4CommitEnvironment.yml

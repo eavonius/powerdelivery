@@ -6,11 +6,9 @@
 
 Pipeline 'PowerDeliveryASPNETMVC4' -Version '1.0.0'
 
-Import-DeliveryModule Chocolatey
 Import-DeliveryModule MSBuild
 Import-DeliveryModule Roundhouse
 Import-DeliveryModule WebDeploy
-Import-DeliveryModule Assets
 
 Init { 
 	$script:webDeployPath 	 = "PowerDeliveryASPNETMVC4\DeploymentPackage"
