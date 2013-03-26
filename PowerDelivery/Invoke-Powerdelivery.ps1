@@ -85,7 +85,10 @@ function Invoke-Powerdelivery {
 							if ($assetOperation.Filter) {
 								$invokeArgs.Add('filter', $assetOperation.Filter)
 							}
-							& Publish-BuildAssets @invokeArgs
+							if ($assetOperation.Recurse) {
+								$invokeArgs.Add('Recurse', $true)
+							}
+							& Publish-BuildAssets @invokeArgs	
 						}
 					}
 				}
@@ -381,17 +384,17 @@ function Invoke-Powerdelivery {
 
 		InvokePowerDeliveryBuildAction -condition $true -stage $powerdelivery.init -description "Initialization" -status "Initializing" -blockName "Init"
 	    InvokePowerDeliveryBuildAction -condition ($powerdelivery.environment -eq 'Commit' -or $powerdelivery.environment -eq 'Local') -stage $powerdelivery.compile -description "Compilations" -status "Compiling" -blockName "Compile"
-	    InvokePowerDeliveryBuildAction -condition ($powerdelivery.environment -eq 'Commit' -or $powerdelivery.environment -eq 'Local') -stage $powerdelivery.testUnits -description "Unit Tests" -status "Testing Units" -blockName "TestUnits"
-		
-		$projectCollection = $null
-	    $buildServer = $null
-	    $structure = $null
-
-	    if ($powerdelivery.environment -ne "Local" -and $powerdelivery.environment -ne "Commit" -and $powerdelivery.onServer) {
+	    
+		if ($powerdelivery.environment -ne "Local" -and $powerdelivery.environment -ne "Commit" -and $powerdelivery.onServer) {
 	        $priorBuildDrop = $powerdelivery.priorBuild.DropLocation
+			"Cloning deployed assets from prior build..."
 	        Copy-Item -Path "$priorBuildDrop\*" -Recurse -Destination $powerdelivery.dropLocation
 	    }
-
+		
+		"Copying deployed assets locally..."	
+		Copy-Item -Force -Path "$($powerdelivery.dropLocation)\*" -Recurse -Destination $powerdelivery.currentLocation
+		
+		InvokePowerDeliveryBuildAction -condition ($powerdelivery.environment -eq 'Commit' -or $powerdelivery.environment -eq 'Local') -stage $powerdelivery.testUnits -description "Unit Tests" -status "Testing Units" -blockName "TestUnits"
 	    InvokePowerDeliveryBuildAction -condition $true -stage $powerdelivery.setupEnvironment -description "Environment Changes" -status "Setting Up Environment" -blockName "SetupEnvironment"
 	    InvokePowerDeliveryBuildAction -condition $true -stage $powerdelivery.deploy -description "Deployments" -status "Deploying" -blockName "Deploy"
 	    InvokePowerDeliveryBuildAction -condition $true -stage $powerdelivery.testEnvironment -description "Environment Tests" -status "Testing Environment" -blockName "TestEnvironment"
@@ -591,6 +594,7 @@ function Pipeline {
 	)
 	
 	$powerdelivery.pipeline = $this
+	$powerdelivery.buildAssemblyVersion = $version
 	$powerdelivery.scriptName = $scriptName
 
 	$buildAppVersion = "$appVersion"

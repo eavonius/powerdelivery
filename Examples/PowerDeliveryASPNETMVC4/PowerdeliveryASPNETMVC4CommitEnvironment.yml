@@ -12,13 +12,17 @@ MSBuild:
 Assets:
     WebSite:
         Path: PowerDeliveryASPNETMVC4\DeploymentPackage\PowerDeliveryASPNETMVC4.zip
-        Destination: PowerDeliveryASPNETMVC4\DeploymentPackage
+        Destination: WebSites\PowerDeliveryASPNETMVC4
     AcceptanceTests:
         Path: PowerDeliveryASPNETMVC4.Acceptance\bin\Debug\*.* 
         Destination: AcceptanceTests
     UnitTests:
         Path: PowerDeliveryASPNETMVC4.Tests\bin\Debug\*.* 
         Destination: UnitTests
+    Databases:
+        Path: PowerDeliveryASPNETMVC4DB
+        Destination: Databases
+        Recurse: true
 
 WebDeploy:
     PowerDeliveryASPNETMVC4:
@@ -27,7 +31,7 @@ WebDeploy:
         WebSite: PowerDeliveryASPNETMVC4_Commit
         WebPassword: "!hafoi^45"
         WebURL: http://localhost:8082/
-        Package: PowerDeliveryASPNETMVC4\DeploymentPackage\PowerDeliveryASPNETMVC4.zip
+        Package: WebSites\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4.zip
         Parameters:
             "IIS Web Application Name": PowerDeliveryASPNETMVC4_Commit
             "DefaultConnection-Web.config Connection String": Data Source=localhost;Initial Catalog=PowerDeliveryASPNETMVC4_Commit;Integrated Security=SSPI
@@ -36,4 +40,4 @@ Roundhouse:
     PowerDeliveryASPNETMVC4:
         Server: localhost
         Database: PowerDeliveryASPNETMVC4_Commit
-        ScriptsDir: PowerDeliveryASPNETMVC4DB
+        ScriptsDir: Databases\PowerDeliveryASPNETMVC4DB

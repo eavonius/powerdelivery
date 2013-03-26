@@ -127,7 +127,8 @@
             </InvokeMethod>
             <mtbwa:CreateDirectory Directory="[BuildDirectory]" DisplayName="Create Working Directory" sap2010:WorkflowViewState.IdRef="CreateDirectory_2" />
             <mtbwa:DownloadFiles DeletionId="{x:Null}" DisplayName="Download Build Script" sap2010:WorkflowViewState.IdRef="DownloadFiles_1" LocalPath="[Path.Combine(BuildDirectory, PowerShellScriptPath.Substring(PowerShellScriptPath.LastIndexOf(&quot;/&quot;) + 1))]" ServerPath="[PowerShellScriptPath]" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces" Version="[PriorBuildDetail.SourceGetVersion]" />
-            <mtbwa:DownloadFiles DeletionId="{x:Null}" DisplayName="Download Environment Config" sap2010:WorkflowViewState.IdRef="DownloadFiles_2" LocalPath="[Path.Combine(BuildDirectory, String.Format(&quot;{0}{1}Environment.csv&quot;, ScriptName, Environment))]" ServerPath="[String.Format(&quot;{0}/{1}{2}Environment.csv&quot;, PowerShellScriptPath.Substring(0, PowerShellScriptPath.LastIndexOf(&quot;/&quot;)), ScriptName, Environment)]" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces" Version="[PriorBuildDetail.SourceGetVersion]" />
+            <mtbwa:DownloadFiles DeletionId="{x:Null}" DisplayName="Download Environment Config (CVS)" sap2010:WorkflowViewState.IdRef="DownloadFiles_2" LocalPath="[Path.Combine(BuildDirectory, String.Format(&quot;{0}{1}Environment.csv&quot;, ScriptName, Environment))]" ServerPath="[String.Format(&quot;{0}/{1}{2}Environment.csv&quot;, PowerShellScriptPath.Substring(0, PowerShellScriptPath.LastIndexOf(&quot;/&quot;)), ScriptName, Environment)]" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces" Version="[PriorBuildDetail.SourceGetVersion]" />
+            <mtbwa:DownloadFiles DeletionId="{x:Null}" DisplayName="Download Environment Config (YML)" sap2010:WorkflowViewState.IdRef="DownloadFiles_3" LocalPath="[Path.Combine(BuildDirectory, String.Format(&quot;{0}{1}Environment.yml&quot;, ScriptName, Environment))]" ServerPath="[String.Format(&quot;{0}/{1}{2}Environment.yml&quot;, PowerShellScriptPath.Substring(0, PowerShellScriptPath.LastIndexOf(&quot;/&quot;)), ScriptName, Environment)]" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces" Version="[PriorBuildDetail.SourceGetVersion]" />
             <TryCatch sap2010:WorkflowViewState.IdRef="TryCatch_1">
               <TryCatch.Try>
                 <Sequence sap2010:WorkflowViewState.IdRef="Sequence_6">
@@ -170,7 +171,7 @@
       <mtbwa:SetBuildProperties CompilationStatus="[Microsoft.TeamFoundation.Build.Client.BuildPhaseStatus.Succeeded]" DisplayName="Set CompilationStatus to Succeeded" sap2010:WorkflowViewState.IdRef="SetBuildProperties_2" PropertiesToSet="CompilationStatus" />
       <mtbwa:SetBuildProperties DisplayName="Set TestStatus to Succeeded" sap2010:WorkflowViewState.IdRef="SetBuildProperties_3" PropertiesToSet="TestStatus" TestStatus="[Microsoft.TeamFoundation.Build.Client.BuildPhaseStatus.Succeeded]" />
     </mtbwa:AgentScope>
-    <sads:DebugSymbol.Symbol>d2BEOlxQcm9qZWN0c1xQb3dlckRlbGl2ZXJ5QVNQTkVUTVZDNFxCdWlsZFByb2Nlc3NUZW1wbGF0ZXNcUG93ZXJEZWxpdmVyeUNoYW5nZVNldFRlbXBsYXRlLjExLnhhbWxXAYkDAckDAQMBYQHwAgECPQOuAQ4CAQFBBUGDAQMBmAFCBU8QAwGFAVAFrAEYAgECQXFBgAEDAZkBQwdFHwMBlQFGB04SAwGGAVCxAVDOAQIBB1CCAVCkAQIBBVDfAVCKAgIBA1cHYxICAWpkB6kBDAIBDaoBB6oBhgICAQurAQerAfEBAgEJRAlEwQEDAZYBRwlLDgMBjwFMCUzWAgMBigFNCU3XAQMBhwFYCVi0AQMBggFZCVnKAQIBf1oJWpYDAgF4WwliDgIBa2QVZEcCAQ5mC6cBFgIBEKoBM6oBdwIBDKsBqgGrAe4BAgEKRDREZgMBlwFHF0dNAwGQAUkNSakCAwGSAUxQTM0BAwGLAU0qTUYDAYgBWKMBWLEBAwGDAVm1AVnHAQMBgAFazAFakwMCAXtatAFaxQECAXlbF1uMAQIBbF0NYBgCAW5sDW8YAgFhcA1wowICAVdxDXYcAgFRdw1/HAIBSoABDYABngECAUeBAQ2BAcYDAgE9ggENggHPBAIBMIMBDaYBGAIBEUlRScwBAwGTAV4PXs0DAgF0Xw9f3gICAW9tD23fAQIBZm4PbtMBAgFicDNwRQIBX3BOcH0CAV5w7wFw/AECAVxwjgJwoAICAVpw1gFw5wECAVh1NnV9AgFUczlzRQIBUn4zfnMCAU95QnlUAgFNfEF8WgIBS4ABLoABQAIBSIEBmQKBAbECAgFFgQGYAYEBjQICAUGBAZ4DgQHDAwIBPoIBlQKCAboDAgE4ggGeAYIBiQICATSCAacEggHMBAIBMYUBEZgBHAIBFKABFaIBIAIBEl5mXuYCAgF2X9oBX9sCAgFyX8IBX9MBAgFwbTdtPwIBaW3LAW3cAQIBZ24wbkICAWSGAROXASkCARWhARehAbkBAgEThgEyhgGUBQIBIoYBxQWGAd0GAgEhhgGhB4YBowkCAR2UARmUAbUCAgEZjAEZjAF8AgEWlAHBAZQBzgECARuUAXOUAbgBAgEajAFsjAF5AgEX</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>d3dEOlxQcm9qZWN0c1xwb3dlcmRlbGl2ZXJ5XEV4YW1wbGVzXFBvd2VyRGVsaXZlcnlBU1BORVRNVkM0XEJ1aWxkUHJvY2Vzc1RlbXBsYXRlc1xQb3dlckRlbGl2ZXJ5Q2hhbmdlU2V0VGVtcGxhdGUuMTEueGFtbFsBiQMByQMBAwFhAfACAQI9A68BDgIBAUEFQYMBAwGlAUIFTxADAZIBUAWtARgCAQJBcUGAAQMBpgFDB0UfAwGiAUYHThIDAZMBULEBUM4BAgEHUIIBUKQBAgEFUN8BUIoCAgEDVwdjEgIBd2QHqgEMAgENqwEHqwGGAgIBC6wBB6wB8QECAQlECUTBAQMBowFHCUsOAwGcAUwJTNYCAwGXAU0JTdcBAwGUAVgJWLQBAwGPAVkJWcoBAwGMAVoJWpYDAwGFAVsJYg4CAXhkFWRHAgEOZguoARYCARCrATOrAXcCAQysAaoBrAHuAQIBCkQ0RGYDAaQBRxdHTQMBnQFJDUmpAgMBnwFMUEzNAQMBmAFNKk1GAwGVAVijAVixAQMBkAFZtQFZxwEDAY0BWswBWpMDAwGIAVq0AVrFAQMBhgFbF1uMAQIBeV0NYBgCAXtsDW8YAgFucA1wowICAWRxDXYcAgFedw1/HAIBV4ABDYABngECAVSBAQ2BAcYDAgFKggENggHVBAIBPYMBDYMB1QQCATCEAQ2nARgCARFJUUnMAQMBoAFeD17NAwMBgQFfD1/eAgIBfG0Pbd8BAgFzbg9u0wECAW9wM3BFAgFscE5wfQIBa3DvAXD8AQIBaXCOAnCgAgIBZ3DWAXDnAQIBZXU2dX0CAWFzOXNFAgFffjN+cwIBXHlCeVQCAVp8QXxaAgFYgAEugAFAAgFVgQGZAoEBsQICAVKBAZgBgQGNAgIBToEBngOBAcMDAgFLggGbAoIBwAMCAUWCAaQBggGPAgIBQYIBrQSCAdIEAgE+gwGbAoMBwAMCATiDAaQBgwGPAgIBNIMBrQSDAdIEAgExhgERmQEcAgEUoQEVowEgAgESXmZe5gIDAYMBX9oBX9sCAgF/X8IBX9MBAgF9bTdtPwIBdm3LAW3cAQIBdG4wbkICAXGHAROYASkCARWiAReiAbkBAgEThwEyhwGUBQIBIocBxQWHAd0GAgEhhwGhB4cBowkCAR2VARmVAbUCAgEZjQEZjQF8AgEWlQHBAZUBzgECARuVAXOVAbgBAgEajQFsjQF5AgEX</sads:DebugSymbol.Symbol>
   </Sequence>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
@@ -230,6 +231,7 @@
       <sap2010:ViewStateData Id="CreateDirectory_2" sap:VirtualizedContainerService.HintSize="418,22" />
       <sap2010:ViewStateData Id="DownloadFiles_1" sap:VirtualizedContainerService.HintSize="418,22" />
       <sap2010:ViewStateData Id="DownloadFiles_2" sap:VirtualizedContainerService.HintSize="418,22" />
+      <sap2010:ViewStateData Id="DownloadFiles_3" sap:VirtualizedContainerService.HintSize="418,22" />
       <sap2010:ViewStateData Id="WriteBuildError_1" sap:VirtualizedContainerService.HintSize="200,22" />
       <sap2010:ViewStateData Id="WriteBuildMessage_1" sap:VirtualizedContainerService.HintSize="200,22" />
       <sap2010:ViewStateData Id="InvokeProcess_1" sap:VirtualizedContainerService.HintSize="234,270" />
@@ -257,25 +259,25 @@
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
       <sap2010:ViewStateData Id="TryCatch_1" sap:VirtualizedContainerService.HintSize="418,919" />
-      <sap2010:ViewStateData Id="Sequence_8" sap:VirtualizedContainerService.HintSize="440,1875">
+      <sap2010:ViewStateData Id="Sequence_8" sap:VirtualizedContainerService.HintSize="440,1937">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="If_3" sap:VirtualizedContainerService.HintSize="565,2023" />
+      <sap2010:ViewStateData Id="If_3" sap:VirtualizedContainerService.HintSize="565,2085" />
       <sap2010:ViewStateData Id="SetBuildProperties_2" sap:VirtualizedContainerService.HintSize="565,22" />
       <sap2010:ViewStateData Id="SetBuildProperties_3" sap:VirtualizedContainerService.HintSize="565,22" />
-      <sap2010:ViewStateData Id="AgentScope_1" sap:VirtualizedContainerService.HintSize="587,2977" />
-      <sap2010:ViewStateData Id="Sequence_9" sap:VirtualizedContainerService.HintSize="609,3969">
+      <sap2010:ViewStateData Id="AgentScope_1" sap:VirtualizedContainerService.HintSize="587,3039" />
+      <sap2010:ViewStateData Id="Sequence_9" sap:VirtualizedContainerService.HintSize="609,4031">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="TfsBuild.Process_1" sap:VirtualizedContainerService.HintSize="649,4049">
+      <sap2010:ViewStateData Id="TfsBuild.Process_1" sap:VirtualizedContainerService.HintSize="649,4111">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="ShouldExpandAll">True</x:Boolean>

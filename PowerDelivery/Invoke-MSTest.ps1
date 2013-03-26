@@ -37,7 +37,8 @@ function Invoke-MSTest {
 		[Parameter(Position=0,Mandatory=1)][string] $file,
 		[Parameter(Position=1,Mandatory=1)][string] $results,
 		[Parameter(Position=2,Mandatory=1)][string] $category,
-        [Parameter(Position=3,Mandatory=0)][string] $platform = 'AnyCPU'
+        [Parameter(Position=3,Mandatory=0)][string] $platform = 'AnyCPU',
+		[Parameter(Position=4,Mandatory=0)][string] $buildConfiguration = 'Release'
     )
 
     $currentDirectory = Get-Location
@@ -48,6 +49,8 @@ function Invoke-MSTest {
 	$dropResults = "$dropLocation\$results"
 
 	try {
+		rm -ErrorAction SilentlyContinue -Force $localResults | Out-Null
+	
         # Run acceptance tests out of local directory
 		$command = "mstest /testcontainer:""$currentDirectory\$file"" /category:""$category"" /resultsfile:""$localResults"""
 		$command += " /usestderr /nologo"
@@ -67,7 +70,7 @@ function Invoke-MSTest {
                        /teamproject:"$(Get-BuildTeamProject)" `
                        /publishbuild:"$(Get-BuildName)" `
                        /publishresultsfile:"$dropResults" `
-                       /flavor:$environment `
+                       /flavor:$buildConfiguration `
                        /platform:$platform `
 					   /nologo
             }

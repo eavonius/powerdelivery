@@ -51,7 +51,7 @@ function Invoke-MSBuild {
         [Parameter(Position=2,Mandatory=0)][string] $target, 
         [Parameter(Position=3,Mandatory=0)][string] $toolsVersion, 
         [Parameter(Position=4,Mandatory=0)][string] $verbosity = "m", 
-        [Parameter(Position=5,Mandatory=0)][string] $buildConfiguration = "Debug", 
+        [Parameter(Position=5,Mandatory=0)][string] $buildConfiguration = "Release", 
         [Parameter(Position=6,Mandatory=0)][string] $flavor = "AnyCPU", 
         [Parameter(Position=7,Mandatory=0)][string] $ignoreProjectExtensions, 
         [Parameter(Position=8,Mandatory=0)][string] $dotNetVersion = "4.0"

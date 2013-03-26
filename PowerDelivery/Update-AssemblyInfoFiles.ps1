@@ -23,15 +23,16 @@ function Update-AssemblyInfoFiles {
 
 	if ($environment -eq 'Development' -or $environment -eq 'Commit') {
         $buildAppVersion = Get-BuildAppVersion
+		$buildAssemblyVersion = Get-BuildAssemblyVersion
 	    $assemblyVersionPattern = 'AssemblyVersion\("[0-9]+(\.([0-9]+|\*)){1,3}"\)'
 	    $fileVersionPattern = 'AssemblyFileVersion\("[0-9]+(\.([0-9]+|\*)){1,3}"\)'
-	    $assemblyVersion = "AssemblyVersion(""$buildAppVersion"")"
+	    $assemblyVersion = "AssemblyVersion(""$buildAssemblyVersion"")"
 	    $fileVersion = "AssemblyFileVersion(""$buildAppVersion"")"
 	    
 	    Get-ChildItem -r -Path $path -filter AssemblyInfo.cs | % {
 	        $filename = $_.Directory.ToString() + '\' + $_.Name
 			$powerdelivery.assemblyInfoFiles += ,$filename
-	        $filename + " -> $appVersion.$changeSetNumber"
+	        $filename + " -> $buildAssemblyVersion ($appVersion.$changeSetNumber)"
 	        Exec -errorMessage "Unable to update file attributes on $filename" { 
                 attrib -r "$filename"
 			}
