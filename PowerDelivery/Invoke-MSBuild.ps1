@@ -47,15 +47,24 @@ function Invoke-MSBuild {
     [CmdletBinding()]
     param(
         [Parameter(Position=0,Mandatory=1)][string] $projectFile, 
-        [Parameter(Position=1,Mandatory=0)] $properties, 
+        [Parameter(Position=1,Mandatory=0)] $properties = @{}, 
         [Parameter(Position=2,Mandatory=0)][string] $target, 
         [Parameter(Position=3,Mandatory=0)][string] $toolsVersion, 
         [Parameter(Position=4,Mandatory=0)][string] $verbosity = "m", 
-        [Parameter(Position=5,Mandatory=0)][string] $buildConfiguration = "Release", 
+        [Parameter(Position=5,Mandatory=0)][string] $buildConfiguration, 
         [Parameter(Position=6,Mandatory=0)][string] $flavor = "AnyCPU", 
         [Parameter(Position=7,Mandatory=0)][string] $ignoreProjectExtensions, 
         [Parameter(Position=8,Mandatory=0)][string] $dotNetVersion = "4.0"
     )
+	
+	if ([String]::IsNullOrWhiteSpace($buildConfiguration)) {
+	
+		$buildConfiguration = Get-BuildEnvironment
+	
+		if (!$properties.ContainsKey('Configuration')) {
+			$properties.Add('Configuration', $buildConfiguration)
+		}
+	}
 	
 	$dropLocation = Get-BuildDropLocation
 	$logFolder = Join-Path $dropLocation "Logs"
@@ -69,15 +78,13 @@ function Invoke-MSBuild {
     $msBuildCommand = "& ""$msbuildExe"""
     $msBuildCommand += " ""/nologo"""
 
-    if ($properties -ne $null) {
-        if ($properties.length -gt 0) {
-            
-            $properties.Keys | % {
-                $msBuildCommand += " ""/p:$($_)=$($properties.Item($_))"""
-            }
+    if ($properties.length -gt 0) {
+        
+        $properties.Keys | % {
+            $msBuildCommand += " ""/p:$($_)=$($properties.Item($_))"""
         }
     }
-
+	
     if ([string]::IsNullOrWhiteSpace($toolsVersion) -eq $false) {
         $msBuildCommand += " ""/tv:$toolsVersion"""
     }

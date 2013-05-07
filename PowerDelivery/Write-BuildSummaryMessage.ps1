@@ -32,7 +32,7 @@ function Write-BuildSummaryMessage {
     $buildServerVersion = $powerdelivery.buildServer.BuildServerVersion
 				
 	if ($buildServerVersion -eq 'v3') {
-        "WARNING: Write-BuildSummaryMessage does nothing on TFS 2010. Upgrade to 2012 to get summary messages (detected TFS $buildServerVersion)."
+        Write-Debug "WARNING: Write-BuildSummaryMessage does nothing on TFS 2010. Upgrade to 2012 to get summary messages (detected TFS $buildServerVersion)."
 	}
 	elseif ($buildServerVersion -eq 'v4') {
         $buildDetail = Get-CurrentBuildDetail

@@ -38,8 +38,12 @@ function Invoke-MSTest {
 		[Parameter(Position=1,Mandatory=1)][string] $results,
 		[Parameter(Position=2,Mandatory=1)][string] $category,
         [Parameter(Position=3,Mandatory=0)][string] $platform = 'AnyCPU',
-		[Parameter(Position=4,Mandatory=0)][string] $buildConfiguration = 'Release'
+		[Parameter(Position=4,Mandatory=0)][string] $buildConfiguration
     )
+	
+	if ([String]::IsNullOrWhiteSpace($buildConfiguration)) {
+		$buildConfiguration = Get-BuildEnvironment
+	}
 
     $currentDirectory = Get-Location
 	$environment = Get-BuildEnvironment

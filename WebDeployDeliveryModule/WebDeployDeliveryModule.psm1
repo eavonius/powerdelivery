@@ -1,6 +1,6 @@
 function Initialize-WebDeployDeliveryModule {
 
-	Register-DeliveryModuleHook 'PostDeploy' {
+	Register-DeliveryModuleHook 'PreDeploy' {
 	
 		$yamlConfig = Get-BuildYamlConfig
 		$webDeployments = $yamlConfig.WebDeploy

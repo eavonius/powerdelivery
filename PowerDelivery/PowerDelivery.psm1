@@ -39,9 +39,9 @@ function Get-CurrentBuildDetail {
 
 function LoadTFS($vsVersion = "11.0") {
 
-    $vsInstallDir = Get-ItemProperty -Path "Registry::HKEY_USERS\.DEFAULT\Software\Microsoft\VisualStudio\11.0_Config" -Name InstallDir       
+    $vsInstallDir = Get-ItemProperty -Path "Registry::HKEY_USERS\.DEFAULT\Software\Microsoft\VisualStudio\11.0_Config" -Name InstallDir -ErrorAction SilentlyContinue     
     if ([string]::IsNullOrWhiteSpace($vsInstallDir)) {
-        $vsInstallDir = Get-ItemProperty -Path "Registry::HKEY_USERS\.DEFAULT\Software\Microsoft\VisualStudio\10.0_Config" -Name InstallDir       
+        $vsInstallDir = Get-ItemProperty -Path "Registry::HKEY_USERS\.DEFAULT\Software\Microsoft\VisualStudio\10.0_Config" -Name InstallDir -ErrorAction SilentlyContinue
         if ([string]::IsNullOrWhiteSpace($vsInstallDir)) {
             throw "No version of Visual Studio with the same tools as your version of TFS is installed on the build server."
         }
