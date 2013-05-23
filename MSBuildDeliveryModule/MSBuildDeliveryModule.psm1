@@ -27,13 +27,13 @@ function Initialize-MSBuildDeliveryModule {
 					$invokeArgs.Add('verbosity', $project.Verbosity)
 				}				
 				if ($project.Flavor) {
-					$invokeArgs.Add('target', $project.Flavor)
+					$invokeArgs.Add('flavor', $project.Flavor)
 				}
 				if ($project.IgnoreProjectExtensions) {
-					$invokeArgs.Add('target', $project.IgnoreProjectExtensions)
+					$invokeArgs.Add('ignoreProjectExtensions', $project.IgnoreProjectExtensions)
 				}
 				if ($project.DotNetVersion) {
-					$invokeArgs.Add('target', $project.DotNetVersion)
+					$invokeArgs.Add('dotNetVersion', $project.DotNetVersion)
 				}
 				if ($project.Properties) {
 					$invokeArgs.Add('properties', $project.Properties)
