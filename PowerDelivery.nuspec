@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>PowerDelivery</id>
-        <version>2.1.5</version>
+        <version>2.1.6</version>
         <title>PowerDelivery</title>
         <authors>Jayme Edwards</authors>
         <owners />
@@ -46,9 +46,12 @@
 		<file src="PowerDelivery\Invoke-Powerdelivery.ps1" target="tools\PowerDelivery\Invoke-Powerdelivery.ps1" />
 		<file src="PowerDelivery\Invoke-Roundhouse.ps1" target="tools\PowerDelivery\Invoke-Roundhouse.ps1" />
 		<file src="PowerDelivery\Invoke-SSISPackage.ps1" target="tools\PowerDelivery\Invoke-SSISPackage.ps1" />
+        <file src="PowerDelivery\New-RemoteShare.ps1" target="tools\PowerDelivery\New-RemoteShare.ps1" />
 		<file src="PowerDelivery\Publish-BuildAssets.ps1" target="tools\PowerDelivery\Publish-BuildAssets.ps1" />
 		<file src="PowerDelivery\Publish-SSAS.ps1" target="tools\PowerDelivery\Publish-SSAS.ps1" />
 		<file src="PowerDelivery\Register-DeliveryModuleHook.ps1" target="tools\PowerDelivery\Register-DeliveryModuleHook.ps1" />
+        <file src="RemoteSharesDeliveryModule\RemoteSharesDeliveryModule.psm1" target="tools\RemoteSharesDeliveryModule\RemoteSharesDeliveryModule.psm1" />
+        <file src="RemoteSharesDeliveryModule\RemoteSharesDeliveryModule.psd1" target="tools\RemoteSharesDeliveryModule\RemoteSharesDeliveryModule.psd1" />
 		<file src="PowerDelivery\Set-SSASConnection.ps1" target="tools\PowerDelivery\Set-SSASConnection.ps1" />
 		<file src="PowerDelivery\Start-SqlJobs.ps1" target="tools\PowerDelivery\Start-SqlJobs.ps1" />
 		<file src="PowerDelivery\Stop-SqlJobs.ps1" target="tools\PowerDelivery\Stop-SqlJobs.ps1" />
@@ -92,5 +95,6 @@
 		<file src="RoundhouseDeliveryModule\RoundhouseDeliveryModule.psm1" target="tools\RoundhouseDeliveryModule\RoundhouseDeliveryModule.psm1" />
         <file src="chocolateyInstall.ps1" target="tools\chocolateyInstall.ps1" />
         <file src="init.ps1" target="tools\init.ps1" />
+        <file src="enable-buildDeployment.ps1" target="tools\enable-buildDeployment.ps1" />
     </files>
 </package>
