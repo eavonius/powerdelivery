@@ -35,10 +35,10 @@ function New-RemoteShare {
 
     Invoke-Command -ComputerName $computerName -ScriptBlock { 
         param(
-            $computerName,
-            $shareName,
-            $shareDirectory,
-            $buildAccountName
+            [Parameter(Position=0,Mandatory=1)]$computerName,
+            [Parameter(Position=1,Mandatory=1)]$shareName,
+            [Parameter(Position=2,Mandatory=1)]$shareDirectory,
+            [Parameter(Position=3,Mandatory=1)]$buildAccountName
         )
 
         if (!(Test-Path -Path $shareDirectory)) {
@@ -58,5 +58,5 @@ function New-RemoteShare {
                 throw "Error creating share, error code was $result"
             }
         }
-    } -ArgumentList @($computerName, $shareName, $shareDirectory, $buildAccountName)
+    } -ArgumentList @("$computerName", "$shareName", "$shareDirectory", "$buildAccountName")
 }

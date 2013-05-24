@@ -110,7 +110,7 @@ Function New-Share (
 	$SecDesc = New-SecurityDescriptor $ACEs
 	#Create the share via WMI, get the return code and create the return message.
 	$Share = [WMICLASS] "\\$ComputerName\Root\Cimv2:Win32_Share"
-	$result = $Share.Create($FolderPath, $ShareName, 0, $false , $Description, $null, $SecDesc)
+	$result = $Share.Create("$FolderPath", "$ShareName", 0, $false , $Description, $null, $SecDesc)
 	switch ($result.ReturnValue)
 	{
 		0 {$text += "has been success fully created" }
