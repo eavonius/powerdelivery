@@ -1,4 +1,6 @@
-﻿<#
+﻿.\NewShareWithPermissions-0.0.1.ps1
+
+<#
 .Synopsis
 Creates a remote UNC share.
 
@@ -32,8 +34,14 @@ function New-RemoteShare {
         if (!(Test-Path -Path $shareDirectory)) {
             New-Item $shareDirectory -ItemType Directory
         }
-        if (!(Get-SmbShare -Name $shareName)) {
-            New-SmbShare –ContinuouslyAvailable –Name $shareName –Path $shareDirectory –FullAccess $buildAccountName
+        if (!(Get-PSDrive -PSProvider FileSystem -Name $shareName)) {
+
+            $domainName = $buildAccountName.Split("\")[0]
+            $accountName = $buildAccountName.Split("\")[1]
+
+            $aces = New-ACE -Name $accountName -Domain $domainName -Permission "Full"
+
+            New-Share -FolderPath $shareDirectory -ShareName $shareName -Computer $computerName -ACEs $aces
         }
     }
 }
