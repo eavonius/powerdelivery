@@ -25,6 +25,7 @@ For example "MYDOMAIN\MyUser"
 New-RemoteShare REMOTE_COMPUTER MyShare "C:\MyShareDir" "MYDOMAIN\MyUser"
 #>
 function New-RemoteShare {
+    [CmdletBinding()]
     [Parameter(Position=0,Mandatory=1)][string] $computerName,
     [Parameter(Position=1,Mandatory=1)][string] $shareName, 
     [Parameter(Position=2,Mandatory=1)][string] $shareDirectory, 
