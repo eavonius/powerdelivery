@@ -42,7 +42,7 @@ function New-RemoteShare {
 
             $aces = New-ACE -Name $accountName -Domain $domainName -Permission "Full"
 
-            New-Share -FolderPath $shareDirectory -ShareName $shareName -Computer $computerName -ACEs $aces
+            New-Share -FolderPath $shareDirectory -ShareName $shareName -ComputerName $computerName -ACEs $aces
         }
     }
 }
