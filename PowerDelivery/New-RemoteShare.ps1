@@ -31,6 +31,8 @@ function New-RemoteShare {
     [Parameter(Position=2,Mandatory=1)][string] $shareDirectory, 
     [Parameter(Position=3,Mandatory=1)][string] $buildAccountName
 
+    Write-Host "Remote share: $computerName"
+
     Invoke-Command -ComputerName $computerName -ScriptBlock { 
         if (!(Test-Path -Path $shareDirectory)) {
             New-Item $shareDirectory -ItemType Directory

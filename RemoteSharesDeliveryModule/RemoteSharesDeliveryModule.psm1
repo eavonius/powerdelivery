@@ -11,6 +11,8 @@ function Initialize-RemoteSharesDeliveryModule {
 				
 				$remoteShare = $remoteShares[$_]
 				
+                Write-Host "Remote share: $($remoteShare.ComputerName)"
+
 				if ($remoteShare.ComputerName) {
 					$invokeArgs.Add('computerName', $remoteShare.ComputerName)
 				}
