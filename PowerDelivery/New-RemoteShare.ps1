@@ -26,12 +26,12 @@ New-RemoteShare REMOTE_COMPUTER MyShare "C:\MyShareDir" "MYDOMAIN\MyUser"
 #>
 function New-RemoteShare {
     [CmdletBinding()]
-    [Parameter(Position=0,Mandatory=1)][string] $computerName,
-    [Parameter(Position=1,Mandatory=1)][string] $shareName, 
-    [Parameter(Position=2,Mandatory=1)][string] $shareDirectory, 
-    [Parameter(Position=3,Mandatory=1)][string] $buildAccountName
-
-    Write-Host "Remote share: $computerName"
+    param (
+        [Parameter(Position=0,Mandatory=1)][string] $computerName,
+        [Parameter(Position=1,Mandatory=1)][string] $shareName, 
+        [Parameter(Position=2,Mandatory=1)][string] $shareDirectory, 
+        [Parameter(Position=3,Mandatory=1)][string] $buildAccountName
+    )
 
     Invoke-Command -ComputerName $computerName -ScriptBlock { 
         if (!(Test-Path -Path $shareDirectory)) {
