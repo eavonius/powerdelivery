@@ -110,7 +110,7 @@ Function New-Share (
 	$SecDesc = New-SecurityDescriptor $ACEs
 	#Create the share via WMI, get the return code and create the return message.
 	$Share = [WMICLASS] "\\$ComputerName\Root\Cimv2:Win32_Share"
-	$result = $Share.Create($FolderPath, $ShareName, 0, $false , $Description, $false  , $SecDesc)
+	$result = $Share.Create($FolderPath, $ShareName, 0, $false , $Description, $null, $SecDesc)
 	switch ($result.ReturnValue)
 	{
 		0 {$text += "has been success fully created" }
@@ -138,21 +138,21 @@ Function New-Share (
 
 #Create ACE's for the securitydescriptor for the share:
 #a group ACE, containing Group info, please notice the -Group switch
-$ACE = New-ACE -Name "Domain Users" -Domain "CORETECH" -Permission "Read" -Group
+#$ACE = New-ACE -Name "Domain Users" -Domain "CORETECH" -Permission "Read" -Group
 #a user ACE.
-$ACE2 = New-ACE -Name "CCO" -Domain "CORETECH" -Permission "Full"
+#$ACE2 = New-ACE -Name "CCO" -Domain "CORETECH" -Permission "Full"
 
 #Create the share on the local machine
-$result = New-Share -FolderPath "C:\Temp" -ShareName "Temp4"  -ACEs $ACE,$ACE2 -Description "Test Description" -Computer "localhost" 
+#$result = New-Share -FolderPath "C:\Temp" -ShareName "Temp4"  -ACEs $ACE,$ACE2 -Description "Test Description" -Computer "localhost" 
 
 #Output result message from new-share
-Write-Output $result.Message
+#Write-Output $result.Message
 
 #Check if the share was succesfully created
-If ($result.ReturnCode -eq 0)
-{
+#If ($result.ReturnCode -eq 0)
+#{
 	#Creation was succesfull, put your next code here.
-}
+#}
 
 #//----------------------------------------------------------------------------
 #//  End Script

@@ -51,7 +51,12 @@ function New-RemoteShare {
 
             $aces = New-ACE -Name $accountName -Domain $domainName -Permission "Full"
 
-            New-Share -FolderPath $shareDirectory -ShareName $shareName -ComputerName $computerName -ACEs $aces
+            $result = New-Share -FolderPath "$shareDirectory" -ShareName "$shareName" -ComputerName "$computerName" -ACEs $aces
+
+            if ($result -ne 0) 
+            {
+                throw "Error creating share, error code was $result"
+            }
         }
     } -ArgumentList @($computerName, $shareName, $shareDirectory, $buildAccountName)
 }
