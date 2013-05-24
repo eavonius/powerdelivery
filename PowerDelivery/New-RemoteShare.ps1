@@ -53,5 +53,5 @@ function New-RemoteShare {
 
             New-Share -FolderPath $shareDirectory -ShareName $shareName -ComputerName $computerName -ACEs $aces
         }
-    }
+    } -ArgumentList $computerName $shareName $shareDirectory $buildAccountName
 }
