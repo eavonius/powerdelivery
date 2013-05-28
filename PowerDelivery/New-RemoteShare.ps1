@@ -33,29 +33,33 @@ function New-RemoteShare {
         [Parameter(Position=3,Mandatory=1)][string] $buildAccountName
     )
 
-    Invoke-Command -ComputerName $computerName -ScriptBlock { 
-        param(
-            [Parameter(Position=0,Mandatory=1)]$computerName,
-            [Parameter(Position=1,Mandatory=1)]$shareName,
-            [Parameter(Position=2,Mandatory=1)]$shareDirectory,
-            [Parameter(Position=3,Mandatory=1)]$buildAccountName
-        )
+    if (!(net view "\\$computerName") -match "^$shareName") {
 
-        if (!(Test-Path -Path $shareDirectory)) {
-            New-Item $shareDirectory -ItemType Directory
-        }
-        if (!(net view "\\$computerName") -match "^$shareName") {
-            $domainName = $buildAccountName.Split("\")[0]
-            $accountName = $buildAccountName.Split("\")[1]
+        Invoke-Command -ComputerName $computerName -ScriptBlock { 
+            param(
+                [Parameter(Position=2,Mandatory=1)]$shareDirectory
+            )
 
-            $aces = New-ACE -Name $accountName -Domain $domainName -Permission "Full"
-
-            $result = New-Share -FolderPath "$shareDirectory" -ShareName "$shareName" -ComputerName "$computerName" -ACEs $aces
-
-            if ($result -ne 0) 
-            {
-                throw "Error creating share, error code was $result"
+            if (!(Test-Path -Path $shareDirectory)) {
+                New-Item $shareDirectory -ItemType Directory
             }
+        
+        } -ArgumentList @("$shareDirectory")
+
+        $accountSplit = $buildAccountName.Split("\\")
+
+        $domainName = $accountSplit[0]
+        $accountName = $accountSplit[1]
+
+        "Creating share $computerName\\$shareName for $shareDirectory and $domainName\\$accountName"
+
+        $aces = New-ACE -Name $accountName -Domain $domainName -Permission "Full"
+
+        $result = New-Share -FolderPath "$shareDirectory" -ShareName "$shareName" -ComputerName "$computerName" -ACEs $aces
+
+        if ($result -ne 0) 
+        {
+            throw "Error creating share, error code was $result"
         }
-    } -ArgumentList @("$computerName", "$shareName", "$shareDirectory", "$buildAccountName")
+    }
 }
