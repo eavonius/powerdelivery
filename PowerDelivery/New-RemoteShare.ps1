@@ -1,4 +1,5 @@
 ﻿.\NewShareWithPermissions-0.0.1.ps1
+.\ModifySharePermissions.ps1
 
 <#
 .Synopsis
@@ -33,7 +34,7 @@ function New-RemoteShare {
         [Parameter(Position=3,Mandatory=1)][string] $buildAccountName
     )
 
-    if (!(net view "\\$computerName") -match "^$shareName") {
+    if (!((net view "\\$computerName") -match "^$shareName")) {
 
         Invoke-Command -ComputerName $computerName -ScriptBlock { 
             param(
@@ -41,25 +42,29 @@ function New-RemoteShare {
             )
 
             if (!(Test-Path -Path $shareDirectory)) {
-                New-Item $shareDirectory -ItemType Directory
+                New-Item $shareDirectory -ItemType Directory | Out-Null
             }
         
         } -ArgumentList @("$shareDirectory")
 
-        $accountSplit = $buildAccountName.Split("\\")
+        $accountSplit = $buildAccountName.Split("\")
 
         $domainName = $accountSplit[0]
         $accountName = $accountSplit[1]
 
-        "Creating share $computerName\\$shareName for $shareDirectory and $domainName\\$accountName"
+        "Creating share \\$computerName\$shareName for $shareDirectory"
 
-        $aces = New-ACE -Name $accountName -Domain $domainName -Permission "Full"
+        #$aces = @(New-ACE -Name $accountName -Domain $domainName -Permission "Full")
 
-        $result = New-Share -FolderPath "$shareDirectory" -ShareName "$shareName" -ComputerName "$computerName" -ACEs $aces
+        $result = New-Share -FolderPath "$shareDirectory" -ShareName "$shareName" -ComputerName "$computerName" #-ACEs $aces
 
-        if ($result -ne 0) 
+        if ($result.ReturnCode -ne 0) 
         {
-            throw "Error creating share, error code was $result"
+            throw "Error creating share, error code was $result.ReturnCode"
         }
+
+        "Modifying share \\$computerName\$shareName to be available to $domainName\$accountName"
+
+        Modify-WMIShareACL -sharename "$shareName" -accountname "$buildAccountName" -rights "Read,Write" -computer "$computerName"
     }
 }
