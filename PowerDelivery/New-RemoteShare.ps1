@@ -44,8 +44,7 @@ function New-RemoteShare {
         if (!(Test-Path -Path $shareDirectory)) {
             New-Item $shareDirectory -ItemType Directory
         }
-        if (!(Get-PSDrive -PSProvider FileSystem -Name $shareDirectory)) {
-
+        if (!(net view "\\$computerName") -match "^$shareName") {
             $domainName = $buildAccountName.Split("\")[0]
             $accountName = $buildAccountName.Split("\")[1]
 
