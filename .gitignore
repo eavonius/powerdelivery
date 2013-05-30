@@ -99,8 +99,16 @@ publish
 # Others
 [Bb]in
 [Oo]bj
+DeploymentPackage
+*BuildDrop
+*.zip
+TestResults
+packages
 sql
 TestResults
+*.trx
+*.log
+*.vssscc
 *.Cache
 ClientBin
 stylecop.*
