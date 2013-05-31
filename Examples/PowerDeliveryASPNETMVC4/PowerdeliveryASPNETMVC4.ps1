@@ -10,16 +10,6 @@ Import-DeliveryModule MSBuild
 Import-DeliveryModule Roundhouse
 Import-DeliveryModule WebDeploy
 
-Init { 
-	#$script:webDeployPath 	 = "PowerDeliveryASPNETMVC4\DeploymentPackage"
-	#$script:webDeployZipFile = Join-Path $webDeployPath PowerDeliveryASPNETMVC4.zip
-}
-
-Deploy {
-	#Get-BuildAssets $webDeployZipFile $webDeployPath
-}
-
 TestUnits {
-	#Get-BuildAssets UnitTests\*.* UnitTests
-	Invoke-MSTest UnitTests\PowerDeliveryASPNETMVC4.Tests.dll UnitTestResults.trx Unit
+	Invoke-MSTest (Get-BuildSetting "UnitTestsPath") UnitTestResults.trx Unit
 }

@@ -114,6 +114,10 @@ ClientBin
 stylecop.*
 ~$*
 *.dbmdl
+Examples/**/jedwards*
+Examples/**/UnitTests
+Examples/**/AcceptanceTests
+Examples/**/WebSites
 Generated_Code #added for RIA/Silverlight projects
 
 # Backup & report files from converting an old project file to a newer

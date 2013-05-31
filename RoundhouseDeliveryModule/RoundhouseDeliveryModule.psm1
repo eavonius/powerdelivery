@@ -2,8 +2,8 @@ function Initialize-RoundhouseDeliveryModule {
 
 	Register-DeliveryModuleHook 'PostDeploy' {
 	
-		$yamlConfig = Get-BuildYamlConfig
-		$roundhouseDatabases = $yamlConfig.Roundhouse
+		$moduleConfig = Get-BuildModuleConfig
+		$roundhouseDatabases = $moduleConfig.Roundhouse
 
 		if ($roundhouseDatabases) {
 			$roundhouseDatabases.Keys | % {

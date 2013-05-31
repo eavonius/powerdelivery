@@ -2,8 +2,8 @@ function Initialize-RemoteSharesDeliveryModule {
 
 	Register-DeliveryModuleHook 'PreSetupEnvironment' {
 	
-		$yamlConfig = Get-BuildYamlConfig
-		$remoteShares = $yamlConfig.RemoteShares
+		$moduleConfig = Get-BuildModuleConfig
+		$remoteShares = $moduleConfig.RemoteShares
 
 		if ($remoteShares) {
 			$remoteShares.Keys | % {

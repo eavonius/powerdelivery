@@ -1,43 +1,7 @@
-Settings:
-    DBServer: localhost
-    DBName: PowerDeliveryASPNETMVC4_Local
-
-MSBuild:
-    PowerDeliveryASPNETMVC4:
-        ProjectFile: PowerDeliveryASPNETMVC4.sln
-        Properties: 
-            DeployOnBuild: true
-            PublishProfile: Default
-
-Assets:
-    WebSite:
-        Path: PowerDeliveryASPNETMVC4\DeploymentPackage\PowerDeliveryASPNETMVC4.zip
-        Destination: WebSites\PowerDeliveryASPNETMVC4
-    AcceptanceTests:
-        Path: PowerDeliveryASPNETMVC4.Acceptance\bin\Debug\*.* 
-        Destination: AcceptanceTests
-    UnitTests:
-        Path: PowerDeliveryASPNETMVC4.Tests\bin\Debug\*.* 
-        Destination: UnitTests
-    Databases:
-        Path: PowerDeliveryASPNETMVC4DB
-        Destination: Databases
-        Recurse: true
-
-WebDeploy:
-    PowerDeliveryASPNETMVC4:
-        WebComputer: localhost
-        WebPort: 8081
-        WebSite: PowerDeliveryASPNETMVC4_Local
-        WebPassword: "!hafoi^45"
-        WebURL: http://localhost:8081/
-        Package: WebSites\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4.zip
-        Parameters:
-            "IIS Web Application Name": PowerDeliveryASPNETMVC4_Local
-            "DefaultConnection-Web.config Connection String": Data Source=localhost;Initial Catalog=PowerDeliveryASPNETMVC4_Local;Integrated Security=SSPI
-
-Roundhouse:
-    PowerDeliveryASPNETMVC4:
-        Server: localhost
-        Database: PowerDeliveryASPNETMVC4_Local
-        ScriptsDir: Databases\PowerDeliveryASPNETMVC4DB
+DatabaseServer: localhost
+DatabaseName: PowerDeliveryASPNETMVC4_Local
+WebServer: localhost
+WebPort: "8081"
+WebSite: PowerDeliveryASPNETMVC4_Local
+WebURL: "http://localhost:8081"
+UnitTestsPath: PowerDeliveryASPNETMVC4.Tests\bin\Debug\PowerDeliveryASPNETMVC4.Tests.dll

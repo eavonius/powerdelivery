@@ -2,8 +2,53 @@ function Initialize-WebDeployDeliveryModule {
 
 	Register-DeliveryModuleHook 'PreDeploy' {
 	
-		$yamlConfig = Get-BuildYamlConfig
-		$webDeployments = $yamlConfig.WebDeploy
+		function Load-WebAdministration
+		{
+		    $ModuleName = "WebAdministration"
+		    $ModuleLoaded = $false
+		    $LoadAsSnapin = $false
+
+		    if ($PSVersionTable.PSVersion.Major -ge 2)
+		    {
+		        if ((Get-Module -ListAvailable | ForEach-Object {$_.Name}) -contains $ModuleName)
+		        {
+		            Import-Module $ModuleName
+
+		            if ((Get-Module | ForEach-Object {$_.Name}) -contains $ModuleName)
+		                { $ModuleLoaded = $true } else { $LoadAsSnapin = $true }
+		        }
+		        elseif ((Get-Module | ForEach-Object {$_.Name}) -contains $ModuleName)
+		            { $ModuleLoaded = $true } else { $LoadAsSnapin = $true }
+		    }
+		    else
+		    { $LoadAsSnapin = $true }
+
+		    if ($LoadAsSnapin)
+		    {
+		        try
+		        {
+		            if ((Get-PSSnapin -Registered | ForEach-Object {$_.Name}) -contains $ModuleName)
+		            {
+		                if ((Get-PSSnapin -Name $ModuleName -ErrorAction SilentlyContinue) -eq $null) 
+		                    { Add-PSSnapin $ModuleName }
+
+		                if ((Get-PSSnapin | ForEach-Object {$_.Name}) -contains $ModuleName)
+		                    { $ModuleLoaded = $true }
+		            }
+		            elseif ((Get-PSSnapin | ForEach-Object {$_.Name}) -contains $ModuleName)
+		                { $ModuleLoaded = $true }
+		        }
+
+		        catch
+		        {
+		            Write-Error "`t`t$($MyInvocation.InvocationName): $_"
+		            Exit
+		        }
+		    }
+		}
+	
+		$moduleConfig = Get-BuildModuleConfig
+		$webDeployments = $moduleConfig.WebDeploy
 
 		if ($webDeployments) {
 			$webDeployments.Keys | % {
@@ -34,14 +79,17 @@ function Initialize-WebDeployDeliveryModule {
 				
 			    $publishSettingsFile = "$(gl)\$($deployment.webSite).publishsettings"
 
-			   	Add-PSSnapin wdeploysnapin3.0
+				if ((Get-PSSnapin -Name "wdeploysnapin3.0" -ErrorAction SilentlyContinue) -eq $null) {
+			   		Add-PSSnapin "wdeploysnapin3.0"
+				}
 				
 				if ($deployment.webComputer -like 'localhost') {
 					
 					$deployment.webComputer = $env:COMPUTERNAME
 					$deployment.webUrl = $deployment.webUrl.Replace("localhost", $env:COMPUTERNAME)
 					
-					Import-Module WebAdministration
+					Load-WebAdministration
+					#Import-Module WebAdministration
 					
 					if (!(Test-Path "IIS:\AppPools\$($deployment.webSite)"))
   					{
@@ -72,7 +120,8 @@ function Initialize-WebDeployDeliveryModule {
 
 			    Restore-WDPackage -Package $deployment.Package `
 								  -DestinationPublishSettings $publishSettingsFile `
-								  -Parameters $deployment.Parameters
+								  -Parameters $deployment.Parameters `
+								  -ErrorAction Stop
 				
 				Write-BuildSummaryMessage -name "Deploy" -header "Deployments" -message "WebDeploy: $($deployment.Package) -> $($deployment.webURL) ($($deployment.webComputer))"
 			}

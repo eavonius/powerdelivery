@@ -44,43 +44,22 @@ Global
 		SccLocalPath3 = PowerDeliveryASPNETMVC4.Acceptance
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Commit|Any CPU = Commit|Any CPU
 		Debug|Any CPU = Debug|Any CPU
-		Production|Any CPU = Production|Any CPU
 		Release|Any CPU = Release|Any CPU
-		Test|Any CPU = Test|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2C4A9BA2-3F2D-4DAA-9826-546EB4C72E56}.Commit|Any CPU.ActiveCfg = Commit|Any CPU
-		{2C4A9BA2-3F2D-4DAA-9826-546EB4C72E56}.Commit|Any CPU.Build.0 = Commit|Any CPU
 		{2C4A9BA2-3F2D-4DAA-9826-546EB4C72E56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2C4A9BA2-3F2D-4DAA-9826-546EB4C72E56}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2C4A9BA2-3F2D-4DAA-9826-546EB4C72E56}.Production|Any CPU.ActiveCfg = Production|Any CPU
-		{2C4A9BA2-3F2D-4DAA-9826-546EB4C72E56}.Production|Any CPU.Build.0 = Production|Any CPU
 		{2C4A9BA2-3F2D-4DAA-9826-546EB4C72E56}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2C4A9BA2-3F2D-4DAA-9826-546EB4C72E56}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2C4A9BA2-3F2D-4DAA-9826-546EB4C72E56}.Test|Any CPU.ActiveCfg = Test|Any CPU
-		{2C4A9BA2-3F2D-4DAA-9826-546EB4C72E56}.Test|Any CPU.Build.0 = Test|Any CPU
-		{00517CD9-5D1F-4BF1-AC09-D78FA20BD405}.Commit|Any CPU.ActiveCfg = Commit|Any CPU
-		{00517CD9-5D1F-4BF1-AC09-D78FA20BD405}.Commit|Any CPU.Build.0 = Commit|Any CPU
 		{00517CD9-5D1F-4BF1-AC09-D78FA20BD405}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{00517CD9-5D1F-4BF1-AC09-D78FA20BD405}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{00517CD9-5D1F-4BF1-AC09-D78FA20BD405}.Production|Any CPU.ActiveCfg = Production|Any CPU
-		{00517CD9-5D1F-4BF1-AC09-D78FA20BD405}.Production|Any CPU.Build.0 = Production|Any CPU
 		{00517CD9-5D1F-4BF1-AC09-D78FA20BD405}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00517CD9-5D1F-4BF1-AC09-D78FA20BD405}.Release|Any CPU.Build.0 = Release|Any CPU
-		{00517CD9-5D1F-4BF1-AC09-D78FA20BD405}.Test|Any CPU.ActiveCfg = Test|Any CPU
-		{00517CD9-5D1F-4BF1-AC09-D78FA20BD405}.Test|Any CPU.Build.0 = Test|Any CPU
-		{34211467-C2AD-494C-915E-C50476D79CD9}.Commit|Any CPU.ActiveCfg = Release|Any CPU
-		{34211467-C2AD-494C-915E-C50476D79CD9}.Commit|Any CPU.Build.0 = Release|Any CPU
 		{34211467-C2AD-494C-915E-C50476D79CD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{34211467-C2AD-494C-915E-C50476D79CD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{34211467-C2AD-494C-915E-C50476D79CD9}.Production|Any CPU.ActiveCfg = Release|Any CPU
-		{34211467-C2AD-494C-915E-C50476D79CD9}.Production|Any CPU.Build.0 = Release|Any CPU
 		{34211467-C2AD-494C-915E-C50476D79CD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{34211467-C2AD-494C-915E-C50476D79CD9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{34211467-C2AD-494C-915E-C50476D79CD9}.Test|Any CPU.ActiveCfg = Release|Any CPU
-		{34211467-C2AD-494C-915E-C50476D79CD9}.Test|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

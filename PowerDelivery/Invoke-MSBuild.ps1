@@ -59,8 +59,13 @@ function Invoke-MSBuild {
 	
 	if ([String]::IsNullOrWhiteSpace($buildConfiguration)) {
 	
-		$buildConfiguration = Get-BuildEnvironment
-	
+		if ((Get-BuildEnvironment) -eq 'Local') {
+			$buildConfiguration = 'Debug'
+		}
+		else {
+			$buildConfiguration = 'Release'
+		}
+
 		if (!$properties.ContainsKey('Configuration')) {
 			$properties.Add('Configuration', $buildConfiguration)
 		}

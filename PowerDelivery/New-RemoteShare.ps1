@@ -1,5 +1,7 @@
-﻿.\NewShareWithPermissions-0.0.1.ps1
-.\ModifySharePermissions.ps1
+﻿$scriptPath = split-path -parent $MyInvocation.MyCommand.Definition
+
+."$scriptPath\NewShareWithPermissions-0.0.1.ps1"
+."$scriptPath\ModifySharePermissions.ps1"
 
 <#
 .Synopsis

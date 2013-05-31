@@ -67,7 +67,7 @@ function Invoke-Powerdelivery {
 					$actionPerformed = $true
 				}			
 				if ($blockName -eq "Compile") {
-					$yamlConfig = Get-BuildYamlConfig
+					$yamlConfig = Get-BuildModuleConfig
 					$assetOperations = $yamlConfig.Assets
 
 					if ($assetOperations) {
@@ -105,6 +105,38 @@ function Invoke-Powerdelivery {
 			}
 			finally {
 			   	Set-Location $powerdelivery.currentLocation
+			}
+		}
+	}
+	
+	function ReplaceModuleConfigSettings($yamlNodes) {
+		if ($yamlNodes.Keys) {
+			$replacedValues = @{}
+			$yamlNodes.Keys | % {
+				$yamlNode = $yamlNodes[$_]			
+				if ($yamlNode.GetType().Name -eq 'Hashtable') {
+					ReplaceModuleConfigSettings($yamlNode)
+				}
+				else {
+					$matches = Select-String "\<<.*?\>>" -InputObject $yamlNode -AllMatches | Foreach {$_.Matches}
+					$replacedValue = $yamlNode
+					$matches | Foreach { 
+						$envSettingName = $_.Value.Substring(2, $_.Length - 4)
+						$envSettingValue = [String]::Empty
+						try {
+							$envSettingValue = Get-BuildSetting $envSettingName
+						}
+						catch {
+							$errorMessage = $_.Exception.Message
+							throw "Error replacing setting in module configuration file: $errorMessage"
+						}
+						$replacedValue = $replacedValue -replace $_, $envSettingValue
+					}
+					$replacedValues.Add($_, $replacedValue)
+				}
+			}
+			$replacedValues.GetEnumerator() | Foreach {
+				$yamlNodes[$_.Name] = $_.Value
 			}
 		}
 	}
@@ -182,8 +214,7 @@ function Invoke-Powerdelivery {
 
 		        $powerdelivery.projectInfo = $powerdelivery.structure.GetProjectFromName($teamProject)
 		        if (!$powerdelivery.projectInfo) {
-		            Write-Error "Project '$teamProject' not found in TFS collection '$collectionUri'"
-		            exit
+		            throw "Project '$teamProject' not found in TFS collection '$collectionUri'"
 		        }
 				
 				$powerdelivery.groupSecurity = $powerdelivery.collection.GetService([Microsoft.TeamFoundation.Server.IGroupSecurityService])
@@ -195,9 +226,11 @@ function Invoke-Powerdelivery {
 			$currentDirectory = Get-Location
 			$powerdelivery.dropLocation = [System.IO.Path]::Combine($currentDirectory, "$($appScript)BuildDrop")
 			mkdir $powerdelivery.dropLocation -Force | Out-Null
+			$dropLocation = $powerdelivery.dropLocation
 	    }
 		
 		$envConfigFileName = "$($appScript)$($environment)Environment"
+		$modulesConfigFileName = "$($appScript)Modules.yml"
 		$yamlFile = "$($envConfigFileName).yml"
 		$csvFile = "$($envConfigFileName).csv"
 
@@ -206,7 +239,7 @@ function Invoke-Powerdelivery {
 	    if (Test-Path -Path $yamlFile) {
 			$yamlPath = (Resolve-Path ".\$($yamlFile)")
 			$powerdelivery.yamlConfig = Get-Yaml -FromFile $yamlPath
-			$powerdelivery.envConfig = $powerdelivery.yamlConfig.Settings
+			$powerdelivery.envConfig = $powerdelivery.yamlConfig
 	    }
 	    elseif (Test-Path -Path $csvFile) {
 			$powerdelivery.is_yaml = $false
@@ -215,6 +248,12 @@ function Invoke-Powerdelivery {
 		else {
 		    throw "Build configuration file $envConfigFileName not found."
 	    }
+		
+		if (Test-Path -Path $modulesConfigFileName) {
+			$yamlPath = (Resolve-Path ".\$($modulesConfigFileName)")
+			$powerdelivery.moduleConfig = Get-Yaml -FromFile $yamlPath			
+			ReplaceModuleConfigSettings($powerdelivery.moduleConfig)
+		}
 		
 		Invoke-Expression -Command ".\$appScript"
 		

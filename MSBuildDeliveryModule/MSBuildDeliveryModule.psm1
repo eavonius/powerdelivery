@@ -2,8 +2,8 @@ function Initialize-MSBuildDeliveryModule {
 
 	Register-DeliveryModuleHook 'PreCompile' {
 	
-		$yamlConfig = Get-BuildYamlConfig
-		$msBuildProjects = $yamlConfig.MSBuild
+		$moduleConfig = Get-BuildModuleConfig
+		$msBuildProjects = $moduleConfig.MSBuild
 
 		if ($msBuildProjects) {
 			$msBuildProjects.Keys | % {

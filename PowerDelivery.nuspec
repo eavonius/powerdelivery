@@ -14,10 +14,6 @@
         <dependencies />
     </metadata>
     <files>
-		<file src="HyperVDeliveryModule\HyperVDeliveryModule.psd1" target="tools\HyperVDeliveryModule\HyperVDeliveryModule.psd1" />
-		<file src="HyperVDeliveryModule\HyperVDeliveryModule.psm1" target="tools\HyperVDeliveryModule\HyperVDeliveryModule.psm1" />
-		<file src="MSBuildDeliveryModule\MSBuildDeliveryModule.psd1" target="tools\MSBuildDeliveryModule\MSBuildDeliveryModule.psd1" />
-		<file src="MSBuildDeliveryModule\MSBuildDeliveryModule.psm1" target="tools\MSBuildDeliveryModule\MSBuildDeliveryModule.psm1" />
         <file src="PowerDelivery\PowerDelivery.psm1" target="tools\PowerDelivery\PowerDelivery.psm1" />
         <file src="PowerDelivery\PowerDelivery.psd1" target="tools\PowerDelivery\PowerDelivery.psd1" />
 		<file src="PowerDelivery\Add-Pipeline.ps1" target="tools\PowerDelivery\Add-Pipeline.ps1" />
@@ -29,6 +25,7 @@
 		<file src="PowerDelivery\Get-BuildChangeSet.ps1" target="tools\PowerDelivery\Get-BuildChangeSet.ps1" />
 		<file src="PowerDelivery\Get-BuildDropLocation.ps1" target="tools\PowerDelivery\Get-BuildDropLocation.ps1" />
 		<file src="PowerDelivery\Get-BuildEnvironment.ps1" target="tools\PowerDelivery\Get-BuildEnvironment.ps1" />
+		<file src="PowerDelivery\Get-BuildModuleConfig.ps1" target="tools\PowerDelivery\Get-BuildModuleConfig.ps1" />
 		<file src="PowerDelivery\Get-BuildName.ps1" target="tools\PowerDelivery\Get-BuildName.ps1" />
 		<file src="PowerDelivery\Get-BuildNumber.ps1" target="tools\PowerDelivery\Get-BuildNumber.ps1" />
 		<file src="PowerDelivery\Get-BuildOnServer.ps1" target="tools\PowerDelivery\Get-BuildOnServer.ps1" />
@@ -51,35 +48,38 @@
 		<file src="PowerDelivery\Publish-BuildAssets.ps1" target="tools\PowerDelivery\Publish-BuildAssets.ps1" />
 		<file src="PowerDelivery\Publish-SSAS.ps1" target="tools\PowerDelivery\Publish-SSAS.ps1" />
 		<file src="PowerDelivery\Register-DeliveryModuleHook.ps1" target="tools\PowerDelivery\Register-DeliveryModuleHook.ps1" />
-        <file src="RemoteSharesDeliveryModule\RemoteSharesDeliveryModule.psm1" target="tools\RemoteSharesDeliveryModule\RemoteSharesDeliveryModule.psm1" />
-        <file src="RemoteSharesDeliveryModule\RemoteSharesDeliveryModule.psd1" target="tools\RemoteSharesDeliveryModule\RemoteSharesDeliveryModule.psd1" />
 		<file src="PowerDelivery\Set-SSASConnection.ps1" target="tools\PowerDelivery\Set-SSASConnection.ps1" />
 		<file src="PowerDelivery\Start-SqlJobs.ps1" target="tools\PowerDelivery\Start-SqlJobs.ps1" />
 		<file src="PowerDelivery\Stop-SqlJobs.ps1" target="tools\PowerDelivery\Stop-SqlJobs.ps1" />
 		<file src="PowerDelivery\Update-AssemblyInfoFiles.ps1" target="tools\PowerDelivery\Update-AssemblyInfoFiles.ps1" />
 		<file src="PowerDelivery\Write-BuildSummaryMessage.ps1" target="tools\PowerDelivery\Write-BuildSummaryMessage.ps1" />
-        <file src="PowerDelivery\BuildProcessTemplates\PowerDeliveryChangeSetTemplate.11.xaml" target="tools\PowerDelivery\BuildProcessTemplates\PowerDeliveryChangeSetTemplate.11.xaml" />
+        
+		<file src="PowerDelivery\BuildProcessTemplates\PowerDeliveryChangeSetTemplate.11.xaml" target="tools\PowerDelivery\BuildProcessTemplates\PowerDeliveryChangeSetTemplate.11.xaml" />
         <file src="PowerDelivery\BuildProcessTemplates\PowerDeliveryChangeSetTemplate.xaml" target="tools\PowerDelivery\BuildProcessTemplates\PowerDeliveryChangeSetTemplate.xaml" />
         <file src="PowerDelivery\BuildProcessTemplates\PowerDeliveryTemplate.11.xaml" target="tools\PowerDelivery\BuildProcessTemplates\PowerDeliveryTemplate.11.xaml" />
         <file src="PowerDelivery\BuildProcessTemplates\PowerDeliveryTemplate.xaml" target="tools\PowerDelivery\BuildProcessTemplates\PowerDeliveryTemplate.xaml" />
-        <file src="PowerDelivery\Templates\ASP.NET Web Site\Build.ps1" target="tools\PowerDelivery\Templates\ASP.NET Web Site\Build.ps1" />
+        
+		<file src="PowerDelivery\Templates\ASP.NET Web Site\Build.ps1" target="tools\PowerDelivery\Templates\ASP.NET Web Site\Build.ps1" />
         <file src="PowerDelivery\Templates\ASP.NET Web Site\BuildCapacityTestEnvironment.csv" target="tools\PowerDelivery\Templates\ASP.NET Web Site\BuildCapacityTestEnvironment.csv" />
         <file src="PowerDelivery\Templates\ASP.NET Web Site\BuildCommitEnvironment.csv" target="tools\PowerDelivery\Templates\ASP.NET Web Site\BuildCommitEnvironment.csv" />
         <file src="PowerDelivery\Templates\ASP.NET Web Site\BuildLocalEnvironment.csv" target="tools\PowerDelivery\Templates\ASP.NET Web Site\BuildLocalEnvironment.csv" />
         <file src="PowerDelivery\Templates\ASP.NET Web Site\BuildProductionEnvironment.csv" target="tools\PowerDelivery\Templates\ASP.NET Web Site\BuildProductionEnvironment.csv" />
         <file src="PowerDelivery\Templates\ASP.NET Web Site\BuildTestEnvironment.csv" target="tools\PowerDelivery\Templates\ASP.NET Web Site\BuildTestEnvironment.csv" />
-        <file src="PowerDelivery\Templates\Blank\Build.ps1" target="tools\PowerDelivery\Templates\Blank\Build.ps1" />
+        
+		<file src="PowerDelivery\Templates\Blank\Build.ps1" target="tools\PowerDelivery\Templates\Blank\Build.ps1" />
         <file src="PowerDelivery\Templates\Blank\BuildCapacityTestEnvironment.yml" target="tools\PowerDelivery\Templates\Blank\BuildCapacityTestEnvironment.yml" />
         <file src="PowerDelivery\Templates\Blank\BuildCommitEnvironment.yml" target="tools\PowerDelivery\Templates\Blank\BuildCommitEnvironment.yml" />
         <file src="PowerDelivery\Templates\Blank\BuildLocalEnvironment.yml" target="tools\PowerDelivery\Templates\Blank\BuildLocalEnvironment.yml" />
         <file src="PowerDelivery\Templates\Blank\BuildProductionEnvironment.yml" target="tools\PowerDelivery\Templates\Blank\BuildProductionEnvironment.yml" />
         <file src="PowerDelivery\Templates\Blank\BuildTestEnvironment.yml" target="tools\PowerDelivery\Templates\Blank\BuildTestEnvironment.yml" />
-        <file src="PowerDelivery\Templates\RoundhousE Database\Build.ps1" target="tools\PowerDelivery\Templates\RoundhousE Database\Build.ps1" />
+        
+		<file src="PowerDelivery\Templates\RoundhousE Database\Build.ps1" target="tools\PowerDelivery\Templates\RoundhousE Database\Build.ps1" />
         <file src="PowerDelivery\Templates\RoundhousE Database\BuildCapacityTestEnvironment.csv" target="tools\PowerDelivery\Templates\RoundhousE Database\BuildCapacityTestEnvironment.csv" />
         <file src="PowerDelivery\Templates\RoundhousE Database\BuildCommitEnvironment.csv" target="tools\PowerDelivery\Templates\RoundhousE Database\BuildCommitEnvironment.csv" />
         <file src="PowerDelivery\Templates\RoundhousE Database\BuildLocalEnvironment.csv" target="tools\PowerDelivery\Templates\RoundhousE Database\BuildLocalEnvironment.csv" />
         <file src="PowerDelivery\Templates\RoundhousE Database\BuildProductionEnvironment.csv" target="tools\PowerDelivery\Templates\RoundhousE Database\BuildProductionEnvironment.csv" />
         <file src="PowerDelivery\Templates\RoundhousE Database\BuildTestEnvironment.csv" target="tools\PowerDelivery\Templates\RoundhousE Database\BuildTestEnvironment.csv" />
+		
 		<file src="PowerYaml\PowerYaml.psm1" target="tools\PowerYaml\PowerYaml.psm1" />
 		<file src="PowerYaml\LICENSE" target="tools\PowerYaml\LICENSE" />
 		<file src="PowerYaml\Functions\Casting.ps1" target="tools\PowerYaml\Functions\Casting.ps1" />
@@ -90,12 +90,24 @@
 		<file src="PowerYaml\Libs\YamlDotNet.Converters.dll" target="tools\PowerYaml\Libs\YamlDotNet.Converters.dll" />
 		<file src="PowerYaml\Libs\YamlDotNet.Core.dll" target="tools\PowerYaml\Libs\YamlDotNet.Core.dll" />
 		<file src="PowerYaml\Libs\YamlDotNet.RepresentationModel.dll" target="tools\PowerYaml\Libs\YamlDotNet.RepresentationModel.dll" />
-		<file src="WebDeployDeliveryModule\WebDeployDeliveryModule.psd1" target="tools\WebDeployDeliveryModule\WebDeployDeliveryModule.psd1" />
-		<file src="WebDeployDeliveryModule\WebDeployDeliveryModule.psm1" target="tools\WebDeployDeliveryModule\WebDeployDeliveryModule.psm1" />
-		<file src="RoundhouseDeliveryModule\RoundhouseDeliveryModule.psd1" target="tools\RoundhouseDeliveryModule\RoundhouseDeliveryModule.psd1" />
-		<file src="RoundhouseDeliveryModule\RoundhouseDeliveryModule.psm1" target="tools\RoundhouseDeliveryModule\RoundhouseDeliveryModule.psm1" />
-        <file src="chocolateyInstall.ps1" target="tools\chocolateyInstall.ps1" />
+		
+		<file src="chocolateyInstall.ps1" target="tools\chocolateyInstall.ps1" />
         <file src="init.ps1" target="tools\init.ps1" />
         <file src="enable-buildDeployment.ps1" target="tools\enable-buildDeployment.ps1" />
+		
+		<file src="HyperVDeliveryModule\HyperVDeliveryModule.psd1" target="tools\HyperVDeliveryModule\HyperVDeliveryModule.psd1" />
+		<file src="HyperVDeliveryModule\HyperVDeliveryModule.psm1" target="tools\HyperVDeliveryModule\HyperVDeliveryModule.psm1" />
+		
+		<file src="MSBuildDeliveryModule\MSBuildDeliveryModule.psd1" target="tools\MSBuildDeliveryModule\MSBuildDeliveryModule.psd1" />
+		<file src="MSBuildDeliveryModule\MSBuildDeliveryModule.psm1" target="tools\MSBuildDeliveryModule\MSBuildDeliveryModule.psm1" />
+		
+		<file src="RemoteSharesDeliveryModule\RemoteSharesDeliveryModule.psm1" target="tools\RemoteSharesDeliveryModule\RemoteSharesDeliveryModule.psm1" />
+        <file src="RemoteSharesDeliveryModule\RemoteSharesDeliveryModule.psd1" target="tools\RemoteSharesDeliveryModule\RemoteSharesDeliveryModule.psd1" />
+		
+		<file src="RoundhouseDeliveryModule\RoundhouseDeliveryModule.psd1" target="tools\RoundhouseDeliveryModule\RoundhouseDeliveryModule.psd1" />
+		<file src="RoundhouseDeliveryModule\RoundhouseDeliveryModule.psm1" target="tools\RoundhouseDeliveryModule\RoundhouseDeliveryModule.psm1" />
+		
+		<file src="WebDeployDeliveryModule\WebDeployDeliveryModule.psd1" target="tools\WebDeployDeliveryModule\WebDeployDeliveryModule.psd1" />
+		<file src="WebDeployDeliveryModule\WebDeployDeliveryModule.psm1" target="tools\WebDeployDeliveryModule\WebDeployDeliveryModule.psm1" />
     </files>
 </package>
