@@ -10,10 +10,10 @@ Assets:
         Path: PowerDeliveryASPNETMVC4\DeploymentPackage\PowerDeliveryASPNETMVC4.zip
         Destination: WebSites\PowerDeliveryASPNETMVC4
     AcceptanceTests:
-        Path: PowerDeliveryASPNETMVC4.Acceptance\bin\Debug\*.* 
+        Path: PowerDeliveryASPNETMVC4.Acceptance\bin\<<BuildConfiguration>>\*.* 
         Destination: AcceptanceTests
     UnitTests:
-        Path: PowerDeliveryASPNETMVC4.Tests\bin\Debug\*.* 
+        Path: PowerDeliveryASPNETMVC4.Tests\bin\<<BuildConfiguration>>\*.* 
         Destination: UnitTests
     Databases:
         Path: PowerDeliveryASPNETMVC4DB

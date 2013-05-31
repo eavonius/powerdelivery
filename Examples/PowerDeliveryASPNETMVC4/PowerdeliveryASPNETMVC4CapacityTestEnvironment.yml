@@ -5,3 +5,4 @@ WebPort: "8084"
 WebSite: PowerDeliveryASPNETMVC4_CapacityTest
 WebURL: "http://localhost:8084"
 UnitTestsPath: UnitTests\PowerDeliveryASPNETMVC4.Tests.dll
+BuildConfiguration: Release
