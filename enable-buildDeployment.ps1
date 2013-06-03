@@ -38,7 +38,7 @@ $localAdminGroupMembers | foreach {
     }
 }
 
-if ($isMemberOfAdminGroup) {
+if ($isMemberOfAdminGroup -eq $false) {
     "Adding $buildUserDomain\$buildUserName to the local Administrators group..."
     $localAdminGroup.psbase.Invoke("Add",([ADSI]"WinNT://$buildUserDomain/$buildUserName").path)
 }
