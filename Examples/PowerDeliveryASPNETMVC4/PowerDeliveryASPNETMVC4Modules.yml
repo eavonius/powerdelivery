@@ -1,39 +1,46 @@
 MSBuild:
-    PowerDeliveryASPNETMVC4:
-        ProjectFile: PowerDeliveryASPNETMVC4.sln
-        Properties: 
-            DeployOnBuild: true
-            PublishProfile: Default
+  PowerDeliveryASPNETMVC4:
+    ProjectFile: PowerDeliveryASPNETMVC4.sln
+    Properties: 
+      DeployOnBuild: true
+      PublishProfile: Default
 
 Assets:
-    WebSite:
-        Path: PowerDeliveryASPNETMVC4\DeploymentPackage\PowerDeliveryASPNETMVC4.zip
-        Destination: WebSites\PowerDeliveryASPNETMVC4
-    AcceptanceTests:
-        Path: PowerDeliveryASPNETMVC4.Acceptance\bin\<<BuildConfiguration>>\*.* 
-        Destination: AcceptanceTests
-    UnitTests:
-        Path: PowerDeliveryASPNETMVC4.Tests\bin\<<BuildConfiguration>>\*.* 
-        Destination: UnitTests
-    Databases:
-        Path: PowerDeliveryASPNETMVC4DB
-        Destination: Databases
-        Recurse: true
+  WebSite:
+    Path: PowerDeliveryASPNETMVC4\DeploymentPackage\PowerDeliveryASPNETMVC4.zip
+    Destination: WebSites\PowerDeliveryASPNETMVC4
+  AcceptanceTests:
+    Path: PowerDeliveryASPNETMVC4.Acceptance\bin\<<BuildConfiguration>>\*.* 
+    Destination: AcceptanceTests
+  UnitTests:
+    Path: PowerDeliveryASPNETMVC4.Tests\bin\<<BuildConfiguration>>\*.* 
+    Destination: UnitTests
+  Databases:
+    Path: PowerDeliveryASPNETMVC4DB
+    Destination: Databases
+    Recurse: true
 
 WebDeploy:
-    PowerDeliveryASPNETMVC4:
-        WebComputer: <<WebServer>>
-        WebPort: <<WebPort>>
-        WebSite: <<WebSite>>
-        WebPassword: "!hafoi^45"
-        WebURL: <<WebUrl>>
-        Package: WebSites\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4.zip
-        Parameters:
-            "IIS Web Application Name": <<WebSite>>
-            "DefaultConnection-Web.config Connection String": "Data Source=<<DatabaseServer>>;Initial Catalog=<<DatabaseName>>;Integrated Security=SSPI"
+  PowerDeliveryASPNETMVC4:
+    WebComputer: <<WebServer>>
+    WebPort: <<WebPort>>
+    WebSite: <<WebSite>>
+    WebPassword: "!hafoi^45"
+    WebURL: <<WebUrl>>
+    Package: WebSites\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4.zip
+    Parameters:
+      "IIS Web Application Name": <<WebSite>>
+      "DefaultConnection-Web.config Connection String": "Data Source=<<DatabaseServer>>;Initial Catalog=<<DatabaseName>>;Integrated Security=SSPI"
+
+MSTest:
+  UnitTests:
+    PowerDeliveryASPNETMVC4.Tests:
+      File: <<UnitTestsPath>>
+      Results: UnitTestResults.trx
+      Category: Unit
 
 Roundhouse:
-    PowerDeliveryASPNETMVC4:
-        Server: <<DatabaseServer>>
-        Database: <<DatabaseName>>
-        ScriptsDir: Databases\PowerDeliveryASPNETMVC4DB
+  PowerDeliveryASPNETMVC4:
+    Server: <<DatabaseServer>>
+    Database: <<DatabaseName>>
+    ScriptsDir: Databases\PowerDeliveryASPNETMVC4DB

@@ -41,13 +41,18 @@ function Invoke-MSTest {
 		[Parameter(Position=4,Mandatory=0)][string] $buildConfiguration
     )
 	
-	if ([String]::IsNullOrWhiteSpace($buildConfiguration)) {
-		$buildConfiguration = Get-BuildEnvironment
-	}
-
     $currentDirectory = Get-Location
 	$environment = Get-BuildEnvironment
 	$dropLocation = Get-BuildDropLocation
+
+	if ([String]::IsNullOrWhiteSpace($buildConfiguration)) {
+		if ($environment -eq 'Local') {
+			$buildConfiguration = 'Debug'
+		}
+		else {
+			$buildConfiguration = 'Release'
+		}
+	}
 
 	$localResults = "$currentDirectory\$results"
 	$dropResults = "$dropLocation\$results"
