@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>PowerDelivery</id>
-        <version>2.2.0</version>
+        <version>2.2.1</version>
         <title>PowerDelivery</title>
         <authors>Jayme Edwards</authors>
         <owners />
@@ -106,6 +106,9 @@
 		
 		<file src="RemoteSharesDeliveryModule\RemoteSharesDeliveryModule.psm1" target="tools\RemoteSharesDeliveryModule\RemoteSharesDeliveryModule.psm1" />
         <file src="RemoteSharesDeliveryModule\RemoteSharesDeliveryModule.psd1" target="tools\RemoteSharesDeliveryModule\RemoteSharesDeliveryModule.psd1" />
+		
+		<file src="SSISPackagesDeliveryModule\SSISPackagesDeliveryModule.psm1" target="tools\SSISPackagesDeliveryModule\SSISPackagesDeliveryModule.psm1" />
+        <file src="SSISPackagesDeliveryModule\SSISPackagesDeliveryModule.psd1" target="tools\SSISPackagesDeliveryModule\SSISPackagesDeliveryModule.psd1" />
 		
 		<file src="RoundhouseDeliveryModule\RoundhouseDeliveryModule.psd1" target="tools\RoundhouseDeliveryModule\RoundhouseDeliveryModule.psd1" />
 		<file src="RoundhouseDeliveryModule\RoundhouseDeliveryModule.psm1" target="tools\RoundhouseDeliveryModule\RoundhouseDeliveryModule.psm1" />
