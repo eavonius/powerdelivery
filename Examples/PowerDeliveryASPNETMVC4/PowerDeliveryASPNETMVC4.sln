@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		PowerdeliveryASPNETMVC4CapacityTestEnvironment.yml = PowerdeliveryASPNETMVC4CapacityTestEnvironment.yml
 		PowerdeliveryASPNETMVC4CommitEnvironment.yml = PowerdeliveryASPNETMVC4CommitEnvironment.yml
 		PowerdeliveryASPNETMVC4LocalEnvironment.yml = PowerdeliveryASPNETMVC4LocalEnvironment.yml
+		PowerDeliveryASPNETMVC4Modules.yml = PowerDeliveryASPNETMVC4Modules.yml
 		PowerdeliveryASPNETMVC4ProductionEnvironment.yml = PowerdeliveryASPNETMVC4ProductionEnvironment.yml
 		PowerdeliveryASPNETMVC4TestEnvironment.yml = PowerdeliveryASPNETMVC4TestEnvironment.yml
 		UnitTests.testsettings = UnitTests.testsettings

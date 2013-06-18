@@ -30,7 +30,7 @@ WebDeploy:
     Package: WebSites\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4.zip
     Parameters:
       "IIS Web Application Name": <<WebSite>>
-      "DefaultConnection-Web.config Connection String": "Data Source=<<DatabaseServer>>;Initial Catalog=<<DatabaseName>>;Integrated Security=SSPI"
+      "DefaultConnection-Web.config Connection String": "Data Source=<<DatabaseServer>>;Initial Catalog=<<DatabaseName>>;Integrated Security=True"
 
 MSTest:
   UnitTests:
