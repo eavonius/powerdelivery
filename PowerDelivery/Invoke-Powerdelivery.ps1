@@ -302,14 +302,6 @@ function Invoke-Powerdelivery {
 
 	    $scriptParams | Format-Table $tableFormat -HideTableHeaders
 
-	    $vsInstallDir = Get-ItemProperty -Path Registry::HKEY_USERS\.DEFAULT\Software\Microsoft\VisualStudio\10.0_Config -Name InstallDir
-	    if ([string]::IsNullOrWhiteSpace($vsInstallDir)) {
-	        throw "No version of Visual Studio with the same tools as your version of TFS is installed on the build server."
-	    }
-	    else {
-	        $ENV:Path += ";$($vsInstallDir.InstallDir)"
-	    }
-
 	    $tableFormat = @{Expression={$_.Name};Label="Name";Width=50}, `
 	                   @{Expression={if ($_.Name.EndsWith("Password")) { '********' } else { $_.Value }};Label="Value";Width=75}
 
