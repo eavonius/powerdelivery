@@ -4,6 +4,8 @@ function Initialize-MSBuildDeliveryModule {
 	
 		$moduleConfig = Get-BuildModuleConfig
 		$msBuildProjects = $moduleConfig.MSBuild
+		
+		$currentDirectory = Get-Location
 
 		if ($msBuildProjects) {
 			$msBuildProjects.Keys | % {
@@ -39,6 +41,8 @@ function Initialize-MSBuildDeliveryModule {
 					$invokeArgs.Add('properties', $project.Properties)
 				}
 				& Invoke-MSBuild @invokeArgs
+				
+				Set-Location $currentDirectory
 			}
 		}
 	}

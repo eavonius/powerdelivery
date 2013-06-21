@@ -19,6 +19,9 @@ The .asdatabase file to deploy. Is a path local to the SSAS server.
 .Parameter version
 Optional. The version of SQL to use. Default is "11.0"
 
+.Parameter deploymentUtilityPath
+Optional. The full path to the Microsoft.AnalysisServices.DeploymentUtility.exe command-line tool.
+
 .Example
 Publish-SSAS -computer "MyServer" -tabularServer "MyServer\INSTANCE" -asDatabase "MyProject\bin\Debug\MyModel.asdatabase"
 #>
@@ -28,23 +31,27 @@ function Publish-SSAS {
         [Parameter(Mandatory=1)][string] $asDatabase, 
         [Parameter(Mandatory=1)][string] $computer, 
         [Parameter(Mandatory=1)][string] $tabularServer, 
-        [Parameter(Mandatory=0)][string] $sqlVersion = '11.0'
+        [Parameter(Mandatory=0)][string] $sqlVersion = '11.0',
+		[Parameter(Mandatory=0)][string] $deploymentUtilityPath = "C:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn\ManagementStudio\Microsoft.AnalysisServices.Deployment.exe"
     )
-
-    #$utilityInstallDir = Invoke-EnvironmentCommand -server $server -credential $credential `
-        #-command "Get-ItemProperty -Path ""Registry::HKEY_CURRENT_USER\Software\Microsoft\SQL Server Management Studio\$($sqlVersion)_Config"" -Name InstallDir"
-
-    $asUtilityPath = "C:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn\ManagementStudio\Microsoft.AnalysisServices.Deployment.exe"
 
     $asModelName = [System.IO.Path]::GetFileNameWithoutExtension($asDatabase)
     $asFilesDir = [System.IO.Path]::GetDirectoryName($asDatabase)
     $xmlaPath = Join-Path -Path $asFilesDir -ChildPath "$($asModelName).xmla"
 
-    $remoteCommand = "& ""$asUtilityPath"" ""$asDatabase"" ""/d"" ""/o:$xmlaPath"" | Out-Null"
+    $remoteCommand = "& ""$deploymentUtilityPath"" ""$asDatabase"" ""/d"" ""/o:$xmlaPath"" | Out-Null"
 
     Invoke-EnvironmentCommand -server $computer -command $remoteCommand
+	
+	if ($lastexitcode -ne $null -and $lastexitcode -ne 0) {
+		throw "Failed to deploy SSAS cube $asModelName exit code from Microsoft.AnalysisServices.Deployment.exe was $lastexitcode"
+	}
 
     $remoteCommand = "Invoke-ASCMD -server ""$tabularServer"" -inputFile ""$xmlaPath"""
 
     Invoke-EnvironmentCommand -server $computer -command $remoteCommand
+	
+	if ($lastexitcode -ne $null -and $lastexitcode -ne 0) {
+		throw "Failed to deploy SSAS cube $asModelName exit code from Invoke-ASCMD was $lastexitcode"
+	}
 }
