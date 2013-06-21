@@ -54,4 +54,6 @@ function Publish-SSAS {
 	if ($lastexitcode -ne $null -and $lastexitcode -ne 0) {
 		throw "Failed to deploy SSAS cube $asModelName exit code from Invoke-ASCMD was $lastexitcode"
 	}
+	
+	Write-BuildSummaryMessage -name "Deploy" -header "Deployments" -message "SSAS: $($asModelName).asdatabase -> $asModelName ($tabularServer)"
 }
