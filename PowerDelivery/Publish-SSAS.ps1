@@ -16,6 +16,9 @@ The server name of the SSAS instance.
 .Parameter asDatabase
 The .asdatabase file to deploy. Is a path local to the SSAS server.
 
+.Parameter cubeName
+Optional. The name to deploy the cube as. Can only be included if only one cube (model) is included in the asdatabase package.
+
 .Parameter version
 Optional. The version of SQL to use. Default is "11.0"
 
@@ -32,7 +35,8 @@ function Publish-SSAS {
         [Parameter(Mandatory=1)][string] $computer, 
         [Parameter(Mandatory=1)][string] $tabularServer, 
         [Parameter(Mandatory=0)][string] $sqlVersion = '11.0',
-		[Parameter(Mandatory=0)][string] $deploymentUtilityPath = "C:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn\ManagementStudio\Microsoft.AnalysisServices.Deployment.exe"
+		[Parameter(Mandatory=0)][string] $deploymentUtilityPath = "C:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn\ManagementStudio\Microsoft.AnalysisServices.Deployment.exe",
+		[Parameter(Mandatory=0)][string] $cubeName
     )
 
     $asModelName = [System.IO.Path]::GetFileNameWithoutExtension($asDatabase)
@@ -47,6 +51,34 @@ function Publish-SSAS {
 		throw "Failed to deploy SSAS cube $asModelName exit code from Microsoft.AnalysisServices.Deployment.exe was $lastexitcode"
 	}
 
+	$newModelName = $asModelName
+
+	if (![String]::IsNullOrWhiteSpace($cubeName)) {
+		$newModelName = $cubeName
+        Invoke-Command -Computer $computer -ArgumentList @($xmlaPath, $cubeName) -ScriptBlock {
+            param(
+                [Parameter(Mandatory=1,Position=0)][string] $xmlaPath,
+                [Parameter(Mandatory=1,Position=1)][string] $cubeName
+            )
+		    [xml]$xmlaDoc = Get-Content $xmlaPath
+
+            $ns = new-object Xml.XmlNamespaceManager $xmlaDoc.NameTable
+            $ns.AddNamespace('xmla', 'http://schemas.microsoft.com/analysisservices/2003/engine')
+
+            $objectNode = $xmlaDoc.SelectSingleNode("//xmla:Batch/xmla:Alter/xmla:Object", $ns)
+            $objectNode.DatabaseID = $cubeName
+
+		    $databaseNode = $xmlaDoc.SelectSingleNode("//xmla:Batch/xmla:Alter/xmla:ObjectDefinition/xmla:Database", $ns)
+			$databaseNode.ID = $cubeName
+			$databaseNode.Name = $cubeName
+		    
+            $objectToProcessNode = $xmlaDoc.SelectSingleNode("//xmla:Batch/xmla:Parallel/xmla:Process/xmla:Object", $ns)
+            $objectToProcessNode.DatabaseID = $cubeName
+
+		    $xmlaDoc.Save($xmlaPath)
+        }
+    }
+
     $remoteCommand = "Invoke-ASCMD -server ""$tabularServer"" -inputFile ""$xmlaPath"""
 
     Invoke-EnvironmentCommand -server $computer -command $remoteCommand
@@ -55,5 +87,5 @@ function Publish-SSAS {
 		throw "Failed to deploy SSAS cube $asModelName exit code from Invoke-ASCMD was $lastexitcode"
 	}
 	
-	Write-BuildSummaryMessage -name "Deploy" -header "Deployments" -message "SSAS: $($asModelName).asdatabase -> $asModelName ($tabularServer)"
+	Write-BuildSummaryMessage -name "Deploy" -header "Deployments" -message "SSAS: $($asModelName).asdatabase -> $newModelName ($tabularServer)"
 }
