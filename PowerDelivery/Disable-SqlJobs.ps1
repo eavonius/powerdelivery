@@ -27,7 +27,7 @@ function Disable-SqlJobs {
 	[Reflection.Assembly]::LoadWithPartialName('Microsoft.SqlServer.SMO') | Out-Null
 
 	Write-Host
-    "Disabling SQL jobs with pattern $($jobs)* on $serverName"
+    "Disabling SQL jobs with pattern $jobs on $serverName"
 	Write-Host
 
     $dataMartServer = New-Object Microsoft.SqlServer.Management.SMO.Server("$serverName")

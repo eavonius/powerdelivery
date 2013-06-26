@@ -24,7 +24,7 @@ function Enable-SqlJobs {
 	[Reflection.Assembly]::LoadWithPartialName('Microsoft.SqlServer.SMO') | Out-Null
 
 	Write-Host
-    "Enabling SQL jobs with pattern $($jobs)* on $serverName"
+    "Enabling SQL jobs with pattern $jobs on $serverName"
 	Write-Host
 
     $dataMartServer = New-Object Microsoft.SqlServer.Management.SMO.Server("$serverName")

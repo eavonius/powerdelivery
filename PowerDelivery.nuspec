@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>PowerDelivery</id>
-        <version>2.2.8</version>
+        <version>2.2.9</version>
         <title>PowerDelivery</title>
         <authors>Jayme Edwards</authors>
         <owners />
@@ -51,6 +51,7 @@
 		<file src="PowerDelivery\Publish-SSAS.ps1" target="tools\PowerDelivery\Publish-SSAS.ps1" />
 		<file src="PowerDelivery\Register-DeliveryModuleHook.ps1" target="tools\PowerDelivery\Register-DeliveryModuleHook.ps1" />
 		<file src="PowerDelivery\Set-SSASConnection.ps1" target="tools\PowerDelivery\Set-SSASConnection.ps1" />
+		<file src="PowerDelivery\Start-SqlJobs.ps1" target="tools\PowerDelivery\Start-SqlJobs.ps1" />
 		<file src="PowerDelivery\Update-AssemblyInfoFiles.ps1" target="tools\PowerDelivery\Update-AssemblyInfoFiles.ps1" />
 		<file src="PowerDelivery\Write-BuildSummaryMessage.ps1" target="tools\PowerDelivery\Write-BuildSummaryMessage.ps1" />
         
