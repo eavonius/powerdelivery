@@ -17,8 +17,8 @@ function Initialize-SSISPackagesDeliveryModule {
 				if ($package.Server) {
 					$invokeArgs.Add('server', $package.Server)
 				}
-				if ($package.Version) {
-					$invokeArgs.Add('version', $package.Version)
+				if ($package.DTExecPath) {
+					$invokeArgs.Add('dtExecPath', $package.DTExecPath)
 				}
 				if ($package.PackageArgs) {
 					$invokeArgs.Add('packageArgs', $package.PackageArgs)

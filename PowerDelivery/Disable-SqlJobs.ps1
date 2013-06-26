@@ -1,23 +1,23 @@
 <#
 .Synopsis
-Stops SQL jobs on a Microsoft SQL database server
+Disables SQL jobs on a Microsoft SQL database server
 
 .Description
-Stops SQL jobs on a Microsoft SQL database server. You can start a set of jobs that matches a wildcard. 
-If any of the jobs matching a wildcard fail to stop, the previously stopped jobs that match the same 
-wildcard will be restarted and an error will occur. This is to make sure all the jobs stop successfully 
+Disables SQL jobs on a Microsoft SQL database server. You can disable a set of jobs that matches a wildcard. 
+If any of the jobs matching a wildcard are already running, the previously disabled jobs that match the same 
+wildcard will be restarted and an error will occur. This is to make sure all the jobs disable successfully 
 together.
 
 .Parameter serverName
-The SQL server instance on which the jobs will be stopped.
+The SQL server instance on which the jobs will be disabled.
 
 .Parameter jobs
-The jobs to stop. Can be a single job name, or a name with wildcards.
+The jobs to disable. Can be a single job name, or a name with wildcards.
 
 .Example
-Stop-SqlJobs -serverName localhost -jobs MyJobs*
+Disable-SqlJobs -serverName localhost -jobs MyJobs*
 #>
-function Stop-SqlJobs {
+function Disable-SqlJobs {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=1)][string] $serverName, 

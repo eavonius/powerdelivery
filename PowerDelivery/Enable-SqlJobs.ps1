@@ -1,20 +1,20 @@
 <#
 .Synopsis
-Starts SQL jobs on a Microsoft SQL database server
+Enables SQL jobs on a Microsoft SQL database server
 
 .Description
-Starts SQL jobs on a Microsoft SQL database server. You can start a set of jobs that matches a wildcard.
+Enables SQL jobs on a Microsoft SQL database server. You can enable a set of jobs that matches a wildcard.
 
 .Parameter serverName
-The SQL server instance on which the jobs will be started.
+The SQL server instance on which the jobs will be enabled.
 
 .Parameter jobs
-The jobs to start. Can be a single job name, or a name with wildcards.
+The jobs to enable. Can be a single job name, or a name with wildcards.
 
 .Example
-Start-SqlJobs -serverName localhost -jobs MyJobs*
+Enable-SqlJobs -serverName localhost -jobs MyJobs*
 #>
-function Start-SqlJobs {
+function Enable-SqlJobs {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=1)][string] $serverName, 

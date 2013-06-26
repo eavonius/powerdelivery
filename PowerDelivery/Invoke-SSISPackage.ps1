@@ -13,11 +13,11 @@ A path local to the remote server the package is being executed on. If you had a
 .Parameter server
 The computer name onto which to execute the package. This computer must have PowerShell 3.0 with WinRM installed, and allow execution of commands from the TFS build server and the account under which the build agent service is running.
 
+.Parameter dtExecPath
+The path to dtexec.exe on the server to run the command.
+
 .Parameter packageArgs
 Optional. A PowerShell hash containing name/value pairs to set as package arguments to dtexec.
-
-.Parameter version
-Optional. The version of dtexec to run ("90", "100", "110" etc.). The default is "110" (SQL Server 2012).
 
 .Example
 Invoke-SSIS -package MyPackage.dtsx -server MyServer -packageArgs @{MyCustomArg = SomeValue}
@@ -26,25 +26,29 @@ function Invoke-SSISPackage {
     [CmdletBinding()]
     param(
         [Parameter(Position=0,Mandatory=1)][string] $package, 
-        [Parameter(Position=0,Mandatory=1)][string] $server, 
-        [Parameter(Position=0,Mandatory=0)][string] $version = "110", 
-        [Parameter(Position=0,Mandatory=0)][string] $packageArgs
+        [Parameter(Position=1,Mandatory=1)][string] $server, 
+        [Parameter(Position=2,Mandatory=1)][string] $dtExecPath, 
+        [Parameter(Position=3,Mandatory=0)][string] $packageArgs
     )
 
-	$getSqlInstallDir = "Get-ItemProperty -Path Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SQL Server\110 -Name VerSpecificRootDir"
-	$sqlInstallDir = Invoke-EnvironmentCommand -server $server -command $getSqlInstallDir
+    Invoke-Command -ComputerName $server -ScriptBlock {
 
-	if ([string]::IsNullOrWhiteSpace($sqlInstallDir)) {
-        throw "SQL $version does not appear to be installed on $server."
+        $innerPackage = $using:package
+        $innerDTExecPath = $using:dtExecPath
+        $innerPackageArgs = $using:packageArgs
+
+	    $packageExecStatement = "& ""$innerDTExecPath"" /File '$innerPackage'"
+	
+	    if ($innerPackageArgs) {
+		    $packageExecStatment += " $innerPackageArgs"
+	    }
+
+        Invoke-Expression -Command $packageExecStatement
+
+        if ($LASTEXITCODE -ne $null -and $LASTEXITCODE -ne 0) {
+            throw "Error executing SSIS package, exit code was $LASTEXITCODE"
+        }
     }
-	
-	$dtExecPath = Join-Path -Path $sqlInstallDir -ChildPath "DTS\Binn\Dtexec.exe"
-	
-	$packageExecStatement = "& ""$dtExecPath"" /File '$package'"
-	
-	if ($packageArgs) {
-		$packageExecStatment += " $packageArgs"
-	}
-	
-	Invoke-EnvironmentCommand -server $server -command $packageExecStatement
+
+    Write-BuildSummaryMessage -name "Packages" -header "Packages" -message "SSIS: $package -> $server"
 }
