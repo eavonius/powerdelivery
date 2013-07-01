@@ -1,0 +1,11 @@
+WebDeploy:
+  PowerDeliveryASPNETMVC4:
+    WebComputer: <<WebServer>>
+    WebPort: <<WebPort>>
+    WebSite: <<WebSite>>
+    WebPassword: "!hafoi^45"
+    WebURL: <<WebUrl>>
+    Package: WebSites\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4.zip
+    Parameters:
+      "IIS Web Application Name": <<WebSite>>
+      "DefaultConnection-Web.config Connection String": "Data Source=<<DatabaseServer>>;Initial Catalog=<<DatabaseName>>;Integrated Security=True"
