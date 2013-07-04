@@ -28,7 +28,7 @@ function Start-SqlJobs {
 	Write-Host
 
     $dataMartServer = New-Object Microsoft.SqlServer.Management.SMO.Server("$serverName")
-    $dataMartJobs = $dataMartServer.jobserver.jobs | where-object {$_.name -like "$($jobs)*"}
+    $dataMartJobs = $dataMartServer.jobserver.jobs | where-object {$_.name -like "$jobs"}
 	
     foreach ($dataMartJob in $dataMartJobs)	{	
         $jobName = $dataMartJob.Name

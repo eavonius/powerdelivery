@@ -31,7 +31,7 @@ function Disable-SqlJobs {
 	Write-Host
 
     $dataMartServer = New-Object Microsoft.SqlServer.Management.SMO.Server("$serverName")
-    $dataMartJobs = $dataMartServer.jobserver.jobs | where-object {$_.Isenabled -eq $true -and  $_.name -like "$($jobs)*"}
+    $dataMartJobs = $dataMartServer.jobserver.jobs | where-object {$_.Isenabled -eq $true -and  $_.name -like "$jobs"}
 
     $jobRunning = $false
     $jobName = ''
