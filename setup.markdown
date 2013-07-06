@@ -77,7 +77,7 @@ layout: page
 		</ol>
 		
 		<p>If you followed the steps above, your TFS Build Agent is now ready for 
-		you to <a href="/create.html">Add powerdelivery to to a TFS project</a>. Before you do that 
+		you to <a href="create.html">Add powerdelivery to to a TFS project</a>. Before you do that 
 		however, continue to follow the next steps to prepare the target environments 
 		of your builds.</p>
 
@@ -181,7 +181,7 @@ layout: page
 		control panel applet.</p>
 		<hr />
 	
-		Next you should read about how to <a href="/create.html">create powerdelivery builds</a>.
+		Next you should read about how to <a href="create.html">create powerdelivery builds</a>.
 		
 	</div>
 </div>

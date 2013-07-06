@@ -37,7 +37,7 @@ layout: page
 		<a name="workstation_prep"><hr></a>
 		<br />
 		<h2>Prepare your workstation for development</h2>
-		<p>After you've <a href="/setup.html">setup your environment</a>, 
+		<p>After you've <a href="setup.html">setup your environment</a>, 
 		you will want to configure the workstation of anyone who will work on the automation scripts 
 		to work with powerdelivery. Follow the directions below on the local computer of any developers, 
 		testers, or IT operations personnel who will help to create powerdelivery deployment automation.</p>
@@ -100,7 +100,7 @@ layout: page
 			<p>And would <b>NOT</b> be:</p>
 			<pre>http://mytfsserver:8080/tfs/MyProject (WRONG!)</pre>
 			<li><h5>Determine the TFS build controller</h5></li>
-			<p>When you <a href="/setup.html">setup your environment for powerdelivery</a>, you installed 
+			<p>When you <a href="setup.html">setup your environment for powerdelivery</a>, you installed 
 			PowerShell 3.0, Chocolatey, and powerdelivery on your <b>TFS Build Agent</b> computer. TFS uses 
 			another service, the <b>TFS Build Controller</b> to orchestrate builds and call your agent to 
 			kick one off. You need to find out the name of this computer. If you have the agent and controller 
@@ -191,7 +191,7 @@ MyProject Production Builders</pre>
 		automation that happens during deployment in your development and test environment is 
 		as close as possible as to what will happen in production.</p>
 		<p>Powerdelivery requires you to use simple environment configuration files to capture 
-		the differences between environments. See the <a href="/setup.html">setup</a> page for 
+		the differences between environments. See the <a href="setup.html">setup</a> page for 
 		more information about planning your infrastructure so you know what information to put 
 		into these files.</p>
 		<h3>How configuration files are loaded</h3>
@@ -235,7 +235,7 @@ DatabaseName: MyDatabase{% endhighlight %}
 		<h3>Retrieving values from configuration files</h3>
 		<p>There is a cmdlet (PowerShell function) included with powerdelivery that you should call in 
 		the <a href="#init_block">Init</a> block of your script (blocks are described in the next section). This cmdlet is 
-		called <a href="/reference.html#get_buildsetting_cmdlet">Get-BuildSetting</a> and takes the name of your setting as its only parameter, and 
+		called <a href="reference.html#get_buildsetting_cmdlet">Get-BuildSetting</a> and takes the name of your setting as its only parameter, and 
 		returns the value of that setting from the configuration file appropriate for the target environment 
 		your build is running against. The idea is to read in these settings that are specific to the environment 
 		as variables and then use them elsewhere in the script to deploy correctly.</p>
@@ -354,19 +354,19 @@ Deploy {
 		and <a href="#commit_build">Commit</a> builds.</p>
 		<p>Because of this, any files that are required for the <a href="#setup_environment_block">SetupEnvironment</a> 
 		block or beyond in other environments must be copied to the drop location during <a href="#compile_block">Compile</a>. Do this by 
-		using the <a href="/reference.html#publish_buildassets">Publish-BuildAssets</a> cmdlet before the Compile 
+		using the <a href="reference.html#publish_buildassets">Publish-BuildAssets</a> cmdlet before the Compile 
 		block ends.</p>
 		<a name="cmdlets"><hr></a>
 		<br />
 		<h2>Using cmdlets</h2>
-		<p>Refer to the <a href="/reference.html#cmdlets">cmdlet reference</a> 
+		<p>Refer to the <a href="reference.html#cmdlets">cmdlet reference</a> 
 		to see what reusable commands are built in to powerdelivery that you can use in your script blocks. 
 		There are many powerful commands that will save you significant time and coding but remember, 
 		you can also use any PowerShell scripts or modules you find along with powerdelivery.</p>
 		<p>Though they don't force you to, many of the included cmdlets are meant to be called within 
-		specific blocks of your script. For example, the <a href="/reference.html#get_buildsettings_cmdlet">Get-BuildSettings</a> 
-		cmdlet should be called in the <a href="#init_block">Init</a> block. The <a href="/reference.html#invoke_msbuild_cmdlet">Invoke-MSBuild</a> 
-		cmdlet should be called in the <a href="#compile_block">Compile</a> block. The <a href="/reference.html#invoke_roundhouse_cmdlet">Invoke-Roundhouse</a> 
+		specific blocks of your script. For example, the <a href="reference.html#get_buildsettings_cmdlet">Get-BuildSettings</a> 
+		cmdlet should be called in the <a href="#init_block">Init</a> block. The <a href="reference.html#invoke_msbuild_cmdlet">Invoke-MSBuild</a> 
+		cmdlet should be called in the <a href="#compile_block">Compile</a> block. The <a href="reference.html#invoke_roundhouse_cmdlet">Invoke-Roundhouse</a> 
 		cmdlet should be called in the <a href="#deploy_block">Deploy</a> block.</p>
 		<a name="modules"><hr></a>
 		<br />
