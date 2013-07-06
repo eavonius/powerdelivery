@@ -440,11 +440,11 @@ Deploy {
 		<br />
 		<h3>Referencing modules</h3>
 		<p>Before you can begin to use a delivery module, you must add a reference to one in your build script. 
-		This is done by calling the <a href="/reference.html#import_delivery_module_cmdlet">Import-DeliveryModule</a> 
+		This is done by calling the <a href="reference.html#import_delivery_module_cmdlet">Import-DeliveryModule</a> 
 		cmdlet at the top of your script (outside of a block). If you are familiar with the C# programming language, 
 		this is analagous to putting a "using" statement at the top of a class file.</p>
-		<p>Below is an example of importing the <a href="/reference.html#web_deploy_module">WebDeploy</a> module 
-		included with powerdelivery. See the <a href="/reference.html#modules">module reference</a> for details of 
+		<p>Below is an example of importing the <a href="reference.html#web_deploy_module">WebDeploy</a> module 
+		included with powerdelivery. See the <a href="reference.html#modules">module reference</a> for details of 
 		which modules are included with powerdelivery.</p>
 		{% highlight powershell %}Pipeline 'MyProduct' -Version '1.0.0'
 
@@ -452,7 +452,7 @@ Import-DeliveryModule WebDeploy{% endhighlight %}
 		<a name="modules_configuring"><hr></a>
 		<br />
 		<h3>Configuring modules</h3>
-		<p>Once you've referenced a module using the <a href="/reference.html#import_delivery_module_cmdlet">Import-DeliveryModule</a> 
+		<p>Once you've referenced a module using the <a href="reference.html#import_delivery_module_cmdlet">Import-DeliveryModule</a> 
 		cmdlet, you must configure it for the module to do any work. When you <a href="#add_pipeline">added a deployment pipeline</a> to your TFS project, 
 		an additional configuration file was added that is used to store the configuration of the modules you use in your script. 
 		This file follows the naming convention:</p>
@@ -465,12 +465,12 @@ Import-DeliveryModule WebDeploy{% endhighlight %}
 			<code>RecipeManagerModules.yml</code>
 		</p>
 		<p>Each delivery module you import has a YAML section name under which its settings should be placed. 
-		You will need to refer to the <a href="/reference.html#modules">delivery module reference</a> for each 
+		You will need to refer to the <a href="reference.html#modules">delivery module reference</a> for each 
 		module to find this information. Below this section name you must add another named section for each 
 		set of settings you want to pass to the module to do work. This section can be named anything you want.</p>
-		<p>As an example, if our script referenced the <a href="/reference.html#msbuild_module">MSBuild</a> delivery module 
+		<p>As an example, if our script referenced the <a href="reference.html#msbuild_module">MSBuild</a> delivery module 
 		we might have 3 projects we want to have compiled when our script runs. Using the delivery module, we no longer 
-		place a call to the <a href="/reference.html#invoke_msbuild_cmdlet">Invoke-MSBuild</a> cmdlet, but instead 
+		place a call to the <a href="reference.html#invoke_msbuild_cmdlet">Invoke-MSBuild</a> cmdlet, but instead 
 		place settings below an <b>MSBuild</b> settings section in the module configuration file. Here is an example 
 		of the contents of the module configuration file in our example:</p>
 		{% highlight yaml %}MSBuild:
@@ -486,7 +486,7 @@ Import-DeliveryModule WebDeploy{% endhighlight %}
       Property2: 2{% endhighlight %}
 		<p>When the script runs (and just prior to when the <a href="#compile_block">Compile</a> block executes), 
 		the MSBuild module will see these settings and attempt to compile these three projects using the settings 
-		that were configured. Again, refer to the <a href="/reference.html#module">delivery module reference</a> 
+		that were configured. Again, refer to the <a href="reference.html#module">delivery module reference</a> 
 		for each module to find out when your settings will actually be executed if you need to coordinate this 
 		with other work you do in your script.</p>
 	</div>
