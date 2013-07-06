@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Continuous Delivery with PowerShell and Team Foundation Server">
     <meta name="author" content="Jayme C Edwards">
-    <link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
+    <link href="stylesheets/bootstrap.min.css" rel="stylesheet">
     <style type="text/css">
       body {
         padding-top: 60px;
@@ -23,17 +23,17 @@
         }
       }
     </style>
-    <link href="/stylesheets/bootstrap-responsive.min.css" rel="stylesheet">
-	<link href="/stylesheets/pygment_trac.css" rel="stylesheet">
-	<link href="/stylesheets/site.css" rel="stylesheet">
+    <link href="stylesheets/bootstrap-responsive.min.css" rel="stylesheet">
+	<link href="stylesheets/pygment_trac.css" rel="stylesheet">
+	<link href="stylesheets/site.css" rel="stylesheet">
     <!--[if lt IE 9]>
       <script src="/javascripts/html5shiv.js"></script>
     <![endif]-->
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon-144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/img/apple-touch-icon-114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/img/apple-touch-icon-72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" href="/img/apple-touch-icon-57-precomposed.png">
-    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="img/apple-touch-icon-57-precomposed.png">
+    <link rel="shortcut icon" href="img/favicon.png">
   </head>
   <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -47,14 +47,14 @@
           <a class="brand">powerdelivery</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li><a href="/index.html">Home</a></li>
-              <li><a href="/about.html">About</a></li>
-			  <li><a href="/setup.html">Setup</a></li>
-			  <li><a href="/create.html">Create</a></li>
-			  <li><a href="/use.html">Use</a></li>
-			  <li><a href="/reference.html">Reference</a></li>
-              <li><a href="/developing.html">Developing</a></li>
-			  <li><a href="/help.html">Get help</a></li>
+              <li><a href="index.html">Home</a></li>
+              <li><a href="about.html">About</a></li>
+			  <li><a href="setup.html">Setup</a></li>
+			  <li><a href="create.html">Create</a></li>
+			  <li><a href="use.html">Use</a></li>
+			  <li><a href="reference.html">Reference</a></li>
+              <li><a href="developing.html">Developing</a></li>
+			  <li><a href="help.html">Get help</a></li>
             </ul>
           </div>
         </div>
@@ -64,26 +64,48 @@
       <div class="row-fluid">
 		<div class='row-fluid'>
 	<div class='span3'>
-		<ul class='nav nav-tabs nav-stacked'>
-			<li>
-				<a href='#workstation_prep'>Prepare your workstation for development</a>
+		<h5>Article contents</h5>
+		<ul class='nav nav-list'>
+			<li class='nav-header'>
+				<a href='#workstation_prep'>Prepare your workstation</a>
 			</li>
-			<li>
+			<li class='nav-header'>
 				<a href='#add_pipeline'>Add a pipeline to a TFS project</a>
 			</li>
 			<li>
+				<a href='#what_created'>What gets created</a>
+			</li>
+			<li class='nav-header'>
 				<a href='#how_works'>How powerdelivery works</a>
 			</li>
-			<li>
+			<li class='nav-header'>
 				<a href='#environment'>Environment configuration</a>
 			</li>
 			<li>
+				<a href='#config_how_loaded'>How files are loaded</a>
+			</li>
+			<li>
+				<a href='#config_layout'>Layout of files</a>
+			</li>
+			<li>
+				<a href='#config_retrieving_values'>Retrieving values</a>
+			</li>
+			<li>
+				<a href='#config_structs'>Using structures</a>
+			</li>
+			<li>
+				<a href='#config_arrays'>Using arrays</a>
+			</li>
+			<li class='nav-header'>
 				<a href='#matrix'>Matrix of script blocks</a>
 			</li>
 			<li>
+				<a href='#optimized_compilation'>Optimized compilation</a>
+			</li>
+			<li class='nav-header'>
 				<a href='#cmdlets'>Using cmdlets</a>
 			</li>
-			<li>
+			<li class='nav-header'>
 				<a href='#modules'>Using delivery modules</a>
 			</li>
 		</ul>
@@ -98,7 +120,7 @@
 		<a name='workstation_prep'><hr /></a>
 		<br />
 		<h2>Prepare your workstation for development</h2>
-		<p>After you've <a href='/setup.html'>setup your environment</a>, 
+		<p>After you've <a href='setup.html'>setup your environment</a>, 
 		you will want to configure the workstation of anyone who will work on the automation scripts 
 		to work with powerdelivery. Follow the directions below on the local computer of any developers, 
 		testers, or IT operations personnel who will help to create powerdelivery deployment automation.</p>
@@ -179,7 +201,7 @@
 			<p>And would <b>NOT</b> be:</p>
 			<pre>http://mytfsserver:8080/tfs/MyProject (WRONG!)</pre>
 			<li><h5>Determine the TFS build controller</h5></li>
-			<p>When you <a href='/setup.html'>setup your environment for powerdelivery</a>, you installed 
+			<p>When you <a href='setup.html'>setup your environment for powerdelivery</a>, you installed 
 			PowerShell 3.0, Chocolatey, and powerdelivery on your <b>TFS Build Agent</b> computer. TFS uses 
 			another service, the <b>TFS Build Controller</b> to orchestrate builds and call your agent to 
 			kick one off. You need to find out the name of this computer. If you have the agent and controller 
@@ -220,6 +242,8 @@
 </code></pre></div>
 
 		</ol>
+		<a name='what_created'><hr /></a>
+		<br />
 		<h3>What gets created</h3>
 		<p>When you add a pipeline to your TFS project, a number of files and artifacts are created. 
 		Assuming the example settings above, the following will be created in TFS:</p>
@@ -276,9 +300,11 @@ MyProject Production Builders</pre>
 		automation that happens during deployment in your development and test environment is 
 		as close as possible as to what will happen in production.</p>
 		<p>Powerdelivery requires you to use simple environment configuration files to capture 
-		the differences between environments. See the <a href='/setup.html'>setup</a> page for 
+		the differences between environments. See the <a href='setup.html'>setup</a> page for 
 		more information about planning your infrastructure so you know what information to put 
 		into these files.</p>
+		<a name='config_how_loaded'><hr /></a>
+		<br />
 		<h3>How configuration files are loaded</h3>
 		<p>When your build script starts, prior to your code being run, powerdelivery 
 		looks in the same directory as your script for a file with the following pattern:</p>
@@ -291,6 +317,8 @@ RecipeManagerCommitEnvironment.yml
 RecipeManagerTestEnvironment.yml
 RecipeManagerCapacityTestEnvironment.yml
 RecipeManagerProductionEnvironment.yml</pre>
+		<a name='config_layout'><hr /></a>
+		<br />
 		<h3>Layout of your configuration files</h3>
 		<p>Configuration files use YAML syntax and most of the settings you use will probably be 
 		name/value pairs. Remember that these files are only meant to contain settings that are 
@@ -329,10 +357,12 @@ RecipeManagerProductionEnvironment.yml</pre>
 <span class='l-Scalar-Plain'>DatabaseName</span><span class='p-Indicator'>:</span> <span class='l-Scalar-Plain'>MyDatabase</span>
 </code></pre></div>
 
+		<a name='config_retrieving_values'><hr /></a>
+		<br />
 		<h3>Retrieving values from configuration files</h3>
 		<p>There is a cmdlet (PowerShell function) included with powerdelivery that you should call in 
 		the <a href='#init_block'>Init</a> block of your script (blocks are described in the next section). This cmdlet is 
-		called <a href='/reference.html#get_buildsetting_cmdlet'>Get-BuildSetting</a> and takes the name of your setting as its only parameter, and 
+		called <a href='reference.html#get_buildsetting_cmdlet'>Get-BuildSetting</a> and takes the name of your setting as its only parameter, and 
 		returns the value of that setting from the configuration file appropriate for the target environment 
 		your build is running against. The idea is to read in these settings that are specific to the environment 
 		as variables and then use them elsewhere in the script to deploy correctly.</p>
@@ -347,6 +377,8 @@ RecipeManagerProductionEnvironment.yml</pre>
 <span class='p'>}</span>
 </code></pre></div>
 
+		<a name='config_structs'><hr /></a>
+		<br />
 		<h3>Using structures in configuration settings</h3>
 		<p>YAML is a flexible format for storing settings. You can also use nested 
 		name/value pairs to provide more structure to your settings if desired. If we have 
@@ -374,6 +406,8 @@ RecipeManagerProductionEnvironment.yml</pre>
 <span class='p'>}</span>
 </code></pre></div>
 
+		<a name='config_arrays'><hr /></a>
+		<br />
 		<h3>Using arrays in configuration settings</h3>
 		<p>Arrays are a powerful way to store configuration when you want to 
 		allow your build to do the same work multiple times driven by configuration. 
@@ -459,6 +493,8 @@ RecipeManagerProductionEnvironment.yml</pre>
 		</table>
 		<p>All blocks are optional and you may choose which to include in your pipeline script depending on 
 		what features you'd like to support.</p>
+		<a name='optimized_compilation'><hr /></a>
+		<br />
 		<h3>Optimized compilation</h3>
 		<p>To confidently promote builds from one environment to another, we want to prevent different compiled 
 		assets from making their way into an environment than have already been evaluated in another. To prevent 
@@ -466,19 +502,19 @@ RecipeManagerProductionEnvironment.yml</pre>
 		and <a href='#commit_build'>Commit</a> builds.</p>
 		<p>Because of this, any files that are required for the <a href='#setup_environment_block'>SetupEnvironment</a> 
 		block or beyond in other environments must be copied to the drop location during <a href='#compile_block'>Compile</a>. Do this by 
-		using the <a href='/reference.html#publish_buildassets'>Publish-BuildAssets</a> cmdlet before the Compile 
+		using the <a href='reference.html#publish_buildassets'>Publish-BuildAssets</a> cmdlet before the Compile 
 		block ends.</p>
 		<a name='cmdlets'><hr /></a>
 		<br />
 		<h2>Using cmdlets</h2>
-		<p>Refer to the <a href='/reference.html#cmdlets'>cmdlet reference</a> 
+		<p>Refer to the <a href='reference.html#cmdlets'>cmdlet reference</a> 
 		to see what reusable commands are built in to powerdelivery that you can use in your script blocks. 
 		There are many powerful commands that will save you significant time and coding but remember, 
 		you can also use any PowerShell scripts or modules you find along with powerdelivery.</p>
 		<p>Though they don't force you to, many of the included cmdlets are meant to be called within 
-		specific blocks of your script. For example, the <a href='/reference.html#get_buildsettings_cmdlet'>Get-BuildSettings</a> 
-		cmdlet should be called in the <a href='#init_block'>Init</a> block. The <a href='/reference.html#invoke_msbuild_cmdlet'>Invoke-MSBuild</a> 
-		cmdlet should be called in the <a href='#compile_block'>Compile</a> block. The <a href='/reference.html#invoke_roundhouse_cmdlet'>Invoke-Roundhouse</a> 
+		specific blocks of your script. For example, the <a href='reference.html#get_buildsettings_cmdlet'>Get-BuildSettings</a> 
+		cmdlet should be called in the <a href='#init_block'>Init</a> block. The <a href='reference.html#invoke_msbuild_cmdlet'>Invoke-MSBuild</a> 
+		cmdlet should be called in the <a href='#compile_block'>Compile</a> block. The <a href='reference.html#invoke_roundhouse_cmdlet'>Invoke-Roundhouse</a> 
 		cmdlet should be called in the <a href='#deploy_block'>Deploy</a> block.</p>
 		<a name='modules'><hr /></a>
 		<br />
@@ -495,7 +531,7 @@ RecipeManagerProductionEnvironment.yml</pre>
       </footer>
     </div>
     <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
-    <script src="/javascripts/bootstrap.min.js"></script>
-	<script src="/javascripts/site.js"></script>
+    <script src="javascripts/bootstrap.min.js"></script>
+	<script src="javascripts/site.js"></script>
   </body>
 </html>

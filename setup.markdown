@@ -3,14 +3,27 @@ layout: page
 ---
 <div class="row-fluid">
 	<div class="span3">
-		<ul class="nav nav-tabs nav-stacked">
-			<li>
+		<h5>Article contents</h5>
+		<ul class="nav nav-list">
+			<li class="nav-header">
 				<a href="#tfs_setup">Setting up Team Foundation Server</a>
 			</li>
-			<li>
+			<li class="nav-header">
 				<a href="#environment_use">How powerdelivery uses your environments</a>
 			</li>
 			<li>
+				<a href="#environment_development">Development</a>
+			</li>
+			<li>
+				<a href="#environment_test">Test</a>
+			</li>
+			<li>
+				<a href="#environment_production">Production</a>
+			</li>
+			<li>
+				<a href="#environment_capacity_test">Capacity test</a>
+			</li>
+			<li class="nav-header">
 				<a href="#enabling_deployment">Enabling deployment to an environment node</a>
 			</li>
 		</ul>
@@ -88,6 +101,8 @@ layout: page
 		<p>This section describes the different environments your software will be propagated through 
 		to eventually be delivered to your customers.</p>
 
+		<a name="environment_development"><hr></a>
+		<br />
 		<h4>The Development environment</h4>
 		<p>When you automate the deployment of your software features, this automation might 
 		compile code, change databases, setup a router or load balancer, or maybe deploy a website. 
@@ -100,6 +115,8 @@ layout: page
 		place to send <abbr title="Quality Assurance">QA</abbr> people to look at the state of the 
 		software that is under development.</p>
 
+		<a name="environment_test"><hr></a>
+		<br />
 		<h4>The Test or User Acceptance Test (UAT) environment</h4>
 		<p>When a build succeeds in the Development environment and looks ready for test, the team can 
 		kickoff a <b>Test</b> build which performs identical steps as far as deployment is concerned, 
@@ -108,12 +125,16 @@ layout: page
 		on the same computer if you want to keep costs low. If using the same computer you'll need to 
 		be careful you avoid naming collisions and use unique names for your websites for example.</p>
 		
+		<a name="environment_production"><hr></a>
+		<br />
 		<h4>The Production environment</h4>
 		<p>Once people responsible for making sure a Test build is suitable for release have evaluated it 
 		in that environment, it's ready to go to production. At this point a <b>Production</b> build is 
 		kicked off and once again we perform identical deployment steps as Test but this time the target 
 		is unique. This environment is the one your customers will use to access the software features.</p>
 		
+		<a name="environment_capacity_test"><hr></a>
+		<br />
 		<h4>The Capacity Test environment</h4>
 		<p>Teams may also want to deploy a build to an environment where it will execute long-running tests 
 		against hardware that is identical to production to evaluate the capacity of the system. This is an 

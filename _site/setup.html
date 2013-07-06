@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Continuous Delivery with PowerShell and Team Foundation Server">
     <meta name="author" content="Jayme C Edwards">
-    <link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
+    <link href="stylesheets/bootstrap.min.css" rel="stylesheet">
     <style type="text/css">
       body {
         padding-top: 60px;
@@ -23,17 +23,17 @@
         }
       }
     </style>
-    <link href="/stylesheets/bootstrap-responsive.min.css" rel="stylesheet">
-	<link href="/stylesheets/pygment_trac.css" rel="stylesheet">
-	<link href="/stylesheets/site.css" rel="stylesheet">
+    <link href="stylesheets/bootstrap-responsive.min.css" rel="stylesheet">
+	<link href="stylesheets/pygment_trac.css" rel="stylesheet">
+	<link href="stylesheets/site.css" rel="stylesheet">
     <!--[if lt IE 9]>
       <script src="/javascripts/html5shiv.js"></script>
     <![endif]-->
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon-144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/img/apple-touch-icon-114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/img/apple-touch-icon-72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" href="/img/apple-touch-icon-57-precomposed.png">
-    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="img/apple-touch-icon-57-precomposed.png">
+    <link rel="shortcut icon" href="img/favicon.png">
   </head>
   <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -47,14 +47,14 @@
           <a class="brand">powerdelivery</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li><a href="/index.html">Home</a></li>
-              <li><a href="/about.html">About</a></li>
-			  <li><a href="/setup.html">Setup</a></li>
-			  <li><a href="/create.html">Create</a></li>
-			  <li><a href="/use.html">Use</a></li>
-			  <li><a href="/reference.html">Reference</a></li>
-              <li><a href="/developing.html">Developing</a></li>
-			  <li><a href="/help.html">Get help</a></li>
+              <li><a href="index.html">Home</a></li>
+              <li><a href="about.html">About</a></li>
+			  <li><a href="setup.html">Setup</a></li>
+			  <li><a href="create.html">Create</a></li>
+			  <li><a href="use.html">Use</a></li>
+			  <li><a href="reference.html">Reference</a></li>
+              <li><a href="developing.html">Developing</a></li>
+			  <li><a href="help.html">Get help</a></li>
             </ul>
           </div>
         </div>
@@ -64,14 +64,27 @@
       <div class="row-fluid">
 		<div class='row-fluid'>
 	<div class='span3'>
-		<ul class='nav nav-tabs nav-stacked'>
-			<li>
+		<h5>Article contents</h5>
+		<ul class='nav nav-list'>
+			<li class='nav-header'>
 				<a href='#tfs_setup'>Setting up Team Foundation Server</a>
 			</li>
-			<li>
+			<li class='nav-header'>
 				<a href='#environment_use'>How powerdelivery uses your environments</a>
 			</li>
 			<li>
+				<a href='#environment_development'>Development</a>
+			</li>
+			<li>
+				<a href='#environment_test'>Test</a>
+			</li>
+			<li>
+				<a href='#environment_production'>Production</a>
+			</li>
+			<li>
+				<a href='#environment_capacity_test'>Capacity test</a>
+			</li>
+			<li class='nav-header'>
 				<a href='#enabling_deployment'>Enabling deployment to an environment node</a>
 			</li>
 		</ul>
@@ -150,7 +163,7 @@
 		</ol>
 		
 		<p>If you followed the steps above, your TFS Build Agent is now ready for 
-		you to <a href='/create.html'>Add powerdelivery to to a TFS project</a>. Before you do that 
+		you to <a href='create.html'>Add powerdelivery to to a TFS project</a>. Before you do that 
 		however, continue to follow the next steps to prepare the target environments 
 		of your builds.</p>
 
@@ -161,6 +174,8 @@
 		<p>This section describes the different environments your software will be propagated through 
 		to eventually be delivered to your customers.</p>
 
+		<a name='environment_development'><hr /></a>
+		<br />
 		<h4>The Development environment</h4>
 		<p>When you automate the deployment of your software features, this automation might 
 		compile code, change databases, setup a router or load balancer, or maybe deploy a website. 
@@ -173,6 +188,8 @@
 		place to send <abbr title='Quality Assurance'>QA</abbr> people to look at the state of the 
 		software that is under development.</p>
 
+		<a name='environment_test'><hr /></a>
+		<br />
 		<h4>The Test or User Acceptance Test (UAT) environment</h4>
 		<p>When a build succeeds in the Development environment and looks ready for test, the team can 
 		kickoff a <b>Test</b> build which performs identical steps as far as deployment is concerned, 
@@ -181,12 +198,16 @@
 		on the same computer if you want to keep costs low. If using the same computer you'll need to 
 		be careful you avoid naming collisions and use unique names for your websites for example.</p>
 		
+		<a name='environment_production'><hr /></a>
+		<br />
 		<h4>The Production environment</h4>
 		<p>Once people responsible for making sure a Test build is suitable for release have evaluated it 
 		in that environment, it's ready to go to production. At this point a <b>Production</b> build is 
 		kicked off and once again we perform identical deployment steps as Test but this time the target 
 		is unique. This environment is the one your customers will use to access the software features.</p>
 		
+		<a name='environment_capacity_test'><hr /></a>
+		<br />
 		<h4>The Capacity Test environment</h4>
 		<p>Teams may also want to deploy a build to an environment where it will execute long-running tests 
 		against hardware that is identical to production to evaluate the capacity of the system. This is an 
@@ -269,7 +290,7 @@
 		control panel applet.</p>
 		<hr />
 	
-		Next you should read about how to <a href='/create.html'>create powerdelivery builds</a>.
+		Next you should read about how to <a href='create.html'>create powerdelivery builds</a>.
 		
 	</div>
 </div>
@@ -282,7 +303,7 @@
       </footer>
     </div>
     <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
-    <script src="/javascripts/bootstrap.min.js"></script>
-	<script src="/javascripts/site.js"></script>
+    <script src="javascripts/bootstrap.min.js"></script>
+	<script src="javascripts/site.js"></script>
   </body>
 </html>

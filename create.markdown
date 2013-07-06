@@ -3,26 +3,48 @@ layout: page
 ---
 <div class="row-fluid">
 	<div class="span3">
-		<ul class="nav nav-tabs nav-stacked">
-			<li>
-				<a href="#workstation_prep">Prepare your workstation for development</a>
+		<h5>Article contents</h5>
+		<ul class="nav nav-list">
+			<li class="nav-header">
+				<a href="#workstation_prep">Prepare your workstation</a>
 			</li>
-			<li>
+			<li class="nav-header">
 				<a href="#add_pipeline">Add a pipeline to a TFS project</a>
 			</li>
 			<li>
+				<a href="#what_created">What gets created</a>
+			</li>
+			<li class="nav-header">
 				<a href="#how_works">How powerdelivery works</a>
 			</li>
-			<li>
+			<li class="nav-header">
 				<a href="#environment">Environment configuration</a>
 			</li>
 			<li>
+				<a href="#config_how_loaded">How files are loaded</a>
+			</li>
+			<li>
+				<a href="#config_layout">Layout of files</a>
+			</li>
+			<li>
+				<a href="#config_retrieving_values">Retrieving values</a>
+			</li>
+			<li>
+				<a href="#config_structs">Using structures</a>
+			</li>
+			<li>
+				<a href="#config_arrays">Using arrays</a>
+			</li>
+			<li class="nav-header">
 				<a href="#matrix">Matrix of script blocks</a>
 			</li>
 			<li>
+				<a href="#optimized_compilation">Optimized compilation</a>
+			</li>
+			<li class="nav-header">
 				<a href="#cmdlets">Using cmdlets</a>
 			</li>
-			<li>
+			<li class="nav-header">
 				<a href="#modules">Using delivery modules</a>
 			</li>
 		</ul>
@@ -135,6 +157,8 @@ layout: page
              -DropFolder "\\MYSERVER\MyDrops" `
              -Name "MyProject"{% endhighlight %}
 		</ol>
+		<a name="what_created"><hr></a>
+		<br />
 		<h3>What gets created</h3>
 		<p>When you add a pipeline to your TFS project, a number of files and artifacts are created. 
 		Assuming the example settings above, the following will be created in TFS:</p>
@@ -194,6 +218,8 @@ MyProject Production Builders</pre>
 		the differences between environments. See the <a href="setup.html">setup</a> page for 
 		more information about planning your infrastructure so you know what information to put 
 		into these files.</p>
+		<a name="config_how_loaded"><hr></a>
+		<br />
 		<h3>How configuration files are loaded</h3>
 		<p>When your build script starts, prior to your code being run, powerdelivery 
 		looks in the same directory as your script for a file with the following pattern:</p>
@@ -206,6 +232,8 @@ RecipeManagerCommitEnvironment.yml
 RecipeManagerTestEnvironment.yml
 RecipeManagerCapacityTestEnvironment.yml
 RecipeManagerProductionEnvironment.yml</pre>
+		<a name="config_layout"><hr></a>
+		<br />
 		<h3>Layout of your configuration files</h3>
 		<p>Configuration files use YAML syntax and most of the settings you use will probably be 
 		name/value pairs. Remember that these files are only meant to contain settings that are 
@@ -232,6 +260,8 @@ DatabaseName: MyDatabase{% endhighlight %}
 		{% highlight yaml %}WebServer: MyProdServer
 DatabaseServer: MyProdDbServer
 DatabaseName: MyDatabase{% endhighlight %}
+		<a name="config_retrieving_values"><hr></a>
+		<br />
 		<h3>Retrieving values from configuration files</h3>
 		<p>There is a cmdlet (PowerShell function) included with powerdelivery that you should call in 
 		the <a href="#init_block">Init</a> block of your script (blocks are described in the next section). This cmdlet is 
@@ -247,6 +277,8 @@ DatabaseName: MyDatabase{% endhighlight %}
   $script:DatabaseServer = Get-BuildSetting DatabaseServer
   $script:DatabaseName = Get-BuildSetting DatabaseName
 }{% endhighlight %}
+		<a name="config_structs"><hr></a>
+		<br />
 		<h3>Using structures in configuration settings</h3>
 		<p>YAML is a flexible format for storing settings. You can also use nested 
 		name/value pairs to provide more structure to your settings if desired. If we have 
@@ -268,6 +300,8 @@ Database:
   $script:DatabaseServer = $databaseSettings.Server
   $script:DatabaseName = $databaseSettings.Database
 }{% endhighlight %}
+		<a name="config_arrays"><hr></a>
+		<br />
 		<h3>Using arrays in configuration settings</h3>
 		<p>Arrays are a powerful way to store configuration when you want to 
 		allow your build to do the same work multiple times driven by configuration. 
@@ -347,6 +381,8 @@ Deploy {
 		</table>
 		<p>All blocks are optional and you may choose which to include in your pipeline script depending on 
 		what features you'd like to support.</p>
+		<a name="optimized_compilation"><hr></a>
+		<br />
 		<h3>Optimized compilation</h3>
 		<p>To confidently promote builds from one environment to another, we want to prevent different compiled 
 		assets from making their way into an environment than have already been evaluated in another. To prevent 
