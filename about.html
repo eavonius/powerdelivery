@@ -1,0 +1,71 @@
+---
+layout: page
+---
+
+<div class="span12">
+	<h1>What is powerdelivery?</h1>
+	<p class="lead">A <b>free</b>, open-source toolkit for <b>automating deployment of software 
+	features</b> using technologies that are <b>easier to work with by <abbr title="Information Technology">IT</abbr> operations personnel</b> 
+	and enable <b>higher quality and more frequent releases</b> by following Continuous Delivery principles.</p>
+	<p>Continuous Delivery is a term coined in the <a href="http://agilemanifesto.org/principles.html">principles</a> of the 
+	<a href="http://agilemanifesto.org/">Agile Manifesto</a>:</p>
+	<blockquote>
+		<h4 style="font-weight: normal">
+			<i>
+				&quot;Our highest priority is to satisfy the customer through early and <b>continuous delivery</b> of valuable software.&quot;
+			</i>
+		</h4>
+	</blockquote>
+	<p>Continuous delivery is also the name of <a href="http://continuousdelivery.com/">a book by Jez Humble of Thoughtworks and David Farley</a>.</p>
+	<h2>What does it do?</h2>
+	<p>The philosophy behind Continuous Delivery is that teams need to release more often to their customers to 
+	get feedback on their ideas before investing so deeply in them. This helps teams get to the truly valuable 
+	features faster and also eliminates waste by identifying bad ideas early. To do this effectively requires 
+	coaching in the approach to really succeed but typically boils down to these essential practices:
+	<ol>
+		<li>Use <a href="http://www.scrum.org">SCRUM</a> to manage the workload of your team.</li>
+		<li>Define requirements using test scripts called <b>acceptance criteria</b>.</li>
+		<li>Use automated testing to reduce <b>cycle time</b>, or the time between an idea and it is available to users.</li>
+		<li>Deploy into your development, test, and production environments with automation and <b>never let people modify your environment directly</b>.</li>
+	</ol>
+	<p>powerdelivery supports all of these practices, but does the heavy lifting to enable primarily the last one.</p>
+	<h2>What is required to use it?</h2>
+	<p>Currently powerdelivery is designed to work with Microsoft Team Foundation Server (TFS). <abbr title="Team Foundation Server">TFS</abbr> 
+	is an Application Lifecycle Management (ALM) tool that provides many great features that can be leveraged 
+	by teams starting to do continuous delivery. However, powerdelivery only relies on the Team Build feature, 
+	and should you choose to use a different project management tool, you can 
+	still use it to get the same benefits for deployment automation.</p>
+	<h2>How is it different?</h2>
+	More than simply "yet another automated deployment technology", powerdelivery was designed specifically to 
+	follow Continuous Delivery practices making your team more efficient by <b>eliminating the possibility of 
+	releasing untested changes to production</b>. It is also designed to be <b>easier to work with than the existing 
+	tools from Microsoft</b> for automated deployment by themselves. The core of powerdelivery is a simple framework 
+	built on top of Windows PowerShell. Everything you can do with the massive array of existing PowerShell 
+	scripts and modules available from Microsoft and on the web is available to you from powerdelivery.</p>
+	<h3>Why Windows PowerShell?</h3>
+	<p><abbr title="Team Foundation Server">TFS</abbr> is great at watching your source code repository for 
+	submissions and kicking off builds, but unless the features that come with the build out of the box are 
+	enough for you, it requires significant customization to be suitable for a Continuous Delivery build 
+	platform. I highly recommend you read Jez Humble's book he makes a much more detailed case about why <b>it 
+	makes sense to author your builds in a scripting language</b>. This information will come in handy as you run 
+	across folks who may be confused as to why you wouldn't just do it all within 
+	<abbr title="Team Foundation Server">TFS</abbr> build itself and need to educate them.</p>
+	<p>I'll summarize what's in the book to highlight the most important benefits. First, if your automated 
+	build relies wholly on <abbr title="Team Foundation Server">TFS</abbr>, you can't run a build on your 
+	computer that does everything that the server can. Second, if you want to really tap into automation you 
+	will be modifying the build's behavior greatly and that requires recompilation of code in the case of 
+	<abbr title="Microsoft Build">MSBuild</abbr>, or understanding the difficult Windows Workflow engine 
+	that <abbr title="Team Foundation Server">TFS</abbr> leverages. Finally, to really automate as much 
+	as possible you will be setting up and tearing down software and hardware infrastructure needed by 
+	your environments as well as doing typical build activities (compiling, database changes) and most 
+	IT operations personnel are more familiar with PowerShell than C# code or Windows Workflow foundation 
+	as it is similar in use to bash shell scripting and batch files.</p>
+	<h2>What is included?</h2>
+	<ul>
+		<li>A simple PowerShell framework for deploying your software into multiple environments.</li>
+		<li>A "hook" into Microsoft Team Foundation Server that triggers your script when you "kickoff" a build.</li>
+		<li>A mechanism for storing environment configuration settings in .yml or .csv files. For instance, your local computer, development, test, and production environment probably use a different database.</li>
+		<li>PowerShell cmdlets (functions) and modules (libraries) that help with writing builds.</li>
+		<li>PowerShell scripts that can be used to setup security appropriately between your automated build server and the computers it deploys to.</li>
+	</ul>
+</div>

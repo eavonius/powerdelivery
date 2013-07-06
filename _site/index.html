@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>powerdelivery - Continuous Delivery with PowerShell and Team Foundation Server</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Continuous Delivery with PowerShell and Team Foundation Server">
+    <meta name="author" content="Jayme C Edwards">
+    <link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+      @media (max-width: 980px) {
+        .navbar-text.pull-right {
+          float: none;
+          padding-left: 5px;
+          padding-right: 5px;
+        }
+      }
+    </style>
+    <link href="/stylesheets/bootstrap-responsive.min.css" rel="stylesheet">
+	<link href="/stylesheets/pygment_trac.css" rel="stylesheet">
+	<link href="/stylesheets/site.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+      <script src="/javascripts/html5shiv.js"></script>
+    <![endif]-->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/img/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/img/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="/img/apple-touch-icon-57-precomposed.png">
+    <link rel="shortcut icon" href="/img/favicon.png">
+  </head>
+  <body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand">powerdelivery</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="/index.html">Home</a></li>
+              <li><a href="/about.html">About</a></li>
+			  <li><a href="/setup.html">Setup</a></li>
+			  <li><a href="/create.html">Create</a></li>
+			  <li><a href="/use.html">Use</a></li>
+			  <li><a href="/reference.html">Reference</a></li>
+              <li><a href="/developing.html">Developing</a></li>
+			  <li><a href="/help.html">Get help</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid">
+      <div class="row-fluid">
+		<!--
+<div class="span3">
+  <div class="well sidebar-nav">
+	<ul class="nav nav-list">
+	  <li class="nav-header">Sidebar</li>
+	  <li><a href="#">Link</a></li>
+	  <li><a href="#">Link</a></li>
+	  <li><a href="#">Link</a></li>
+	  <li><a href="#">Link</a></li>
+	  <li class="nav-header">Sidebar</li>
+	  <li><a href="#">Link</a></li>
+	  <li><a href="#">Link</a></li>
+	  <li><a href="#">Link</a></li>
+	  <li><a href="#">Link</a></li>
+	  <li><a href="#">Link</a></li>
+	  <li><a href="#">Link</a></li>
+	  <li class="nav-header">Sidebar</li>
+	  <li><a href="#">Link</a></li>
+	  <li><a href="#">Link</a></li>
+	  <li><a href="#">Link</a></li>
+	</ul>
+  </div>
+</div>
+-->
+<div class="span12">
+  <div class="hero-unit well" style="background-color: #f5f5f5">
+	<h1 style="font-weight: normal">power<b>delivery</b></h1>
+	<br />
+	<p class="lead">A free, powerful toolkit enabling teams <b>continuously deliver software</b> 
+	to their customers using <a href="http://tfs.visualstudio.com/" target="_blank">Microsoft Team Foundation Server</a> 
+	and <a href="http://technet.microsoft.com/en-us/library/bb978526.aspx" target="_blank">Windows PowerShell</a>.</p>
+	<p><a class="btn btn-large btn-primary" href="/about.html">Read more &gt;&gt;</a></p>
+  </div>
+  <div class="row-fluid">
+	<div class="span12 well" style="text-align: center">
+		<a href="https://github.com/eavonius/powerdelivery" target="_new">Github</a> | 
+		<a href="http://chocolatey.org/packages/PowerDelivery" target="_new">Chocolatey</a> | 
+		<a href="http://thevaluerevival.wordpress.com" target="_new">Jayme's Blog</a>&nbsp;&nbsp; 
+		<span class="label label-info">Version 2.2.11</span>
+	</div>
+  </div>
+  <div id="feature-highlight" class="row-fluid">
+	<div class="span4">
+		<h2>Reduce cycle time</h2>
+		<p>How do you know that users love your idea? Get it out to 
+		there and listen. Automate your deployment once and 
+		move it through your development, test, and production quality 
+		gates fast to get that feedback.</p>
+	</div>
+	<div class="span4">
+		<h2>Release with confidence</h2>
+		<p>Making the release process a policy isn't enough. 
+		Automate it and use technology to stop the team from 
+		making changes to servers directly.</p>
+	</div>
+	<div class="span4">
+		<h2>Bring peace to the team</h2>
+		<p>Stop wasting time chasing down differences in 
+		server configuration and focus your resources on what 
+		they do best - innovate and create value for your customers.</p>
+	</div>
+  </div>
+</div>
+      </div>
+      <hr>
+      <footer>
+        <p align="center">
+			<small>powerdelivery is released under the <a href="http://www.opensource.org/licenses/MIT">MIT license</a>.</small>
+		</p>
+      </footer>
+    </div>
+    <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script src="/javascripts/bootstrap.min.js"></script>
+	<script src="/javascripts/site.js"></script>
+  </body>
+</html>

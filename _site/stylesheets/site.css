@@ -1,0 +1,50 @@
+.navbar-inner .container-fluid, .navbar-fixed-top .navbar-inner {
+	background-image: none;
+	background-color: #c41230;
+}
+
+.navbar-inverse .btn-navbar {
+	background: #c41230;
+}
+
+.navbar-inverse .brand {
+	color: #ffffff;
+}
+
+.navbar-inverse .nav .active > a, 
+.navbar-inverse .nav .active > a:hover,
+.navbar-inverse .nav .active > a:focus {
+	background-color: #B62027;
+}
+
+.narvbar-fixed-top .nav li a {
+	background: transparent;
+	color: #fefefe;
+}
+
+.narvbar-fixed-top .nav li a:hover {
+	background: #c41230;
+	color: #fefefe;
+}
+
+.narvbar-fixed-top .nav li.active a {
+	background: #c41230;
+}
+
+.navbar-fixed-top .navbar-inner .container-fluid .nav-collapse .navbar-text {
+	color: #ffffff;
+}
+
+.navbar-fixed-top .navbar-inner .container-fluid .nav-collapse a,
+.navbar-fixed-top .navbar-inner .container-fluid .nav-collapse a:link,
+.navbar-fixed-top .navbar-inner .container-fluid .nav-collapse a:visited {
+	color: #ffffff;
+}
+
+#feature-highlight h2 {
+	font-weight: normal;
+}
+
+#feature-highlight .span4 {
+	text-align: center;
+}
