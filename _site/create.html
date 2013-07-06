@@ -108,6 +108,9 @@
 			<li class='nav-header'>
 				<a href='#modules'>Using delivery modules</a>
 			</li>
+			<li>
+				<a href='#modules_referencing'>Referencing modules</a>
+			</li>
 		</ul>
 	</div>	
 	<div class='span9'>
@@ -519,7 +522,28 @@ RecipeManagerProductionEnvironment.yml</pre>
 		<a name='modules'><hr /></a>
 		<br />
 		<h2>Using delivery modules</h2>
-		<p />
+		<p>The reusable cmdlets included with powerdelivery are easy to use and you just choose a <a href='#matrix'>script block</a> 
+		(Init, Compile, Deploy etc.) to call them from. However, there are times when you might want to package 
+		up some reusable PowerShell code that does work across more than one of these script blocks. For example, 
+		to setup a website, you might want to enable the target environment to use <a href='http://www.iis.net/downloads/microsoft/web-deploy' target='_blank'>Microsoft Web Deploy</a> in the 
+		<a href='#setup_environment_block'>SetupEnvironment</a> block, and then do the actual deployment in the 
+		<a href='#deploy_block'>Deploy</a> block. To enable this, powerdelivery allows for the use of <b>Delivery Modules</b>.</p>
+		<a name='modules_referencing'><hr /></a>
+		<br />
+		<h3>Referencing modules</h3>
+		<p>Before you can begin to use a delivery module, you must add a reference to one in your build script. 
+		This is done by calling the <a href='/reference.html#import_delivery_module_cmdlet'>Import-DeliveryModule</a> 
+		cmdlet at the top of your script (outside of a block). If you are familiar with the C# programming language, 
+		this is analagous to putting a "using" statement at the top of a class file.</p>
+		<p>Below is an example of importing the <a href='/reference.html#web_deploy_module'>WebDeploy</a> module 
+		included with powerdelivery. See the <a href='/reference.html#modules'>module reference</a> for details of 
+		which modules are included with powerdelivery.</p>
+		
+<div class='highlight'><pre><code class='powershell'><span class='n'>Pipeline</span> <span class='s1'>&#39;MyProduct&#39;</span> <span class='n'>-Version</span> <span class='s1'>&#39;1.0.0&#39;</span>
+
+<span class='nb'>Import-DeliveryModule</span> <span class='n'>WebDeploy</span>
+</code></pre></div>
+
 	</div>
 </div>
       </div>
