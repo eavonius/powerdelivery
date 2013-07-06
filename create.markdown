@@ -470,7 +470,7 @@ Import-DeliveryModule WebDeploy{% endhighlight %}
 		set of settings you want to pass to the module to do work. This section can be named anything you want.</p>
 		<p>As an example, if our script referenced the <a href="reference.html#msbuild_module">MSBuild</a> delivery module 
 		we might have 3 projects we want to have compiled when our script runs. Using the delivery module, we no longer 
-		place a call to the <a href="reference.html#invoke_msbuild_cmdlet">Invoke-MSBuild</a> cmdlet, but instead 
+		use a call to the <a href="reference.html#invoke_msbuild_cmdlet">Invoke-MSBuild</a> cmdlet in our script, but instead 
 		place settings below an <b>MSBuild</b> settings section in the module configuration file. Here is an example 
 		of the contents of the module configuration file in our example:</p>
 		{% highlight yaml %}MSBuild:
@@ -486,8 +486,8 @@ Import-DeliveryModule WebDeploy{% endhighlight %}
       Property2: 2{% endhighlight %}
 		<p>When the script runs (and just prior to when the <a href="#compile_block">Compile</a> block executes), 
 		the MSBuild module will see these settings and attempt to compile these three projects using the settings 
-		that were configured. Again, refer to the <a href="reference.html#module">delivery module reference</a> 
-		for each module to find out when your settings will actually be executed if you need to coordinate this 
-		with other work you do in your script.</p>
+		that were configured. Refer to the <a href="reference.html#module">delivery module reference</a> 
+		for each module to find out during which script blocks in the delivery pipeline's execution lifecycle
+		that your settings will actually do work if you need to coordinate this with other work you do in your script.</p>
 	</div>
 </div>
