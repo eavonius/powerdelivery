@@ -50,6 +50,12 @@ layout: page
 			<li>
 				<a href="#modules_referencing">Referencing modules</a>
 			</li>
+			<li>
+				<a href="#modules_configuring">Configuring modules</a>
+			</li>
+			<li>
+				<a href="#modules_developing">Developing modules</a>
+			</li>
 		</ul>
 	</div>	
 	<div class="span9">
@@ -85,20 +91,28 @@ layout: page
 			{% highlight powershell %}Set-ExecutionPolicy Unrestricted{% endhighlight %}
 			<li><h5>Install Powerdelivery on the local computer</h5></li>
 			<p>From an Administrative PowerShell console, run the following command to install powerdelivery via chocolatey:</p>
-			{% highlight powershell %}cinst powerdelivery{% endhighlight %}
+			<p>
+				<code>cinst powerdelivery</code>
+			</p>
 			<p>You should <a href="http://chocolatey.org/packages/PowerDelivery">check the powerdelivery Chocolatey page for updates</a> 
 			from time to time. When you find them, update your build agent from an Administrative PowerShell 
 			console again with the following command:</p>
-			{% highlight powershell %}cup powerdelivery{% endhighlight %}
+			<p>
+				<code>cup powerdelivery</code>
+			</p>
 			<li><h5>Install PowerShell development tools (optional)</h5></li>
 			<p>PowerShell 3.0 comes with an <abbr title="Integrated Scripting Environment">ISE</abbr> that works fairly 
 			well for scripting, but you may also consider installing the free version of 
 			<a href="http://www.powergui.com">PowerGUI</a>. You can install PowerGUI via Chocolatey with the 
 			following command:</p>
-			{% highlight powershell %}cinst powergui{% endhighlight %}
+			<p>
+				<code>cinst powergui</code>
+			</p>
 			<p>You might also consider installing <a href="http://notepad-plus-plus.org/">Notepad++</a> for editing the .yml configuration files used by 
 			powerdelivery. Notepad++ has YAML syntax highlighting and you can install it via Chocolatey with the following command:</p>
-			{% highlight powershell %}cinst notepadplusplus{% endhighlight %}
+			<p>
+				<code>cinst notepadplusplus</code>
+			</p>
 		</ol>
 		<a name="add_pipeline"><hr></a>
 		<br />
@@ -121,9 +135,13 @@ layout: page
 			<p>Using Team Explorer again, find the URL of your project collection. This is the URL to the 
 			collection of projects itself, not your project.</p>
 			<p>If you had a project named "MyProject", this URL might be:</p>
-			<pre>http://mytfsserver:8080/tfs</pre>
+			<p>
+				<code>http://mytfsserver:8080/tfs</code>
+			</p>
 			<p>And would <b>NOT</b> be:</p>
-			<pre>http://mytfsserver:8080/tfs/MyProject (WRONG!)</pre>
+			<p>
+				<code>http://mytfsserver:8080/tfs/MyProject (WRONG!)</code>
+			</p>
 			<li><h5>Determine the TFS build controller</h5></li>
 			<p>When you <a href="setup.html">setup your environment for powerdelivery</a>, you installed 
 			PowerShell 3.0, Chocolatey, and powerdelivery on your <b>TFS Build Agent</b> computer. TFS uses 
@@ -226,7 +244,9 @@ MyProject Production Builders</pre>
 		<h3>How configuration files are loaded</h3>
 		<p>When your build script starts, prior to your code being run, powerdelivery 
 		looks in the same directory as your script for a file with the following pattern:</p>
-		<pre>[ScriptName][EnvironmentName]Environment.yml</pre>
+		<p>
+			<code>[ScriptName][EnvironmentName]Environment.yml</code>
+		</p>
 		<p>where <i>ScriptName</i> is the name of the build script (ending in .ps1) and <i>EnvironmentName</i> 
 		is "Local", "Test", or "Production" for example, depending on the target build environment.</p>
 		<p>For example, if your script was named "RecipeManager", powerdelivery would expect to find the following environment configuration files:</p>
@@ -429,5 +449,45 @@ Deploy {
 		{% highlight powershell %}Pipeline 'MyProduct' -Version '1.0.0'
 
 Import-DeliveryModule WebDeploy{% endhighlight %}
+		<a name="modules_configuring"><hr></a>
+		<br />
+		<h3>Configuring modules</h3>
+		<p>Once you've referenced a module using the <a href="/reference.html#import_delivery_module_cmdlet">Import-DeliveryModule</a> 
+		cmdlet, you must configure it for the module to do any work. When you <a href="#add_pipeline">added a deployment pipeline</a> to your TFS project, 
+		an additional configuration file was added that is used to store the configuration of the modules you use in your script. 
+		This file follows the naming convention:</p>
+		<p>
+			<code>[ScriptName]Modules.yml</code>
+		</p>
+		<p>Following our example, if our pipeline was named "RecipeManager" (and thus the build script is named 
+		RecipeManager.ps1), the module configuration file would be:</p>
+		<p>
+			<code>RecipeManagerModules.yml</code>
+		</p>
+		<p>Each delivery module you import has a YAML section name under which its settings should be placed. 
+		You will need to refer to the <a href="/reference.html#modules">delivery module reference</a> for each 
+		module to find this information. Below this section name you must add another named section for each 
+		set of settings you want to pass to the module to do work. This section can be named anything you want.</p>
+		<p>As an example, if our script referenced the <a href="/reference.html#msbuild_module">MSBuild</a> delivery module 
+		we might have 3 projects we want to have compiled when our script runs. Using the delivery module, we no longer 
+		place a call to the <a href="/reference.html#invoke_msbuild_cmdlet">Invoke-MSBuild</a> cmdlet, but instead 
+		place settings below an <b>MSBuild</b> settings section in the module configuration file. Here is an example 
+		of the contents of the module configuration file in our example:</p>
+		{% highlight yaml %}MSBuild:
+  Project1:
+    ProjectFile: Project1/Project1.csproj
+  Project2:
+    ProjectFile: Project2/Project2.csproj
+    Flavor: x64
+  Project3:
+    ProjectFile: Project3/Project3.csproj
+    Properties:
+      Property1: 1
+      Property2: 2{% endhighlight %}
+		<p>When the script runs (and just prior to when the <a href="#compile_block">Compile</a> block executes), 
+		the MSBuild module will see these settings and attempt to compile these three projects using the settings 
+		that were configured. Again, refer to the <a href="/reference.html#module">delivery module reference</a> 
+		for each module to find out when your settings will actually be executed if you need to coordinate this 
+		with other work you do in your script.</p>
 	</div>
 </div>

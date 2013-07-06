@@ -60,3 +60,8 @@
 #feature-highlight .span4 {
 	text-align: center;
 }
+
+code {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}

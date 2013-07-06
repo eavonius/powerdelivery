@@ -83,11 +83,15 @@ layout: page
 			{% highlight powershell %}Set-ExecutionPolicy Unrestricted{% endhighlight %}
 			<li><h5>Install Powerdelivery on the Build Agent</h5></li>
 			<p>From an Administrative PowerShell console, run the following command to install powerdelivery via chocolatey:</p>
-			{% highlight powershell %}cinst powerdelivery{% endhighlight %}
+			<p>
+				<code>cinst powerdelivery</code>
+			</p>
 			<p>You should <a href="http://chocolatey.org/packages/PowerDelivery">check the powerdelivery Chocolatey page for updates</a> 
 			from time to time. When you find them, update your build agent from an Administrative PowerShell 
 			console again with the following command:</p>
-			{% highlight powershell %}cup powerdelivery{% endhighlight %}
+			<p>
+				<code>cup powerdelivery</code>
+			</p>
 		</ol>
 		
 		<p>If you followed the steps above, your TFS Build Agent is now ready for 
@@ -180,7 +184,9 @@ layout: page
 			For example if your username on the node is "myprofile" and you downloaded it to the Downloads folder:</p>
 			{% highlight powershell %}Set-Location "C:\Users\myprofile\Downloads"{% endhighlight %}
 			<p>Run the following command:</p>
-			{% highlight powershell %}.\enable-buildDeployment.ps1{% endhighlight %}
+			<p>
+				<code>.\enable-buildDeployment.ps1</code>
+			</p>
 			<p>You will be prompted for 3 pieces of information:</p>
 			<ul>
 				<li><b>buildAgentComputer</b></li>
@@ -195,7 +201,9 @@ layout: page
 				<p>This is the domain name of the account that the TFS Build Agent is set to run under.</p>
 			</ul>
 			<p>You can optionally call the script by passing all three parameters to skip the prompts. An example might be:</p>
-			{% highlight powershell %}.\enableBuildDeployment.ps1 -buildAgentComputer MYAGENT -buildUserName MYACCOUNT -buildUserDomain MYDOMAIN{% endhighlight %}
+			{% highlight powershell %}.\enableBuildDeployment.ps1 -buildAgentComputer MYAGENT `
+                            -buildUserName MYACCOUNT `
+                            -buildUserDomain MYDOMAIN{% endhighlight %}
 		</ol>
 		<p>If you've followed the steps above, the node should be enabled for deployment to from the TFS Build Agent 
 		for continuous delivery. You may want to double-check that the TFS Build Agent account you specified in the 

@@ -150,17 +150,15 @@
 
 			<li><h5>Install Powerdelivery on the Build Agent</h5></li>
 			<p>From an Administrative PowerShell console, run the following command to install powerdelivery via chocolatey:</p>
-			
-<div class='highlight'><pre><code class='powershell'><span class='n'>cinst</span> <span class='n'>powerdelivery</span>
-</code></pre></div>
-
+			<p>
+				<code>cinst powerdelivery</code>
+			</p>
 			<p>You should <a href='http://chocolatey.org/packages/PowerDelivery'>check the powerdelivery Chocolatey page for updates</a> 
 			from time to time. When you find them, update your build agent from an Administrative PowerShell 
 			console again with the following command:</p>
-			
-<div class='highlight'><pre><code class='powershell'><span class='n'>cup</span> <span class='n'>powerdelivery</span>
-</code></pre></div>
-
+			<p>
+				<code>cup powerdelivery</code>
+			</p>
 		</ol>
 		
 		<p>If you followed the steps above, your TFS Build Agent is now ready for 
@@ -262,10 +260,9 @@
 </code></pre></div>
 
 			<p>Run the following command:</p>
-			
-<div class='highlight'><pre><code class='powershell'><span class='p'>.\</span><span class='nb'>enable-buildDeployment</span><span class='p'>.</span><span class='n'>ps1</span>
-</code></pre></div>
-
+			<p>
+				<code>.\enable-buildDeployment.ps1</code>
+			</p>
 			<p>You will be prompted for 3 pieces of information:</p>
 			<ul>
 				<li><b>buildAgentComputer</b></li>
@@ -281,7 +278,9 @@
 			</ul>
 			<p>You can optionally call the script by passing all three parameters to skip the prompts. An example might be:</p>
 			
-<div class='highlight'><pre><code class='powershell'><span class='p'>.\</span><span class='n'>enableBuildDeployment</span><span class='p'>.</span><span class='n'>ps1</span> <span class='n'>-buildAgentComputer</span> <span class='n'>MYAGENT</span> <span class='n'>-buildUserName</span> <span class='n'>MYACCOUNT</span> <span class='n'>-buildUserDomain</span> <span class='n'>MYDOMAIN</span>
+<div class='highlight'><pre><code class='powershell'><span class='p'>.\</span><span class='n'>enableBuildDeployment</span><span class='p'>.</span><span class='n'>ps1</span> <span class='n'>-buildAgentComputer</span> <span class='n'>MYAGENT</span> <span class='p'>`</span>
+                            <span class='n'>-buildUserName</span> <span class='n'>MYACCOUNT</span> <span class='p'>`</span>
+                            <span class='n'>-buildUserDomain</span> <span class='n'>MYDOMAIN</span>
 </code></pre></div>
 
 		</ol>
