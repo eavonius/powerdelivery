@@ -17,6 +17,9 @@ layout: page
 			<li class="nav-header">
 				<a href="#how_works">How powerdelivery works</a>
 			</li>
+			<li>
+				<a href="#dependencies">Pipeline dependencies</a>
+			</li>
 			<li class="nav-header">
 				<a href="#environment">Environment configuration</a>
 			</li>
@@ -254,11 +257,44 @@ MyProject Production Builders</pre>
 		<a name="how_works"><hr></a>
 		<br />
 		<h2>How powerdelivery works</h2>
-		<p>To put it simply, powerdelivery runs a PowerShell script. You can choose to run 
-		that script on your own computer and it will run a "Local" build. When you trigger 
+		<p>At its core, powerdelivery simply runs a PowerShell script. You can choose to run 
+		that script on your own computer and it will run a <a href="#local_builds">Local</a> build. When you trigger 
 		a build on <abbr title="Team Foundation Server">TFS</abbr>, some extra parameters 
 		are passed to the script so that it runs a build against the appropriate target 
 		environment (Development, Test, Production etc.).</p>
+		<p>The top of every powerdelivery script declares the name of the deployment 
+		pipeline as well as a version. The name was specified when you 
+		<a href="#add_pipeline">added powerdelivery to your TFS project</a> and the 
+		version can be incremented as necessary. Here is an example of a pipeline declaration, 
+		present at the top of every powerdelivery script:</p> 
+		{% highlight powershell %}Pipeline 'MyProduct' -Version '1.0.3'{% endhighlight %}
+		<p>As your build runs, it goes through a <a href="#matrix">specific sequence</a> of calling named script blocks 
+		where you should do common delivery activities (compile, deploy, setup the environment, 
+		test etc.). You can use the <a href="#cmdlets">cmdlets</a> (reusable PowerShell functions) included with 
+		powerdelivery within those script blocks to do work. You can also use 
+		<a href="#modules">delivery modules</a> as necessary.</p>
+		
+		<a name="dependencies"><hr></a>
+		<br>
+		<h3>Dependencies between deployment pipelines</h3>
+		<p>You should always use a 3-part version in your pipeline declaration. This allows you 
+		to control your release of change into other deployment pipelines (products or software 
+		projects) that are dependent on yours.	An example would be where you have one TFS 
+		project that delivers a reusable class library, using powerdelivery, as its output. 
+		There are other TFS projects that consume this reusable library. You may have written your 
+		build so that it drops the library into a UNC path somewhere or perhaps <a href="http://www.nuget.org" target="_blank">nuget</a> as its <a href="#production_builds">production</a> 
+		build "deployment".</p>
+		<p>When the other TFS projects that want to reuse this asset reference it, they should 
+		pull versions that are tied to the 3 part name, so for instance they are designed to work 
+		with version 1.0.3 <i>or greater</i> of your library. This way, when new versions of your files are released 
+		as 1.0.3.100 or 1.0.3.500 you are telling the consuming applications that the <i>interface</i> 
+		to that file hasn't changed. If it does change, you can then update the version at the top 
+		of the script to 1.0.4 and those downstream applications can choose to integrate the new 
+		changes only when they are ready.</p>
+		<p>Powerdelivery automatically creates a 
+		version number with the changeset appended to the end on each build so that you 
+		can version your files appropriately. See the <a href="reference.html#invoke_msbuild_cmdlet">Invoke-MSBuild</a> 
+		cmdlet for more information about versioning files.</p>
 
 		<a name="environment"><hr></a>
 		<br />
@@ -582,7 +618,7 @@ SetupEnvironment {
 		<br />
 		<h3>Referencing modules</h3>
 		<p>Before you can begin to use a delivery module, you must add a reference to one in your build script. 
-		This is done by calling the <a href="reference.html#import_delivery_module_cmdlet">Import-DeliveryModule</a> 
+		This is done by calling the <a href="reference.html#import_deliverymodule_cmdlet">Import-DeliveryModule</a> 
 		cmdlet at the top of your script (outside of a block). If you are familiar with the C# programming language, 
 		this is analagous to putting a "using" statement at the top of a class file.</p>
 		<p>Below is an example of importing the <a href="reference.html#web_deploy_module">WebDeploy</a> module 
@@ -629,7 +665,7 @@ Import-DeliveryModule WebDeploy{% endhighlight %}
       Property2: 2{% endhighlight %}
 		<p>When the script runs (and just prior to when the <a href="#compile_block">Compile</a> block executes), 
 		the MSBuild module will see these settings and attempt to compile these three projects using the settings 
-		that were configured. Refer to the <a href="reference.html#module">delivery module reference</a> 
+		that were configured. Refer to the <a href="reference.html#modules">delivery module reference</a> 
 		for each module to find out during which script blocks in the delivery pipeline's execution lifecycle
 		that your settings will actually do work if you need to coordinate this with other work you do in your script.</p>
 	</div>
