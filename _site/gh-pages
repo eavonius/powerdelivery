@@ -1,0 +1,64 @@
+<NotepadPlus>
+    <Project name="gh-pages">
+        <Folder name="img">
+            <File name="img\glyphicons-halflings-white.png" />
+            <File name="img\glyphicons-halflings.png" />
+        </Folder>
+        <Folder name="javascripts">
+            <File name="javascripts\bootstrap.min.js" />
+            <File name="javascripts\html5shiv.js" />
+            <File name="javascripts\main.js" />
+            <File name="javascripts\site.js" />
+        </Folder>
+        <Folder name="stylesheets">
+            <File name="stylesheets\bootstrap-responsive.min.css" />
+            <File name="stylesheets\bootstrap.min.css" />
+            <File name="stylesheets\pygment_trac.css" />
+            <File name="stylesheets\site.css" />
+        </Folder>
+        <Folder name="_layouts">
+            <File name="_layouts\page.html" />
+        </Folder>
+        <Folder name="_site">
+            <Folder name="img">
+                <File name="_site\img\glyphicons-halflings-white.png" />
+                <File name="_site\img\glyphicons-halflings.png" />
+            </Folder>
+            <Folder name="javascripts">
+                <File name="_site\javascripts\bootstrap.min.js" />
+                <File name="_site\javascripts\html5shiv.js" />
+                <File name="_site\javascripts\main.js" />
+                <File name="_site\javascripts\site.js" />
+            </Folder>
+            <Folder name="stylesheets">
+                <File name="_site\stylesheets\bootstrap-responsive.min.css" />
+                <File name="_site\stylesheets\bootstrap.min.css" />
+                <File name="_site\stylesheets\pygment_trac.css" />
+                <File name="_site\stylesheets\site.css" />
+            </Folder>
+            <File name="_site\about.html" />
+            <File name="_site\create.html" />
+            <File name="_site\developing.html" />
+            <File name="_site\help.html" />
+            <File name="_site\index.html" />
+            <File name="_site\params.json" />
+            <File name="_site\README.md" />
+            <File name="_site\reference.html" />
+            <File name="_site\server.ps1" />
+            <File name="_site\setup.html" />
+            <File name="_site\use.html" />
+        </Folder>
+        <File name="about.html" />
+        <File name="create.markdown" />
+        <File name="developing.markdown" />
+        <File name="help.markdown" />
+        <File name="index.html" />
+        <File name="params.json" />
+        <File name="README.md" />
+        <File name="reference.markdown" />
+        <File name="server.ps1" />
+        <File name="setup.markdown" />
+        <File name="use.markdown" />
+        <File name="_config.yml" />
+    </Project>
+</NotepadPlus>

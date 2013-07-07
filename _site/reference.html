@@ -103,7 +103,64 @@
 				<a href='#get_buildmoduleconfig_cmdlet'>Get-BuildModuleConfig</a>
 			</li>
 			<li>
+				<a href='#get_buildname_cmdlet'>Get-BuildName</a>
+			</li>
+			<li>
+				<a href='#get_buildnumber_cmdlet'>Get-BuildNumber</a>
+			</li>
+			<li>
+				<a href='#get_buildonserver_cmdlet'>Get-BuildOnServer</a>
+			</li>
+			<li>
+				<a href='#get_buildrequestedby_cmdlet'>Get-BuildRequestedBy</a>
+			</li>
+			<li>
+				<a href='#get_buildsetting_cmdlet'>Get-BuildSetting</a>
+			</li>
+			<li>
+				<a href='#get_buildteamproject_cmdlet'>Get-BuildTeamProject</a>
+			</li>
+			<li>
+				<a href='#get_builduri_cmdlet'>Get-BuildUri</a>
+			</li>
+			<li>
+				<a href='#get_buildworkspacename_cmdlet'>Get-BuildWorkspaceName</a>
+			</li>
+			<li>
+				<a href='#import_deliverymodule_cmdlet'>Import-DeliveryModule</a>
+			</li>
+			<li>
 				<a href='#invoke_msbuild_cmdlet'>Invoke-MSBuild</a>
+			</li>
+			<li>
+				<a href='#invoke_mstest_cmdlet'>Invoke-MSTest</a>
+			</li>
+			<li>
+				<a href='#invoke_powerdelivery_cmdlet'>Invoke-PowerDelivery</a>
+			</li>
+			<li>
+				<a href='#invoke_roundhouse_cmdlet'>Invoke-Roundhouse</a>
+			</li>
+			<li>
+				<a href='#invoke_ssispackage_cmdlet'>Invoke-SSISPackage</a>
+			</li>
+			<li>
+				<a href='#publish_buildassets_cmdlet'>Publish-BuildAssets</a>
+			</li>
+			<li>
+				<a href='#publish_ssas_cmdlet'>Publish-SSAS</a>
+			</li>
+			<li>
+				<a href='#register_deliverymodulehook_cmdlet'>Register-DeliveryModuleHook</a>
+			</li>
+			<li>
+				<a href='#set_ssasconnection_cmdlet'>Set-SSASConnection</a>
+			</li>
+			<li>
+				<a href='#start_sqljobs_cmdlet'>Start-SqlJobs</a>
+			</li>
+			<li>
+				<a href='#write_buildsummarymessage_cmdlet'>Write-BuildSummaryMessage</a>
 			</li>
 			<li class='nav-header'>
 				<a href='#modules'>Delivery modules</a>
@@ -121,8 +178,8 @@
 		<br />
 		<h2>PowerShell cmdlets</h2>
 		<p>This section includes the reference for all the included powerdelivery 
-		cmdlets. See the <a href='/create.html#cmdlets'>using cmdlets</a> 
-		topic from the <a href='/create.html'>creating deployment pipelines</a> article 
+		cmdlets. See the <a href='create.html#cmdlets'>using cmdlets</a> 
+		topic from the <a href='create.html'>creating deployment pipelines</a> article 
 		for an overview of the philosophy behind using these cmdlets.</p>
 		
 		<a name='disable_sqljobs_cmdlet'><hr /></a>
@@ -273,17 +330,127 @@
 		<h4>Outputs</h4>
 		<p>YAML - The YAML configuration object used by delivery modules to get settings.</p>
 		
+		<a name='get_buildname_cmdlet'><hr /></a>
+		<h3>Get-BuildName</h3>
+		<p>Gets the name of the currently executing build. This value will match the name of the build as viewed in TFS and must be used to call some TFS APIs.</p>
+		<h4>Example</h4>
+		
+<div class='highlight'><pre><code class='powershell'><span class='nv'>$name</span> <span class='p'>=</span> <span class='nb'>Get-BuildName</span>
+</code></pre></div>
+
+		<h4>Outputs</h4>
+		<p>string - The name of the currently executing build.</p>
+		
+		<a name='get_buildnumber_cmdlet'><hr /></a>
+		<h3>Get-BuildNumber</h3>
+		<p>Gets the number of the currently executing build. This value must be used to call some TFS APIs.</p>
+		<h4>Example</h4>
+		
+<div class='highlight'><pre><code class='powershell'><span class='nv'>$number</span> <span class='p'>=</span> <span class='nb'>Get-BuildNumber</span>
+</code></pre></div>
+
+		<h4>Outputs</h4>
+		<p>string - The number of the currently executing build.</p>
+		
+		<a name='get_buildonserver_cmdlet'><hr /></a>
+		<h3>Get-BuildOnServer</h3>
+		<p>Gets whether the build is executing on the build server or not.</p>
+		<h4>Example</h4>
+		
+<div class='highlight'><pre><code class='powershell'><span class='nv'>$onServer</span> <span class='p'>=</span> <span class='nb'>Get-BuildOnServer</span>
+</code></pre></div>
+
+		<h4>Outputs</h4>
+		<p>bool - Whether the build is executing on the build server or not.</p>
+		
+		<a name='get_buildrequestedby_cmdlet'><hr /></a>
+		<h3>Get-BuildRequestedBy</h3>
+		<p>Gets the account name of the user who requested the build.</p>
+		<h4>Example</h4>
+		
+<div class='highlight'><pre><code class='powershell'><span class='nv'>$requestedBy</span> <span class='p'>=</span> <span class='nb'>Get-BuildRequestedBy</span>
+</code></pre></div>
+
+		<h4>Outputs</h4>
+		<p>string - The account name of the user who requested the build.</p>
+		
+		<a name='get_buildsetting_cmdlet'><hr /></a>
+		<h3>Get-BuildSetting</h3>
+		<p>Gets a environment setting from the .yml file for the environment the currently executing build is targeting.</p>
+		<h4>Example</h4>
+		
+<div class='highlight'><pre><code class='powershell'><span class='nv'>$webServerName</span> <span class='p'>=</span> <span class='nb'>Get-BuildSetting</span> <span class='n'>WebServerName</span>
+</code></pre></div>
+
+		<h4>Parameters</h4>
+		<h5>name</h5>
+		<p>The name of the setting from the .csv file to get.</p>
+		<h4>Outputs</h4>
+		<p>string or hash - The value of the setting from the .yml file for the setting that was requested.</p>
+		
+		<a name='get_buildteamproject_cmdlet'><hr /></a>
+		<h3>Get-BuildTeamProject</h3>
+		<p>Gets the name of the TFS project the build is delivering assets for.</p>
+		<h4>Example</h4>
+		
+<div class='highlight'><pre><code class='powershell'><span class='nv'>$teamProject</span> <span class='p'>=</span> <span class='nb'>Get-BuildTeamProject</span>
+</code></pre></div>
+
+		<h4>Outputs</h4>
+		<p>string - The name of the TFS project the build is delivering assets for.</p>
+		
+		<a name='get_builduri_cmdlet'><hr /></a>
+		<h3>Get-BuildUri</h3>
+		<p>Gets the URI the build when running on TFS. This URI is required to 
+		make some calls to the TFS API and should not be necessary for you 
+		to use for most operations.</p>
+		<h4>Example</h4>
+		
+<div class='highlight'><pre><code class='powershell'><span class='nv'>$uri</span> <span class='p'>=</span> <span class='nb'>Get-BuildUri</span>
+</code></pre></div>
+
+		<h4>Outputs</h4>
+		<p>string - The URI of the build when running on TFS.</p>
+		
+		<a name='get_buildworkspacename_cmdlet'><hr /></a>
+		<h3>Get-BuildWorkspaceName</h3>
+		<p>Gets the name of the TFS source control workspace name used to get a copy of the source code to compile.</p>
+		<h4>Example</h4>
+		
+<div class='highlight'><pre><code class='powershell'><span class='nv'>$workspaceName</span> <span class='p'>=</span> <span class='nb'>Get-BuildWorkspaceName</span>
+</code></pre></div>
+
+		<h4>Outputs</h4>
+		<p>string - The name of the TFS source control workspace name used to get a copy of the source code to compile.</p>
+		
+		<a name='import_deliverymodule_cmdlet'><hr /></a>
+		<h3>Import-DeliveryModule</h3>
+		<p>Imports a <a href='#modules'>delivery module</a> for use by a delivery pipeline.</p>
+		<h4>Example</h4>
+		
+<div class='highlight'><pre><code class='powershell'><span class='nb'>Import-DeliveryModule</span> <span class='n'>MSBuild</span>
+</code></pre></div>
+
+		<h4>Parameters</h4>
+		<h5>name</h5>
+		<p>string - The name of the delivery module to import functions for.</p>
+		
 		<a name='invoke_msbuild_cmdlet'><hr /></a>
 		<h3>Invoke-MSBuild</h3>
 		<p>This cmdlet is used to compile a MSBuild-compatible project or solution. 
 		You should always use this cmdlet instead of a direct call to msbuild.exe or existing 
 		cmdlets you may have found online when working with powerdelivery.</p>
 		<p>This cmdlet provides the following essential continuous delivery features:</p>
-		<ol>
-			<li>Updates the version of any AssemblyInfo.cs (or AssemblyInfo.vb) files with the current build version. This causes all of your binary files to have the build number. For example, if your build pipeline's version in the script is set to 1.0.2 and this is a build against changeset C234, the version of your assemblies will be set to 1.0.2.234. The assembly version will still have the version specified in the build without the changeset appended (3 part versioning).</li>
+		<ul>
+			<li>Updates the version of any AssemblyInfo.cs (or AssemblyInfo.vb) files 
+			with the current build version. This causes all of your binary files to 
+			have the build number. For example, if your build pipeline's version 
+			in the script is set to 1.0.2 and this is a build against changeset C234, 
+			the assembly version of your files will be set to 1.0.2 and the file version will 
+			be set to 1.0.2.234.</li>
 			<li>Reports warnings and errors encountered back to TFS for viewing on the build summary page.</li>
 			<li>Reports the status of the compilation back to TFS for viewing on the build summary page.</li>
-		</ol>
+		</ul>
 		<h4>Example</h4>
 		
 <div class='highlight'><pre><code class='powershell'><span class='nb'>Invoke-MSBuild</span> <span class='n'>MyProject</span><span class='p'>/</span><span class='n'>MySolution</span><span class='p'>.</span><span class='n'>sln</span> <span class='n'>-properties</span>  <span class='err'>@</span><span class='p'>{</span><span class='n'>MyCustomProp</span> <span class='p'>=</span> <span class='n'>SomeValue</span><span class='p'>}</span>
@@ -308,12 +475,279 @@
 		<p>string - Optional. A semicolon-delimited list of project extensions (".smproj;.csproj" etc.) of projects in the solution to not compile.</p>
 		<h5>dotNetVersion</h5>
 		<p>string - Optional. The .NET version to use for compilation. Defaults to the version specified in the project file(s) being built.</p>
+
+		<a name='invoke_mstest_cmdlet'><hr /></a>
+		<h3>Invoke-MSTest</h3>
+		<p>The Invoke-MSTest cmdlet is used to run unit or acceptance tests using mstest.exe. You should always use this cmdlet instead of a direct call to mstest.exe or existing cmdlets you may have found online when working with powerdelivery.</p>
+		<p>This cmdlet reports the results of the test run back to TFS to be viewed in the build summary.</p>
+		<p>IMPORTANT: You most only call Invoke-MSTest in the 
+		<a href='create.html#test_units_block'>TestUnits</a> or <a href='create.html#test_acceptance_block'>TestAcceptance</a> blocks.</p>
+		<h4>Example</h4>
+		
+<div class='highlight'><pre><code class='powershell'><span class='nb'>Invoke-MSTest</span> <span class='o'>-file</span> <span class='n'>MyTests</span><span class='p'>.</span><span class='n'>dll</span> <span class='n'>-results</span> <span class='n'>MyTestResults</span><span class='p'>.</span><span class='n'>trx</span> <span class='n'>-category</span> <span class='n'>AllTests</span>
+</code></pre></div>
+
+		<h4>Parameters</h4>
+		<h5>file</h5>
+		<p>string - The path to a file containing MSTest unit tests.</p>
+		<h5>results</h5>
+		<p>string - A path relative to the drop location (retrieved via Get-BuildDropLocation) of a test run results file (.trx) to store results in.</p>
+		<h5>category</h5>
+		<p>string - Runs tests found in the file referenced by the <b>file</b> parameter on any classes found with the [TestCategory] attribute present set to this value.</p>
+		<h5>platform</h5>
+		<p>string - Optional. The platform configuration (x86, x64 etc.) of this MSBuild compilation. The default is "AnyCPU".</p>
+		<h5>buildConfiguration</h5>
+		<p>string - Optional. The default is to use the Release configuration.</p>
+		
+		<a name='invoke_powerdelivery_cmdlet'><hr /></a>
+		<h3>Invoke-PowerDelivery</h3>
+		<p>Runs a continuous delivery build script using powerdelivery. If you run the PowerShell 
+		<b>get-help</b> cmdlet against Invoke-PowerDelivery you will notice there are other parameters 
+		available to pass here. However, you should only ever specify the <b>buildScript</b> 
+		parameter when running this function on your own computer. All other parameters are used 
+		by the TFS server and require the script running as part of a TFS build.</p>
+		<h4>Example</h4>
+		
+<div class='highlight'><pre><code class='powershell'><span class='nb'>Invoke-PowerDelivery</span> <span class='p'>.\</span><span class='n'>MyProduct</span><span class='p'>.</span><span class='n'>ps1</span>
+</code></pre></div>
+
+		<h4>Parameters</h4>
+		<h5>buildScript</h5>
+		<p>string - The relative path to to a local powerdelivery build script to run.</p>
+		
+		<a name='invoke_roundhouse_cmdlet'><hr /></a>
+		<h3>Invoke-Roundhouse</h3>
+		<p>This cmdlet will run migration scripts on a database using the 
+		<a href='https://code.google.com/p/roundhouse/' target='_blank'>RoundhousE</a> database migration tool.</p>
+		<p>In the <a href='create.html#compile_block'>Compile</a> block of your build, 
+		you should copy the directory containing your RoundhousE scripts to a subdirectory 
+		of the drop location named "Databases". For example, if you had a database named 
+		"MyDatabase" you'd have the following directory in TFS with your scripts:</p>
+		<p>
+			<code>$/MyProject/Databases/MyDatabase</code>
+		</p>
+		<p>You should copy them in Compile to here:</p>
+		<p>
+			<code>\DropLocation\Databases\MyDatabase</code>
+		</p>
+		<p>where <i>DropLocation</i> above is the result of a call to the 
+		<a href='#get_builddroplocation_cmdlet'>Get-BuildDropLocation</a> cmdlet.</p>
+		<p>Because RoundhousE cannot use UNC paths, you will need to copy those 
+		scripts in the Deploy block back to a local directory using the <a href='#get_buildassets'>Get-BuildAssets</a> 
+		cmdlet so you can pass their local location as the <b>scriptsDir</b> parameter.</p>
+		<p>Additionally, powerdelivery passes the name of the environment returned by a call to the 
+		<a href='#get_buildenvironment_cmdlet'>Get-BuildEnvironment</a> cmdlet 
+		to RoundhouseE to allow your scripts to take advantage of 
+		<a href='https://github.com/chucknorris/roundhouse/wiki/EnvironmentScripts' target='_blank'>environment scripts</a>.</p>
+		<p><b>IMPORTANT</b>: Only call Invoke-Roundhouse in the <a href='create.html#deploy_block'>Deploy</a> block.</p>
+		<h4>Example</h4>
+		<p>The example below restores from a production backup before running database migrations. You can 
+		choose to only do this in production builds, or eliminate it altogether by omitting the <b>restorePath</b> 
+		and <b>restoreOptions</b> parameters.</p>
+		
+<div class='highlight'><pre><code class='powershell'><span class='n'>Init</span> <span class='p'>{</span>
+  <span class='nv'>$script:dbServer</span> <span class='p'>=</span> <span class='nb'>Get-BuildSetting</span> <span class='n'>DatabaseServer</span>
+  <span class='nv'>$script:dbName</span>   <span class='p'>=</span> <span class='nb'>Get-BuildSetting</span> <span class='n'>DatabaseName</span>
+
+  <span class='nv'>$script:dbDir</span>     <span class='p'>=</span> <span class='nb'>Join-Path</span> <span class='nv'>$currentDirectory</span> <span class='n'>Databases</span>
+  <span class='nv'>$script:dbDropDir</span> <span class='p'>=</span> <span class='nb'>Join-Path</span> <span class='nv'>$dropLocation</span> <span class='n'>Databases</span>
+
+  <span class='nv'>$script:productionBackup</span> <span class='p'>=</span> <span class='n'>D</span><span class='err'>:</span><span class='p'>\</span><span class='n'>Backups</span><span class='p'>\</span><span class='n'>MyDatabase_Latest</span><span class='p'>.</span><span class='n'>mdf</span>
+  <span class='nv'>$script:dataDir</span> <span class='p'>=</span> <span class='s2'>&quot;C:\Program Files\Microsoft SQL Server10\MSAS11.MSSQLSERVER\MSSQL\Data&quot;</span>
+<span class='p'>}</span>
+
+<span class='n'>Compile</span> <span class='p'>{</span>
+  <span class='n'>copy</span> <span class='n'>-Recurse</span> <span class='n'>-Filter</span> <span class='p'>*.*</span> <span class='nv'>$dbDir</span> <span class='nv'>$dropLocation</span>
+<span class='p'>}</span>
+
+<span class='n'>Deploy</span> <span class='p'>{</span>
+  <span class='nb'>Invoke-Roundhouse</span> <span class='n'>-server</span> <span class='nv'>$dbServer</span> <span class='p'>`</span>
+                    <span class='n'>-database</span> <span class='nv'>$dbName</span> <span class='p'>`</span>
+                    <span class='n'>-scriptsDir</span> <span class='s2'>&quot;$dbDropDir\MyDatabase&quot;</span> <span class='p'>`</span>
+                    <span class='n'>-restorePath</span> <span class='nv'>$productionBackup</span> <span class='p'>`</span>
+                    <span class='n'>-restoreOptions</span> <span class='s2'>&quot;MOVE &#39;MyDatabase&#39; TO &#39;</span><span class='si'>$(</span><span class='err'>$</span><span class='si'>dataDir)</span><span class='s2'>\</span><span class='si'>$(</span><span class='err'>$</span><span class='si'>dbName)</span><span class='s2'>.mdf&#39;, MOVE &#39;MyDatabase_log&#39; TO &#39;</span><span class='si'>$(</span><span class='err'>$</span><span class='si'>dataDir)</span><span class='s2'>\</span><span class='si'>$(</span><span class='err'>$</span><span class='si'>dbName)</span><span class='s2'>.ldf&#39;, REPLACE, RECOVERY&quot;</span>
+<span class='p'>}</span>
+</code></pre></div>
+
+		<h4>Parameters</h4>
+		<h5>server</h5>
+		<p>string - The name of the SQL server to run scripts against.</p>
+		<h5>database</h5>
+		<p>string - The name of the database to run scripts against.</p>
+		<h5>scriptsDir</h5>
+		<p>string - Path to the directory containing RoundhousE migration scripts to run. Should be a subdirectory of your build's drop location.</p>
+		<h5>restorePath</h5>
+		<p>string - Optional. Path to a .mdf file (backup) of a database file to restore. Until you have a database in production don't specify this property in your build. Once you have a database in production, if you specify the path to your latest production backup file, this be restored prior to running migration scripts. This allows you to test the changes exactly as they would be applied were the current build released to production.</p>
+		<h5>restoreOptions</h5>
+		<p>string - Optional. A string of options to pass to the RESTORE T-SQL statement performed. Use this to specify for instance the .sql and .log file paths that should be used instead of the ones contained within the backup file.</p>
+		
+		<a name='invoke_ssispackage_cmdlet'><hr /></a>
+		<h3>Invoke-SSISPackage</h3>
+		<p>Executes a Microsoft <a href='http://msdn.microsoft.com/en-us/library/ms141026.aspx' target='_blank'>SQL Server Integration Services</a> (SSIS) package. This cmdlet runs <a href='http://msdn.microsoft.com/en-us/library/ms162810(v=sql.105).aspx' target='_blank'>dtexec.exe</a> on a remote computer.</p>
+		<p>Copy your .dtsx packages to a UNC network share within the <a href='create.html#deploy_block'>Deploy</a> block of your script onto each computer you wish to run packages on.</p>
+		<h4>Example</h4>
+		
+<div class='highlight'><pre><code class='powershell'><span class='nv'>$dtExecPath</span> <span class='p'>=</span> <span class='s2'>&quot;C:\Program Files\Microsoft SQL Server\110\Dts\Binn\dtexec.exe&quot;</span>
+		
+<span class='nb'>Invoke-SSIS</span> <span class='n'>-package</span> <span class='n'>MyPackage</span><span class='p'>.</span><span class='n'>dtsx</span> <span class='n'>-server</span> <span class='n'>MyServer</span> <span class='n'>-dtExecPath</span> <span class='nv'>$dtExecPath</span>
+</code></pre></div>
+
+		<h4>Parameters</h4>
+		<h5>package</h5>
+		<p>string - A path local to the remote server the package is being executed on. If you had a UNC share on that server "\\MyServer\MyShare" and it was mapped to "D:\Somepath", use "D:\Somepath" here.</p>
+		<h5>server</h5>
+		<p>string - The computer name onto which to execute the package. This computer must have PowerShell 3.0 with WinRM installed, and allow execution of commands from the TFS build server and the account under which the build agent service is running.</p>
+		<h5>dtExecPath</h5>
+		<p>string - The path to dtexec.exe on the server to run the command.</p>
+		<h5>packageArgs</h5>
+		<p>Optional. A PowerShell hash containing name/value pairs to set as package arguments to dtexec.</p>
+		
+		<a name='publish_buildassets_cmdlet'><hr /></a>
+		<h3>Publish-BuildAssets</h3>
+		<p>Copies build assets from the build working directory to the remote UNC drop location. You should specify relative paths for this command.</p>
+		<h4>Example</h4>
+		
+<div class='highlight'><pre><code class='powershell'><span class='n'>Publish-BuildAssets</span> <span class='s2'>&quot;SomeDir\SomeFiles\*.*&quot;</span> <span class='n'>SomeDir</span>
+</code></pre></div>
+
+		<h4>Parameters</h4>
+		<h5>path</h5>
+		<p>string - The relative local path of assets in the current directory that should be copied remotely.</p>
+		<h5>destination</h5>
+		<p>string - The relative remote path to copy the assets to.</p>
+		<h5>filter</h5>
+		<p>string - Optional. A filter for the file extensions that should be included.</p>
+		<h5>recurse</h5>
+		<p>bool - Optional. Specifies whether to recursively copy all files in subdirectories of the path specified by the <b>path</b> parameter.</p>
+		
+		<a name='publish_ssas_cmdlet'><hr /></a>
+		<h3>Publish-SSAS</h3>
+		<p>The Publish-SSAS cmdlet will deploy a <a href='http://msdn.microsoft.com/en-us/library/ms175609(v=sql.90).aspx' target='_blank'>Microsoft SQL Server Analysis Services</a> (SSAS) .asdatabase file to a server.</p>
+		<p>Before you call the cmdlet, copy the .asdatabase to a computer that has the <a href='http://msdn.microsoft.com/en-us/library/ms162758.aspx' target='_blank'>SQL Server Analysis Services Deployment Utility</a> installed.</p>
+		<h4>Example</h4>
+		
+<div class='highlight'><pre><code class='powershell'><span class='n'>Publish-SSAS</span> <span class='n'>-computer</span> <span class='n'>MyServer</span> <span class='n'>-tabularServer</span> <span class='s2'>&quot;MyServer\INSTANCE&quot;</span> <span class='n'>-asDatabase</span> <span class='s2'>&quot;Cubes\MyModel.asdatabase&quot;</span>
+</code></pre></div>
+
+		<h4>Parameters</h4>
+		<h5>computer</h5>
+		<p>string - The computer to run the SSAS deployment utility on.</p>
+		<h5>asDatabase</h5>
+		<p>string - The .asdatabase file to deploy. This is a path local to the computer specified by the <b>computer</b> parameter.</p>
+		<h5>tabularServer</h5>
+		<p>string - The server name of the SSAS instance. In a SQL cluster this will be the cluster name.</p>
+		<h5>cubeName</h5>
+		<p>string - Optional. The name to deploy the cube as. Can only be omitted if only one cube (model) is included in the asdatabase package.</p>
+		<h5>sqlVersion</h5>
+		<p>string - Optional. The version of SQL to use. Default is "11.0"</p>
+		<h5>deploymentUtilityPath</h5>
+		<p>string - Optional. The full path to the Microsoft.AnalysisServices.DeploymentUtility.exe command-line tool on the computer specified by the <b>computer</b> parameter.</p>
+		
+		<a name='register_deliverymodulehook_cmdlet'><hr /></a>
+		<h3>Register-DeliveryModuleHook</h3>
+		<p>Use this cmdlet in a powerdelivery <a href='#modules'>delivery module</a> to register a function 
+		so that it gets called before or after a <a href='create.html#script_blocks'>script block</a> in a delivery build script 
+		that has imported it with the <a href='#import_deliverymodule_cmdlet'>Import-DeliveryModule</a> cmdlet.</p>
+		<p>For example, you can write code in a delivery module that runs before the <a href='create.html#compile_block'>Compile</a> block 
+		in the importing script.</p>
+		<h4>Example</h4>
+		<p>Below is an example from the <a href='#msbuild_module'>MSBuild delivery module</a>. It causes 
+		code to run prior to the <a href='create.html#compile_block'>Compile</a> block in the importing script.</p>
+		
+<div class='highlight'><pre><code class='powershell'><span class='k'>function</span> <span class='n'>Initialize-MSBuildDeliveryModule</span> <span class='p'>{</span>
+  <span class='nb'>Register-DeliveryModuleHook</span> <span class='s1'>&#39;PreCompile&#39;</span> <span class='p'>{</span>
+    <span class='p'>//</span> <span class='n'>Put</span> <span class='n'>code</span> <span class='n'>here</span> <span class='n'>to</span> <span class='n'>run</span> <span class='n'>before</span> <span class='n'>the</span> <span class='n'>Compile</span> <span class='n'>block</span>
+  <span class='p'>}</span>
+<span class='p'>}</span>
+</code></pre></div>
+
+		<h4>Parameters</h4>
+		<h5>function</h5>
+		<p>string - The name of a <a href='create.html#script_blocks'>script block</a> to "hook" prefixed with "Pre" or "Post" to have the 
+		module hook code run before or after the importing script's function respectively.</p>
+		<p><b>function</b> can be one of the following values:</p>
+		<ul>
+			<li>PreInit</li>
+			<li>PostInit</li>
+			<li>PreCompile</li>
+			<li>PostCompile</li>
+			<li>PreSetupEnvironment</li>
+			<li>PostSetupEnvironment</li>
+			<li>PreTestEnvironment</li>
+			<li>PostTestEnvironment</li>
+			<li>PreDeploy</li>
+			<li>PostDeploy</li>
+			<li>PreTestAcceptance</li>
+			<li>PostTestAcceptance</li>
+			<li>PreTestUnits</li>
+			<li>PostTestUnits</li>
+			<li>PreTestCapacity</li>
+			<li>PostTestCapacity</li>
+		</ul>
+
+		<a name='set_ssasconnection_cmdlet'><hr /></a>
+		<h3>Set-SSASConnection</h3>
+		<p>Sets a connection string on a deployed <a href='http://msdn.microsoft.com/en-us/library/ms175609(v=sql.90).aspx' target='_blank'>Microsoft SQL Server Analysis Services</a> (SSAS) cube.</p>
+		<h4>Example</h4>
+		
+<div class='highlight'><pre><code class='powershell'><span class='nb'>Set-SSASConnection</span> <span class='n'>-computer</span> <span class='n'>MyServer</span> <span class='n'>-tabularServer</span> <span class='n'>MyServer</span><span class='p'>\</span><span class='n'>TABULAR</span> <span class='n'>-databaseName</span> <span class='n'>MyCube</span> <span class='n'>-datasourceID</span> <span class='s2'>&quot;{4CC0937D-61D3-421E-B607-B3E36D1D09B5}&quot;</span> <span class='n'>-connectionString</span> <span class='s2'>&quot;Initial Catalog=MyDB;Server=localhost;Trusted Connection=yes&quot;</span>
+</code></pre></div>
+
+		<h4>Parameters</h4>
+		<h5>computer</h5>
+		<p>string - The computer to which the SSAS cube was deployed.</p>
+		<h5>tabularServer</h5>
+		<p>string - The instance of the SSAS server to change the connection on.</p>
+		<h5>databaseName</h5>
+		<p>string - The name of the SSAS database/cube to change the connection on.</p>
+		<h5>datasourceID</h5>
+		<p>string - The GUID of the connection to change. Use SQL Server Management Studio to browse the 
+		cube deployed locally or remotely and open the properties dialog on the connection to change. The ID 
+		will be listed there. This value does not change between deployments but is a required parameter here.</p>
+		<h5>connectionName</h5>
+		<p>The name of the connection to change.</p>
+		<h5>connectionString</h5>
+		<p>The value to change the connection to.</p>
+
+		<a name='start_sqljobs_cmdlet'><hr /></a>
+		<h3>Start-SqlJobs</h3>
+		<p>This cmdlet can start one or more sql jobs who's name(s) match the pattern provided.</p>
+		<h4>Example</h4>
+		
+<div class='highlight'><pre><code class='powershell'><span class='nb'>Start-SqlJobs</span> <span class='n'>-serverName</span> <span class='n'>MyServer</span> <span class='n'>-jobs</span> <span class='s2'>&quot;Purchasing*&quot;</span>
+</code></pre></div>
+
+		<h4>Parameters</h4>
+		<h5>serverName</h5>
+		<p>string - The SQL server name of the SQL instance to start jobs on.</p>
+		<h5>jobs</h5>
+		<p>string - The name of the job(s) to start. You can use wildcards or a single name.</p>
+		
+		<a name='write_buildsummarymessage_cmdlet'><hr /></a>
+		<h3>Write-BuildSummaryMessage</h3>
+		<p>Writes a message to a section in the TFS build summary page. Specify as the <b>name</b> parameter 
+		the name of a <a href='create.html#script_blocks'>script block</a> from your delivery pipeline script. 
+		For example, pass "Compile" to have your message appear under that section of the build summary.</p>
+		<p><b>NOTE</b>: This function will output a warning and not do anything on TFS versions prior to 2012.</p>
+		<h4>Example</h4>
+		
+<div class='highlight'><pre><code class='powershell'><span class='nb'>Write-BuildSummaryMessage</span> <span class='s2'>&quot;Compile&quot;</span> <span class='s2'>&quot;Compilations&quot;</span> <span class='s2'>&quot;My Message&quot;</span>
+</code></pre></div>
+
+		<h4>Parameters</h4>
+		<h5>name</h5>
+		<p>string - The name of the section to write the message to.</p>
+		<h5>header</h5>
+		<p>string - The text of the section to display (ignored if any other message was already written to this section).</p>
+		<h5>message</h5>
+		<p>string - The message to add to the section specified.</p>
+		
 		<a name='modules'><hr /></a>
 		<br />
 		<h2>Delivery modules</h2>
 		<p>This section includes the reference for all the included powerdelivery 
-		delivery modules. See the <a href='/create.html#modules'>using delivery modules</a> 
-		topic from the <a href='/create.html'>creating deployment pipelines</a> article 
+		delivery modules. See the <a href='create.html#modules'>using delivery modules</a> 
+		topic from the <a href='create.html'>creating deployment pipelines</a> article 
 		for an overview of the usage and philosophy behind using these modules. You can also 
 		create your own.</p>
 		<a name='modules'><hr /></a>

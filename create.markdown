@@ -36,10 +36,37 @@ layout: page
 				<a href="#config_arrays">Using arrays</a>
 			</li>
 			<li class="nav-header">
-				<a href="#matrix">Matrix of script blocks</a>
+				<a href="#script_blocks">Script blocks</a>
+			</li>
+			<li>
+				<a href="#matrix">Matrix of execution</a>
 			</li>
 			<li>
 				<a href="#optimized_compilation">Optimized compilation</a>
+			</li>
+			<li>
+				<a href="#init_block">Init block</a>
+			</li>
+			<li>
+				<a href="#compile_block">Compile block</a>
+			</li>
+			<li>
+				<a href="#test_units_block">TestUnits block</a>
+			</li>
+			<li>
+				<a href="#setup_environment_block">SetupEnvironment block</a>
+			</li>
+			<li>
+				<a href="#deploy_block">Deploy block</a>
+			</li>
+			<li>
+				<a href="#test_environment_block">TestEnvironment block</a>
+			</li>
+			<li>
+				<a href="#test_acceptance_block">TestAcceptance block</a>
+			</li>
+			<li>
+				<a href="#test_capacity_block">TestCapacity block</a>
 			</li>
 			<li class="nav-header">
 				<a href="#cmdlets">Using cmdlets</a>
@@ -65,6 +92,7 @@ layout: page
 		This page will help you use powerdelivery to add a deployment pipeline to your <abbr title="Team Foundation Server">TFS</abbr> 
 		project, understand how it works, and guide you in where to place the PowerShell commands that 
 		do your automation in your script.</p>
+
 		<a name="workstation_prep"><hr></a>
 		<br />
 		<h2>Prepare your workstation for development</h2>
@@ -114,6 +142,7 @@ layout: page
 				<code>cinst notepadplusplus</code>
 			</p>
 		</ol>
+
 		<a name="add_pipeline"><hr></a>
 		<br />
 		<h2>Add a pipeline to a TFS project</h2>
@@ -178,6 +207,7 @@ layout: page
              -DropFolder "\\MYSERVER\MyDrops" `
              -Name "MyProject"{% endhighlight %}
 		</ol>
+
 		<a name="what_created"><hr></a>
 		<br />
 		<h3>What gets created</h3>
@@ -220,6 +250,7 @@ MyProject CapacityTest Builders
 MyProject Production Builders</pre>
 		<p>Only users who are added to the above groups will be permitted to trigger 
 		builds targeting those environments.</p>
+
 		<a name="how_works"><hr></a>
 		<br />
 		<h2>How powerdelivery works</h2>
@@ -228,6 +259,7 @@ MyProject Production Builders</pre>
 		a build on <abbr title="Team Foundation Server">TFS</abbr>, some extra parameters 
 		are passed to the script so that it runs a build against the appropriate target 
 		environment (Development, Test, Production etc.).</p>
+
 		<a name="environment"><hr></a>
 		<br />
 		<h2>Environment configuration</h2>
@@ -239,6 +271,7 @@ MyProject Production Builders</pre>
 		the differences between environments. See the <a href="setup.html">setup</a> page for 
 		more information about planning your infrastructure so you know what information to put 
 		into these files.</p>
+
 		<a name="config_how_loaded"><hr></a>
 		<br />
 		<h3>How configuration files are loaded</h3>
@@ -255,6 +288,7 @@ RecipeManagerCommitEnvironment.yml
 RecipeManagerTestEnvironment.yml
 RecipeManagerCapacityTestEnvironment.yml
 RecipeManagerProductionEnvironment.yml</pre>
+
 		<a name="config_layout"><hr></a>
 		<br />
 		<h3>Layout of your configuration files</h3>
@@ -283,6 +317,7 @@ DatabaseName: MyDatabase{% endhighlight %}
 		{% highlight yaml %}WebServer: MyProdServer
 DatabaseServer: MyProdDbServer
 DatabaseName: MyDatabase{% endhighlight %}
+
 		<a name="config_retrieving_values"><hr></a>
 		<br />
 		<h3>Retrieving values from configuration files</h3>
@@ -300,6 +335,7 @@ DatabaseName: MyDatabase{% endhighlight %}
   $script:DatabaseServer = Get-BuildSetting DatabaseServer
   $script:DatabaseName = Get-BuildSetting DatabaseName
 }{% endhighlight %}
+
 		<a name="config_structs"><hr></a>
 		<br />
 		<h3>Using structures in configuration settings</h3>
@@ -323,6 +359,7 @@ Database:
   $script:DatabaseServer = $databaseSettings.Server
   $script:DatabaseName = $databaseSettings.Database
 }{% endhighlight %}
+
 		<a name="config_arrays"><hr></a>
 		<br />
 		<h3>Using arrays in configuration settings</h3>
@@ -354,13 +391,17 @@ Deploy {
 		<p>This trivial example simply prints out to the build log the name and port of the 
 		web servers and ports. In a more useful build you might deploy to each web site the 
 		same set of files in a farm for example.</p>
-		<a name="matrix"><hr></a>
-		<br />
-		<h2>Matrix of script blocks</h2>
+
+		<a name="script_blocks"><hr></a>
+		<h2>Script blocks</h2>
 		<p>Once you have <a href="#environment">configured your environment</a>, 
 		you can begin the task of writing the actual automation PowerShell statements that will do the 
 		work. These go into script blocks with specific names that represent the phases of a Continuous 
 		Delivery deployment pipeline.</p>
+
+		<a name="matrix"><hr></a>
+		<br />
+		<h3>Matrix of script blocks</h3>
 		<p>These script blocks are always called in the same order, but depending on the environment 
 		the build is targeting, some will be omitted. The table below shows a matrix of the order of execution 
 		of these blocks (from top to bottom) and which are called in each environment.</p>
@@ -404,6 +445,7 @@ Deploy {
 		</table>
 		<p>All blocks are optional and you may choose which to include in your pipeline script depending on 
 		what features you'd like to support.</p>
+		
 		<a name="optimized_compilation"><hr></a>
 		<br />
 		<h3>Optimized compilation</h3>
@@ -415,6 +457,104 @@ Deploy {
 		block or beyond in other environments must be copied to the drop location during <a href="#compile_block">Compile</a>. Do this by 
 		using the <a href="reference.html#publish_buildassets">Publish-BuildAssets</a> cmdlet before the Compile 
 		block ends.</p>
+		
+		<a name="init_block"><hr></a>
+		<br>
+		<h3>Init block</h3>
+		<p>This is the first block called in your build pipeline script. You should do things 
+		that must happen before the build starts that will run on all environments. My 
+		suggestion is to only use this block to get environment configuration using the 
+		<a href="reference.html#get_buildsetting_cmdlet">Get-BuildSetting</a> cmdlet, and 
+		set them as script scoped variables. This will make the settings available to all 
+		blocks of your pipeline script.</p>
+		<p>Another common use of this block is to setup paths as variables needed by the 
+		rest of your script.</p>
+		<h4>Example</h4>
+		{% highlight powershell %}Init {
+  $script:currentDirectory = Get-Location
+  $script:myDatabase = Get-BuildSetting MyDatabase
+  $script:myWebServer = Get-BuildSetting MyWebServer
+}{% endhighlight %}
+		
+		<a name="compile_block"><hr></a>
+		<br>
+		<h3>Compile block</h3>
+		<p>This block is only called on <a href="#commit_build">Commit</a> or <a href="#local_build">Local</a> builds. You should run any tools 
+		or compilers necessary to create the software assets you will deploy to your environments.</p>
+		<p>Any files you need to do deployment that are part of your source must be copied to the 
+		drop location. You can get this directory (a UNC path) from calling the 
+		<a href="reference.html#get_builddroplocation_cmdlet">Get-BuildDropLocation</a> function.</p>
+		<h4>Example</h4>
+		<p>In the example deployment pipeline script below, any files output from the 
+		"MyProject" solution after compilation (like .dll, .exe, or other files) are 
+		copied to the the "Binaries" subdirectory of the drop location for deployment.</p>
+		{% highlight powershell %}Init {
+  $script:currentDirectory = Get-Location
+  $script:dropLocation     = Get-BuildDropLocation
+  $script:environment      = Get-BuildEnvironment
+
+  $script:binDropDir = Join-Path $dropLocation Binaries
+
+  mkdir $binDropDir
+}
+
+Compile {
+  Invoke-MSBuild MyProject.sln
+
+  copy "MyProject\bin\$environment\*.*" $binDropDir
+}{% endhighlight %}
+
+		<a name="test_units_block"><hr></a>
+		<br>
+		<h3>TestUnits block</h3>
+		<p>Here you should run any automated unit test commands such as MSTest.exe 
+		with the included <a href="reference.html#invoke_mstest_cmdlet">Invoke-MSTest</a>
+		cmdlet. These tests run after compilation but prior to deployment.</p>
+		
+		<a name="setup_environment_block"><hr></a>
+		<br>
+		<h3>SetupEnvironment block</h3>
+		<p>Here is where you will make changes to the target environment nodes (computers, 
+		virtual machines, cloud hosted nodes etc.) to support deployment of your software 
+		assets.	This follows the practice of Continuous Delivery where you should no longer 
+		allow people to login to the environments and instead use automation to modify them. 
+		This is where you do it.</p>
+		<p>Try to setup the environment nodes with a base OS image with just the 
+		middleware you'd need that takes a long time to install (for instance, SQL server) 
+		pre-installed and use the script to configure and install everything else.</p>
+		<h4>Example</h4>
+		<p>This example sets an environment variable on a target computer. It is just an 
+		example of what you might need to do to support your deployment.</p>
+		{% highlight powershell %}Init {
+  $script:myEnvVarValue = Get-BuildSetting -Name MyEnvVarValue
+  $script:myServer = Get-BuildSetting -Name MyServer
+}
+
+SetupEnvironment {
+  $setMyEnvVar = @"
+    [Environment]::SetEnvironmentVariable('MyEnvVar', '$myEnvVarValue', 'Machine');
+    `$ENV:MyEnvVar = '$myEnvVarValue'
+    "@
+    Invoke-Command -ComputerName $myServer {
+  Exec {
+    Invoke-Expression $using:setMyEnvVar 
+  }
+}
+}{% endhighlight %}
+
+		<a name="deploy_block"><hr></a>
+		<br>
+		<h3>Deploy block</h3>
+		<p>This script block runs in all environments and should take the assets in your 
+		build (compiled .dll or .exe files, SSIS packages, etc.) and install them on the 
+		target environment nodes (physical computers, virtual machines, devices, cloud nodes etc.).</p>
+		<p>Because powerdelivery supports <a href="#optimized_compilation">optimized compilation</a>, 
+		remember that any files you need to use for deployment must be published using the 
+		<a href="reference.html#publish_buildassets_cmdlet">Publish-BuildAssets</a> 
+		cmdlet in the <a href="#compile_block">Compile</a> block to the UNC network share located at the path returned from calling the 
+		<a href="reference.html#get_builddroplocation_cmdlet">Get-BuildDropLocation</a> 
+		cmdlet prior to deploying them.</p>
+
 		<a name="cmdlets"><hr></a>
 		<br />
 		<h2>Using cmdlets</h2>
@@ -427,6 +567,7 @@ Deploy {
 		cmdlet should be called in the <a href="#init_block">Init</a> block. The <a href="reference.html#invoke_msbuild_cmdlet">Invoke-MSBuild</a> 
 		cmdlet should be called in the <a href="#compile_block">Compile</a> block. The <a href="reference.html#invoke_roundhouse_cmdlet">Invoke-Roundhouse</a> 
 		cmdlet should be called in the <a href="#deploy_block">Deploy</a> block.</p>
+
 		<a name="modules"><hr></a>
 		<br />
 		<h2>Using delivery modules</h2>
@@ -436,6 +577,7 @@ Deploy {
 		to setup a website, you might want to enable the target environment to use <a href="http://www.iis.net/downloads/microsoft/web-deploy" target="_blank">Microsoft Web Deploy</a> in the 
 		<a href="#setup_environment_block">SetupEnvironment</a> block, and then do the actual deployment in the 
 		<a href="#deploy_block">Deploy</a> block. To enable this, powerdelivery allows for the use of <b>Delivery Modules</b>.</p>
+
 		<a name="modules_referencing"><hr></a>
 		<br />
 		<h3>Referencing modules</h3>
@@ -449,6 +591,7 @@ Deploy {
 		{% highlight powershell %}Pipeline 'MyProduct' -Version '1.0.0'
 
 Import-DeliveryModule WebDeploy{% endhighlight %}
+
 		<a name="modules_configuring"><hr></a>
 		<br />
 		<h3>Configuring modules</h3>
