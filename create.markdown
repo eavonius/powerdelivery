@@ -30,6 +30,9 @@ layout: page
 				<a href="#config_layout">Layout of files</a>
 			</li>
 			<li>
+				<a href="#yaml">YAML best practices</a>
+			</li>
+			<li>
 				<a href="#config_retrieving_values">Retrieving values</a>
 			</li>
 			<li>
@@ -328,7 +331,7 @@ RecipeManagerProductionEnvironment.yml</pre>
 		<a name="config_layout"><hr></a>
 		<br />
 		<h3>Layout of your configuration files</h3>
-		<p>Configuration files use YAML syntax and most of the settings you use will probably be 
+		<p>Configuration files use <a href="https://en.wikipedia.org/wiki/YAML" target="_blank">YAML</a> syntax and most of the settings you use will probably be 
 		name/value pairs. Remember that these files are only meant to contain settings that are 
 		<i>different</i> between your environments.</p>
 		<p>Below is an example of three settings in a build that could deploy a website and a 
@@ -354,6 +357,29 @@ DatabaseName: MyDatabase{% endhighlight %}
 DatabaseServer: MyProdDbServer
 DatabaseName: MyDatabase{% endhighlight %}
 
+		<a name="yaml"><hr></a>
+		<br />
+		<h3>YAML best practices</h3>
+		<p>Because YAML strings are interpreted as PowerShell strings when loaded by powerdelivery, 
+		you need to be a little careful to avoid some gotchas you may run into. Here are the considerations 
+		you should take into account.</p>
+		<ul>
+			<li><b>Tabs</b> - Do not use tabs to indent your YAML settings. Use two spaces. This 
+			requirement is part of the YAML specification.</li>
+			<br>
+			<li><b>Backslashes</b> - When you do NOT have quotes around your string, these will 
+			be interpreted exactly as you type them. When you do, a single backslash will not appear 
+			at all, and a double backslash will appear as a single one.</li>
+			<br>
+			<li><b>Reserved characters</b> - A list of them can be seen at the 
+			<a href="http://ss64.com/ps/syntax-esc.html" target="_blank">top of this page</a>. If you put one of 
+			these reserved characters (the character prefixed by a tick character) into a YAML 
+			value WITHOUT spaces, you will get an error when loading the YAML file. You must 
+			surround your value with quotes to use it.</li>
+		</ul>
+		<p>An interactive YAML parser is available online <a href="https://yaml-online-parser.appspot.com/" target="_blank">here</a> and 
+		may be helpful in learning the markup syntax initially if you have questions.</p>
+		
 		<a name="config_retrieving_values"><hr></a>
 		<br />
 		<h3>Retrieving values from configuration files</h3>
