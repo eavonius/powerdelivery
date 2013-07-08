@@ -448,7 +448,7 @@ RecipeManagerProductionEnvironment.yml</pre>
 		<a name='yaml'><hr /></a>
 		<br />
 		<h3>YAML best practices</h3>
-		<p>Because YAML strings are interpreted as PowerShell strings when loaded by powerdelivery, 
+		<p>Because <a href='https://en.wikipedia.org/wiki/YAML' target='_blank'>YAML</a> strings are interpreted as PowerShell strings when loaded by powerdelivery, 
 		you need to be a little careful to avoid some gotchas you may run into. Here are the considerations 
 		you should take into account.</p>
 		<ul>
@@ -729,6 +729,33 @@ RecipeManagerProductionEnvironment.yml</pre>
 		<a href='reference.html#get_builddroplocation_cmdlet'>Get-BuildDropLocation</a> 
 		cmdlet prior to deploying them.</p>
 
+		<a name='test_environment_block'><hr /></a>
+		<br />
+		<h3>TestEnvironment block</h3>
+		<p>Here you should run any smoke test commands that can be used to make sure the 
+		environment was setup successfully. You might ping web servers or services, try 
+		accessing a load balancer, or verify anything else that was modified during 
+		the <a href='#setup_environment_block'>SetupEnvironment</a> block.</p>
+		
+		<a name='test_acceptance_block'><hr /></a>
+		<br />
+		<h3>TestAcceptance block</h3>
+		<p>Here you should run any automated acceptance test commands such as MSTest.exe 
+		with the included <a href='reference.html#invoke_mstest_cmdlet'>Invoke-MSTest</a> 
+		cmdlet. These tests run after the <a href='#deploy_block'>Deploy</a> block gets 
+		called and so can interact with anything that was setup during deployment.</p>
+		
+		<a name='test_capacity_block'><hr /></a>
+		<br />
+		<h3>TestCapacity block</h3>
+		<p>Here you should run any automated performance tests that verify that a 
+		capacity test environment being deployed to is suitable for the audience the 
+		software assets will be serving. Your capacity test environment should be 
+		identical to production in hardware capability, or as close as possible. 
+		Computing resources do not scale in a linear fashion so assuming your quad 
+		core production server will support twice the load of a capacity-tested 
+		dual core is false.</p>
+		
 		<a name='cmdlets'><hr /></a>
 		<br />
 		<h2>Using cmdlets</h2>
