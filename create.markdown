@@ -360,7 +360,7 @@ DatabaseName: MyDatabase{% endhighlight %}
 		<a name="yaml"><hr></a>
 		<br />
 		<h3>YAML best practices</h3>
-		<p>Because YAML strings are interpreted as PowerShell strings when loaded by powerdelivery, 
+		<p>Because <a href="https://en.wikipedia.org/wiki/YAML" target="_blank">YAML</a> strings are interpreted as PowerShell strings when loaded by powerdelivery, 
 		you need to be a little careful to avoid some gotchas you may run into. Here are the considerations 
 		you should take into account.</p>
 		<ul>
