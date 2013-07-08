@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>PowerDelivery</id>
-        <version>2.2.10</version>
+        <version>2.2.12</version>
         <title>PowerDelivery</title>
         <authors>Jayme Edwards</authors>
         <owners />
@@ -37,7 +37,6 @@
 		<file src="PowerDelivery\Get-BuildUri.ps1" target="tools\PowerDelivery\Get-BuildUri.ps1" />
 		<file src="PowerDelivery\Get-BuildWorkspaceName.ps1" target="tools\PowerDelivery\Get-BuildWorkspaceName.ps1" />
 		<file src="PowerDelivery\Get-BuildCollectionUri.ps1" target="tools\PowerDelivery\Get-BuildCollectionUri.ps1" />
-		<file src="PowerDelivery\Get-BuildYamlConfig.ps1" target="tools\PowerDelivery\Get-BuildYamlConfig.ps1" />
 		<file src="PowerDelivery\Import-DeliveryModule.ps1" target="tools\PowerDelivery\Import-DeliveryModule.ps1" />
 		<file src="PowerDelivery\Invoke-EnvironmentCommand.ps1" target="tools\PowerDelivery\Invoke-EnvironmentCommand.ps1" />
 		<file src="PowerDelivery\Invoke-MSBuild.ps1" target="tools\PowerDelivery\Invoke-MSBuild.ps1" />
@@ -45,7 +44,8 @@
 		<file src="PowerDelivery\Invoke-Powerdelivery.ps1" target="tools\PowerDelivery\Invoke-Powerdelivery.ps1" />
 		<file src="PowerDelivery\Invoke-Roundhouse.ps1" target="tools\PowerDelivery\Invoke-Roundhouse.ps1" />
 		<file src="PowerDelivery\Invoke-SSISPackage.ps1" target="tools\PowerDelivery\Invoke-SSISPackage.ps1" />
-        <file src="PowerDelivery\New-RemoteShare.ps1" target="tools\PowerDelivery\New-RemoteShare.ps1" />
+        <file src="PowerDelivery\ModifySharePermissions.ps1" target="tools\PowerDelivery\ModifySharePermissions.ps1" />
+		<file src="PowerDelivery\New-RemoteShare.ps1" target="tools\PowerDelivery\New-RemoteShare.ps1" />
         <file src="PowerDelivery\NewShareWithPermissions-0.0.1.ps1" target="tools\PowerDelivery\NewShareWithPermissions-0.0.1.ps1" />
 		<file src="PowerDelivery\Publish-BuildAssets.ps1" target="tools\PowerDelivery\Publish-BuildAssets.ps1" />
 		<file src="PowerDelivery\Publish-SSAS.ps1" target="tools\PowerDelivery\Publish-SSAS.ps1" />

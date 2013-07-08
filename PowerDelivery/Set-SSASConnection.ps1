@@ -63,8 +63,9 @@ function Set-SSASConnection {
 
     $command = "Invoke-ASCMD -server $tabularServer -query ""$query"""
     
-	#$result = Invoke-EnvironmentCommand -server $computer -command $command
-	Invoke-EnvironmentCommand -server $computer -command $command
+	Invoke-Command -ComputerName $computer -ErrorAction Stop {
+		$using:command
+	}
 	
 	#if ($result -contains 'Exception xmlns') {
 	#	throw "Error setting connection $connectionName of $databaseName on $tabularServer - see build log for details."

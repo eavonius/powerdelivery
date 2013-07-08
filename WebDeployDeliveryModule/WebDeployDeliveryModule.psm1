@@ -56,15 +56,18 @@ function Initialize-WebDeployDeliveryModule {
 				
 				$deployment = $webDeployments[$_]
 
+				$webDeployDir = "C:\Program Files\IIS\Microsoft Web Deploy v3"
+				
+				if ($deployment.WebDeployDir) {
+					$webDeployDir = $deployment.WebDeployDir
+				}
+				
+				$msDeployPath = Join-Path $webDeployDir "msdeploy.exe"
+
 				if ($deployment.WebComputer) {
 					$invokeArgs.Add('webComputer', $deployment.WebComputer)
 				}
-				if ($deployment.WebDeployDir) {
-					$invokeArgs.Add('webDeployDir', $deployment.WebDeployDir)
-				}
-				else {
-					$invokeArgs.Add('webDeployDir', "C:\Program Files\IIS\Microsoft Web Deploy v3")
-				}
+				$invokeArgs.Add('webDeployDir', $webDeployDir)
 				if ($deployment.WebPort) {
 					$invokeArgs.Add('webPort', $deployment.WebPort)
 				}
@@ -118,10 +121,34 @@ function Initialize-WebDeployDeliveryModule {
 			                          -SiteUrl $deployment.webURL -FileName $publishSettingsFile `
 			                          -AllowUntrusted -AgentType MSDepSvc | Out-Null
 
-			    Restore-WDPackage -Package $deployment.Package `
-								  -DestinationPublishSettings $publishSettingsFile `
-								  -Parameters $deployment.Parameters `
-								  -ErrorAction Stop
+				try {
+
+					if ($deployment.BringOffline) {
+						if ($deployment.BringOffline -eq 'true') {
+
+							$deleteOfflineFile = "$msDeployPath -verb:delete -dest:contentPath=$($deployment.webSite)/App_Offline.htm,computername=$($deployment.webComputer)"
+							
+							$deleteOfflineFileResult = Invoke-Command -ComputerName $deployment.webComputer -ErrorAction SilentlyContinue {
+								$using:offlineCmd
+							}
+												
+							$offlineCmd = "$msDeployPath -verb:sync -source:iisApp=$($deployment.webSite) -dest:auto,computername=$($deployment.webComputer) -enableRule:AppOffline"
+							
+							Invoke-Command -ComputerName $deployment.webComputer -ErrorAction Stop {
+								$using:offlineCmd
+							}
+						}
+					}
+				
+					Restore-WDPackage -Package $deployment.Package `
+									-DestinationPublishSettings $publishSettingsFile `
+									-Parameters $deployment.Parameters `
+									-ErrorAction Stop
+				}
+				catch {
+					"The web deployment failed. Please review the parameters you are passing and ensure that they match those expected by the parameters.xml file in your web deploy package .zip file"
+					throw
+				}
 				
 				Write-BuildSummaryMessage -name "Deploy" -header "Deployments" -message "WebDeploy: $($deployment.Package) -> $($deployment.webURL) ($($deployment.webComputer))"
 			}

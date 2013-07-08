@@ -15,7 +15,7 @@ The name of the section to write the message to.
 .Parameter header
 The text of the section to display (ignored if any other message was already written to this section).
 
-.Parmater message
+.Paramater message
 The message to add to the section specified.
 
 .Example

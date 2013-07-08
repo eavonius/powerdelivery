@@ -45,7 +45,9 @@ function Publish-SSAS {
 
     $remoteCommand = "& ""$deploymentUtilityPath"" ""$asDatabase"" ""/d"" ""/o:$xmlaPath"" | Out-Null"
 
-    Invoke-EnvironmentCommand -server $computer -command $remoteCommand
+	Invoke-Command -ComputerName $computer -ErrorAction Stop {
+		$using:remoteCommand
+	}
 	
 	if ($lastexitcode -ne $null -and $lastexitcode -ne 0) {
 		throw "Failed to deploy SSAS cube $asModelName exit code from Microsoft.AnalysisServices.Deployment.exe was $lastexitcode"
@@ -81,7 +83,9 @@ function Publish-SSAS {
 
     $remoteCommand = "Invoke-ASCMD -server ""$tabularServer"" -inputFile ""$xmlaPath"""
 
-    Invoke-EnvironmentCommand -server $computer -command $remoteCommand
+	Invoke-Command -ComputerName $computer -ErrorAction Stop {
+		$using:remoteCommand
+	}
 	
 	if ($lastexitcode -ne $null -and $lastexitcode -ne 0) {
 		throw "Failed to deploy SSAS cube $asModelName exit code from Invoke-ASCMD was $lastexitcode"
