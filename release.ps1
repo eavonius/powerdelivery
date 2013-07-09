@@ -78,7 +78,7 @@ try {
 
 	cd ..\master
 	
-	"$nuspecFullPath -> PowerDelivery.($newVersion).nupkg"
+	"$nuspecFullPath -> PowerDelivery.$($newVersion).nupkg"
 	
 	Exec -errorMessage "Error creating .nupkg" -ErrorAction Stop {
 		cpack "$nuspecFullPath"
