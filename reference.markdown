@@ -104,6 +104,9 @@ layout: page
 			<li class="nav-header">
 				<a href="#modules">Delivery modules</a>
 			</li>
+			<li>
+				<a href="#webdeploy_module">WebDeploy</a>
+			</li>
 		</ul>
 	</div>
 	<div class="span9">
@@ -598,6 +601,56 @@ Invoke-SSIS -package MyPackage.dtsx -server MyServer -dtExecPath $dtExecPath{% e
 		topic from the <a href="create.html">creating deployment pipelines</a> article 
 		for an overview of the usage and philosophy behind using these modules. You can also 
 		create your own.</p>
-		<a name="modules"><hr></a>
+		
+		<a name="webdeploy_module"></hr></a>
+		<br />
+		<h3>WebDeploy Module</h3>
+		<p>This module can be used to deploy a web application using <a href="http://www.iis.net/downloads/microsoft/web-deploy" target="_blank">Microsoft Web Deploy 3.0</a>. 
+		Use the <a href="#invoke_msbuild_cmdlet">Invoke-MSBuild</a> cmdlet to compile a project so that the web deploy package (.zip file) you want to deploy is created.</p>
+		<p>You will also want to use the <a href="http://www.microsoft.com/web/downloads/platform.aspx" target="_blank">Microsoft Web Platform Installer</a> on the web server to which you will deploy. Select "Recommended Configuration for Hosting Providers" 
+		from the feature list. This will install Web Deploy 3.0 and appropriate security settings for this module to work. See 
+		<a href="http://www.iis.net/learn/install/installing-publishing-technologies/installing-and-configuring-web-deploy" target="_blank">this article from Microsoft</a> 
+		for an overview as well as troubleshooting relating to setting up a server for web deploy.</p>
+		<br />
+		<h4>Referencing the module</h4>
+		<p>Add the following to the top of your delivery pipeline script:</p>
+		<p>
+			<code>Import-Module WebDeploy</code>
+		</p>
+		<br />
+		<h4>Configuring the module</h4>
+		<p>Add a section named <b>WebDeploy</b> to your <a ref="create.html#modules_configuring">module configuration file</a> with a 
+		YAML section below it for each deployment you wish to occur during your build. Each section you define must have the following settings:</p>
+		<h5>WebComputer</h5>
+		<p>string - The computer to deploy to.</p>
+		<h5>WebPort</h5>
+		<p>int - The HTTP/HTTPS port to create the web site on.</p>
+		<h5>WebSite</h5>
+		<p>string - The name of the virtual directory to create the web site within. A folder will also be created below the <i>Inetpub</i> directory on the target server with this name containing your web application's files.</p>
+		<h5>WebPassword</h5>
+		<p>string - A password that meets the strength requirements of the destination computer that deployment will occur on. A user will be created with the 
+		same name as the <b>WebSite</b> property and this account, combined with this password, will control the ability to perform deployments.</p>
+		<h5>WebURL</h5>
+		<p>string - The URL, including the port, that users will use to access the site.</p>
+		<h5>Package</h5>
+		<p>string - The path to the web deployment zip file containing the package to deploy.</p>
+		<h5>Parameters</h5>
+		<p>hash - Optional. Nested YAML settings for parameters that will be passed during web deployment. See the parameters.xml file inside your web deployment zip file for possible options for your specific deployment.</p>
+		<h5>BringOffline</h5>
+		<p>bool - Optional. Must be true or false. If present, takes the web application <a href="http://www.iis.net/learn/publish/deploying-application-packages/taking-an-application-offline-before-publishing" target="_blank">offline</a> during publishing.</p>
+		<br/>
+		<h4>Example configuration</h4>
+		{% highlight yaml %}WebDeploy:
+  MySite:
+    WebComputer: MyComputer
+    WebPort: 8080
+    WebSite: www.somewhere.com
+    WebPassword: gh#1@42*
+    WebURL: http://www.somewhere.com:8080
+    Package: WebSites/MySite.zip
+    BringOffline: true
+    Parameters:
+      DatabaseName: MyDatabase
+      SomeOtherParameter: SomeValue{% endhighlight %}
 	</div>
 </div>
