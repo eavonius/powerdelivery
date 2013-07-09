@@ -618,6 +618,11 @@ Invoke-SSIS -package MyPackage.dtsx -server MyServer -dtExecPath $dtExecPath{% e
 			<code>Import-Module WebDeploy</code>
 		</p>
 		<br />
+		<h4>When it runs<h4>
+		<p>The web deployment for any sites configured using this module will occur just <b>before</b> the 
+		<a href="create.html#deploy_block">Deploy</a> block of your script is called for those build environments 
+		to which that block applies.</p>
+		<br />
 		<h4>Configuring the module</h4>
 		<p>Add a section named <b>WebDeploy</b> to your <a ref="create.html#modules_configuring">module configuration file</a> with a 
 		YAML section below it for each deployment you wish to occur during your build. Each section you define must have the following settings:</p>
