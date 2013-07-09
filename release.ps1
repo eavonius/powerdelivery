@@ -84,7 +84,7 @@ try {
 		cpack "$nuspecFullPath"
 	}
 	
-	$nuPkgFile = (gci *.nupack).Name
+	$nuPkgFile = (gci *.nupkg).Name
 	
 	"$nuPkgFile -> http://www.chocolately.org..."
 	
