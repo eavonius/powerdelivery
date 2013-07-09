@@ -570,12 +570,14 @@
 </code></pre></div>
 
 		<h4>Parameters</h4>
-		<h5>server</h5>
-		<p>string - The name of the SQL server to run scripts against.</p>
-		<h5>database</h5>
-		<p>string - The name of the database to run scripts against.</p>
 		<h5>scriptsDir</h5>
 		<p>string - Path to the directory containing RoundhousE migration scripts to run. Should be a subdirectory of your build's drop location.</p>
+		<h5>database</h5>
+		<p>string - The name of the database to run scripts against.</p>
+		<h5>server</h5>
+		<p>string - Optional. The name of the SQL server to run scripts against. Use this or the connectionString parameter.</p>
+		<h5>connectionString</h5>
+		<p>string - Optional. The connection string to the database. Use this or the server parameter.</p>
 		<h5>restorePath</h5>
 		<p>string - Optional. Path to a .mdf file (backup) of a database file to restore. Until you have a database in production don't specify this property in your build. Once you have a database in production, if you specify the path to your latest production backup file, this be restored prior to running migration scripts. This allows you to test the changes exactly as they would be applied were the current build released to production.</p>
 		<h5>restoreOptions</h5>
