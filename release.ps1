@@ -18,7 +18,7 @@ function Sync-Git {
 		git add .
 	}
 	Exec -errorMessage "Error committing changes to git" -ErrorAction Stop {
-		git commit -m "Chocolatey $newVersion release."
+		git commit --allow-empty -m "Chocolatey $newVersion release."
 	}
 	Exec -errorMessage "Error pushing changes to git" -ErrorAction Stop {
 		git push
