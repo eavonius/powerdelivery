@@ -618,7 +618,7 @@ Invoke-SSIS -package MyPackage.dtsx -server MyServer -dtExecPath $dtExecPath{% e
 			<code>Import-Module WebDeploy</code>
 		</p>
 		<br />
-		<h4>When it runs<h4>
+		<h4>When it runs</h4>
 		<p>The web deployment for any sites configured using this module will occur just <b>before</b> the 
 		<a href="create.html#deploy_block">Deploy</a> block of your script is called for those build environments 
 		to which that block applies.</p>
