@@ -261,7 +261,7 @@ MyProject Production Builders</pre>
 		<br />
 		<h2>How powerdelivery works</h2>
 		<p>At its core, powerdelivery simply runs a PowerShell script. You can choose to run 
-		that script on your own computer and it will run a <a href="#local_builds">Local</a> build. When you trigger 
+		that script on your own computer and it will run a <a href="use.html#local_build">Local</a> build. When you trigger 
 		a build on <abbr title="Team Foundation Server">TFS</abbr>, some extra parameters 
 		are passed to the script so that it runs a build against the appropriate target 
 		environment (Development, Test, Production etc.).</p>
@@ -285,7 +285,7 @@ MyProject Production Builders</pre>
 		projects) that are dependent on yours.	An example would be where you have one TFS 
 		project that delivers a reusable class library, using powerdelivery, as its output. 
 		There are other TFS projects that consume this reusable library. You may have written your 
-		build so that it drops the library into a UNC path somewhere or perhaps <a href="http://www.nuget.org" target="_blank">nuget</a> as its <a href="#production_builds">production</a> 
+		build so that it drops the library into a UNC path somewhere or perhaps <a href="http://www.nuget.org" target="_blank">nuget</a> as its <a href="use.html#production_build">production</a> 
 		build "deployment".</p>
 		<p>When the other TFS projects that want to reuse this asset reference it, they should 
 		pull versions that are tied to the 3 part name, so for instance they are designed to work 
@@ -474,11 +474,11 @@ Deploy {
 			</tr>
 			<tr>
 				<th style="text-align: center">PowerShell Script Block</th>
-				<th><a href="#local_builds">Local</a></th>
-				<th><a href="#commit_builds">Commit</a></th>
-				<th><a href="#test_builds">Test</a></th>
-				<th><a href="#capacity_test_builds">CapacityTest</a></th>
-				<th><a href="#production_builds">Production</a></th>
+				<th><a href="use.html#local_build">Local</a></th>
+				<th><a href="use.html#commit_build">Commit</a></th>
+				<th><a href="use.html#test_build">Test</a></th>
+				<th><a href="use.html#capacity_test_build">CapacityTest</a></th>
+				<th><a href="use.html#production_build">Production</a></th>
 			</tr>
 			<tr>
 				<td style="text-align: right"><a href="#init_block">Init</a></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"><i class="icon-ok"></i></td>  

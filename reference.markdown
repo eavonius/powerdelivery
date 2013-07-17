@@ -631,7 +631,7 @@ Invoke-SSIS -package MyPackage.dtsx -server MyServer -dtExecPath $dtExecPath{% e
 		to which that block applies.</p>
 		<br />
 		<h4>Configuring the module</h4>
-		<p>Add a section named <b>MSBuild</b> to your <a ref="create.html#modules_configuring">module configuration file</a> with a 
+		<p>Add a section named <b>MSBuild</b> to your <a href="create.html#modules_configuring">module configuration file</a> with a 
 		YAML section below it for each deployment you wish to occur during your build. Each section you define must have the following settings:</p>
 		<h5>projectFile</h5>
 		<p>string - A relative path at or below the script directory that contains an MSBuild project or solution to compile.</p>
@@ -686,7 +686,7 @@ Invoke-SSIS -package MyPackage.dtsx -server MyServer -dtExecPath $dtExecPath{% e
 		to which that block applies.</p>
 		<br />
 		<h4>Configuring the module</h4>
-		<p>Add a section named <b>MSTest</b> to your <a ref="create.html#modules_configuring">module configuration file</a> with a 
+		<p>Add a section named <b>MSTest</b> to your <a href="create.html#modules_configuring">module configuration file</a> with a 
 		section named <b>UnitTests</b> or <b>AcceptanceTests</b> below it containing 
 		YAML sections below them for each set of tests you wish to run during your build. You can include unit tests and acceptance tests, 
 		or just one type by choosing to include or omit those sections. Each section you define must have the following settings:</p>
@@ -734,7 +734,7 @@ Invoke-SSIS -package MyPackage.dtsx -server MyServer -dtExecPath $dtExecPath{% e
 		to which that block applies.</p>
 		<br />
 		<h4>Configuring the module</h4>
-		<p>Add a section named <b>Roundhouse</b> to your <a ref="create.html#modules_configuring">module configuration file</a> with a 
+		<p>Add a section named <b>Roundhouse</b> to your <a href="create.html#modules_configuring">module configuration file</a> with a 
 		YAML section below it for each database you wish to migrate changes to during your build. Each section you define must have the following settings:</p>
 		<h5>scriptsDir</h5>
 		<p>string - Path to the directory containing RoundhousE migration scripts to run. Should be a subdirectory of your build's drop location.</p>
@@ -782,7 +782,7 @@ Invoke-SSIS -package MyPackage.dtsx -server MyServer -dtExecPath $dtExecPath{% e
 		to which that block applies.</p>
 		<br />
 		<h4>Configuring the module</h4>
-		<p>Add a section named <b>WebDeploy</b> to your <a ref="create.html#modules_configuring">module configuration file</a> with a 
+		<p>Add a section named <b>WebDeploy</b> to your <a href="create.html#modules_configuring">module configuration file</a> with a 
 		YAML section below it for each deployment you wish to occur during your build. Each section you define must have the following settings:</p>
 		<h5>WebComputer</h5>
 		<p>string - The computer to deploy to.</p>

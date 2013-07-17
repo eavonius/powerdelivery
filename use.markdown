@@ -263,7 +263,7 @@ layout: page
 		detailed planning of an entire feature before users have had a chance to inspect it and provide feedback. This results in team members being 
 		more likely to plan for immediate changes to the design to meet customer's needs.</p>
 		
-		<a name="execution"><hr></a>
+		<a name="execute"><hr></a>
 		<br/>
 		<h3>Executing the sprint</h3>
 		<p>As developers submit code changes, they may be using <a href="https://en.wikipedia.org/wiki/Test-driven_development" target="_blank">test-driven development</a> 
@@ -379,11 +379,20 @@ layout: page
 		<h3>Queueing powerdelivery builds</h3>
 		<p>The process for queueing a build depends on the environment being targeted.</p>
 		
+		<a name="local_build"><hr></a>
+		<br/>
+		<h4>Local builds</h4>
+		<p>You can run powerdelivery on your workstation by opening a Windows PowerShell command prompt and 
+		using the <a href="reference.html#invoke_powerdelivery_cmdlet">Invoke-Powerdelivery</a> cmdlet. If your 
+		build was named "RecipeManager", you would change directory into where your script is and execute it 
+		with the following command:</p>
+		{% highlight powershell %}Invoke-Powerdelivery .\RecipeManager.ps1{% endhighlight %}
+		
 		<a name="commit_build"><hr></a>
 		<br/>
 		<h4>Commit builds</h4>
 		<p>Builds that target your <a href="#environment_development">Development</a> environment are automatically 
-		queued whenever anyone on your team checks in code.</p>
+		queued whenever anyone on your team checks in code to the TFS project setup to use powerdelivery.</p>
 
 		<a name="test_build"><hr></a>
 		<br/>
