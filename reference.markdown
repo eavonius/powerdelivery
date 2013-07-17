@@ -588,7 +588,7 @@ Invoke-SSIS -package MyPackage.dtsx -server MyServer -dtExecPath $dtExecPath{% e
 		
 		<a name="write_buildsummarymessage_cmdlet"><hr></a>
 		<h3>Write-BuildSummaryMessage</h3>
-		<p>Writes a message to a section in the TFS build summary page. Specify as the <b>name</b> parameter 
+		<p>Writes a message to a section to the <a href="use.html#build_summary">build summary</a>. Specify as the <b>name</b> parameter 
 		the name of a <a href="create.html#script_blocks">script block</a> from your delivery pipeline script. 
 		For example, pass "Compile" to have your message appear under that section of the build summary.</p>
 		<p><b>NOTE</b>: This function will output a warning and not do anything on TFS versions prior to 2012.</p>
