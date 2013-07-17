@@ -72,7 +72,7 @@ try {
 	$indexFileName = [System.IO.Path]::GetFileName($indexFile)
 	"$indexFileName -> $newVersion..."
 	$newIndexFileContent = (Get-Content $indexFileName) -replace "^.*Version.*", "`t`t<span class=`"label label-info`">Version $newVersion</span>"
-	Out-File -FilePath $indexFile -Force -InputObject $newIndexFileContent
+	Out-File -Encoding 'UTF-8' -FilePath $indexFile -Force -InputObject $newIndexFileContent
 
 	Sync-Git
 

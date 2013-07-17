@@ -21,7 +21,7 @@ Init {
 	$script:databaseServer 		= Get-BuildSetting DatabaseServer
 	$script:databaseName 		= Get-BuildSetting DatabaseName
 	
-	$script:dbScriptsDir		= "Databases\PowerDeliveryASPNETMVCDB"
+	$script:dbScriptsDir		= "Databases\PowerDeliveryASPNETMVC4DB"
 }
 
 # Compile source code or intermediary files and deploy outputs to the drop location (UNC path on TFS)
