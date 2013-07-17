@@ -485,5 +485,49 @@ layout: page
 		<a name="build_log"><hr></a>
 		<br/>
 		<h3>Reviewing the log of a powerdelivery build</h3>
+		<p>From the <a href="#build_summary">summary</a> page, click the <b>View Log</b> link to view the Team Foundation Server 
+		build log. The log displays detailed information about the output of powerdelivery and any Windows PowerShell commands you run. 
+		Any statements you write to the console using Windows PowerShell in your script will automatically be displayed in the log. 
+		When you encounter failed builds, the first place to go should be the build log to view more details about what went wrong, and 
+		look at what other operations may have run successfully prior to the failure to help you diagnose the breakage.</p>
+		
+		<a name="controlling_builds"><hr></a>
+		<br/>
+		<h3>Controlling who can build</h3>
+		<p>When you <a href="create.html#add_pipeline">add powerdelivery to a TFS project</a>, three security groups are added to 
+		your TFS server named after your deployment pipeline and suffixed with a build environment. Since <a href="#development_build">Development</a> 
+		builds are triggered whenever anyone commits code, users only need to have permission to checkin code to source control 
+		to gain the ability to trigger those builds.</p>
+		<p>To trigger builds in other environments, the following procedure must be used to give permissions to users to do so:</p>
+		<ol>
+			<li>Open the <b>Team Explorer</b> panel in Visual Studio.</li>
+			<br/>
+			<li>Navigate to the <b>Settings</b> page of the Team Explorer panel.</li>
+			<br/>
+			<li>Click the <b>Group Membership</b> link under the <i>Team Project</i> you wish to modify security settings for.</li>
+			<br/>
+			<img src="img/team_project_group_membership.gif" />
+			<p>
+				<br/>
+				<small>Figure: The settings panel of Team Explorer in Visual Studio 2012</small>
+			</p>
+			<li>The security page of the <b>Team Foundation Server Portal</b> website will appear in your web browser (if Visual Studio 2012) 
+			or a dialog will appear (if Visual Studio 2010). Select the group named with the following pattern:</li>
+			<p>
+				<br/>
+				<code>[Pipeline] [Environment] Builders</code>
+			</p>
+			<br/>			
+			<p>Where <b>Pipeline</b> is the name of your build script and <b>Environment</b> is the build environment to allow 
+			queueing of builds for.</p>
+			<br/>
+			<img src="img/team_project_security_page.gif" />
+			<p>
+				<br/>
+				<small>Figure: The security page of the Team Foundation Server Portal in a web browser</small>
+			</p>
+			<li>Modify the list of users and groups to control who can queue builds into that environment.</li>
+		</ol>
+		
 	</div>
 </div>

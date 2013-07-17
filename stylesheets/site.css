@@ -10,7 +10,6 @@
 }
 
 .container-fluid .span3 .nav.nav-list h5 {
-
 	margin-left: 15px;
 }
 
@@ -67,6 +66,7 @@
 
 .span3 .nav-list li.nav-header a {
 	margin-left: 0px;
+	font-size: 12px;
 }
 
 #feature-highlight h2 {
