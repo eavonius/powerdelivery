@@ -674,7 +674,7 @@ SetupEnvironment {
 		This is done by calling the <a href="reference.html#import_deliverymodule_cmdlet">Import-DeliveryModule</a> 
 		cmdlet at the top of your script (outside of a block). If you are familiar with the C# programming language, 
 		this is analagous to putting a "using" statement at the top of a class file.</p>
-		<p>Below is an example of importing the <a href="reference.html#web_deploy_module">WebDeploy</a> module 
+		<p>Below is an example of importing the <a href="reference.html#webdeploy_module">WebDeploy</a> module 
 		included with powerdelivery. See the <a href="reference.html#modules">module reference</a> for details of 
 		which modules are included with powerdelivery.</p>
 		{% highlight powershell %}Pipeline 'MyProduct' -Version '1.0.0'
