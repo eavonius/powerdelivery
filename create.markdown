@@ -374,8 +374,8 @@ DatabaseName: MyDatabase{% endhighlight %}
 			<li><b>Reserved characters</b> - A list of them can be seen at the 
 			<a href="http://ss64.com/ps/syntax-esc.html" target="_blank">top of this page</a>. If you put one of 
 			these reserved characters (the character prefixed by a tick character) into a YAML 
-			value WITHOUT spaces, you will get an error when loading the YAML file. You must 
-			surround your value with quotes to use it.</li>
+			value WITHOUT quotes, you will get an error when loading the YAML file. You must 
+			surround your value with quotes to use a reserved character.</li>
 		</ul>
 		<p>An interactive YAML parser is available online <a href="https://yaml-online-parser.appspot.com/" target="_blank">here</a> and 
 		may be helpful in learning the markup syntax initially if you have questions.</p>
@@ -465,7 +465,7 @@ Deploy {
 		<br />
 		<h3>Matrix of script blocks</h3>
 		<p>These script blocks are always called in the same order, but depending on the environment 
-		the build is targeting, some will be omitted. The table below shows a matrix of the order of execution 
+		the build is targeting, some will be skipped over. The table below shows a matrix of the order of execution 
 		of these blocks (from top to bottom) and which are called in each environment.</p>
 		<table class="table">
 			<tr>
@@ -589,19 +589,13 @@ Compile {
 		example of what you might need to do to support your deployment.</p>
 		{% highlight powershell %}Init {
   $script:myEnvVarValue = Get-BuildSetting -Name MyEnvVarValue
-  $script:myServer = Get-BuildSetting -Name MyServer
+  $script:myServer      = Get-BuildSetting -Name MyServer
 }
 
 SetupEnvironment {
-  $setMyEnvVar = @"
-    [Environment]::SetEnvironmentVariable('MyEnvVar', '$myEnvVarValue', 'Machine');
-    `$ENV:MyEnvVar = '$myEnvVarValue'
-    "@
-    Invoke-Command -ComputerName $myServer {
-  Exec {
-    Invoke-Expression $using:setMyEnvVar 
+  Invoke-Command -ComputerName $myServer {
+    [Environment]::SetEnvironmentVariable('MyEnvVar', '$using:myEnvVarValue', 'Machine')
   }
-}
 }{% endhighlight %}
 
 		<a name="deploy_block"><hr></a>
