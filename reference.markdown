@@ -15,9 +15,6 @@ layout: page
 				<a href="#enable_sqljobs_cmdlet">Enable-SqlJobs</a>
 			</li>
 			<li>
-				<a href="#enable_webdeploy_cmdlet">Enable-WebDeploy</a>
-			</li>
-			<li>
 				<a href="#get_buildappversion_cmdlet">Get-BuildAppVersion</a>
 			</li>
 			<li>
@@ -155,25 +152,6 @@ layout: page
 		<p>string - The SQL server name of the SQL instance to enable jobs on.</p>
 		<h5>jobs</h5>
 		<p>string - The name of the job(s) to enable. You can use wildcards or a single name.</p>
-		
-		<a name="enable_webdeploy_cmdlet"><hr></a>
-		<h3>Enable-WebDeploy</h3>
-		<p>This cmdlet is used to configure an IIS website for deployment.</p>
-		<h4>Example</h4>
-		{% highlight powershell %}Enable-WebDeploy -webComputer 'MyWebServer' -webDeployDir 'C:\Program Files\Microsoft Web Deploy v3' -webSite 'MySite' -webPort '8080' -webPassword '3F#g&jKl'{% endhighlight %}
-		<h4>Parameters</h4>
-		<h5>webComputer</h5>
-		<p>The name of the computer to enable web deployment for. Must be Windows Server running IIS 7 or greater, with Web Deploy 3.0 and "Recommended Host Configuration" setup using Microsoft Platform Installer.</p>
-		<h5>webDeployDir</h5>
-		<p>The directory on the web server computer into which Web Deploy 3 is installed. You can use a remote powershell command to read this out of the registry of the remote computer if your different enviroments have installed it in different locations.</p>
-		<h5>webSite</h5>
-		<p>The name of the website to create. A corresponding application pool with the same name will also be created.</p>
-		<h5>webPort</h5>
-		<p>The port the website should run on. Must not be an existing port in use on the server.</p>
-		<h5>webPassword</h5>
-		<p>A user account will be created on the server that will allow deployment to it named after the website. This paramter specifies the password of that account.</p>
-		<h5>runtimeVersion</h5>
-		<p>Optional. The version of .NET the application pool should be created with. Defaults to '4.0'.</p>
 		
 		<a name="get_buildappversion_cmdlet"><hr></a>
 		<h3>Get-BuildAppVersion</h3>
