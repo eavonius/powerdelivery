@@ -9,13 +9,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		AcceptanceTests.testsettings = AcceptanceTests.testsettings
 		packages.config = packages.config
-		PowerdeliveryASPNETMVC4_WithModuleConfig.ps1 = PowerdeliveryASPNETMVC4.ps1
-		PowerdeliveryASPNETMVC4_WithModuleConfigCapacityTestEnvironment.yml = PowerdeliveryASPNETMVC4_WithModuleConfigCapacityTestEnvironment.yml
-		PowerdeliveryASPNETMVC4_WithModuleConfigCommitEnvironment.yml = PowerdeliveryASPNETMVC4_WithModuleConfigCommitEnvironment.yml
-		PowerdeliveryASPNETMVC4_WithModuleConfigLocalEnvironment.yml = PowerdeliveryASPNETMVC4_WithModuleConfigLocalEnvironment.yml
-		PowerDeliveryASPNETMVC4_WithModuleConfigModules.yml = PowerDeliveryASPNETMVC4_WithModuleConfigModules.yml
-		PowerdeliveryASPNETMVC4_WithModuleConfigProductionEnvironment.yml = PowerdeliveryASPNETMVC4_WithModuleConfigProductionEnvironment.yml
-		PowerdeliveryASPNETMVC4_WithModuleConfigTestEnvironment.yml = PowerdeliveryASPNETMVC4_WithModuleConfigTestEnvironment.yml
+		PowerdeliveryASPNETMVC4.ps1 = PowerdeliveryASPNETMVC4.ps1
+		PowerdeliveryASPNETMVC4CapacityTestEnvironment.yml = PowerdeliveryASPNETMVC4CapacityTestEnvironment.yml
+		PowerdeliveryASPNETMVC4CommitEnvironment.yml = PowerdeliveryASPNETMVC4CommitEnvironment.yml
+		PowerdeliveryASPNETMVC4LocalEnvironment.yml = PowerdeliveryASPNETMVC4LocalEnvironment.yml
+		PowerDeliveryASPNETMVC4Modules.yml = PowerDeliveryASPNETMVC4Modules.yml
+		PowerdeliveryASPNETMVC4ProductionEnvironment.yml = PowerdeliveryASPNETMVC4ProductionEnvironment.yml
+		PowerdeliveryASPNETMVC4TestEnvironment.yml = PowerdeliveryASPNETMVC4TestEnvironment.yml
 		UnitTests.testsettings = UnitTests.testsettings
 	EndProjectSection
 EndProject

@@ -1,0 +1,43 @@
+﻿<Page x:Class="PowerDeliveryClient.Pages.Home"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d" Title="Deployment Pipelines"
+      d:DesignHeight="400" d:DesignWidth="500">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0">
+            <TextBlock Style="{StaticResource PageTitle}">Deployment Pipelines</TextBlock>
+        </StackPanel>
+        <ItemsControl Grid.Row="1" Name="lstPipelines" Padding="10">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Button Style="{StaticResource PipelinePanel}" DataContext="{Binding}" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.Style>
+                <Style TargetType="ItemsControl">
+                    <Style.Triggers>
+                        <Trigger Property="HasItems" Value="false">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate>
+                                        <TextBlock Text="No deployment pipelines found. Use the Sources button to add some." />
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ItemsControl.Style>
+        </ItemsControl>
+        <StackPanel Grid.Row="2" Style="{StaticResource PageActions}">
+            <Button Content="Sources" Name="btnSources" Click="btnSources_Click" />
+        </StackPanel>
+    </Grid>
+</Page>
