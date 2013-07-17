@@ -1,0 +1,428 @@
+<NotepadPlus>
+    <Project name="gh-pages">
+        <Folder name="img">
+            <File name="img\glyphicons-halflings-white.png" />
+            <File name="img\glyphicons-halflings.png" />
+            <File name="img\promote_build.gif" />
+        </Folder>
+        <Folder name="javascripts">
+            <File name="javascripts\bootstrap.min.js" />
+            <File name="javascripts\html5shiv.js" />
+            <File name="javascripts\main.js" />
+            <File name="javascripts\site.js" />
+        </Folder>
+        <Folder name="stylesheets">
+            <File name="stylesheets\bootstrap-responsive.min.css" />
+            <File name="stylesheets\bootstrap.min.css" />
+            <File name="stylesheets\pygment_trac.css" />
+            <File name="stylesheets\site.css" />
+        </Folder>
+        <Folder name="_layouts">
+            <File name="_layouts\page.html" />
+        </Folder>
+        <Folder name="_site">
+            <Folder name="img">
+                <File name="_site\img\glyphicons-halflings-white.png" />
+                <File name="_site\img\glyphicons-halflings.png" />
+            </Folder>
+            <Folder name="javascripts">
+                <File name="_site\javascripts\bootstrap.min.js" />
+                <File name="_site\javascripts\html5shiv.js" />
+                <File name="_site\javascripts\main.js" />
+                <File name="_site\javascripts\site.js" />
+            </Folder>
+            <Folder name="stylesheets">
+                <File name="_site\stylesheets\bootstrap-responsive.min.css" />
+                <File name="_site\stylesheets\bootstrap.min.css" />
+                <File name="_site\stylesheets\pygment_trac.css" />
+                <File name="_site\stylesheets\site.css" />
+            </Folder>
+            <File name="_site\about.html" />
+            <File name="_site\create.html" />
+            <File name="_site\developing.html" />
+            <File name="_site\help.html" />
+            <File name="_site\index.html" />
+            <File name="_site\params.json" />
+            <File name="_site\README.md" />
+            <File name="_site\reference.html" />
+            <File name="_site\server.ps1" />
+            <File name="_site\setup.html" />
+            <File name="_site\use.html" />
+        </Folder>
+        <File name="about.html" />
+        <File name="create.markdown" />
+        <File name="developing.markdown" />
+        <File name="help.markdown" />
+        <File name="index.html" />
+        <File name="params.json" />
+        <File name="README.md" />
+        <File name="reference.markdown" />
+        <File name="server.ps1" />
+        <File name="setup.markdown" />
+        <File name="use.markdown" />
+        <File name="_config.yml" />
+        <File name=".gitattributes" />
+        <File name=".gitignore" />
+    </Project>
+    <Project name="powerdelivery">
+        <Folder name="Examples">
+            <Folder name="PowerDeliveryASPNETMVC4">
+                <Folder name=".nuget">
+                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\.nuget\NuGet.Config" />
+                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\.nuget\NuGet.exe" />
+                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\.nuget\NuGet.targets" />
+                </Folder>
+                <Folder name="BuildProcessTemplates">
+                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\BuildProcessTemplates\DefaultTemplate.11.1.xaml" />
+                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\BuildProcessTemplates\LabDefaultTemplate.11.xaml" />
+                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\BuildProcessTemplates\PowerDeliveryChangeSetTemplate.11.xaml" />
+                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\BuildProcessTemplates\PowerDeliveryChangeSetTemplate.xaml" />
+                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\BuildProcessTemplates\PowerDeliveryTemplate.11.xaml" />
+                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\BuildProcessTemplates\PowerDeliveryTemplate.xaml" />
+                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\BuildProcessTemplates\UpgradeTemplate.xaml" />
+                </Folder>
+                <Folder name="Databases">
+                    <Folder name="PowerDeliveryASPNETMVC4DB">
+                        <Folder name="up">
+                            <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\Databases\PowerDeliveryASPNETMVC4DB\up\0001_CreateInitialSchema.sql" />
+                        </Folder>
+                    </Folder>
+                </Folder>
+                <Folder name="PowerDeliveryASPNETMVC4">
+                    <Folder name="App_Start">
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\App_Start\AuthConfig.cs" />
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\App_Start\BundleConfig.cs" />
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\App_Start\FilterConfig.cs" />
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\App_Start\RouteConfig.cs" />
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\App_Start\WebApiConfig.cs" />
+                    </Folder>
+                    <Folder name="Content">
+                        <Folder name="themes">
+                            <Folder name="base">
+                                <Folder name="images">
+                                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+                                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
+                                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+                                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
+                                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
+                                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+                                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
+                                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+                                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\images\ui-icons_222222_256x240.png" />
+                                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
+                                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\images\ui-icons_454545_256x240.png" />
+                                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\images\ui-icons_888888_256x240.png" />
+                                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+                                </Folder>
+                                <Folder name="minified">
+                                    <Folder name="images">
+                                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\minified\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+                                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\minified\images\ui-bg_flat_75_ffffff_40x100.png" />
+                                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\minified\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+                                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\minified\images\ui-bg_glass_65_ffffff_1x400.png" />
+                                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\minified\images\ui-bg_glass_75_dadada_1x400.png" />
+                                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\minified\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+                                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\minified\images\ui-bg_glass_95_fef1ec_1x400.png" />
+                                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\minified\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+                                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\minified\images\ui-icons_222222_256x240.png" />
+                                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\minified\images\ui-icons_2e83ff_256x240.png" />
+                                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\minified\images\ui-icons_454545_256x240.png" />
+                                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\minified\images\ui-icons_888888_256x240.png" />
+                                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\minified\images\ui-icons_cd0a0a_256x240.png" />
+                                    </Folder>
+                                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\minified\jquery-ui.min.css" />
+                                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\minified\jquery.ui.accordion.min.css" />
+                                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\minified\jquery.ui.autocomplete.min.css" />
+                                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\minified\jquery.ui.button.min.css" />
+                                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\minified\jquery.ui.core.min.css" />
+                                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\minified\jquery.ui.datepicker.min.css" />
+                                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\minified\jquery.ui.dialog.min.css" />
+                                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\minified\jquery.ui.menu.min.css" />
+                                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\minified\jquery.ui.progressbar.min.css" />
+                                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\minified\jquery.ui.resizable.min.css" />
+                                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\minified\jquery.ui.selectable.min.css" />
+                                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\minified\jquery.ui.slider.min.css" />
+                                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\minified\jquery.ui.spinner.min.css" />
+                                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\minified\jquery.ui.tabs.min.css" />
+                                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\minified\jquery.ui.theme.min.css" />
+                                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\minified\jquery.ui.tooltip.min.css" />
+                                </Folder>
+                                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\jquery-ui.css" />
+                                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\jquery.ui.accordion.css" />
+                                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\jquery.ui.all.css" />
+                                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\jquery.ui.autocomplete.css" />
+                                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\jquery.ui.base.css" />
+                                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\jquery.ui.button.css" />
+                                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\jquery.ui.core.css" />
+                                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\jquery.ui.datepicker.css" />
+                                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\jquery.ui.dialog.css" />
+                                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\jquery.ui.menu.css" />
+                                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\jquery.ui.progressbar.css" />
+                                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\jquery.ui.resizable.css" />
+                                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\jquery.ui.selectable.css" />
+                                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\jquery.ui.slider.css" />
+                                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\jquery.ui.spinner.css" />
+                                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\jquery.ui.tabs.css" />
+                                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\jquery.ui.theme.css" />
+                                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\themes\base\jquery.ui.tooltip.css" />
+                            </Folder>
+                        </Folder>
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Content\Site.css" />
+                    </Folder>
+                    <Folder name="Controllers">
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Controllers\AccountController.cs" />
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Controllers\HomeController.cs" />
+                    </Folder>
+                    <Folder name="Filters">
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Filters\InitializeSimpleMembershipAttribute.cs" />
+                    </Folder>
+                    <Folder name="Images">
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Images\accent.png" />
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Images\bullet.png" />
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Images\heroAccent.png" />
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Images\orderedList0.png" />
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Images\orderedList1.png" />
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Images\orderedList2.png" />
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Images\orderedList3.png" />
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Images\orderedList4.png" />
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Images\orderedList5.png" />
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Images\orderedList6.png" />
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Images\orderedList7.png" />
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Images\orderedList8.png" />
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Images\orderedList9.png" />
+                    </Folder>
+                    <Folder name="Models">
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Models\AccountModels.cs" />
+                    </Folder>
+                    <Folder name="Properties">
+                        <Folder name="PublishProfiles">
+                            <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Properties\PublishProfiles\Default.pubxml" />
+                        </Folder>
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Properties\AssemblyInfo.cs" />
+                    </Folder>
+                    <Folder name="Scripts">
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Scripts\jquery-1.8.2.intellisense.js" />
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Scripts\jquery-1.8.2.js" />
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Scripts\jquery-1.8.2.min.js" />
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Scripts\jquery-ui-1.9.2.js" />
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Scripts\jquery-ui-1.9.2.min.js" />
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Scripts\jquery.unobtrusive-ajax.js" />
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Scripts\jquery.unobtrusive-ajax.min.js" />
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Scripts\jquery.validate-vsdoc.js" />
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Scripts\jquery.validate.js" />
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Scripts\jquery.validate.min.js" />
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Scripts\jquery.validate.unobtrusive.js" />
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Scripts\jquery.validate.unobtrusive.min.js" />
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Scripts\knockout-2.2.0.debug.js" />
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Scripts\knockout-2.2.0.js" />
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Scripts\modernizr-2.6.2.js" />
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Scripts\_references.js" />
+                    </Folder>
+                    <Folder name="Views">
+                        <Folder name="Account">
+                            <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Views\Account\ExternalLoginConfirmation.cshtml" />
+                            <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Views\Account\ExternalLoginFailure.cshtml" />
+                            <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Views\Account\Login.cshtml" />
+                            <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Views\Account\Manage.cshtml" />
+                            <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Views\Account\Register.cshtml" />
+                            <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Views\Account\_ChangePasswordPartial.cshtml" />
+                            <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Views\Account\_ExternalLoginsListPartial.cshtml" />
+                            <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Views\Account\_RemoveExternalLoginsPartial.cshtml" />
+                            <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Views\Account\_SetPasswordPartial.cshtml" />
+                        </Folder>
+                        <Folder name="Home">
+                            <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Views\Home\About.cshtml" />
+                            <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Views\Home\Contact.cshtml" />
+                            <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Views\Home\Index.cshtml" />
+                        </Folder>
+                        <Folder name="Shared">
+                            <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Views\Shared\Error.cshtml" />
+                            <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Views\Shared\_Layout.cshtml" />
+                            <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Views\Shared\_LoginPartial.cshtml" />
+                        </Folder>
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Views\Web.config" />
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Views\_ViewStart.cshtml" />
+                    </Folder>
+                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\favicon.ico" />
+                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Global.asax" />
+                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Global.asax.cs" />
+                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\packages.config" />
+                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4.csproj" />
+                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Web.config" />
+                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Web.Debug.config" />
+                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4\Web.Release.config" />
+                </Folder>
+                <Folder name="PowerDeliveryASPNETMVC4.Acceptance">
+                    <Folder name="Properties">
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4.Acceptance\Properties\AssemblyInfo.cs" />
+                    </Folder>
+                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4.Acceptance\PowerDeliveryASPNETMVC4.Acceptance.csproj" />
+                </Folder>
+                <Folder name="PowerDeliveryASPNETMVC4.Tests">
+                    <Folder name="Controllers">
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4.Tests\Controllers\HomeControllerTest.cs" />
+                    </Folder>
+                    <Folder name="Properties">
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4.Tests\Properties\AssemblyInfo.cs" />
+                    </Folder>
+                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4.Tests\App.config" />
+                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4.Tests\packages.config" />
+                    <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4.Tests\PowerDeliveryASPNETMVC4.Tests.csproj" />
+                </Folder>
+                <Folder name="PowerDeliveryASPNETMVC4DB">
+                    <Folder name="up">
+                        <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4DB\up\0001_CreateInitialSchema.sql" />
+                    </Folder>
+                </Folder>
+                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\AcceptanceTests.testsettings" />
+                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\packages.config" />
+                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4.sln" />
+                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4_Local.publishsettings" />
+                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerdeliveryASPNETMVC4_WithCmdlets.ps1" />
+                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerdeliveryASPNETMVC4_WithCmdletsCapacityTestEnvironment.yml" />
+                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerdeliveryASPNETMVC4_WithCmdletsCommitEnvironment.yml" />
+                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerdeliveryASPNETMVC4_WithCmdletsLocalEnvironment.yml" />
+                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4_WithCmdletsModules.yml" />
+                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerdeliveryASPNETMVC4_WithCmdletsProductionEnvironment.yml" />
+                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerdeliveryASPNETMVC4_WithCmdletsTestEnvironment.yml" />
+                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4_WithModuleConfig.ps1" />
+                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerdeliveryASPNETMVC4_WithModuleConfigCapacityTestEnvironment.yml" />
+                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerdeliveryASPNETMVC4_WithModuleConfigCommitEnvironment.yml" />
+                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerdeliveryASPNETMVC4_WithModuleConfigLocalEnvironment.yml" />
+                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerDeliveryASPNETMVC4_WithModuleConfigModules.yml" />
+                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerdeliveryASPNETMVC4_WithModuleConfigProductionEnvironment.yml" />
+                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\PowerdeliveryASPNETMVC4_WithModuleConfigTestEnvironment.yml" />
+                <File name="D:\Projects\powerdelivery\master\Examples\PowerDeliveryASPNETMVC4\UnitTests.testsettings" />
+            </Folder>
+        </Folder>
+        <Folder name="HyperVDeliveryModule">
+            <File name="D:\Projects\powerdelivery\master\HyperVDeliveryModule\HyperVDeliveryModule.psd1" />
+            <File name="D:\Projects\powerdelivery\master\HyperVDeliveryModule\HyperVDeliveryModule.psm1" />
+        </Folder>
+        <Folder name="MSBuildDeliveryModule">
+            <File name="D:\Projects\powerdelivery\master\MSBuildDeliveryModule\MSBuildDeliveryModule.psd1" />
+            <File name="D:\Projects\powerdelivery\master\MSBuildDeliveryModule\MSBuildDeliveryModule.psm1" />
+        </Folder>
+        <Folder name="MSTestDeliveryModule">
+            <File name="D:\Projects\powerdelivery\master\MSTestDeliveryModule\MSTestDeliveryModule.psd1" />
+            <File name="D:\Projects\powerdelivery\master\MSTestDeliveryModule\MSTestDeliveryModule.psm1" />
+        </Folder>
+        <Folder name="PowerDelivery">
+            <Folder name="BuildProcessTemplates">
+                <File name="D:\Projects\powerdelivery\master\PowerDelivery\BuildProcessTemplates\PowerDeliveryChangeSetTemplate.11.xaml" />
+                <File name="D:\Projects\powerdelivery\master\PowerDelivery\BuildProcessTemplates\PowerDeliveryChangeSetTemplate.xaml" />
+                <File name="D:\Projects\powerdelivery\master\PowerDelivery\BuildProcessTemplates\PowerDeliveryTemplate.11.xaml" />
+                <File name="D:\Projects\powerdelivery\master\PowerDelivery\BuildProcessTemplates\PowerDeliveryTemplate.xaml" />
+            </Folder>
+            <Folder name="Templates">
+                <Folder name="ASP.NET Web Site">
+                    <File name="D:\Projects\powerdelivery\master\PowerDelivery\Templates\ASP.NET Web Site\Build.ps1" />
+                    <File name="D:\Projects\powerdelivery\master\PowerDelivery\Templates\ASP.NET Web Site\BuildCapacityTestEnvironment.csv" />
+                    <File name="D:\Projects\powerdelivery\master\PowerDelivery\Templates\ASP.NET Web Site\BuildCommitEnvironment.csv" />
+                    <File name="D:\Projects\powerdelivery\master\PowerDelivery\Templates\ASP.NET Web Site\BuildLocalEnvironment.csv" />
+                    <File name="D:\Projects\powerdelivery\master\PowerDelivery\Templates\ASP.NET Web Site\BuildProductionEnvironment.csv" />
+                    <File name="D:\Projects\powerdelivery\master\PowerDelivery\Templates\ASP.NET Web Site\BuildTestEnvironment.csv" />
+                </Folder>
+                <Folder name="Blank">
+                    <File name="D:\Projects\powerdelivery\master\PowerDelivery\Templates\Blank\Build.ps1" />
+                    <File name="D:\Projects\powerdelivery\master\PowerDelivery\Templates\Blank\BuildCapacityTestEnvironment.yml" />
+                    <File name="D:\Projects\powerdelivery\master\PowerDelivery\Templates\Blank\BuildCommitEnvironment.yml" />
+                    <File name="D:\Projects\powerdelivery\master\PowerDelivery\Templates\Blank\BuildLocalEnvironment.yml" />
+                    <File name="D:\Projects\powerdelivery\master\PowerDelivery\Templates\Blank\BuildProductionEnvironment.yml" />
+                    <File name="D:\Projects\powerdelivery\master\PowerDelivery\Templates\Blank\BuildTestEnvironment.yml" />
+                </Folder>
+                <Folder name="RoundhousE Database">
+                    <File name="D:\Projects\powerdelivery\master\PowerDelivery\Templates\RoundhousE Database\Build.ps1" />
+                    <File name="D:\Projects\powerdelivery\master\PowerDelivery\Templates\RoundhousE Database\BuildCapacityTestEnvironment.csv" />
+                    <File name="D:\Projects\powerdelivery\master\PowerDelivery\Templates\RoundhousE Database\BuildCommitEnvironment.csv" />
+                    <File name="D:\Projects\powerdelivery\master\PowerDelivery\Templates\RoundhousE Database\BuildLocalEnvironment.csv" />
+                    <File name="D:\Projects\powerdelivery\master\PowerDelivery\Templates\RoundhousE Database\BuildProductionEnvironment.csv" />
+                    <File name="D:\Projects\powerdelivery\master\PowerDelivery\Templates\RoundhousE Database\BuildTestEnvironment.csv" />
+                </Folder>
+            </Folder>
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Add-Pipeline.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Disable-SqlJobs.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Enable-SqlJobs.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Enable-WebDeploy.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Exec.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Get-BuildAppVersion.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Get-BuildAssemblyVersion.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Get-BuildAssets.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Get-BuildChangeSet.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Get-BuildCollectionUri.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Get-BuildDropLocation.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Get-BuildEnvironment.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Get-BuildModuleConfig.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Get-BuildName.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Get-BuildNumber.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Get-BuildOnServer.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Get-BuildRequestedBy.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Get-BuildSetting.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Get-BuildTeamProject.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Get-BuildUri.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Get-BuildWorkspaceName.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Get-BuildYamlConfig.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Import-DeliveryModule.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Invoke-EnvironmentCommand.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Invoke-MSBuild.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Invoke-MSTest.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Invoke-Powerdelivery.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Invoke-Roundhouse.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Invoke-SSISPackage.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\ModifySharePermissions.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\New-RemoteShare.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\NewShareWithPermissions-0.0.1.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\PowerDelivery.psd1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\PowerDelivery.psm1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Publish-BuildAssets.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Publish-SSAS.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Register-DeliveryModuleHook.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Set-SSASConnection.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Start-SqlJobs.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Update-AssemblyInfoFiles.ps1" />
+            <File name="D:\Projects\powerdelivery\master\PowerDelivery\Write-BuildSummaryMessage.ps1" />
+        </Folder>
+        <Folder name="PowerYaml">
+            <Folder name="Functions">
+                <File name="D:\Projects\powerdelivery\master\PowerYaml\Functions\Casting.ps1" />
+                <File name="D:\Projects\powerdelivery\master\PowerYaml\Functions\Shadow-Copy.ps1" />
+                <File name="D:\Projects\powerdelivery\master\PowerYaml\Functions\Validator-Functions.ps1" />
+                <File name="D:\Projects\powerdelivery\master\PowerYaml\Functions\YamlDotNet-Integration.ps1" />
+            </Folder>
+            <Folder name="Libs">
+                <File name="D:\Projects\powerdelivery\master\PowerYaml\Libs\YamlDotNet.Configuration.dll" />
+                <File name="D:\Projects\powerdelivery\master\PowerYaml\Libs\YamlDotNet.Converters.dll" />
+                <File name="D:\Projects\powerdelivery\master\PowerYaml\Libs\YamlDotNet.Core.dll" />
+                <File name="D:\Projects\powerdelivery\master\PowerYaml\Libs\YamlDotNet.RepresentationModel.dll" />
+            </Folder>
+            <File name="D:\Projects\powerdelivery\master\PowerYaml\LICENSE" />
+            <File name="D:\Projects\powerdelivery\master\PowerYaml\PowerYaml.psm1" />
+        </Folder>
+        <Folder name="RemoteSharesDeliveryModule">
+            <File name="D:\Projects\powerdelivery\master\RemoteSharesDeliveryModule\RemoteSharesDeliveryModule.psd1" />
+            <File name="D:\Projects\powerdelivery\master\RemoteSharesDeliveryModule\RemoteSharesDeliveryModule.psm1" />
+        </Folder>
+        <Folder name="RoundhouseDeliveryModule">
+            <File name="D:\Projects\powerdelivery\master\RoundhouseDeliveryModule\RoundhouseDeliveryModule.psd1" />
+            <File name="D:\Projects\powerdelivery\master\RoundhouseDeliveryModule\RoundhouseDeliveryModule.psm1" />
+        </Folder>
+        <Folder name="SSISPackagesDeliveryModule">
+            <File name="D:\Projects\powerdelivery\master\SSISPackagesDeliveryModule\SSISPackagesDeliveryModule.psd1" />
+            <File name="D:\Projects\powerdelivery\master\SSISPackagesDeliveryModule\SSISPackagesDeliveryModule.psm1" />
+        </Folder>
+        <Folder name="WebDeployDeliveryModule">
+            <File name="D:\Projects\powerdelivery\master\WebDeployDeliveryModule\WebDeployDeliveryModule.psd1" />
+            <File name="D:\Projects\powerdelivery\master\WebDeployDeliveryModule\WebDeployDeliveryModule.psm1" />
+        </Folder>
+        <File name="D:\Projects\powerdelivery\master\.gitattributes" />
+        <File name="D:\Projects\powerdelivery\master\.gitignore" />
+        <File name="D:\Projects\powerdelivery\master\chocolateyInstall.ps1" />
+        <File name="D:\Projects\powerdelivery\master\enable-buildDeployment.ps1" />
+        <File name="D:\Projects\powerdelivery\master\init.ps1" />
+        <File name="D:\Projects\powerdelivery\master\PowerDelivery.nuspec" />
+        <File name="D:\Projects\powerdelivery\master\powerdelivery.png" />
+        <File name="D:\Projects\powerdelivery\master\README.md" />
+        <File name="D:\Projects\powerdelivery\master\test-chocolatey.ps1" />
+        <File name="D:\Projects\powerdelivery\master\release.ps1" />
+    </Project>
+</NotepadPlus>

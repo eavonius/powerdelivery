@@ -371,14 +371,116 @@ layout: page
 		<a name="using_builds"><hr></a>
 		<br/>
 		<h2>Using builds of your software features</h2>
+		<p>As you <a href="create.html">create your automated deployment pipeline</a> for the software you are delivering, 
+		you will need to use Microsoft Team Foundation Server to promote builds through your environments.</p>
 		
 		<a name="queueing_builds"><hr></a>
 		<br/>
 		<h3>Queueing powerdelivery builds</h3>
+		<p>The process for queueing a build depends on the environment being targeted.</p>
+		
+		<a name="commit_build"><hr></a>
+		<br/>
+		<h4>Commit builds</h4>
+		<p>Builds that target your <a href="#environment_development">Development</a> environment are automatically 
+		queued whenever anyone on your team checks in code.</p>
+
+		<a name="test_build"><hr></a>
+		<br/>
+		<h4>Test builds</h4>
+		<p>To queue a build that targets your <a href="#environment_test">Test</a> environment, follow this procedure. Powerdelivery works with 
+		Visual Studio 2010, but these instructions are for Visual Studio 2012.</p>
+		<ol>
+			<li>Open the <b>Team Explorer</b> panel in Visual Studio.</li>
+			<br>
+			<li>Right-click the build named after the <a href="create.html">deployment pipeline</a> you want to 
+			queue in TFS that ends with the word "Test".</li>
+			<br>
+			<li>Select <b>Queue New Build...</b> from the context menu that appears.</li>
+			<p>
+				<br>
+				<img src="img/queue_build.gif" />
+				<p>
+					<small>Figure: Queuing a build in Visual Studio 2012</small>
+				</p>
+			</p>
+			<li>Select the <i>Parameters</i> tab from the dialog that appears and enter the build number of a 
+			successful Development build in the <b>Build to Promote</b> field. See the <a href="#build_summary">build summary</a> topic to find 
+			out where to obtain the build number. If you try to use a failed build or forget to provide this value, 
+			the Test build will fail.</li>
+			<p>
+				<br>
+				<img src="img/promote_build.gif" />
+				<p>
+					<small>Figure: Specifying the build to promote in Visual Studio 2012</small>
+				</p>
+			</p>
+			<li>Click the <b>Queue</b> button.</li>
+		</ol>
+		
+		<a name="production_build"><hr></a>
+		<br/>
+		<h4>Production build</h4>
+		<p>To queue a build that targets your <a href="#environment_production">Production</a> environment, follow the same procedure as for a <a href="#test_build">Test build</a> but 
+		specify the build number of a successful Test build in the <b>Build to promote</b> field, and queue the build that ends with the word "Production".</p>
+		
+		<a name="capacity_test_build"><hr></a>
+		<br/>
+		<h4>Capacity test build</h4>
+		<p>To queue a build that targets your <a href="#environment_capacity_test">Capacity test</a> environment, follow the same procedure as for a <a href="#test_build">Test build</a> 
+		but queue the build that ends with the word "Capacity Test".</p>
 		
 		<a name="build_summary"><hr></a>
 		<br/>
 		<h3>The summary of a powerdelivery build</h3>
+		<p>Microsoft Team Foundation Server includes a <a href="http://msdn.microsoft.com/en-us/library/ms181733.aspx" target="_blank">summary page</a> 
+		useful for reviewing the results of a 
+		build. Powerdelivery extends the summary page with additional information and can also be 
+		used to surface summary information custom to your deployment.</p>
+		<img src="img/build_summary_detail.gif" style="width: 100%; max-width: 757px" />
+		<p>
+			<br/>
+			<small>Figure: The build summary of a Commit build in Visual Studio 2012</small>
+		</p>
+		<br />
+		<p>The summary page displays the following standard sections:</p>
+		
+		<h5>Release</h5>
+		<p>Displays the version, environment, and build number. The build number is the value provided in the 
+		<b>Build to Promote</b> field of the <i>Parameters</i> tab when promoting a build from one environment 
+		to another.</p>
+		
+		<h5>Environment</h5>
+		<p>Displays the values loaded from the <a href="create.html#environment">environment configuration</a> 
+		file for the target environment of the build. Any values with the word "password" in them will be masked.</p>
+		
+		<h5>Delivery Modules</h5>
+		<p>Displays the name and version of any <a href="create.html#modules">delivery modules</a> 
+		loaded by the build.</p>
+		
+		<h5>Compilations</h5>
+		<p>Displays any MSBuild projects compiled using the <a href="reference.html#invoke_msbuild_cmdlet">Invoke-MSBuild</a> 
+		cmdlet or <a href="reference.html#msbuild_module">MSBuild</a> delivery module.</p>
+		
+		<h5>Published Assets</h5>
+		<p>Displays any files published to the drop location of the build using the <a href="reference.html#publish_buildassets_cmdlet">Publish-BuildAssets</a> 
+		cmdlet.</p>
+		
+		<h5>Unit Tests</h5>
+		<p>Displays any unit tests run using the <a href="reference.html#invoke_mstest_cmdlet">Invoke-MSTest</a> 
+		cmdlet or the <a href="reference.html#mstest_module">MSTest</a> module.</p>
+		
+		<h5>Acceptance Tests</h5>
+		<p>Displays any acceptance tests run using the <a href="reference.html#invoke_mstest_cmdlet">Invoke-MSTest</a> 
+		cmdlet or the <a href="reference.html#mstest_module">MSTest</a> module.</p>
+		
+		<h5>Deployments</h5>
+		<p>Displays any databases deployed using the <a href="reference.html#invoke_roundhouse_cmdlet">Invoke-Roundhouse</a> 
+		cmdlet or the <a href="reference.html#roundhouse_module">Roundhouse</a> module, the <a href="reference.html#webdeploy_module">WebDeploy</a> module, 
+		or any other deployments that use this section name.</p>
+		
+		<p>You can add your own entries to any of the above sections, or create your own, using the <a href="reference.html#write_buildsummarymessage_cmdlet">Write-BuildSummaryMessage</a> 
+		cmdlet.</p>
 		
 		<a name="build_log"><hr></a>
 		<br/>
