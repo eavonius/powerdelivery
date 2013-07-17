@@ -2,9 +2,9 @@
 layout: page
 ---
 <div class="row-fluid">
-	<div class="span3">
-		<h5>Article contents</h5>
+	<div class="span3 hidden-tablet">
 		<ul class="nav nav-list">
+			<h5>Article contents</h5>
 			<li class="nav-header">
 				<a href="#cmdlets">PowerShell cmdlets</a>
 			</li>
@@ -105,11 +105,20 @@ layout: page
 				<a href="#modules">Delivery modules</a>
 			</li>
 			<li>
+				<a href="#msbuild_module">MSBuild</a>
+			</li>
+			<li>
+				<a href="#mstest_module">MSTest</a>
+			</li>
+			<li>
+				<a href="#roundhouse_module">Roundhouse</a>
+			</li>
+			<li>
 				<a href="#webdeploy_module">WebDeploy</a>
 			</li>
 		</ul>
 	</div>
-	<div class="span9">
+	<div class="span9 span12-tablet">
 		<h1>Reference</h1>
 		<p>This page contains details of all the included reusable assets in 
 		powerdelivery you can use to do automation work. Refer to this page 
@@ -601,6 +610,155 @@ Invoke-SSIS -package MyPackage.dtsx -server MyServer -dtExecPath $dtExecPath{% e
 		topic from the <a href="create.html">creating deployment pipelines</a> article 
 		for an overview of the usage and philosophy behind using these modules. You can also 
 		create your own.</p>
+		
+		<a name="msbuild_module"></hr></a>
+		<br />
+		<h3>MSBuild Module</h3>
+		<p>This module will compile MSBuild projects by calling the <a href="#invoke_msbuild_cmdlet">Invoke-MSBuild</a> cmdlet. 
+		It provides identical functionality to that cmdlet, and should be easier to use than the cmdlet by itself if you don't need to have 
+		compilations occur in a specific order. If that is the case, you should use the cmdlet since you can place logic around calls to it 
+		and also control the order relative to other PowerShell code in the <a href="create.html#compile_block">Compile</a> block.</p>
+		<br />
+		<h4>Referencing the module</h4>
+		<p>Add the following to the top of your delivery pipeline script:</p>
+		<p>
+			<code>Import-Module MSBuild</code>
+		</p>
+		<br />
+		<h4>When it runs</h4>
+		<p>The compilation of any MSBuild projects configured using this module will occur just <b>before</b> the 
+		<a href="create.html#compile_block">Compile</a> block of your script is called for those build environments 
+		to which that block applies.</p>
+		<br />
+		<h4>Configuring the module</h4>
+		<p>Add a section named <b>MSBuild</b> to your <a ref="create.html#modules_configuring">module configuration file</a> with a 
+		YAML section below it for each deployment you wish to occur during your build. Each section you define must have the following settings:</p>
+		<h5>projectFile</h5>
+		<p>string - A relative path at or below the script directory that contains an MSBuild project or solution to compile.</p>
+		<h5>target</h5>
+		<p>string - Optional. The name of the MSBuild target to invoke in the project file. Defaults to the default target specified within the project file.</p>
+		<h5>properties</h5>
+		<p>hash - Optional. A PowerShell hash containing name/value pairs to set as MSBuild properties.</p>
+		<h5>toolsVersion</h5>
+		<p>string - Optional. The version of MSBuild to run ("2.0", "3.5", "4.0", etc.). The default is "4.0".</p>
+		<h5>verbosity</h5>
+		<p>string - Optional. The verbosity of this MSBuild compilation. The default is "m".</p>
+		<h5>buildConfiguration</h5>
+		<p>string - Optional. The default is to use the same as the environment name. Create build configurations named "Commit", "Test", and "Production" with appropriate settings in your projects.</p>
+		<h5>flavor</h5>
+		<p>string - Optional. The platform configuration (x86, x64 etc.) of this MSBuild complation. The default is "AnyCPU".</p>
+		<h5>ignoreProjectExtensions</h5>
+		<p>string - Optional. A semicolon-delimited list of project extensions (".smproj;.csproj" etc.) of projects in the solution to not compile.</p>
+		<h5>dotNetVersion</h5>
+		<p>string - Optional. The .NET version to use for compilation. Defaults to the version specified in the project file(s) being built.</p>
+		<br/>
+		<h4>Example configuration</h4>
+		{% highlight yaml %}MSBuild:
+  MySolution:
+    ProjectFile: MySolutionFolder/MySolution.sln
+  MyOtherProject:
+    ProjectFile: MyOtherProject/MyOtherProject.csproj
+    Target: Build
+    Flavor: x64
+    Properties:
+      SomeProperty: 1
+      SomeOtherProperty: 2{% endhighlight %}
+	  
+		<a name="mstest_module"></hr></a>
+		<br />
+		<h3>MSTest Module</h3>
+		<p>This module will run tests using the <a href="#invoke_mstest_cmdlet">Invoke-MSTest</a> cmdlet. 
+		It provides identical functionality to that cmdlet, and should be easier to use than the cmdlet by itself if you don't need to have 
+		test projects executed in a specific order. If that is the case, you should use the cmdlet since you can place logic around calls to it 
+		and also control the order relative to other PowerShell code in the <a href="create.html#test_units_block">TestUnits</a> (for unit tests) 
+		or <a href="create.html#test_acceptance_block">TestAcceptance</a> (for acceptance tests) blocks.</p>
+		<br />
+		<h4>Referencing the module</h4>
+		<p>Add the following to the top of your delivery pipeline script:</p>
+		<p>
+			<code>Import-Module MSTest</code>
+		</p>
+		<br />
+		<h4>When it runs</h4>
+		<p>The execution of any libraries containing tests configured using this module will occur just <b>before</b> the 
+		<a href="create.html#test_units_block">TestUnits</a> block of your script, or just <b>before</b> the 
+		<a href="create.html#test_acceptance_block">TestAcceptance</a> block when those blocks are called for those build environments 
+		to which that block applies.</p>
+		<br />
+		<h4>Configuring the module</h4>
+		<p>Add a section named <b>MSTest</b> to your <a ref="create.html#modules_configuring">module configuration file</a> with a 
+		section named <b>UnitTests</b> or <b>AcceptanceTests</b> below it containing 
+		YAML sections below them for each set of tests you wish to run during your build. You can include unit tests and acceptance tests, 
+		or just one type by choosing to include or omit those sections. Each section you define must have the following settings:</p>
+		<h5>file</h5>
+		<p>string - The path to a file containing MSTest unit tests.</p>
+		<h5>results</h5>
+		<p>string - A path relative to the drop location (retrieved via Get-BuildDropLocation) of a test run results file (.trx) to store results in.</p>
+		<h5>category</h5>
+		<p>string - Runs tests found in the file referenced by the file parameter on any classes found with the [TestCategory] attribute present set to this value.</p>
+		<h5>platform</h5>
+		<p>string - Optional. The platform configuration (x86, x64 etc.) of this MSBuild compilation. The default is "AnyCPU".</p>
+		<h5>buildConfiguration</h5>
+		<p>string - Optional. The default is to use the Release configuration.</p>
+		<br/>
+		<h4>Example configuration</h4>
+		{% highlight yaml %}MSTest:
+  UnitTests:
+    MyUnitTests: 
+      File: UnitTests/MyUnitTestLibrary.dll
+      Results: UnitTestsMyUnitTestResults.trx
+      Category: MyTestCategory
+  AcceptanceTests:
+    MyAcceptanceTests:
+      File: AcceptanceTests/MyAcceptanceTestLibrary.dll
+      Results: AcceptanceTestResults.trx
+      Category: MyTestCategory{% endhighlight %}
+	  
+		<a name="roundhouse_module"></hr></a>
+		<br />
+		<h3>Roundhouse Module</h3>
+		<p>This module will run database migrations using the <a href="#invoke_roundhouse_cmdlet">Invoke-Roundhouse</a> cmdlet. 
+		It provides identical functionality to that cmdlet, and should be easier to use than the cmdlet by itself if you don't need to have 
+		database deployments executed in a specific order. If that is the case, you should use the cmdlet since you can place logic around calls to it 
+		and also control the order relative to other PowerShell code in the <a href="create.html#deploy_block">Deploy</a> block.</p>
+		<br />
+		<h4>Referencing the module</h4>
+		<p>Add the following to the top of your delivery pipeline script:</p>
+		<p>
+			<code>Import-Module Roundhouse</code>
+		</p>
+		<br />
+		<h4>When it runs</h4>
+		<p>The execution of any libraries containing tests configured using this module will occur just <b>after</b> the 
+		<a href="deploy.html#deploy_block">Deploy</a> block of your script when those blocks are called for those build environments 
+		to which that block applies.</p>
+		<br />
+		<h4>Configuring the module</h4>
+		<p>Add a section named <b>Roundhouse</b> to your <a ref="create.html#modules_configuring">module configuration file</a> with a 
+		YAML section below it for each database you wish to migrate changes to during your build. Each section you define must have the following settings:</p>
+		<h5>scriptsDir</h5>
+		<p>string - Path to the directory containing RoundhousE migration scripts to run. Should be a subdirectory of your build's drop location.</p>
+		<h5>database</h5>
+		<p>string - The name of the database to run scripts against.</p>
+		<h5>server</h5>
+		<p>string - Optional. The name of the SQL server to run scripts against. Use this or the connectionString parameter.</p>
+		<h5>connectionString</h5>
+		<p>string - Optional. The connection string to the database. Use this or the server parameter.</p>
+		<h5>restorePath</h5>
+		<p>string - Optional. Path to a .mdf file (backup) of a database file to restore. Until you have a database in production don't specify this property in your build. Once you have a database in production, if you specify the path to your latest production backup file, this be restored prior to running migration scripts. This allows you to test the changes exactly as they would be applied were the current build released to production.</p>
+		<h5>restoreOptions</h5>
+		<p>string - Optional. A string of options to pass to the RESTORE T-SQL statement performed. Use this to specify for instance the .sql and .log file paths that should be used instead of the ones contained within the backup file.</p>
+		<br/>
+		<h4>Example configuration</h4>
+		{% highlight yaml %}Roundhouse:
+  DatabaseOne:
+    ScriptsDir: Databases\DatabaseOne
+    Server: MyServer
+    Database: DatabaseOne
+  DatabaseTwo:
+    ScriptsDir: Databases\DatabaseTwo
+    Server: MyServer
+    Database: DatabaseTwo{% endhighlight %}
 		
 		<a name="webdeploy_module"></hr></a>
 		<br />

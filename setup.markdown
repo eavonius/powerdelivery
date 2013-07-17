@@ -2,33 +2,18 @@
 layout: page
 ---
 <div class="row-fluid">
-	<div class="span3">
-		<h5>Article contents</h5>
+	<div class="span3 hidden-tablet">
 		<ul class="nav nav-list">
+			<h5>Article contents</h5>
 			<li class="nav-header">
 				<a href="#tfs_setup">Setting up Team Foundation Server</a>
-			</li>
-			<li class="nav-header">
-				<a href="#environment_use">How powerdelivery uses your environments</a>
-			</li>
-			<li>
-				<a href="#environment_development">Development</a>
-			</li>
-			<li>
-				<a href="#environment_test">Test</a>
-			</li>
-			<li>
-				<a href="#environment_production">Production</a>
-			</li>
-			<li>
-				<a href="#environment_capacity_test">Capacity test</a>
 			</li>
 			<li class="nav-header">
 				<a href="#enabling_deployment">Enabling deployment to an environment node</a>
 			</li>
 		</ul>
 	</div>
-	<div class="span9">
+	<div class="span9 span12-tablet">
 		
 		<h1>Setting up your infrastructure</h1>
 		<p>To use powerdelivery, you will need at least 3 separate environments to run 
@@ -99,55 +84,6 @@ layout: page
 		however, continue to follow the next steps to prepare the target environments 
 		of your builds.</p>
 
-		<a name="environment_use"><hr></a>
-		<br />
-		<h2>How powerdelivery uses your environments</h2>
-
-		<p>This section describes the different environments your software will be propagated through 
-		to eventually be delivered to your customers.</p>
-
-		<a name="environment_development"><hr></a>
-		<br />
-		<h4>The Development environment</h4>
-		<p>When you automate the deployment of your software features, this automation might 
-		compile code, change databases, setup a router or load balancer, or maybe deploy a website. 
-		The goal is to have this 
-		"build" do everything needed to automate the setup of your software in a single environment. 
-		This first environment is known as <b>Development</b> and is deployed to when you submit changes 
-		to a source control project in TFS that you've setup with powerdelivery. powerdelivery calls 
-		the build that deploys your Development environment a <b>Commit</b> 
-		build. The Development environment changes all the time and because of this, it's a bad 
-		place to send <abbr title="Quality Assurance">QA</abbr> people to look at the state of the 
-		software that is under development.</p>
-
-		<a name="environment_test"><hr></a>
-		<br />
-		<h4>The Test or User Acceptance Test (UAT) environment</h4>
-		<p>When a build succeeds in the Development environment and looks ready for test, the team can 
-		kickoff a <b>Test</b> build which performs identical steps as far as deployment is concerned, 
-		but this time the target will be a different environment. Again, this depends on your needs and 
-		could be a different computer, database, or virtual machine - or perhaps just a different one 
-		on the same computer if you want to keep costs low. If using the same computer you'll need to 
-		be careful you avoid naming collisions and use unique names for your websites for example.</p>
-		
-		<a name="environment_production"><hr></a>
-		<br />
-		<h4>The Production environment</h4>
-		<p>Once people responsible for making sure a Test build is suitable for release have evaluated it 
-		in that environment, it's ready to go to production. At this point a <b>Production</b> build is 
-		kicked off and once again we perform identical deployment steps as Test but this time the target 
-		is unique. This environment is the one your customers will use to access the software features.</p>
-		
-		<a name="environment_capacity_test"><hr></a>
-		<br />
-		<h4>The Capacity Test environment</h4>
-		<p>Teams may also want to deploy a build to an environment where it will execute long-running tests 
-		against hardware that is identical to production to evaluate the capacity of the system. This is an 
-		optional build that can be kicked off using a Commit build (a build that successfully deployed to your 
-		Development environment). Teams will typically use the Test environment to perform any manual review 
-		of the software for functional acceptance, and the Capacity Test environment to review the performance 
-		and when both are adequate, only then promote the build to production.</p>
-		
 		<a name="enabling_deployment"><hr></a>
 		<br />
 		<h2>Enabling deployment to an environment node</h2>

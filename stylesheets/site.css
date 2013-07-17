@@ -1,3 +1,19 @@
+.container-fluid .span3 .nav.nav-list {
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	width: 23.404255319148934%;
+	z-index: 1020;
+	top: 52px;
+	margin-bottom: 10px;
+	overflow-y: auto;
+}
+
+.container-fluid .span3 .nav.nav-list h5 {
+
+	margin-left: 15px;
+}
+
 .navbar-inner .container-fluid, .navbar-fixed-top .navbar-inner {
 	background-image: none;
 	background-color: #c41230;
@@ -68,4 +84,111 @@ code {
 
 .span9 hr {
 	margin-top: 30px;
+}
+
+.featurette-divider {
+  margin: 80px 0; /* Space out the Bootstrap <hr> more */
+}
+.featurette {
+  padding-top: 120px; /* Vertically center images part 1: add padding above and below text. */
+  overflow: hidden; /* Vertically center images part 2: clear their floats. */
+}
+.featurette-image {
+  margin-top: -120px; /* Vertically center images part 3: negative margin up the image the same amount of the padding to center it. */
+}
+
+/* Give some space on the sides of the floated elements so text doesn't run right into it. */
+.featurette-image.pull-left {
+  margin-right: 40px;
+}
+.featurette-image.pull-right {
+  margin-left: 40px;
+}
+
+/* Thin out the marketing headings */
+.featurette-heading {
+  font-size: 50px;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -1px;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+@media (max-width: 979px) {
+
+  .container.navbar-wrapper {
+	margin-bottom: 0;
+	width: auto;
+  }
+  .navbar-inner {
+	border-radius: 0;
+	margin: -20px 0;
+  }
+
+  .carousel .item {
+	height: 500px;
+  }
+  .carousel img {
+	width: auto;
+	height: 500px;
+  }
+
+  .featurette {
+	height: auto;
+	padding: 0;
+  }
+  .featurette-image.pull-left,
+  .featurette-image.pull-right {
+	display: block;
+	float: none;
+	max-width: 40%;
+	margin: 0 auto 20px;
+  }
+}
+
+
+@media (max-width: 767px) {
+
+  .navbar-inner {
+	margin: -20px;
+  }
+
+  .carousel {
+	margin-left: -20px;
+	margin-right: -20px;
+  }
+  .carousel .container {
+
+  }
+  .carousel .item {
+	height: 300px;
+  }
+  .carousel img {
+	height: 300px;
+  }
+  .carousel-caption {
+	width: 65%;
+	padding: 0 70px;
+	margin-top: 100px;
+  }
+  .carousel-caption h1 {
+	font-size: 30px;
+  }
+  .carousel-caption .lead,
+  .carousel-caption .btn {
+	font-size: 18px;
+  }
+
+  .marketing .span4 + .span4 {
+	margin-top: 40px;
+  }
+
+  .featurette-heading {
+	font-size: 30px;
+  }
+  .featurette .lead {
+	font-size: 18px;
+	line-height: 1.5;
+  }
+
 }

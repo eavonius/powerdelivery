@@ -29,7 +29,8 @@ layout: page
 	</ol>
 	<p>powerdelivery supports all of these practices, but does the heavy lifting to enable primarily the last one.</p>
 	<h2>What is required to use it?</h2>
-	<p>Currently powerdelivery is designed to work with Microsoft Team Foundation Server (TFS). <abbr title="Team Foundation Server">TFS</abbr> 
+	<p>Currently powerdelivery is designed to work with <a href="https://en.wikipedia.org/wiki/Team_Foundation_Server" target="_blank">Microsoft Team Foundation Server</a> (TFS). 
+	<abbr title="Team Foundation Server">TFS</abbr> 
 	is an Application Lifecycle Management (ALM) tool that provides many great features that can be leveraged 
 	by teams starting to do continuous delivery. However, powerdelivery only relies on the Team Build feature, 
 	and should you choose to use a different project management tool, you can 
@@ -38,9 +39,16 @@ layout: page
 	More than simply "yet another automated deployment technology", powerdelivery was designed specifically to 
 	follow Continuous Delivery practices making your team more efficient by <b>eliminating the possibility of 
 	releasing untested changes to production</b>. It is also designed to be <b>easier to work with than the existing 
-	tools from Microsoft</b> for automated deployment by themselves. The core of powerdelivery is a simple framework 
-	built on top of Windows PowerShell. Everything you can do with the massive array of existing PowerShell 
-	scripts and modules available from Microsoft and on the web is available to you from powerdelivery.</p>
+	tools from Microsoft</b> for automated deployment by themselves. Microsoft recently acquired 
+	<a href="http://www.incyclesoftware.com/inrelease/" target="_blank">Incycle Software's In Release</a> product which is meant to provide a similar deployment solution 
+	as powerdelivery, however it requires understanding and use of <a href="http://msdn.microsoft.com/en-us/library/vstudio/ms734631(v=vs.90).aspx" target="_blank">Windows Workflow Foundation</a> 
+	which has proven to be difficult for IT operations personnel to learn. It also encourages teams to think of the release to their environments 
+	as separately designed processes.</p>
+	<p>The core of powerdelivery is a simple framework 
+	built on top of <a href="http://technet.microsoft.com/en-us/library/bb978526.aspx" target="_blank">Windows PowerShell</a>. 
+	Everything you can do with the massive array of existing PowerShell scripts and modules available from Microsoft and 
+	on the web is available to you from powerdelivery. And once you write the deployment, you can target each of your 
+	environments using the same script.</p>
 	<h3>Why Windows PowerShell?</h3>
 	<p><abbr title="Team Foundation Server">TFS</abbr> is great at watching your source code repository for 
 	submissions and kicking off builds, but unless the features that come with the build out of the box are 
@@ -59,6 +67,7 @@ layout: page
 	your environments as well as doing typical build activities (compiling, database changes) and most 
 	IT operations personnel are more familiar with PowerShell than C# code or Windows Workflow foundation 
 	as it is similar in use to bash shell scripting and batch files.</p>
+	<p>Remember, <b>continuous delivery means continuously changing your release process</b> as well.</p>
 	<h2>What is included?</h2>
 	<ul>
 		<li>A simple PowerShell framework for deploying your software into multiple environments.</li>
@@ -67,4 +76,6 @@ layout: page
 		<li>PowerShell cmdlets (functions) and modules (libraries) that help with writing builds.</li>
 		<li>PowerShell scripts that can be used to setup security appropriately between your automated build server and the computers it deploys to.</li>
 	</ul>
+	<hr>
+	<p>Get started with powerdelivery by discovering <a href="use.html">how to use it on a team</a>.</p>
 </div>
