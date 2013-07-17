@@ -594,7 +594,7 @@ Compile {
 
 SetupEnvironment {
   Invoke-Command -ComputerName $myServer {
-    [Environment]::SetEnvironmentVariable('MyEnvVar', '$using:myEnvVarValue', 'Machine')
+    [Environment]::SetEnvironmentVariable('MyEnvVar', $using:myEnvVarValue, 'Machine')
   }
 }{% endhighlight %}
 
