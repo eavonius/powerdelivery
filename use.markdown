@@ -71,7 +71,7 @@ layout: page
 		<br/>
 		<h2>Sprints with Continuous Delivery</h2>
 		<p>On most teams that follow Agile/<a href="http://www.scrum.org" target="_blank">SCRUM</a> development methodologies, several sprints worth of functionality is built before it is actually released into 
-		<a href="#production_builds">Production</a>. Rather than waiting until you are about to release a complete 
+		<a href="#environment_production">Production</a>. Rather than waiting until you are about to release a complete 
 		vision of everything you think users want in terms of features, 
 		codify the process you'll use to release your software using powerdelivery 
 		as a primary output of your team's first sprint. This puts you in the position to release small 
@@ -113,7 +113,7 @@ layout: page
 		<p>Prior to starting a sprint following SCRUM, prioritize the user stories from top to bottom with the topmost 
 		ones being of the most importance to the business. These will be worked on first. Again, do not go to 
 		the trouble of coming up with acceptance criteria and detailed requirements for any of the user 
-		stories prior to the <a href="#planning_the_sprint">sprint planning meeting</a> as this simply wastes time and assumes that 
+		stories prior to the <a href="#plan">sprint planning meeting</a> as this simply wastes time and assumes that 
 		the design of the product will match your original vision, and you will get it all done in one sprint. 
 		The whole reason to do SCRUM is to get 
 		feedback and continually refactor the design to arrive at a product that best meets the needs of 
@@ -296,7 +296,7 @@ layout: page
 		in their estimation during the first few sprints until they learn what the true velocity of how much work they can get done in two weeks looks like 
 		now that testing and deployment are requirements to be considered done.</p>
 		<p>At the end of the sprint review meeting, if the business decides they would like to release, promote the build that was demonstrated in 
-		the <a href="#test_environment">Test</a> environment to <a href="#production_environment">Production</a> using powerdelivery.</p>
+		the <a href="#environment_test">Test</a> environment to <a href="#environment_production">Production</a> using powerdelivery.</p>
 		
 		<a name="retrospective"><hr></a>
 		<br/>
@@ -319,7 +319,7 @@ layout: page
 		checked into their TFS source control project. But this place needs to be in isolation 
 		of the live, running, production copy of software that your customers see.</p>
 		<p>During the first sprint, the team will 
-		<a href="/create.html#add_pipeline">setup a source control project to use powerdelivery</a>. 
+		<a href="create.html#add_pipeline">setup a source control project to use powerdelivery</a>. 
 		Powerdelivery can 
 		compile code, change databases, setup a router or load balancer, 
 		deploy a website, or whatever else is necessary to get this isolated environment running. 
