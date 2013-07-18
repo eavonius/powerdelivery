@@ -533,6 +533,7 @@ Deploy {
 		rest of your script.</p>
 		<h4>Example</h4>
 		{% highlight powershell %}Init {
+		
   $script:currentDirectory = Get-Location
   $script:myDatabase = Get-BuildSetting MyDatabase
   $script:myWebServer = Get-BuildSetting MyWebServer
@@ -550,20 +551,11 @@ Deploy {
 		<p>In the example deployment pipeline script below, any files output from the 
 		"MyProject" solution after compilation (like .dll, .exe, or other files) are 
 		copied to the the "Binaries" subdirectory of the drop location for deployment.</p>
-		{% highlight powershell %}Init {
-  $script:currentDirectory = Get-Location
-  $script:dropLocation     = Get-BuildDropLocation
-  $script:environment      = Get-BuildEnvironment
-
-  $script:binDropDir = Join-Path $dropLocation Binaries
-
-  mkdir $binDropDir
-}
-
+		{% highlight powershell %}
 Compile {
-  Invoke-MSBuild MyProject.sln
 
-  copy "MyProject\bin\$environment\*.*" $binDropDir
+  Invoke-MSBuild MyProject.sln
+  Publish-BuildAssets "MyProject\bin\Release\*.*" Binaries
 }{% endhighlight %}
 
 		<a name="test_units_block"><hr></a>
@@ -588,11 +580,13 @@ Compile {
 		<p>This example sets an environment variable on a target computer. It is just an 
 		example of what you might need to do to support your deployment.</p>
 		{% highlight powershell %}Init {
-  $script:myEnvVarValue = Get-BuildSetting -Name MyEnvVarValue
-  $script:myServer      = Get-BuildSetting -Name MyServer
+
+  $script:myServer      = Get-BuildSetting MyServer
+  $script:myEnvVarValue = Get-BuildSetting MyEnvVarValue
 }
 
 SetupEnvironment {
+
   Invoke-Command -ComputerName $myServer {
     [Environment]::SetEnvironmentVariable('MyEnvVar', $using:myEnvVarValue, 'Machine')
   }
