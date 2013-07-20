@@ -71,6 +71,8 @@ function Publish-WebDeploy {
 	
 		$msDeployPath = Join-Path $WebDeployDir "msdeploy.exe"
 
+		$invokeArgs = @{}
+		
 		$invokeArgs.Add('webComputer', $computerName)
 		$invokeArgs.Add('webDeployDir', $WebDeployDir)
 		$invokeArgs.Add('WebPort', $WebPort)
