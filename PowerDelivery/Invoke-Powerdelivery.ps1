@@ -109,13 +109,38 @@ function Invoke-Powerdelivery {
 		}
 	}
 	
-	function ReplaceModuleConfigSettings($yamlNodes) {
+	function MergeHashNested($baseHash, $subHash) {
+		$mergedHash = @{}
+		$baseHash.Keys | % {
+			if (!$subHash.ContainsKey($_)) {
+				$mergedHash.Add($_, $baseHash[$_])
+			}
+			else {		
+				$baseHashVal = $baseHash[$_]
+				if ($baseHashVal.GetType().Name -eq 'Hashtable') {
+					$childMergedHash = MergedHashNested -baseHash $baseHashVal -subHash $subHash[$_]
+					$mergedHash.Add($_, $childMergedHash)
+				}
+				else {
+					$mergedHash.Add($_, $subHash[$_])
+				}
+			}
+		}
+		$subHash.Keys | % {
+			if (!$baseHash.ContainsKey($_)) {
+				$mergedHash.Add($_, $subHash[$_])
+			}
+		}
+		$mergedHash
+	}
+	
+	function ReplaceReferencedConfigSettings($yamlNodes) {
 		if ($yamlNodes.Keys) {
 			$replacedValues = @{}
 			$yamlNodes.Keys | % {
 				$yamlNode = $yamlNodes[$_]			
 				if ($yamlNode.GetType().Name -eq 'Hashtable') {
-					ReplaceModuleConfigSettings($yamlNode)
+					ReplaceReferencedConfigSettings($yamlNode)
 				}
 				else {
 					$matches = Select-String "\<<.*?\>>" -InputObject $yamlNode -AllMatches | Foreach {$_.Matches}
@@ -140,6 +165,43 @@ function Invoke-Powerdelivery {
 			}
 		}
 	}
+	
+	function PrintSpaces($numSpaces) {
+		$val = ""
+		$spaceIndex = 0
+		while ($spaceIndex -lt $numSpaces) {
+			$val += "--"
+			$spaceIndex++
+		}
+		$val
+	}
+
+	function PrintConfiguration($configNodes, $depth) {
+	
+		$envMessage = @()
+		
+		foreach ($configSetting in $configNodes.GetEnumerator() | Sort Name) {
+			$envValue = $configSetting.Value
+			
+			if ($envValue.GetType().Name -eq 'Hashtable') {
+				$newDepth = $depth + 1
+				$nestedValSpaces = PrintSpaces -numSpaces $depth
+				$nestedVal = "$nestedValSpaces$($configSetting.Key):`n"
+				$nestedVal += (PrintConfiguration -configNodes $envValue -depth $newDepth)
+				$envMessage += $nestedVal
+			}
+			else {		
+				if ($configSetting.Key.EndsWith("Password")) {
+	                $envValue = '********'
+	            }
+				$envValWithSpaces = PrintSpaces -numSpaces $depth
+				$envMessage += "$envValWithSpaces$($configSetting.Key): $envValue"
+			}
+		}
+		
+		$returnMessage = $envMessage -join "`n"
+		return $returnMessage
+	}
 
     if (!$dropLocation.EndsWith('\')) {
 	    $dropLocation = "$($dropLocation)\"
@@ -160,7 +222,7 @@ function Invoke-Powerdelivery {
     $powerdelivery.assemblyInfoFiles = @()
     $powerdelivery.currentLocation = gl
     $powerdelivery.noReleases = $true
-    $powerdelivery.envConfig = @()
+    $powerdelivery.config = @()
     $powerdelivery.environment = $environment
     $powerdelivery.dropLocation = $dropLocation
     $powerdelivery.changeSet = $changeSet
@@ -232,28 +294,22 @@ function Invoke-Powerdelivery {
 		$envConfigFileName = "$($appScript)$($environment)Environment"
 		$modulesConfigFileName = "$($appScript)Modules.yml"
 		$yamlFile = "$($envConfigFileName).yml"
-		$csvFile = "$($envConfigFileName).csv"
-
-		$powerdelivery.is_yaml = $true
 
 	    if (Test-Path -Path $yamlFile) {
 			$yamlPath = (Resolve-Path ".\$($yamlFile)")
-			$powerdelivery.yamlConfig = Get-Yaml -FromFile $yamlPath
-			$powerdelivery.envConfig = $powerdelivery.yamlConfig
+			$powerdelivery.config = Get-Yaml -FromFile $yamlPath
 	    }
-	    elseif (Test-Path -Path $csvFile) {
-			$powerdelivery.is_yaml = $false
-			$powerdelivery.envConfig = Import-Csv $csvFile
-		}
 		else {
 		    throw "Build configuration file $envConfigFileName not found."
 	    }
 		
 		if (Test-Path -Path $modulesConfigFileName) {
 			$yamlPath = (Resolve-Path ".\$($modulesConfigFileName)")
-			$powerdelivery.moduleConfig = Get-Yaml -FromFile $yamlPath			
-			ReplaceModuleConfigSettings($powerdelivery.moduleConfig)
+			$moduleConfig = Get-Yaml -FromFile $yamlPath
+			$powerdelivery.config = MergeHashNested -baseHash $moduleConfig -subHash $powerdelivery.config			
 		}
+		
+		ReplaceReferencedConfigSettings($powerdelivery.config)
 		
 		Invoke-Expression -Command ".\$appScript"
 		
@@ -308,30 +364,10 @@ function Invoke-Powerdelivery {
 	    "Environment"
 	    Write-ConsoleSpacer
         
-        $powerdelivery.envConfig | Format-Table $tableFormat -HideTableHeaders
-      
-        $envMessage = @()
+        $envMessage = PrintConfiguration -configNodes $powerdelivery.config -depth 0
+		$envMessage += "`n"
 		
-		if ($powerdelivery.is_yaml) {
-			foreach ($envKey in $powerdelivery.envConfig.Keys) {
-				$envValue = $powerdelivery.envConfig[$envKey]
-				if ($envKey.EndsWith("Password")) {
-	                $envValue = '********'
-	            }
-	            $envMessage += "$($envKey): $envValue"
-			}
-		}
-		else {
-	        $powerdelivery.envConfig | % {
-	            $value = $_.Value
-	            if ($_.Name.EndsWith("Password")) {
-	                $value = '********'
-	            }
-	            $envMessage += "$($_.Name): $value"
-	        }
-		}
-
-        $envMessage = ($envMessage -join "`n")
+		$envMessage
 
         Write-BuildSummaryMessage -name "Environment" -header "Environment Configuration" -message $envMessage 
 
