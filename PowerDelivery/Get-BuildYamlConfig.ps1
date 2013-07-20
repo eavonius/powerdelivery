@@ -1,14 +1,13 @@
 <#
 .Synopsis
-Gets the YAML configuration file used for the build. Returns null if a .csv file 
-was used.
+Gets the YAML configuration used for the build.
 
 .Description
-Gets the YAML configuration file used for the build. Returns null if a .csv file 
-was used.
+Gets the YAML configuration used for the build.
 
 .Outputs
-The YAML configuration object used by delivery modules to get settings.
+A nested hashtable of YAML configuration settings that is the result 
+of merging the shared (Modules) and environment-specific configuration.
 
 .Example
 $yamlConfig = Get-BuildYamlConfig
@@ -16,5 +15,5 @@ $yamlConfig = Get-BuildYamlConfig
 function Get-BuildYamlConfig {
 	[CmdletBinding()]
 	param()
-	return $powerdelivery.yamlConfig
+	return $powerdelivery.config
 }

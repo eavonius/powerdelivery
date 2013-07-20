@@ -20,8 +20,6 @@
             $startingSemicolon = $psModulePath.LastIndexOf(";", $indexOfSegment, $caseInsensitive)
             $trailingSemicolon = $psModulePath.IndexOf(";", $indexOfSegment + $pathSegment.Length, $caseInsensitive)
 
-            Write-Host "$indexOfSegment $startingSemicolon $trailingSemicolon"
-
             if ($startingSemicolon -ne -1) {
                 $psModulePrefix = $psModulePath.Substring(0, $startingSemicolon)
                 $newEnvVar = "$psModulePrefix;$powerdeliveryDir"
@@ -34,8 +32,6 @@
 
     [Environment]::SetEnvironmentVariable("PSModulePath", $newEnvVar, "Machine")
 
-    "Powerdelivery is now ready."
-  
     Write-ChocolateySuccess 'powerdelivery'
 } 
 catch {

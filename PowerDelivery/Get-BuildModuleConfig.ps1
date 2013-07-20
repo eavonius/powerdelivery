@@ -16,5 +16,5 @@ $moduleConfig = Get-BuildModuleConfig
 function Get-BuildModuleConfig {
 	[CmdletBinding()]
 	param()
-	return $powerdelivery.moduleConfig
+	return $powerdelivery.config
 }

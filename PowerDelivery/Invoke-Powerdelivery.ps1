@@ -68,6 +68,7 @@ function Invoke-Powerdelivery {
 				}			
 				if ($blockName -eq "Compile") {
 					$yamlConfig = Get-BuildModuleConfig
+
 					$assetOperations = $yamlConfig.Assets
 
 					if ($assetOperations) {
@@ -170,7 +171,7 @@ function Invoke-Powerdelivery {
 		$val = ""
 		$spaceIndex = 0
 		while ($spaceIndex -lt $numSpaces) {
-			$val += "--"
+			$val += "  "
 			$spaceIndex++
 		}
 		$val
