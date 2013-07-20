@@ -67,6 +67,7 @@ namespace PowerDeliveryClient.Pages
 
                                 string lastBuildStatus = "Never Run";
                                 string lastBuildNumber = "";
+                                DateTime lastBuildFinishTime = DateTime.MinValue;
 
                                 if (definition.LastBuildUri != null)
                                 {
@@ -74,14 +75,15 @@ namespace PowerDeliveryClient.Pages
                                     {
                                         IBuildDetail lastBuild = buildServer.GetBuild(definition.LastBuildUri);
                                         lastBuildStatus = lastBuild.Status.ToString();
-                                        lastBuildNumber = lastBuild.BuildNumber;
+                                        lastBuildFinishTime = lastBuild.FinishTime;
+                                        lastBuildNumber = definition.LastBuildUri.ToString().Substring(definition.LastBuildUri.ToString().LastIndexOf("/") + 1);
                                     }
                                     catch (Exception) { // Build was deleted 
                                         lastBuildStatus = "No Longer Exists";
                                     }
                                 }
 
-                                PipelineEnvironment environment = new PipelineEnvironment(pipeline, environmentName, lastBuildStatus, lastBuildNumber);
+                                PipelineEnvironment environment = new PipelineEnvironment(pipeline, environmentName, lastBuildStatus, lastBuildNumber, lastBuildFinishTime);
 
                                 if (environmentName == "Commit")
                                 {
@@ -115,6 +117,35 @@ namespace PowerDeliveryClient.Pages
         private void btnSources_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Uri("Pages/Sources.xaml", UriKind.Relative));
+        }
+
+        private void btnEditPipelineScript_Click(object sender, RoutedEventArgs e)
+        {
+            Button btnSource = (Button)sender;
+
+            PipelineEnvironment environment = (PipelineEnvironment)btnSource.DataContext;
+        }
+
+        private void btnEditEnvironmentConfig_Click(object sender, RoutedEventArgs e)
+        {
+            Button btnSource = (Button)sender;
+
+            PipelineEnvironment environment = (PipelineEnvironment)btnSource.DataContext;
+
+            Uri collectionUri = null;
+            TfsTeamProjectCollection collection = null;
+
+            try
+            {
+                collectionUri = new Uri(environment.Pipeline.CollectionName);
+                collection = new TfsTeamProjectCollection(collectionUri);
+
+                       
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.GetBaseException().Message, "Error connecting to TFS", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

@@ -13,14 +13,6 @@ namespace PowerDeliveryClient
     /// </summary>
     public partial class App : Application
     {
-        private void btnEditPipelineScript_Click(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
-        private void btnEditEnvironmentConfig_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
+        
     }
 }

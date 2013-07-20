@@ -4,40 +4,51 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       mc:Ignorable="d" Title="Team Foundation Server Sources"
-      d:DesignHeight="400" d:DesignWidth="500">
+      d:DesignHeight="400" d:DesignWidth="500" Margin="20">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0">
-            <TextBlock Style="{StaticResource PageTitle}">Team Foundation Server Sources</TextBlock>
+            <TextBlock Style="{StaticResource PageTitle}">Select a Team Foundation Server source</TextBlock>
+            <TextBlock Style="{StaticResource PageDescription}">Select a source to modify or remove it, or click the "Add Source" button to add a new one.</TextBlock>
         </StackPanel>
-        <StackPanel Grid.Row="1" Style="{StaticResource PageActions}">
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <ItemsControl Name="itmsSource" Margin="0 15 0 0">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Content="{Binding Path=Uri}" DataContext="{Binding}" Click="btnAddEditSource_Click">
+                            <Button.Template>
+                                <ControlTemplate>
+                                    <Border CornerRadius="6" Background="Gray">
+                                        <TextBlock Text="{Binding Path=Uri}" Padding="20" Foreground="White" FontSize="16" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.Style>
+                    <Style TargetType="ItemsControl">
+                        <Style.Triggers>
+                            <Trigger Property="HasItems" Value="false">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate>
+                                            <TextBlock Text="No sources found. Use the Add Source button to add a Team Foundation Server source." />
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ItemsControl.Style>
+            </ItemsControl>
+        </ScrollViewer>
+        <StackPanel Grid.Row="2" Style="{StaticResource PageActions}">
             <Button Content="Add Source" Name="btnAddSource" Click="btnAddSource_Click" />
         </StackPanel>
-        <ItemsControl Grid.Row="2" Name="itmsSource">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Button Content="{Binding Path=Uri}" DataContext="{Binding}" Click="btnAddEditSource_Click"/>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-            <ItemsControl.Style>
-                <Style TargetType="ItemsControl">
-                    <Style.Triggers>
-                        <Trigger Property="HasItems" Value="false">
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate>
-                                        <TextBlock Text="No sources found. Use the Add Source button to add a Team Foundation Server source." />
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </ItemsControl.Style>
-        </ItemsControl>
     </Grid>
 </Page>

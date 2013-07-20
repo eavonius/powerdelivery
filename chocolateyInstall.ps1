@@ -1,7 +1,7 @@
 ﻿try { 
     $powerdeliveryDir = Split-Path -parent $MyInvocation.MyCommand.Definition
   
-    Write-Host "Updating PSModulePath to include $powerdeliveryDir"
+    Write-Host "Updating PSModulePath to include $powerdeliveryDir..."
 
     $psModulePath = $env:PSModulePath
   
@@ -31,8 +31,6 @@
             }
         }
     }
-
-    "Setting environment var to $newEnvVar"
 
     [Environment]::SetEnvironmentVariable("PSModulePath", $newEnvVar, "Machine")
 

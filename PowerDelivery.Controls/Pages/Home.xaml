@@ -1,0 +1,127 @@
+﻿<Page x:Class="PowerDelivery.Controls.Pages.Home"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d" Title="Deployment Pipelines"
+      d:DesignHeight="400" d:DesignWidth="500">
+    <Page.Resources>
+        <ControlTemplate x:Key="EnvironmentBlock">
+            <Border Background="LightGreen" Padding="7" CornerRadius="6" HorizontalAlignment="Left" Margin="0 20 0 0">
+                <Grid Grid.Row="0" Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="{Binding EnvironmentName}" FontSize="18" />    
+                        <Button Grid.Column="1" Click="btnEditEnvironmentConfig_Click" HorizontalAlignment="Right" VerticalAlignment="Top">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Image Source="..\Images\Server_5720.png" Margin="7 0 0 0" ToolTip="Edit Commit Environment" />
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </Grid>
+                    <StackPanel Grid.Row="1" Orientation="Vertical">
+                        <TextBlock Grid.Row="1" Text="{Binding LastStatus}" FontSize="14" />
+                        <TextBlock Text="{Binding LastBuildFinishString}" FontSize="12" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </ControlTemplate>
+        
+        <Style TargetType="Button" x:Key="PipelinePanel">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <StackPanel Orientation="Horizontal" Margin="0 0 0 15">
+                            <!-- Pipeline -->
+                            <Border Background="Gray"  Padding="7" CornerRadius="6" HorizontalAlignment="Left" Margin="0 10 0 0">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <Grid Grid.Row="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{Binding ProjectName}" Foreground="White" FontSize="18" />
+                                        <Button Grid.Column="1" Click="btnEditPipelineScript_Click" HorizontalAlignment="Right" VerticalAlignment="Top">
+                                            <Button.Template>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Image Source="..\Images\ScriptFile_452.png" Margin="7 0 0 0" ToolTip="Edit Pipeline Script" />
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                        </Button>
+                                    </Grid>
+                                    <TextBlock Grid.Row="1" Text="{Binding CollectionName}" Foreground="White" />
+                                </Grid>
+                            </Border>
+                            <Line Height="5" Stroke="Green" StrokeStartLineCap="Flat" StrokeEndLineCap="Triangle" StrokeThickness="2" X2="25" Margin="0 15 0 0" />
+
+                            <!-- Commit -->
+                            <ContentControl Template="{StaticResource EnvironmentBlock}" DataContext="{Binding Commit}" />
+                            <Line Height="5" Stroke="Green" StrokeStartLineCap="Flat" StrokeEndLineCap="Triangle" StrokeThickness="2" X2="25" Margin="0 15 0 0" />
+                            
+                            <!-- Test -->
+                            <ContentControl Template="{StaticResource EnvironmentBlock}" DataContext="{Binding Test}" />
+                            <Line Height="5" Stroke="Green" StrokeStartLineCap="Flat" StrokeEndLineCap="Triangle" StrokeThickness="2" X2="25" Margin="0 15 0 0" />
+
+                            <!-- Production -->
+                            <ContentControl Template="{StaticResource EnvironmentBlock}" DataContext="{Binding Production}" />
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0">
+            <TextBlock Style="{StaticResource PageTitle}">Deployment Pipelines</TextBlock>
+            <TextBlock Style="{StaticResource PageDescription}">Review the pipelines continuously delivering software using the 
+            TFS sources you are connected to.</TextBlock>
+        </StackPanel>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <ScrollViewer.Content>
+                <ItemsControl Name="lstPipelines" Margin="0 10 0 0">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Style="{StaticResource PipelinePanel}" DataContext="{Binding}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.Style>
+                        <Style TargetType="ItemsControl">
+                            <Style.Triggers>
+                                <Trigger Property="HasItems" Value="false">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <TextBlock Text="No deployment pipelines found. Use the Sources button to add some." />
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ItemsControl.Style>
+                </ItemsControl>
+            </ScrollViewer.Content>
+        </ScrollViewer>
+        <StackPanel Grid.Row="2" Style="{StaticResource PageActions}">
+            <Button Content="Sources" Name="btnSources" Click="btnSources_Click" />
+        </StackPanel>
+    </Grid>
+</Page>

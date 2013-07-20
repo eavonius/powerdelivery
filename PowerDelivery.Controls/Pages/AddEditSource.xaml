@@ -1,0 +1,38 @@
+﻿<Page x:Class="PowerDelivery.Controls.Pages.AddEditSource"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d" Title="Add/Edit Team Foundation Server Source"
+      d:DesignHeight="400" d:DesignWidth="500" Margin="20">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Style="{StaticResource HeaderPanel}">
+            <TextBlock Style="{StaticResource PageTitle}">Add/Edit Team Foundation Server Source</TextBlock>
+            <TextBlock Style="{StaticResource PageDescription}" Text="Enter the URL of a Team Foundation Server collection you have access to." />
+        </StackPanel>
+        <Grid Grid.Row="1" VerticalAlignment="Top">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            
+            <Label Grid.Row="0" Grid.Column="0" Content="TFS Collection URL:" />
+            <TextBox Grid.Row="0" Grid.Column="1" Name="txtCollectionURL" Text="{Binding Path=Uri}" />
+            <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="e.g. http://www.myserver.com:8080/tfs" Style="{StaticResource FieldExample}"/>
+        </Grid>
+        <StackPanel Grid.Row="2" Style="{StaticResource PageActions}">
+            <Button Content="Remove" Name="btnRemove" Click="btnRemove_Click" Visibility="Collapsed" Margin="0 0 15 0" />
+            <Button Content="Save Changes" Name="btnSaveChanges" Click="btnSaveChanges_Click" Margin="0 0 15 0" />
+            <Button Content="Cancel" Name="btnCancel" Click="btnCancel_Click" />
+        </StackPanel>
+    </Grid>
+</Page>

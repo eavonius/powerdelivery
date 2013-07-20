@@ -4,8 +4,7 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <Style TargetType="TextBlock" x:Key="PageTitle">
-            <Setter Property="FontSize" Value="26" />
-            <Setter Property="Margin" Value="10 0 0 0" />
+            <Setter Property="FontSize" Value="30" />
         </Style>
         <Style TargetType="TextBox">
             <Setter Property="Margin" Value="0 0 10 0" />
@@ -13,7 +12,6 @@
         </Style>
         <Style TargetType="Button">
             <Setter Property="Padding" Value="10" />
-            <Setter Property="Margin" Value="5" />
         </Style>
         <Style TargetType="StackPanel" x:Key="PageActions">
             <Setter Property="Orientation" Value="Horizontal" />
@@ -26,122 +24,13 @@
             <Setter Property="FontSize" Value="15" />
             <Setter Property="Margin" Value="0 0 0 7" />
         </Style>
+        <Style TargetType="TextBlock" x:Key="PageDescription">
+            <Setter Property="Margin" Value="0 10 0 10" />
+            <Setter Property="FontSize" Value="16" />
+        </Style>
         <Style TargetType="Label" x:Key="FieldExample">
             <Setter Property="Margin" Value="15 0 0 0" />
             <Setter Property="Foreground" Value="Gray" />
-        </Style>
-        <Style TargetType="Button" x:Key="PipelinePanel">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <StackPanel Orientation="Horizontal" Margin="0 0 0 15">
-                            <!-- Pipeline -->
-                            <Border Background="Gray"  Padding="7" CornerRadius="6" HorizontalAlignment="Left" Margin="0 10 0 0">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition />
-                                        <RowDefinition />
-                                    </Grid.RowDefinitions>
-                                    <Grid Grid.Row="0">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="{Binding ProjectName}" Foreground="White" FontSize="15" />
-                                        <Button Grid.Column="1" Click="btnEditPipelineScript_Click">
-                                            <Button.Template>
-                                                <ControlTemplate TargetType="Button">
-                                                    <Image Source="Images\ScriptFile_452.png" Margin="7 0 0 0" ToolTip="Edit Pipeline Script" />
-                                                </ControlTemplate>
-                                            </Button.Template>
-                                        </Button>
-                                    </Grid>
-                                    <TextBlock Grid.Row="1" Text="{Binding CollectionName}" Foreground="White" />
-                                </Grid>
-                            </Border>
-                            <Line Height="5" Stroke="Green" StrokeStartLineCap="Flat" StrokeEndLineCap="Triangle" StrokeThickness="2" X2="25" Margin="0 10 0 0" />
-                            <!-- Commit -->
-                            <Border Background="LightGreen"  Padding="7" CornerRadius="6" HorizontalAlignment="Left" Margin="0 10 0 0">
-                                <Grid Grid.Row="0" Grid.Column="1" DataContext="{Binding Commit}">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition />
-                                        <RowDefinition />
-                                    </Grid.RowDefinitions>
-                                    <Grid Grid.Row="0">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="{Binding EnvironmentName}" FontSize="15" />
-                                        <Button Grid.Column="1" Click="btnEditEnvironmentConfig_Click">
-                                            <Button.Template>
-                                                <ControlTemplate TargetType="Button">
-                                                    <Image Source="Images\Server_5720.png" Margin="7 0 0 0" ToolTip="Edit Commit Environment" />
-                                                </ControlTemplate>
-                                            </Button.Template>
-                                        </Button>
-                                    </Grid>
-                                    <TextBlock Grid.Row="1" Text="{Binding LastStatus}" />
-                                </Grid>
-                            </Border>
-                            <Line Height="5" Stroke="Green" StrokeStartLineCap="Flat" StrokeEndLineCap="Triangle" StrokeThickness="2" X2="25" Margin="0 10 0 0" />
-                            <!-- Commit -->
-                            <Border Background="Yellow"  Padding="7" CornerRadius="6" HorizontalAlignment="Left" Margin="0 10 0 0">
-                                <Grid Grid.Row="0" Grid.Column="1" DataContext="{Binding Test}">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition />
-                                        <RowDefinition />
-                                    </Grid.RowDefinitions>
-                                    <Grid Grid.Row="0">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="{Binding EnvironmentName}" FontSize="15" />
-                                        <Button Grid.Column="1" Click="btnEditEnvironmentConfig_Click">
-                                            <Button.Template>
-                                                <ControlTemplate TargetType="Button">
-                                                    <Image Source="Images\Server_5720.png" Margin="7 0 0 0" ToolTip="Edit Test Environment" />
-                                                </ControlTemplate>
-                                            </Button.Template>
-                                        </Button>
-                                    </Grid>
-                                    <TextBlock Grid.Row="1" Text="{Binding LastStatus}" />
-                                </Grid>
-                            </Border>
-                            <Line Height="5" Stroke="Green" StrokeStartLineCap="Flat" StrokeEndLineCap="Triangle" StrokeThickness="2" X2="25" Margin="0 10 0 0" />
-                            <!-- Commit -->
-                            <Border Background="Red"  Padding="7" CornerRadius="6" HorizontalAlignment="Left" Margin="0 10 0 0">
-                                <Grid Grid.Row="0" Grid.Column="1" DataContext="{Binding Production}">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition />
-                                        <RowDefinition />
-                                    </Grid.RowDefinitions>
-                                    <Grid Grid.Row="0">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="{Binding EnvironmentName}" FontSize="15" Foreground="White" />
-                                        <Button Grid.Column="1" Click="btnEditEnvironmentConfig_Click">
-                                            <Button.Template>
-                                                <ControlTemplate TargetType="Button">
-                                                    <Image Source="Images\Server_5720.png" Margin="7 0 0 0" ToolTip="Edit Production Environment" />
-                                                </ControlTemplate>
-                                            </Button.Template>
-                                        </Button>
-                                    </Grid>
-                                    <TextBlock Grid.Row="1" Text="{Binding LastStatus}" Foreground="White" />
-                                </Grid>
-                            </Border>
-                        </StackPanel>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
         </Style>
     </Application.Resources>
 </Application>

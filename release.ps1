@@ -32,7 +32,7 @@ $originalDirectory = Get-Location
 "Releasing new version of powerdelivery..."
 "-----------------------------------------"
 
-del *.nupack
+del *.nupkg
 
 $latestVersion = $(clist powerdelivery).split(' ')[1].split('.')
 $oldVersion = $latestVersion -join '.'
