@@ -33,6 +33,6 @@ function Get-BuildAssets {
 	$destinationPath = Join-Path $currentDirectory $destination
 	
 	mkdir -Force $destinationPath | Out-Null
-	
+
 	copy -Filter $filter -Force -Path $sourcePath -Destination $destinationPath
 }

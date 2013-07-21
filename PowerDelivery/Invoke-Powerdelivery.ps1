@@ -54,7 +54,9 @@ function Invoke-Powerdelivery {
 					$chocolateyPackages = "packages.config"
 					if (Test-Path $chocolateyPackages) {
 						Exec -errorMessage "Error installing chocolatey packages" {
+							"Installing chocolatey packages in packages.config on the TFS build agent..."
 							cinst $chocolateyPackages
+
 						}
 					}
 				}
@@ -171,7 +173,7 @@ function Invoke-Powerdelivery {
 		$val = ""
 		$spaceIndex = 0
 		while ($spaceIndex -lt $numSpaces) {
-			$val += "  "
+			$val += "--"
 			$spaceIndex++
 		}
 		$val

@@ -1,4 +1,4 @@
-﻿function Invoke-ConfigSections {
+﻿function Invoke-BuildConfigSections {
 	[CmdletBinding()]
 	param(
 		[Parameter(Position=0,Mandatory=1)] $sections,
@@ -7,6 +7,6 @@
 	
 	$sections.Keys | % {
 		$section = $sections[$_]
-		Invoke-ConfigSection $section $cmdlet
+		Invoke-BuildConfigSection $section $cmdlet
 	}
 }

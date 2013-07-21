@@ -63,8 +63,8 @@ function Invoke-Roundhouse {
     [CmdletBinding()]
     param(
         [Parameter(Position=0,Mandatory=1)][string] $scriptsDir, 
-		[Parameter(Position=1,Mandatory=1)][string] $database, 
-		[Parameter(Position=2,Mandatory=0)][string] $server, 
+    		[Parameter(Position=1,Mandatory=1)][string] $database, 
+		    [Parameter(Position=2,Mandatory=0)][string] $server, 
         [Parameter(Position=3,Mandatory=0)][string] $connectionString,
         [Parameter(Position=4,Mandatory=0)][string] $restorePath, 
         [Parameter(Position=5,Mandatory=0)][string] $restoreOptions
