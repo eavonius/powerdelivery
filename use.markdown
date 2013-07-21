@@ -340,7 +340,7 @@ layout: page
 		<br />
 		<h4>The Test or User Acceptance Test (UAT) environment</h4>
 		<p>When any Commit build has succeeds in deploying to the Development and is passing any unit tests created, 
-		a team member can <a href="#queuing_builds">queue a Test build</a> and specify a specific build to promote 
+		a team member can <a href="#queueing_builds">queue a Test build</a> and specify a specific build to promote 
 		into an environment to be used for user acceptance testing. Powerdelievery runs the same deployment process 
 		that version of the Commit build used to deploy the software features, but targeting a different environment.</p>
 		<p>How you will separate these environments depends on your needs and 
@@ -353,7 +353,7 @@ layout: page
 		<br />
 		<h4>The Production environment</h4>
 		<p>Once those folks on your team that are responsible for making sure a Test build is suitable for release have evaluated it, 
-		they can <a href="#queuing_builds">queue a Production build</a> and specify a specific build to promote from 
+		they can <a href="#queueing_builds">queue a Production build</a> and specify a specific build to promote from 
 		the Test environment into the one that that your customers use to access the software's features. 
 		Your team can wait until the <a href="#review">sprint review</a> to do this, or if you've got 
 		things down, at any time when you are confident the changes in that build are tested well enough to release.</p>
@@ -410,7 +410,7 @@ layout: page
 				<br>
 				<img src="img/queue_build.gif" />
 				<p>
-					<small>Figure: Queuing a build in Visual Studio 2012</small>
+					<small>Figure: queueing a build in Visual Studio 2012</small>
 				</p>
 			</p>
 			<li>Select the <i>Parameters</i> tab from the dialog that appears and enter the build number of a 
