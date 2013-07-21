@@ -66,6 +66,12 @@ layout: page
 				<a href="#import_deliverymodule_cmdlet">Import-DeliveryModule</a>
 			</li>
 			<li>
+				<a href="#invoke_buildconfigsection_cmdlet">Invoke-BuildConfigSection</a>
+			</li>
+			<li>
+				<a href="#invoke_buildconfigsections_cmdlet">Invoke-BuildConfigSections</a>
+			</li>
+			<li>
 				<a href="#invoke_msbuild_cmdlet">Invoke-MSBuild</a>
 			</li>
 			<li>
@@ -85,6 +91,9 @@ layout: page
 			</li>
 			<li>
 				<a href="#publish_ssas_cmdlet">Publish-SSAS</a>
+			</li>
+			<li>
+				<a href="#publish_webdeploy_cmdlet">Publish-WebDeploy</a>
 			</li>
 			<li>
 				<a href="#register_deliverymodulehook_cmdlet">Register-DeliveryModuleHook</a>
@@ -304,6 +313,39 @@ layout: page
 		<h5>name</h5>
 		<p>string - The name of the delivery module to import functions for.</p>
 		
+		<a name="invoke_buildconfigsection_cmdlet"><hr></a>
+		<h3>Invoke-BuildConfigSection</h3>
+		<p>Invokes a PowerShell cmdlet passing a section of YAML from the build 
+		<a href="create.html#environment">environment configuration</a> 
+		as arguments to it.</p>
+		<h4>Example</h4>
+		<p>In the example below, there is a YAML configuration section named "Database" 
+		with settings that match the arguments of the "Invoke-Roundhouse" cmdlet.</p>
+		{% highlight powershell %}$databaseSection = Get-BuildSetting Database
+Invoke-BuildConfigSection $databaseSection "Invoke-Roundhouse"{% endhighlight %}
+		<h4>Parameters</h4>
+		<h5>section</h5>
+		<p>hash - Each value of the hash will be passed to the cmdlet as arguments.</p>
+		<h5>cmdlet</h5>
+		<p>string - The name of the cmdlet to invoke.</p>
+
+		<a name="invoke_buildconfigsections_cmdlet"><hr></a>
+		<h3>Invoke-BuildConfigSections</h3>
+		<p>Calls the <a href="#invoke_buildconfigsection_cmdlet">Invoke-BuildConfigSection</a> 
+		cmdlet once for each entry in a hash. Use this to do work on all nested entries in a section of YAML 
+		from the build <a href="create.html#environment">environment configuration</a>.</p>
+		<h4>Example</h4>
+		<p>In th example below, there is a YAML configuration section named "MSBuild" 
+		with YAML sections below it. Each entry below it has settings that match the 
+		arguments of the "Invoke-MSBuild" cmdlet.</p>
+		{% highlight powershell %}$msBuildSection = Get-BuildSetting MSBuild
+Invoke-BuildConfigSections $msBuildSection "Invoke-MSBuild"{% endhighlight %}
+		<h4>Parameters</h4>
+		<h5>section</h5>
+		<p>hash - Each value of the hash will be passed to <a href="#invoke_buildconfigsection_cmdlet">Invoke-BuildConfigSection</a> cmdlet.</p>
+		<h5>cmdlet</h5>
+		<p>string - The name of the cmdlet to invoke.</p>
+
 		<a name="invoke_msbuild_cmdlet"><hr></a>
 		<h3>Invoke-MSBuild</h3>
 		<p>This cmdlet is used to compile a MSBuild-compatible project or solution. 
