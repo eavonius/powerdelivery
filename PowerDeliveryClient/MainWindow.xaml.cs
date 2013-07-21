@@ -20,18 +20,9 @@ namespace PowerDeliveryClient
     /// </summary>
     public partial class MainWindow : Window
     {
-        internal static ClientConfiguration Configuration { get; private set; }
-
         public MainWindow()
         {
             InitializeComponent();
-
-            Configuration = ClientConfiguration.Current;
-        }
-
-        private void frmContent_Navigated(object sender, NavigationEventArgs e)
-        {
-            Title = "powerdelivery - " + ((Page)frmContent.Content).Title;
         }
     }
 }

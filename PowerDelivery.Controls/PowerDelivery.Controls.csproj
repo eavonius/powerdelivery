@@ -65,8 +65,8 @@
       <DependentUpon>Sources.xaml</DependentUpon>
     </Compile>
     <Compile Include="PipelineEnvironment.cs" />
-    <Compile Include="PowerDeliveryClientControl.xaml.cs">
-      <DependentUpon>PowerDeliveryClientControl.xaml</DependentUpon>
+    <Compile Include="ClientControl.xaml.cs">
+      <DependentUpon>ClientControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -104,9 +104,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="PowerDeliveryClientControl.xaml">
+    <Page Include="ClientControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -114,7 +118,18 @@
     <Resource Include="Images\ScriptFile_452.png" />
     <Resource Include="Images\Server_5720.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Pipelines.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>mkdir "C:\Program Files\Powerdelivery"
+xcopy /y $(TargetDir)*.* "C:\Program Files\Powerdelivery"</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

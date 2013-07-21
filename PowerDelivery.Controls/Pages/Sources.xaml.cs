@@ -20,8 +20,12 @@ namespace PowerDelivery.Controls.Pages
     /// </summary>
     public partial class Sources : Page
     {
-        public Sources()
+        ClientControl _clientControl;
+
+        public Sources(ClientControl clientControl)
         {
+            _clientControl = clientControl;
+
             InitializeComponent();
 
             itmsSource.ItemsSource = ClientControl.Configuration.Sources;
@@ -29,14 +33,14 @@ namespace PowerDelivery.Controls.Pages
 
         private void btnAddSource_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new AddEditSource(new ClientCollectionSource() { Uri = "" }));
+            NavigationService.Navigate(new AddEditSource(_clientControl, new ClientCollectionSource() { Uri = "" }));
         }
 
         private void btnAddEditSource_Click(object sender, RoutedEventArgs e)
         {
             Button btnSender = (Button)sender;
 
-            NavigationService.Navigate(new AddEditSource((ClientCollectionSource)btnSender.DataContext));
+            NavigationService.Navigate(new AddEditSource(_clientControl, (ClientCollectionSource)btnSender.DataContext));
         }
     }
 }

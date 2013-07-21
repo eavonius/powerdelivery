@@ -73,37 +73,12 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ClientCollectionSource.cs" />
-    <Compile Include="ClientConfiguration.cs" />
-    <Compile Include="DeliveryPipeline.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Pages\AddEditSource.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\Home.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\Sources.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Pages\AddEditSource.xaml.cs">
-      <DependentUpon>AddEditSource.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\Home.xaml.cs">
-      <DependentUpon>Home.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\Sources.xaml.cs">
-      <DependentUpon>Sources.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="PipelineEnvironment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -131,19 +106,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\ScriptFile_452.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\Server_5720.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\ExtensionManager_vsix_OSReg.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\PowerDelivery.Controls\PowerDelivery.Controls.csproj">
       <Project>{891289c8-6e99-4626-9f9e-6cbb9e37e561}</Project>
       <Name>PowerDelivery.Controls</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\ExtensionManager_vsix_OSReg.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

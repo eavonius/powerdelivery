@@ -1,0 +1,43 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style TargetType="TextBlock" x:Key="PageTitle">
+        <Setter Property="FontSize" Value="30" />
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" />
+    </Style>
+    <Style TargetType="TextBox">
+        <Setter Property="Margin" Value="0 0 10 0" />
+        <Setter Property="FontSize" Value="16" />
+    </Style>
+    <Style TargetType="Button">
+        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
+        <Setter Property="Padding" Value="10" />
+    </Style>
+    <Style TargetType="StackPanel" x:Key="PageActions">
+        <Setter Property="Orientation" Value="Horizontal" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
+    </Style>
+    <Style TargetType="StackPanel" x:Key="HeaderPanel">
+        <Setter Property="Margin" Value="0 0 0 10" />
+    </Style>
+    <Style TargetType="Label" x:Key="FieldDirections">
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="Margin" Value="0 0 0 7" />
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" />
+    </Style>
+    <Style TargetType="TextBlock" x:Key="PageDescription">
+        <Setter Property="Margin" Value="0 10 0 10" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" />
+    </Style>
+    <Style TargetType="Label" x:Key="FieldExample">
+        <Setter Property="Margin" Value="15 0 0 0" />
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" />
+    </Style>
+    <Style TargetType="Grid" x:Key="Background">
+        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
+    </Style>
+    <Style TargetType="Page">
+        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
+    </Style>
+</ResourceDictionary>

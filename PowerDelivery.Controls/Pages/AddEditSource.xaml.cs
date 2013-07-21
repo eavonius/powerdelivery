@@ -21,8 +21,11 @@ namespace PowerDelivery.Controls.Pages
     /// </summary>
     public partial class AddEditSource : Page
     {
-        public AddEditSource(ClientCollectionSource source)
+        ClientControl _clientControl;
+
+        public AddEditSource(ClientControl clientControl, ClientCollectionSource source)
         {
+            _clientControl = clientControl;
             DataContext = source;
 
             InitializeComponent();
@@ -63,14 +66,25 @@ namespace PowerDelivery.Controls.Pages
 
                 ClientCollectionSource source = (ClientCollectionSource)DataContext;
 
+                bool added = true;
+
                 if (!ClientConfiguration.Current.Sources.Contains(source))
                 {
                     ClientControl.Configuration.Sources.Add(new ClientCollectionSource() { Uri = collectionUri.ToString() });
+
+                    added = false;
                 }
 
                 ClientControl.Configuration.Save();
 
-                NavigationService.Navigate(new Uri("Pages/Sources.xaml", UriKind.Relative));
+                if (added)
+                {
+                    NavigationService.Navigate(new Pages.Home(_clientControl));
+                }
+                else
+                {
+                    NavigationService.Navigate(new Pages.Sources(_clientControl));
+                }
             }
             catch (Exception ex)
             {
@@ -94,7 +108,7 @@ namespace PowerDelivery.Controls.Pages
                 ClientConfiguration.Current.Sources.Remove(source);
                 ClientConfiguration.Current.Save();
 
-                NavigationService.Navigate(new Uri("Pages/Sources.xaml", UriKind.Relative));
+                NavigationService.Navigate(new Pages.Sources(_clientControl));
             }
         }
     }

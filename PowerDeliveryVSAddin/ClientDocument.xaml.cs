@@ -12,26 +12,21 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Runtime.InteropServices;
+using stdole;
 
-namespace PowerDelivery.Controls
+namespace PowerDeliveryVSAddin
 {
     /// <summary>
-    /// Interaction logic for ClientControl.xaml
+    /// Interaction logic for ClientDocument.xaml
     /// </summary>
-    public partial class ClientControl : UserControl
+    [ComVisible(true)]
+    [ClassInterface(ClassInterfaceType.None)]
+    public partial class ClientDocument : UserControl, IDispatch
     {
-        internal static ClientConfiguration Configuration { get; private set; }
-
-        public ClientControl()
+        public ClientDocument()
         {
             InitializeComponent();
-
-            Configuration = ClientConfiguration.Current;
-        }
-
-        private void frmContent_Navigated(object sender, NavigationEventArgs e)
-        {
-            //Title = "powerdelivery - " + ((Page)frmContent.Content).Title;
         }
     }
 }

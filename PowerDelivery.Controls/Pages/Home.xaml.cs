@@ -16,6 +16,7 @@ using Microsoft.TeamFoundation.Framework;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.Build.Client;
 using Microsoft.TeamFoundation.Server;
+using System.ComponentModel;
 
 namespace PowerDelivery.Controls.Pages
 {
@@ -24,8 +25,13 @@ namespace PowerDelivery.Controls.Pages
     /// </summary>
     public partial class Home : Page
     {
-        public Home()
+        bool _useDarkTheme = false;
+        ClientControl _clientControl;
+
+        public Home(ClientControl clientControl)
         {
+            _clientControl = clientControl;
+
             InitializeComponent();
 
             LoadPipelines();
@@ -116,7 +122,7 @@ namespace PowerDelivery.Controls.Pages
 
         private void btnSources_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Uri("Pages/Sources.xaml", UriKind.Relative));
+            NavigationService.Navigate(new Pages.Sources(_clientControl));
         }
 
         private void btnEditPipelineScript_Click(object sender, RoutedEventArgs e)
