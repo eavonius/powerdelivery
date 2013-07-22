@@ -15,6 +15,10 @@ local.properties
 .classpath
 .settings/
 .loadpath
+.publishsettings
+.sublime-project
+.sublime-workspace
+.vssscc
 
 # External tool builders
 .externalToolBuilders/
