@@ -17,6 +17,9 @@ Import-DeliveryModule WebDeploy
 # Load settings you need for the entire build
 #
 Init {
+ 
+    # Get the "Roundhouse" configuration section 
+    # from PowerDeliveryASPNETMVC4_WithModulesShared.yml
     $script:Roundhouse = Get-BuildSetting Roundhouse
 }
 
@@ -39,8 +42,14 @@ SetupEnvironment {
 #
 Deploy {
 
+    # Copy files at the "Databases" subdirectory of the drop location 
+    # to the current directory.
     Get-BuildAssets Databases .
-    Invoke-ConfigSection $Roundhouse "Invoke-Roundhouse"
+
+    # Invoke any sections below the "Roundhouse" configuration 
+    # section from PowerDeliveryASPNETMVC4_WithModulesShared.yml 
+    # passing them as arguments to the Invoke-Roundhouse cmdlet.
+    Invoke-BuildConfigSections $Roundhouse Invoke-Roundhouse
 }
 
 # Test modifications to the target environment

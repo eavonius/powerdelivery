@@ -110,25 +110,10 @@ function Invoke-MSBuild {
 	$logFile = "$($projectFileBase).log"
 	
 	$msBuildCommand += " ""/l:FileLogger,Microsoft.Build.Engine;logfile=$logFile"""
-
-	<#
-	if ($powerdelivery.onServer) {
-		$outDir = Join-Path $currentDirectory "Binaries\$projectFileBase"
-		$msBuildCommand += " ""/p:TeamBuildOutDir=$outDir"""		
-	}
-	else {
-		$outDir = Join-Path $dropLocation "Binaries\$projectFileBase"
-		$msBuildCommand += " ""/p:OutDir=$outDir"""
-	}
-	#>
-
     $msBuildCommand += " ""$projectFile"""
 
 	Write-Host
-    Write-Host "Compiling MSBuild Project:"
-	Write-ConsoleSpacer
-	Write-Host
-	
+    
     "Project File: $projectFile"
     "Configuration: $buildConfiguration"
     "Platform(s): $flavor"
@@ -178,8 +163,6 @@ function Invoke-MSBuild {
 
             $projectFileName = [System.IO.Path]::GetFileName($projectFile)
             $tfsPath = "`$/$($projectFile.Replace('\', '/'))"
-
-            "Uploading MSBuild information to TFS for $tfsPath"
 
             $publishTarget = "Default"
             if (![string]::IsNullOrWhiteSpace($target)) {
@@ -266,9 +249,6 @@ function Invoke-MSBuild {
             $buildDetail.Information.Save()
 
 			Write-BuildSummaryMessage -name "Compile" -header "Compilations" -message "MSBuild: $projectFile ($flavor - $buildConfiguration)"
-            "TFS build information saved."
         }
-
-        Write-ConsoleSpacer
     }
 }

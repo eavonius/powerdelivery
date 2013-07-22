@@ -45,7 +45,8 @@ function Invoke-Powerdelivery {
 			$actionPerformed = $false
 			
 			Write-Host
-			"$status..."
+			Write-ConsoleSpacer
+			"= Powerdelivery: $status..."
 	    	Write-ConsoleSpacer
 	    	Write-Host
 			
@@ -172,7 +173,7 @@ function Invoke-Powerdelivery {
 		$val = ""
 		$spaceIndex = 0
 		while ($spaceIndex -lt $numSpaces) {
-			$val += "--"
+			$val += "  "
 			$spaceIndex++
 		}
 		$val
@@ -197,7 +198,7 @@ function Invoke-Powerdelivery {
 	                $envValue = '********'
 	            }
 				$envValWithSpaces = PrintSpaces -numSpaces $depth
-				$envMessage += "$envValWithSpaces$($configSetting.Key): $envValue"
+				$envMessage += "$envValWithSpaces$($configSetting.Key): $($envValue)`n"
 			}
 		}
 		
@@ -316,14 +317,14 @@ function Invoke-Powerdelivery {
 		Invoke-Expression -Command ".\$appScript"
 		
 		Write-Host
-	    "Application"
-	    Write-ConsoleSpacer
-
-	    $appProperties = @{"App Name" = $appScript; "App Version" = $powerdelivery.buildAppVersion}
-
-	    Format-Table -InputObject $appProperties -AutoSize -HideTableHeaders
-
-	    "Parameters"
+		Write-ConsoleSpacer
+	    "= Deployment Pipeline"
+		Write-ConsoleSpacer
+		"`nName: $appScript"
+		"Version: $($powerdelivery.buildAppVersion)`n"
+	    
+		Write-ConsoleSpacer
+	    "= PowerShell Script Parameters"
 	    Write-ConsoleSpacer
 
 	    $scriptParams = @{}
@@ -355,26 +356,58 @@ function Invoke-Powerdelivery {
 		
 		$scriptParams["Drop Location"] = $powerdelivery.dropLocation
 		
-		$tableFormat = @{Expression={$_.Key};Label="Key";Width=50}, `
+		$tableFormat = @{Expression={$_.Key};Label="Key";Width=40}, `
 	                   @{Expression={$_.Value};Label="Value";Width=75}
 
 	    $scriptParams | Format-Table $tableFormat -HideTableHeaders
 
-	    $tableFormat = @{Expression={$_.Name};Label="Name";Width=50}, `
+	    $tableFormat = @{Expression={$_.Name};Label="Name";Width=40}, `
 	                   @{Expression={if ($_.Name.EndsWith("Password")) { '********' } else { $_.Value }};Label="Value";Width=75}
 
-	    "Environment"
-	    Write-ConsoleSpacer
-        
-        $envMessage = PrintConfiguration -configNodes $powerdelivery.config -depth 0
-		$envMessage += "`n"
-		
-		$envMessage
-
-        Write-BuildSummaryMessage -name "Environment" -header "Environment Configuration" -message $envMessage 
-
-		"Delivery Modules"
 		Write-ConsoleSpacer
+	    "= Build Environment"
+	    Write-ConsoleSpacer
+		Write-Host
+        
+		if ($onServer)
+		{
+			$yamlContents = PrintConfiguration -configNodes $powerdelivery.config -depth 0
+			Out-File -Encoding ascii -FilePath "$($dropLocation)$($appScript).yml" -InputObject $yamlContents
+		}
+
+        $configMessage = ""
+		
+		$powerdelivery.config.Keys | % {
+			$configKey = $_
+			$configVal = $powerdelivery.config[$_]
+			
+			$configMessage += "`n$($configKey): "
+			
+			if ($configVal.GetType().Name -eq 'Hashtable') {
+				$configMessage += "{"
+				$configSectionNames = @()
+				$configVal.Keys | % { $configSectionNames += $_	}
+				$configMessage += $configSectionNames -join ", "
+				$configMessage += "}"
+			}
+			else {
+				if ($_ -contains "password") {
+					$configMessage += "*******"
+				}
+				else {
+					$configMessage += $configVal
+				}
+			}
+		}
+
+		$powerdelivery.config | Format-Table $tableFormat -HideTableHeaders
+		
+        Write-BuildSummaryMessage -name "Environment" -header "Environment Configuration" -message $configMessage
+
+		Write-ConsoleSpacer
+		"= Delivery Modules"
+		Write-ConsoleSpacer
+		Write-Host
 
 		if ($powerdelivery.deliveryModules) {
 			$deliveryModules = @()
@@ -460,7 +493,6 @@ function Invoke-Powerdelivery {
 	        Copy-Item -Path "$priorBuildDrop\*" -Recurse -Destination $powerdelivery.dropLocation
 	    }
 		
-		"Copying deployed assets locally..."	
 		Copy-Item -Force -Path "$($powerdelivery.dropLocation)\*" -Recurse -Destination $powerdelivery.currentLocation
 		
 		InvokePowerDeliveryBuildAction -condition ($powerdelivery.environment -eq 'Commit' -or $powerdelivery.environment -eq 'Local') -stage $powerdelivery.testUnits -description "Unit Tests" -status "Testing Units" -blockName "TestUnits"
@@ -470,11 +502,11 @@ function Invoke-Powerdelivery {
 	    InvokePowerDeliveryBuildAction -condition ($environment -eq 'Commit' -or $environment -eq 'Local') -stage $powerdelivery.testAcceptance -description "Acceptance Tests" -status "Testing Acceptance" -blockName "TestAcceptance"
 	    InvokePowerDeliveryBuildAction -condition ($environment -eq 'CapacityTest') -stage $powerdelivery.testCapacity -description "Capacity Tests" -status "Testing Capacity" -blockName "TestCapacity"
         
-	    Write-Host "Build succeeded!" -ForegroundColor DarkGreen
+	    Write-Host "Powerdelivery: Build succeeded!" -ForegroundColor DarkGreen
     }
     catch {
 	    Set-Location $powerdelivery.currentLocation
-	    Write-Host "Build Failed!" -ForegroundColor Red
+	    Write-Host "Powerdelivery: Build Failed!" -ForegroundColor Red
 		throw
     }
 }
