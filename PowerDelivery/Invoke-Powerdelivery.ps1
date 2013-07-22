@@ -121,7 +121,7 @@ function Invoke-Powerdelivery {
 			else {		
 				$baseHashVal = $baseHash[$_]
 				if ($baseHashVal.GetType().Name -eq 'Hashtable') {
-					$childMergedHash = MergedHashNested -baseHash $baseHashVal -subHash $subHash[$_]
+					$childMergedHash = MergeHashNested -baseHash $baseHashVal -subHash $subHash[$_]
 					$mergedHash.Add($_, $childMergedHash)
 				}
 				else {
@@ -308,8 +308,15 @@ function Invoke-Powerdelivery {
 		
 		if (Test-Path -Path $sharedConfigFileName) {
 			$yamlPath = (Resolve-Path ".\$($sharedConfigFileName)")
-			$sharedConfig = Get-Yaml -FromFile $yamlPath
-			$powerdelivery.config = MergeHashNested -baseHash $sharedConfig -subHash $powerdelivery.config			
+			$loadedSharedConfig = $false
+			try {
+				$sharedConfig = Get-Yaml -FromFile $yamlPath -ErrorAction SilentlyContinue
+				$loadedSharedConfig = $true
+			}
+			catch {}
+			if ($loadedSharedConfig) {
+				$powerdelivery.config = MergeHashNested -baseHash $sharedConfig -subHash $powerdelivery.config			
+			}
 		}
 		
 		ReplaceReferencedConfigSettings($powerdelivery.config)
