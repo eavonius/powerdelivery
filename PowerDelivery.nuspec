@@ -27,7 +27,7 @@
     <file src="PowerDelivery\Get-BuildChangeSet.ps1" target="tools\PowerDelivery\Get-BuildChangeSet.ps1" />
     <file src="PowerDelivery\Get-BuildDropLocation.ps1" target="tools\PowerDelivery\Get-BuildDropLocation.ps1" />
     <file src="PowerDelivery\Get-BuildEnvironment.ps1" target="tools\PowerDelivery\Get-BuildEnvironment.ps1" />
-    <file src="PowerDelivery\Get-BuildModuleConfig.ps1" target="tools\PowerDelivery\Get-BuildModuleConfig.ps1" />
+    <file src="PowerDelivery\Get-BuildConfig.ps1" target="tools\PowerDelivery\Get-BuildConfig.ps1" />
     <file src="PowerDelivery\Get-BuildName.ps1" target="tools\PowerDelivery\Get-BuildName.ps1" />
     <file src="PowerDelivery\Get-BuildNumber.ps1" target="tools\PowerDelivery\Get-BuildNumber.ps1" />
     <file src="PowerDelivery\Get-BuildOnServer.ps1" target="tools\PowerDelivery\Get-BuildOnServer.ps1" />
@@ -60,24 +60,13 @@
     <file src="PowerDelivery\BuildProcessTemplates\PowerDeliveryChangeSetTemplate.xaml" target="tools\PowerDelivery\BuildProcessTemplates\PowerDeliveryChangeSetTemplate.xaml" />
     <file src="PowerDelivery\BuildProcessTemplates\PowerDeliveryTemplate.11.xaml" target="tools\PowerDelivery\BuildProcessTemplates\PowerDeliveryTemplate.11.xaml" />
     <file src="PowerDelivery\BuildProcessTemplates\PowerDeliveryTemplate.xaml" target="tools\PowerDelivery\BuildProcessTemplates\PowerDeliveryTemplate.xaml" />
-    <file src="PowerDelivery\Templates\ASP.NET Web Site\Build.ps1" target="tools\PowerDelivery\Templates\ASP.NET Web Site\Build.ps1" />
-    <file src="PowerDelivery\Templates\ASP.NET Web Site\BuildCapacityTestEnvironment.csv" target="tools\PowerDelivery\Templates\ASP.NET Web Site\BuildCapacityTestEnvironment.csv" />
-    <file src="PowerDelivery\Templates\ASP.NET Web Site\BuildCommitEnvironment.csv" target="tools\PowerDelivery\Templates\ASP.NET Web Site\BuildCommitEnvironment.csv" />
-    <file src="PowerDelivery\Templates\ASP.NET Web Site\BuildLocalEnvironment.csv" target="tools\PowerDelivery\Templates\ASP.NET Web Site\BuildLocalEnvironment.csv" />
-    <file src="PowerDelivery\Templates\ASP.NET Web Site\BuildProductionEnvironment.csv" target="tools\PowerDelivery\Templates\ASP.NET Web Site\BuildProductionEnvironment.csv" />
-    <file src="PowerDelivery\Templates\ASP.NET Web Site\BuildTestEnvironment.csv" target="tools\PowerDelivery\Templates\ASP.NET Web Site\BuildTestEnvironment.csv" />
     <file src="PowerDelivery\Templates\Blank\Build.ps1" target="tools\PowerDelivery\Templates\Blank\Build.ps1" />
-    <file src="PowerDelivery\Templates\Blank\BuildCapacityTestEnvironment.yml" target="tools\PowerDelivery\Templates\Blank\BuildCapacityTestEnvironment.yml" />
-    <file src="PowerDelivery\Templates\Blank\BuildCommitEnvironment.yml" target="tools\PowerDelivery\Templates\Blank\BuildCommitEnvironment.yml" />
-    <file src="PowerDelivery\Templates\Blank\BuildLocalEnvironment.yml" target="tools\PowerDelivery\Templates\Blank\BuildLocalEnvironment.yml" />
-    <file src="PowerDelivery\Templates\Blank\BuildProductionEnvironment.yml" target="tools\PowerDelivery\Templates\Blank\BuildProductionEnvironment.yml" />
-    <file src="PowerDelivery\Templates\Blank\BuildTestEnvironment.yml" target="tools\PowerDelivery\Templates\Blank\BuildTestEnvironment.yml" />
-    <file src="PowerDelivery\Templates\RoundhousE Database\Build.ps1" target="tools\PowerDelivery\Templates\RoundhousE Database\Build.ps1" />
-    <file src="PowerDelivery\Templates\RoundhousE Database\BuildCapacityTestEnvironment.csv" target="tools\PowerDelivery\Templates\RoundhousE Database\BuildCapacityTestEnvironment.csv" />
-    <file src="PowerDelivery\Templates\RoundhousE Database\BuildCommitEnvironment.csv" target="tools\PowerDelivery\Templates\RoundhousE Database\BuildCommitEnvironment.csv" />
-    <file src="PowerDelivery\Templates\RoundhousE Database\BuildLocalEnvironment.csv" target="tools\PowerDelivery\Templates\RoundhousE Database\BuildLocalEnvironment.csv" />
-    <file src="PowerDelivery\Templates\RoundhousE Database\BuildProductionEnvironment.csv" target="tools\PowerDelivery\Templates\RoundhousE Database\BuildProductionEnvironment.csv" />
-    <file src="PowerDelivery\Templates\RoundhousE Database\BuildTestEnvironment.csv" target="tools\PowerDelivery\Templates\RoundhousE Database\BuildTestEnvironment.csv" />
+    <file src="PowerDelivery\Templates\Blank\BuildCapacityTest.yml" target="tools\PowerDelivery\Templates\Blank\BuildCapacityTest.yml" />
+    <file src="PowerDelivery\Templates\Blank\BuildCommit.yml" target="tools\PowerDelivery\Templates\Blank\BuildCommit.yml" />
+    <file src="PowerDelivery\Templates\Blank\BuildLocal.yml" target="tools\PowerDelivery\Templates\Blank\BuildLocal.yml" />
+    <file src="PowerDelivery\Templates\Blank\BuildProduction.yml" target="tools\PowerDelivery\Templates\Blank\BuildProduction.yml" />
+    <file src="PowerDelivery\Templates\Blank\BuildTest.yml" target="tools\PowerDelivery\Templates\Blank\BuildTest.yml" />
+    <file src="PowerDelivery\Templates\Blank\BuildShared.yml" target="tools\PowerDelivery\Templates\Blank\BuildShared.yml" />
     <file src="PowerYaml\PowerYaml.psm1" target="tools\PowerYaml\PowerYaml.psm1" />
     <file src="PowerYaml\LICENSE" target="tools\PowerYaml\LICENSE" />
     <file src="PowerYaml\Functions\Casting.ps1" target="tools\PowerYaml\Functions\Casting.ps1" />

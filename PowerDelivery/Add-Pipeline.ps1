@@ -27,11 +27,12 @@ The name of the TFS build controller the pipeline should use.
 Optional. The name of a directory within the "Templates" directory of wherever you installed powerdelivery to (usually C:\Chocolatey\lib\powerdelivery<version>). The default is "Blank". A template minimally must have the following files:
 
 Build.ps1
-BuildLocalEnvironment.csv
-BuildCommitEnvironment.csv
-BuildTestEnvironment.csv
-BuildCapacityTestEnvironment.csv
-BuildProductionEnvironment.csv
+BuildLocal.yml
+BuildCommit.yml
+BuildTest.yml
+BuildCapacityTest.yml
+BuildProduction.yml
+BuildShared.yml
 
 Check out the templates page on the wiki (https://github.com/eavonius/powerdelivery/wiki/Templates) for more about which to use.
 #>
@@ -101,8 +102,9 @@ function Add-Pipeline {
 
         $newScriptName = "$outBaseDir\$name.ps1"
 
-        Move-Item -Path "$outBaseDir\Build.ps1" -Destination "$newScriptName" -Force
-		
+        Move-Item -Force "$outBaseDir\Build.ps1" "$newScriptName"
+		Move-Item -Force "$outBaseDir\BuildShared.yml" "$outBaseDir\$($name)Shared.yml"
+
 		$buildDictionary = @{
             "$name - Local" = "Local";
             "$name - Commit" = "Commit";
@@ -111,20 +113,15 @@ function Add-Pipeline {
             "$name - Production" = "Production";
         }
 		
-		$envExtensions = @(".yml", ".csv")
-		
 		$buildDictionary.Values | % {
 			$envName = $_
-			$envExtensions | % {
-				$envExtension = $_
-				$sourcePath = "$outBaseDir\Build$($envName)Environment$($envExtension)"
-				$destPath = "$outBaseDir\$($name)$($envName)Environment$($envExtension)"
-				if (Test-Path $sourcePath) {
-					Move-Item -Force $sourcePath $destPath
-				}
+			$sourcePath = "$outBaseDir\Build$($envName).yml"
+			$destPath = "$outBaseDir\$($name)$($envName).yml"
+			if (Test-Path $sourcePath) {
+				Move-Item -Force $sourcePath $destPath
 			}
 		}
-		
+
         "Replacing build template variables..."
         (Get-Content "$newScriptName") | % {
             $_ -replace '%BUILD_NAME%', $name

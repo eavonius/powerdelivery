@@ -69,9 +69,8 @@ function Invoke-Powerdelivery {
 					$actionPerformed = $true
 				}			
 				if ($blockName -eq "Compile") {
-					$yamlConfig = Get-BuildModuleConfig
-
-					$assetOperations = $yamlConfig.Assets
+					$yamlConfig = Get-BuildConfig
+					$assetOperations =  $yamlConfig.Assets
 
 					if ($assetOperations) {
 						$assetOperations.Keys | % {
@@ -294,8 +293,8 @@ function Invoke-Powerdelivery {
 			$dropLocation = $powerdelivery.dropLocation
 	    }
 		
-		$envConfigFileName = "$($appScript)$($environment)Environment"
-		$modulesConfigFileName = "$($appScript)Modules.yml"
+		$envConfigFileName = "$($appScript)$($environment)"
+		$sharedConfigFileName = "$($appScript)Shared.yml"
 		$yamlFile = "$($envConfigFileName).yml"
 
 	    if (Test-Path -Path $yamlFile) {
@@ -306,10 +305,10 @@ function Invoke-Powerdelivery {
 		    throw "Build configuration file $envConfigFileName not found."
 	    }
 		
-		if (Test-Path -Path $modulesConfigFileName) {
-			$yamlPath = (Resolve-Path ".\$($modulesConfigFileName)")
-			$moduleConfig = Get-Yaml -FromFile $yamlPath
-			$powerdelivery.config = MergeHashNested -baseHash $moduleConfig -subHash $powerdelivery.config			
+		if (Test-Path -Path $sharedConfigFileName) {
+			$yamlPath = (Resolve-Path ".\$($sharedConfigFileName)")
+			$sharedConfig = Get-Yaml -FromFile $yamlPath
+			$powerdelivery.config = MergeHashNested -baseHash $sharedConfig -subHash $powerdelivery.config			
 		}
 		
 		ReplaceReferencedConfigSettings($powerdelivery.config)

@@ -2,9 +2,9 @@
 # 
 # The script for PowerDeliveryASPNETMVC4's continous delivery pipeline. 
 #
-# This sample script uses primarily cmdlets. See the same script 
-# suffixed with _WithModuleConfig for a sample that uses primarily 
-# delivery modules.
+# This sample script uses primarily cmdlets. See the script named 
+# PowerDeliveryASPNETMVC4_WithModules.ps1 for a sample that uses 
+# primarily delivery modules to do work instead of calling cmdlets.
 #
 # https://github.com/eavonius/powerdelivery
 
@@ -38,20 +38,38 @@ Compile {
 	Publish-BuildAssets "PowerDeliveryASPNETMVC4DB" Databases -recurse
 }
 
+# Run automated unit tests
+#
+TestUnits {
+	Invoke-MSTest -file $unitTestsPath -category Unit -results UnitTestResults.trx
+}
+
+# Make modifications to the target environment
+#
+SetupEnvironment {
+}
+
 # Deploy your assets to the target environment
 #
 Deploy {
 
 	# Bring down scripts from drop location into current directory to run roundhouse
 	#
-	Get-BuildAssets $dbScriptsDir Databases
-
+	Get-BuildAssets Databases .
 	Invoke-Roundhouse -server $databaseServer -database $databaseName -scriptsDir $dbScriptsDir
 }
 
-# Run unit tests
+# Test modifications to the target environment
 #
-TestUnits {
+TestEnvironment {
+}
 
-	Invoke-MSTest -file $unitTestsPath -category Unit -results UnitTestResults.trx
+# Run automated acceptance tests
+#
+TestAcceptance {
+}
+
+# Run longer and more intensive capacity tests
+#
+TestCapacity {
 }
