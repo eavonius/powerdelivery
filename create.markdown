@@ -225,11 +225,12 @@ layout: page
 		<pre>$/MyProject/MyProject.ps1</pre>
 		<p>The YAML files to put your environment configuration in:</p>
 		<pre>
-$/MyProject/MyProjectCapacityTestEnvironment.yml
-$/MyProject/MyProjectCommitEnvironment.yml
-$/MyProject/MyProjectTestEnvironment.yml
-$/MyProject/MyProjectProductionEnvironment.yml
-$/MyProject/MyProjectModules.yml</pre>
+$/MyProject/MyProjectLocal.yml
+$/MyProject/MyProjectCommit.yml
+$/MyProject/MyProjectTest.yml
+$/MyProject/MyProjectCapacityTest.yml
+$/MyProject/MyProjectProduction.yml
+$/MyProject/MyProjectShared.yml</pre>
 		<p>The TFS Build Process Templates. These are Windows Workflow Foundation files that 
 		TFS uses to call a powerdelivery script. You should not need to open or understand 
 		anything about these files to use powerdelivery and please <b>do not modify these files</b>:</p>
