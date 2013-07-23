@@ -18,7 +18,7 @@ layout: page
 				<a href="#how_works">How powerdelivery works</a>
 			</li>
 			<li>
-				<a href="#dependencies">Pipeline dependencies</a>
+				<a href="#versioning">Versioning</a>
 			</li>
 			<li class="nav-header">
 				<a href="#environment">Environment configuration</a>
@@ -40,6 +40,9 @@ layout: page
 			</li>
 			<li>
 				<a href="#config_arrays">Using arrays</a>
+			</li>
+			<li>
+				<a href="#replacement_values">Replacement values</a>
 			</li>
 			<li class="nav-header">
 				<a href="#script_blocks">Script blocks</a>
@@ -278,23 +281,25 @@ MyProject Production Builders</pre>
 		powerdelivery within those script blocks to do work. You can also use 
 		<a href="#modules">delivery modules</a> as necessary.</p>
 		
-		<a name="dependencies"><hr></a>
+		<a name="versioning"><hr></a>
 		<br>
-		<h3>Dependencies between deployment pipelines</h3>
+		<h3>Versioning deployment pipelines</h3>
 		<p>You should always use a 3-part version in your pipeline declaration. This allows you 
 		to control your release of change into other deployment pipelines (products or software 
-		projects) that are dependent on yours.	An example would be where you have one TFS 
+		projects) that are dependent on yours when applicable. An example where this situation might occur
+		is when you have one TFS 
 		project that delivers a reusable class library, using powerdelivery, as its output. 
-		There are other TFS projects that consume this reusable library. You may have written your 
-		build so that it drops the library into a UNC path somewhere or perhaps <a href="http://www.nuget.org" target="_blank">nuget</a> as its <a href="use.html#production_build">production</a> 
-		build "deployment".</p>
+		There are other TFS projects that would like to consume this reusable library. You would write your 
+		build so that it drops the library into a UNC path somewhere or perhaps <a href="http://www.nuget.org" target="_blank">nuget</a> as its <a href="use.html#production_build">production</a> build "deployment". So deployment of this 
+		component is simply placing it somewhere for downstream other consuming deployment pipelines to pick it up.</p>
 		<p>When the other TFS projects that want to reuse this asset reference it, they should 
-		pull versions that are tied to the 3 part name, so for instance they are designed to work 
-		with version 1.0.3 <i>or greater</i> of your library. This way, when new versions of your files are released 
+		pull versions that are tied to <i>greater than or equal to</i> the 3 part name, so for instance they are designed to work 
+		with version 1.0.3.* of your library. This way, when new versions of your files are released 
 		as 1.0.3.100 or 1.0.3.500 you are telling the consuming applications that the <i>interface</i> 
-		to that file hasn't changed. If it does change, you can then update the version at the top 
-		of the script to 1.0.4 and those downstream applications can choose to integrate the new 
-		changes only when they are ready.</p>
+		to that file hasn't changed, and you intend for it to be consumed. If something substantial about the 
+		dependency does change, you can then update the version at the top 
+		of the script to 1.0.4 and those downstream applications will not pull that version. These dependent 
+		pipelines can choose to integrate the new changes only when they are ready.</p>
 		<p>Powerdelivery automatically creates a 
 		version number with the changeset appended to the end on each build so that you 
 		can version your files appropriately. See the <a href="reference.html#invoke_msbuild_cmdlet">Invoke-MSBuild</a> 
@@ -318,16 +323,28 @@ MyProject Production Builders</pre>
 		<p>When your build script starts, prior to your code being run, powerdelivery 
 		looks in the same directory as your script for a file with the following pattern:</p>
 		<p>
-			<code>[ScriptName][EnvironmentName]Environment.yml</code>
+			<code>[ScriptName]Shared.yml</code>
+		</p>
+		<p>where <i>ScriptName</i> is the name of the build script (ending in .ps1). This is the 
+		<b>shared configuration file</b> and any settings you put in it will be available in 
+		<i>all environments</i> (Development, Test, Production etc.) that your build targets.</p>
+		<p>After the shared configuration file is loaded, powerdelivery looks in the same 
+		directory for an environment-specific configuration file with the following pattern:</p>
+		<p>
+			<code>[ScriptName][EnvironmentName].yml</code>
 		</p>
 		<p>where <i>ScriptName</i> is the name of the build script (ending in .ps1) and <i>EnvironmentName</i> 
 		is "Local", "Test", or "Production" for example, depending on the target build environment.</p>
-		<p>For example, if your script was named "RecipeManager", powerdelivery would expect to find the following environment configuration files:</p>
-		<pre>RecipeManagerLocalEnvironment.yml
-RecipeManagerCommitEnvironment.yml
-RecipeManagerTestEnvironment.yml
-RecipeManagerCapacityTestEnvironment.yml
-RecipeManagerProductionEnvironment.yml</pre>
+		<p>For example, if your script was named "RecipeManager", and you requested a "Test" environment 
+		build, powerdelivery would load the following environment configuration files:</p>
+		<pre>RecipeManagerShared.yml
+RecipeManagerTest.yml</pre>
+		<p><b>IMPORTANT</b>: Any settings you place in the shared file will be merged with the 
+		environment-specific file. If there are any settings in one file but not the other, at 
+		runtime (when the build runs) these settings will still be available. If two copies of the 
+		same settings are present in each file, powerdelivery gives precedence to the environment-specific 
+		file. This allows you to define structured configuration in the shared file, and override 
+		environment-specific settings only as necessary.</p>
 
 		<a name="config_layout"><hr></a>
 		<br />
@@ -454,6 +471,27 @@ Deploy {
 		<p>This trivial example simply prints out to the build log the name and port of the 
 		web servers and ports. In a more useful build you might deploy to each web site the 
 		same set of files in a farm for example.</p>
+
+		<a name="replacement_values"><hr></a>
+		<br />
+		<h3>Replacing values in configuration settings</h3>
+		<p>To eliminate duplication, you can specify the value of any setting as the name 
+		of an existing setting to have its value replaced at build time. The name of the 
+		setting must be a top-level setting (not nested below another section) and can 
+		come from either the <i>shared configuration file</i> or an <i>environment-specific configuration file</i>.</p>
+		<p>To indicate that you want powerdelivery to perform this replacement, you must surround 
+		the name of the value to be replaced with double angle brackets. For example:</p>
+		{% highlight yaml %}DatabaseServer: myServer
+
+Databases:
+  Database1:
+    Server: <<DatabaseServer>>
+    Database: Database1
+  Database2:
+    Server: <<DatabaseServer>>
+    Database: Database2{% endhighlight %}
+		<p>In the example above at build time the token &lt;&lt;DatabaseServer&gt;&gt; will be replaced with 
+		<i>myServer</i>.</p>
 
 		<a name="script_blocks"><hr></a>
 		<h2>Script blocks</h2>
@@ -674,26 +712,17 @@ Import-DeliveryModule WebDeploy{% endhighlight %}
 		<br />
 		<h3>Configuring modules</h3>
 		<p>Once you've referenced a module using the <a href="reference.html#import_delivery_module_cmdlet">Import-DeliveryModule</a> 
-		cmdlet, you must configure it for the module to do any work. When you <a href="#add_pipeline">added a deployment pipeline</a> to your TFS project, 
-		an additional configuration file was added that is used to store the configuration of the modules you use in your script. 
-		This file follows the naming convention:</p>
-		<p>
-			<code>[ScriptName]Modules.yml</code>
-		</p>
-		<p>Following our example, if our pipeline was named "RecipeManager" (and thus the build script is named 
-		RecipeManager.ps1), the module configuration file would be:</p>
-		<p>
-			<code>RecipeManagerModules.yml</code>
-		</p>
-		<p>Each delivery module you import has a YAML section name under which its settings should be placed. 
+		cmdlet, you must configure it for the module to do any work.</p>
+		<p>Each delivery module you import looks for a specifically-named YAML section name under which its settings should be placed. 
 		You will need to refer to the <a href="reference.html#modules">delivery module reference</a> for each 
 		module to find this information. Below this section name you must add another named section for each 
 		set of settings you want to pass to the module to do work. This section can be named anything you want.</p>
 		<p>As an example, if our script referenced the <a href="reference.html#msbuild_module">MSBuild</a> delivery module 
 		we might have 3 projects we want to have compiled when our script runs. Using the delivery module, we no longer 
 		use a call to the <a href="reference.html#invoke_msbuild_cmdlet">Invoke-MSBuild</a> cmdlet in our script, but instead 
-		place settings below an <b>MSBuild</b> settings section in the module configuration file. Here is an example 
-		of the contents of the module configuration file in our example:</p>
+		place settings below an <b>MSBuild</b> settings section in our environment configuration file. Remember, you can use the 
+		shared, or environment-specific file for configuring these settings.</p>
+		<p>Here is an example of the contents of the shared environment configuration file:</p>
 		{% highlight yaml %}MSBuild:
   Project1:
     ProjectFile: Project1/Project1.csproj
