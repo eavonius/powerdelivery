@@ -30,13 +30,13 @@ layout: page
 				<a href="#get_buildcollectionuri_cmdlet">Get-BuildCollectionUri</a>
 			</li>
 			<li>
+				<a href="#get_buildconfig_cmdlet">Get-BuildConfig</a>
+			</li>
+			<li>
 				<a href="#get_builddroplocation_cmdlet">Get-BuildDropLocation</a>
 			</li>
 			<li>
 				<a href="#get_buildenvironment_cmdlet">Get-BuildEnvironment</a>
-			</li>
-			<li>
-				<a href="#get_buildmoduleconfig_cmdlet">Get-BuildModuleConfig</a>
 			</li>
 			<li>
 				<a href="#get_buildname_cmdlet">Get-BuildName</a>
@@ -207,6 +207,24 @@ layout: page
 		<h4>Outputs</h4>
 		<p>string - The Uri of the TFS project collection containing the project being built.</p>
 
+		<a name="get_buildconfig_cmdlet"><hr></a>
+		<h3>Get-BuildConfig</h3>
+		<p>Gets the configuration used for the build. This object contains the results of merging the 
+		shared and environment-specific configuration files for the target environment being deployed to. 
+		The <a href="get_buildsetting_cmdlet">Get-BuildSetting</a> cmdlet provides the same functionality 
+		as this one, however that cmdlet will throw an exception of the requested setting is not found. 
+		You can use this cmdlet to retrieve the entire top-level configuration and check for the presence 
+		of a section, if you know a section may not be present at build time.</p>
+		<h4>Example</h4>
+		{% highlight powershell %}$config = Get-BuildConfig
+
+if ($config.MySetting) {
+  $mySetting = $config.MySetting
+}{% endhighlight %}
+		<h4>Outputs</h4>
+		<p>hash - A combined hash that is the result of merging the shared and environment-specific configuration 
+		file, appropriate for the target environment being built to.</p>
+
 		<a name="get_builddroplocation_cmdlet"><hr></a>
 		<h3>Get-BuildDropLocation</h3>
 		<p>Gets the remote UNC path into which build assets should be placed. You can use the 
@@ -225,15 +243,6 @@ layout: page
 		{% highlight powershell %}$environment = Get-BuildEnvironment{% endhighlight %}
 		<h4>Outputs</h4>
 		<p>string - The environment the currently executing build is targeting for deployment.</p>
-		
-		<a name="get_buildmoduleconfig_cmdlet"><hr></a>
-		<h3>Get-BuildModuleConfig</h3>
-		<p>Gets the Module configuration file used for the build. You should not call this 
-		cmdlet in your script directly. Use it from a <a href="#modules">delivery module</a>.</p>
-		<h4>Example</h4>
-		{% highlight powershell %}$moduleConfig = Get-BuildModuleConfig{% endhighlight %}
-		<h4>Outputs</h4>
-		<p>YAML - The YAML configuration object used by delivery modules to get settings.</p>
 		
 		<a name="get_buildname_cmdlet"><hr></a>
 		<h3>Get-BuildName</h3>
@@ -269,14 +278,17 @@ layout: page
 		
 		<a name="get_buildsetting_cmdlet"><hr></a>
 		<h3>Get-BuildSetting</h3>
-		<p>Gets a environment setting from the .yml file for the environment the currently executing build is targeting.</p>
+		<p>Gets a environment setting from the combined result of merging the shared and environment-specific 
+		.yml configuration files, using the environment the currently executing build is targeting.</p>
 		<h4>Example</h4>
 		{% highlight powershell %}$webServerName = Get-BuildSetting WebServerName{% endhighlight %}
 		<h4>Parameters</h4>
 		<h5>name</h5>
-		<p>The name of the setting from the .csv file to get.</p>
+		<p>The name of the setting from the .yml file to get.</p>
 		<h4>Outputs</h4>
-		<p>string or hash - The value of the setting from the .yml file for the setting that was requested.</p>
+		<p>string or hash - The value of the setting from the .yml file for the setting that was requested. 
+		If the value is a simple name/value pair a string will be returned, otherwise a hash of the nested 
+		settings below the requested section.</p>
 		
 		<a name="get_buildteamproject_cmdlet"><hr></a>
 		<h3>Get-BuildTeamProject</h3>

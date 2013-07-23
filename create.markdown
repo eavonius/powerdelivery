@@ -362,15 +362,15 @@ DatabaseName: MyDatabase{% endhighlight %}
 		but with different <i>values</i>, in all of your environment configuration files. So if we were 
 		using the example build name of "RecipeManager" (where our build script is named RecipeManager.ps1) 
 		we might have the following contents for our environment configuration files:</p>
-		<p><b>RecipeManagerCommitEnvironment.yml</b></p>
+		<p>RecipeManagerCommit.yml</p>
 		{% highlight yaml %}WebServer: MyDevServer
 DatabaseServer: MyDevDbServer
 DatabaseName: MyDatabase{% endhighlight %}
-		<p><b>RecipeManagerTestEnvironment.yml</b></p>
+		<p>RecipeManagerTest.yml</p>
 		{% highlight yaml %}WebServer: MyTestServer
 DatabaseServer: MyTestDbServer
 DatabaseName: MyDatabase{% endhighlight %}
-		<p><b>RecipeManagerProductionEnvironment.yml</b></p>
+		<p>RecipeManagerProduction.yml</p>
 		{% highlight yaml %}WebServer: MyProdServer
 DatabaseServer: MyProdDbServer
 DatabaseName: MyDatabase{% endhighlight %}
