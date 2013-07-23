@@ -80,6 +80,9 @@ layout: page
 			<li class="nav-header">
 				<a href="#cmdlets">Using cmdlets</a>
 			</li>
+			<li>
+				<a href="#invoking_sections">Invoking configuration sections</a>
+			</li>
 			<li class="nav-header">
 				<a href="#modules">Using delivery modules</a>
 			</li>
@@ -683,6 +686,50 @@ SetupEnvironment {
 		cmdlet should be called in the <a href="#init_block">Init</a> block. The <a href="reference.html#invoke_msbuild_cmdlet">Invoke-MSBuild</a> 
 		cmdlet should be called in the <a href="#compile_block">Compile</a> block. The <a href="reference.html#invoke_roundhouse_cmdlet">Invoke-Roundhouse</a> 
 		cmdlet should be called in the <a href="#deploy_block">Deploy</a> block.</p>
+
+		<a name="invoking_sections"><hr></a>
+		<br />
+		<h2>Invoking configuration sections using cmdlets</h2>
+		<p>If you would prefer to reduce the lines of code in your PowerShell script and to use 
+		configuration instead of scripting, you can use two special cmdlets in powerdelivery to 
+		do so. The first requirement for using these is that you must have an existing PowerShell 
+		cmdlet (function) that takes a set of parameters that can be represented in the configuration 
+		file.</p>
+		<h5>Example</h5>
+		<p>In the example PowerShell function below, we have a cmdlet that takes two strings and a hash as parameters:</p>
+		{% highlight powershell %}function Invoke-Something {
+  param(
+    [string] $paramOne,
+    [string] $paramTwo,
+    [hash] $properties
+  )
+
+  Write-Host "You passed $paramOne and $paramTwo!"
+  $properties | % { "Property: $($_.Key) set to $($_.Value)" }
+}{% endhighlight %}
+		<p>You could call this function using traditional PowerShell somewhere in your script:</p>
+		{% highlight powershell %}function Deploy {
+  Invoke-Something `
+    -paramOne "Param One Value" `
+    -paramTwo "Param Two Value" `
+    -properties @{'Prop1' = 'test'; 'Prop2' = 'test'}
+}{% endhighlight %}
+		<p>However, you can also simply place a section where the parameters match in your configuration file:</p>
+		{% highlight yaml %}Something:
+  ParamOne: Param One Value
+  ParamTwo: Param Two Value
+  Properties:
+    Prop1: test
+    Prop2: test{% endhighlight %}
+  		<p>And then call the function using the <a href="reference.html#invoke_buildconfigsection_cmdlet">Invoke-BuildConfigSection</a> 
+  		cmdlet:</p>
+  		{% highlight powershell %}function Deploy {
+  $something = Get-BuildConfigSection Something
+  Invoke-BuildConfigSection $something, Invoke-Something
+}{% endhighlight %}
+		<p>This will result in the Invoke-Something cmdlet being called passing the parameters under that section 
+		from the configuration file. You can also use <a href="reference.html#invoke_buildconfigsection_cmdlet">Invoke-BuildConfigSections</a> 
+		to do the same for a list of multiple sections that match the cmdlet's parameters.</p>
 
 		<a name="modules"><hr></a>
 		<br />
