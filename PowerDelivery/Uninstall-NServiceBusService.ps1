@@ -28,7 +28,7 @@ function Uninstall-NServiceBusService{
 		[Parameter(Position=2,Mandatory=1)]$Directory
 	)
 
-	Write-Host "Uninstalling previous copy of $using:Name service if found..."
+	Write-Host "Uninstalling previous copy of $Name service if found..."
 
 	Invoke-Command -ComputerName $ComputerName {
 
