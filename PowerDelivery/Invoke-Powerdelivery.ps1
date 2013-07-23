@@ -309,11 +309,13 @@ function Invoke-Powerdelivery {
 		if (Test-Path -Path $sharedConfigFileName) {
 			$yamlPath = (Resolve-Path ".\$($sharedConfigFileName)")
 			$loadedSharedConfig = $false
-			try {
+			if (Test-Path $yamlPath) {
 				$sharedConfig = Get-Yaml -FromFile $yamlPath -ErrorAction SilentlyContinue
 				$loadedSharedConfig = $true
 			}
-			catch {}
+			else {
+				Write-Host "WARNING: File $yamlPath not found, not loading shared environment configuration."
+			}
 			if ($loadedSharedConfig) {
 				$powerdelivery.config = MergeHashNested -baseHash $sharedConfig -subHash $powerdelivery.config			
 			}
@@ -509,11 +511,37 @@ function Invoke-Powerdelivery {
 	    InvokePowerDeliveryBuildAction -condition ($environment -eq 'Commit' -or $environment -eq 'Local') -stage $powerdelivery.testAcceptance -description "Acceptance Tests" -status "Testing Acceptance" -blockName "TestAcceptance"
 	    InvokePowerDeliveryBuildAction -condition ($environment -eq 'CapacityTest') -stage $powerdelivery.testCapacity -description "Capacity Tests" -status "Testing Capacity" -blockName "TestCapacity"
         
-	    Write-Host "Powerdelivery: Build succeeded!" -ForegroundColor DarkGreen
+	    Write-Host "`nPowerdelivery: Build succeeded!`n" -ForegroundColor DarkGreen
     }
     catch {
 	    Set-Location $powerdelivery.currentLocation
-	    Write-Host "Powerdelivery: Build Failed!" -ForegroundColor Red
+
+		$ErrorRecord = $_[0]
+
+ 		Write-ConsoleSpacer
+ 		"= Powerdelivery: Build failure details"
+ 		Write-ConsoleSpacer
+
+ 		"`nScript Error Details:`n"
+ 		"Script Error Line: " + $ErrorRecord.InvocationInfo.Line
+ 		"Script Error Position: " + $ErrorRecord.InvocationInfo.PositionMessage
+ 		"Script Error Message Details: " + $ErrorRecord.PSMessageDetails
+ 		"Script Error Id: " + $ErrorRecord.FullyQualifiedErrorId
+ 		"Script Stack Trace: " + $ErrorRecord.ScriptStackTrace
+
+ 		$Exception = $ErrorRecord.Exception
+ 		if ($Exception -ne $null)
+		{
+ 			"`nException(s) details:`n"
+ 			for ($i = 0; $Exception; $i++, ($Exception = $Exception.InnerException))
+			{
+ 				"Exception Type: " + $Exception.GetType().FullName
+ 				"Exception Message: " + $Exception.Message
+ 				"Exception Stack Trace: " + $Exception.StackTrace
+			}
+		}
+
+	    Write-Host "`nPowerdelivery: Build Failed!`n" -ForegroundColor Red
 		throw
     }
 }
