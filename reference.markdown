@@ -9,6 +9,9 @@ layout: page
 				<a href="#cmdlets">PowerShell cmdlets</a>
 			</li>
 			<li>
+				<a href="#add_windowsusertogroup_cmdlet">Add-WindowsUserToGroup</a>
+			</li>
+			<li>
 				<a href="#disable_sqljobs_cmdlet">Disable-SqlJobs</a>
 			</li>
 			<li>
@@ -87,6 +90,9 @@ layout: page
 				<a href="#invoke_ssispackage_cmdlet">Invoke-SSISPackage</a>
 			</li>
 			<li>
+				<a href="#new_windowsuseraccount_cmdlet">New-WindowsUserAccount</a>
+			</li>
+			<li>
 				<a href="#publish_buildassets_cmdlet">Publish-BuildAssets</a>
 			</li>
 			<li>
@@ -97,6 +103,9 @@ layout: page
 			</li>
 			<li>
 				<a href="#register_deliverymodulehook_cmdlet">Register-DeliveryModuleHook</a>
+			</li>
+			<li>
+				<a href="#set_apppoolidentity_cmdlet">Set-AppPoolIdentity</a>
 			</li>
 			<li>
 				<a href="#set_ssasconnection_cmdlet">Set-SSASConnection</a>
@@ -139,6 +148,21 @@ layout: page
 		topic from the <a href="create.html">creating deployment pipelines</a> article 
 		for an overview of the philosophy behind using these cmdlets.</p>
 		
+		<a name="add_windowsusertogroup_cmdlet"><hr></a>
+		<h3>Add-WindowsUserToGroup</h3>
+		<p>Adds a non-domain (local) user account to a group on a Windows computer. This cmdlet executes without error if the user is already a member of the group specified.</p>
+		<h4>Example</h4>
+		{% highlight powershell %}Add-WindowsUserToGroup -userName MyUser `
+                       -group "Performance Monitor Users" `
+                       -computerName MYSERVER{% endhighlight %}
+		<h4>Parameters</h4>
+		<h5>userName</h5>
+		<p>string - The account username of the user to add to a group.</p>
+		<h5>group</h5>
+		<p>string - The group to add the user to.</p>
+		<h5>computerName</h5>
+		<p>Optional. string - The computer to add the user to a group on. Adds the user to the group on the local computer if no computer name is specified.</p>
+
 		<a name="disable_sqljobs_cmdlet"><hr></a>
 		<h3>Disable-SqlJobs</h3>
 		<p>This cmdlet can disable one or more sql jobs who's name(s) match the pattern provided.</p>
@@ -512,6 +536,21 @@ Invoke-SSIS -package MyPackage.dtsx -server MyServer -dtExecPath $dtExecPath{% e
 		<h5>packageArgs</h5>
 		<p>Optional. A PowerShell hash containing name/value pairs to set as package arguments to dtexec.</p>
 		
+		<a name="new_windowsuseraccount_cmdlet"><hr></a>
+		<h3>New-WindowsUserAccount</h3>
+		<p>Creates a non-domain (local) user account on a Windows computer. This cmdlet executes without error if the user already exists.</p>
+		<h4>Example</h4>
+		{% highlight powershell %}New-WindowsUserAccount -userName MyUser `
+                       -password "n3w@cctp@ss4" `
+                       -computerName MYSERVER{% endhighlight %}
+		<h4>Parameters</h4>
+		<h5>userName</h5>
+		<p>string - The name of the new user to add.</p>
+		<h5>password</h5>
+		<p>string - The password of the new user's account.</p>
+		<h5>computerName</h5>
+		<p>Optional. string - The computer to add the user to. Adds the user to the local computer if no computer name is specified.</p>
+
 		<a name="publish_buildassets_cmdlet"><hr></a>
 		<h3>Publish-BuildAssets</h3>
 		<p>Copies build assets from the build working directory to the remote UNC drop location. You should specify relative paths for this command.</p>
@@ -547,6 +586,44 @@ Invoke-SSIS -package MyPackage.dtsx -server MyServer -dtExecPath $dtExecPath{% e
 		<h5>deploymentUtilityPath</h5>
 		<p>string - Optional. The full path to the Microsoft.AnalysisServices.DeploymentUtility.exe command-line tool on the computer specified by the <b>computer</b> parameter.</p>
 		
+		<a name="publish_webdeploy_cmdlet"></hr></a>
+		<h3>Publish-WebDeploy</h3>
+		<p>Used to deploy a web application using <a href="http://www.iis.net/downloads/microsoft/web-deploy" target="_blank">Microsoft Web Deploy 3.0</a>. 
+		Use the <a href="#invoke_msbuild_cmdlet">Invoke-MSBuild</a> cmdlet to compile a project so that the web deploy package (.zip file) you want to deploy is created.</p>
+		<p>You will also want to use the <a href="http://www.microsoft.com/web/downloads/platform.aspx" target="_blank">Microsoft Web Platform Installer</a> on the web server to which you will deploy. Select "Recommended Configuration for Hosting Providers" 
+		from the feature list. This will install Web Deploy 3.0 and appropriate security settings for this module to work. See 
+		<a href="http://www.iis.net/learn/install/installing-publishing-technologies/installing-and-configuring-web-deploy" target="_blank">this article from Microsoft</a> 
+		for an overview as well as troubleshooting relating to setting up a server for web deploy.</p>
+		<p>You should call Publish-WebDeploy cmdlet during the 
+		<a href="create.html#deploy_block">Deploy</a> block of your script.</p>
+		<h4>Example</h4>
+		{% highlight powershell %}Invoke-WebDeploy -webComputer MyComputer ` 
+                 -webPort 8080 `
+                 -webSite www.somewhere.com `
+                 -webPassword "gh#1@42*" `
+                 -webURL: http://www.somewhere.com:8080 `
+                 -package: WebSites/MySite.zip `
+                 -bringOffline: true `
+                 -parameters: @{'DatabaseName' = 'MyDatabase'}{% endhighlight %}
+		<h4>Parameters</h4>
+		<h5>WebComputer</h5>
+		<p>string - The computer to deploy to.</p>
+		<h5>WebPort</h5>
+		<p>int - The HTTP/HTTPS port to create the web site on.</p>
+		<h5>WebSite</h5>
+		<p>string - The name of the virtual directory to create the web site within. A folder will also be created below the <i>Inetpub</i> directory on the target server with this name containing your web application's files.</p>
+		<h5>WebPassword</h5>
+		<p>string - A password that meets the strength requirements of the destination computer that deployment will occur on. A user will be created with the 
+		same name as the <b>WebSite</b> property and this account, combined with this password, will control the ability to perform deployments.</p>
+		<h5>WebURL</h5>
+		<p>string - The URL, including the port, that users will use to access the site.</p>
+		<h5>Package</h5>
+		<p>string - The path to the web deployment zip file containing the package to deploy.</p>
+		<h5>Parameters</h5>
+		<p>hash - Optional. Nested YAML settings for parameters that will be passed during web deployment. See the parameters.xml file inside your web deployment zip file for possible options for your specific deployment.</p>
+		<h5>BringOffline</h5>
+		<p>bool - Optional. Must be true or false. If present, takes the web application <a href="http://www.iis.net/learn/publish/deploying-application-packages/taking-an-application-offline-before-publishing" target="_blank">offline</a> during publishing.</p>
+
 		<a name="register_deliverymodulehook_cmdlet"><hr></a>
 		<h3>Register-DeliveryModuleHook</h3>
 		<p>Use this cmdlet in a powerdelivery <a href="#modules">delivery module</a> to register a function 
@@ -586,11 +663,33 @@ Invoke-SSIS -package MyPackage.dtsx -server MyServer -dtExecPath $dtExecPath{% e
 			<li>PostTestCapacity</li>
 		</ul>
 
+		<a name="set_apppoolidentity_cmdlet"><hr></a>
+		<h3>Set-AppPoolIdentity</h3>
+		<p>Sets the identity of an IIS web application pool to a specific user account. Use the <a href="#new_windowsuseraccount_cmdlet">New-WindowsUserAccount</a> cmdlet to create this user beforehand if necessary.</p>
+		<h4>Example</h4>
+		{% highlight powershell %}Set-AppPoolIdentity -appPoolName MySite `
+                    -userName 'DOMAIN\MyUser' `
+                    -password 's@m3p@ss' `
+                    -computerName MYCOMPUTER{% endhighlight %}
+		<h4>Parameters</h4>
+		<h5>appPoolName</h5>
+		<p>string - The name of the application pool to modify.</p>
+		<h5>userName</h5>
+		<p>string - The username of the account to use for the identity.</p>
+		<h5>password</h5>
+		<p>string - The password of the account to use for the identity.</p>
+		<h5>computerName</h5>
+		<p>Optional. string - The computer to set the app pool identity on. Modifies the local computer if no computer name is specified.</p>
+
 		<a name="set_ssasconnection_cmdlet"><hr></a>
 		<h3>Set-SSASConnection</h3>
 		<p>Sets a connection string on a deployed <a href="http://msdn.microsoft.com/en-us/library/ms175609(v=sql.90).aspx" target="_blank">Microsoft SQL Server Analysis Services</a> (SSAS) cube.</p>
 		<h4>Example</h4>
-		{% highlight powershell %}Set-SSASConnection -computer MyServer -tabularServer MyServer\TABULAR -databaseName MyCube -datasourceID "{4CC0937D-61D3-421E-B607-B3E36D1D09B5}" -connectionString "Initial Catalog=MyDB;Server=localhost;Trusted Connection=yes"{% endhighlight %}
+		{% highlight powershell %}Set-SSASConnection -computer MyServer `
+                   -tabularServer MyServer\TABULAR `
+                   -databaseName MyCube `
+                   -datasourceID "{4CC0937D-61D3-421E-B607-B3E36D1D09B5}" `
+                   -connectionString "Initial Catalog=MyDB;Server=localhost;Trusted Connection=yes"{% endhighlight %}
 		<h4>Parameters</h4>
 		<h5>computer</h5>
 		<p>string - The computer to which the SSAS cube was deployed.</p>
