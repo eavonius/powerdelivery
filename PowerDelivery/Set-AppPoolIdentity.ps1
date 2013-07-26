@@ -8,16 +8,16 @@ Use the New-WindowsUserAccount cmdlet to create this user beforehand if
 necessary.
 
 .Parameter appPoolName
-The name of the application pool to modify.
+string - The name of the application pool to modify.
 
 .Parameter userName
-The username of the account to use for the identity.
+string - The username of the account to use for the identity.
 
 .Parameter password
-The password of the account to use for the identity.
+string - The password of the account to use for the identity.
 
 .Parameter computerName
-Optional. The computer running the IIS website to be modified.
+string - Optional. The computer running the IIS website to be modified.
 
 .Example
 Set-AppPoolIdentity -appPoolName MySite `

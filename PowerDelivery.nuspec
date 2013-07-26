@@ -47,7 +47,6 @@
     <file src="PowerDelivery\Invoke-Powerdelivery.ps1" target="tools\PowerDelivery\Invoke-Powerdelivery.ps1" />
     <file src="PowerDelivery\Invoke-Roundhouse.ps1" target="tools\PowerDelivery\Invoke-Roundhouse.ps1" />
     <file src="PowerDelivery\Invoke-SSISPackage.ps1" target="tools\PowerDelivery\Invoke-SSISPackage.ps1" />
-    <file src="PowerDelivery\ModifySharePermissions.ps1" target="tools\PowerDelivery\ModifySharePermissions.ps1" />
     <file src="PowerDelivery\New-RemoteShare.ps1" target="tools\PowerDelivery\New-RemoteShare.ps1" />
     <file src="PowerDelivery\New-WindowsUserAccount.ps1" target="tools\PowerDelivery\New-WindowsUserAccount.ps1" />
     <file src="PowerDelivery\NewShareWithPermissions-0.0.1.ps1" target="tools\PowerDelivery\NewShareWithPermissions-0.0.1.ps1" />

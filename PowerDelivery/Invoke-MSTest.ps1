@@ -5,31 +5,33 @@ Runs unit tests using mstest.exe.
 .Description
 The Invoke-MSTest cmdlet is used to run unit or acceptance tests using mstest.exe. You should always use this cmdlet instead of a direct call to mstest.exe or existing cmdlets you may have found online when working with powerdelivery.
 
-This cmdlet provides the following essential continuous delivery features:
+This cmdlet reports the results of the test run back to TFS to be viewed in the build summary.
 
-Automatically targets a test configuration matching the environment name ("Commit", "Test", or "Production"). Create build configurations named "Commit", "Test", and "Production" with appropriate settings in your projects and compile them using the Invoke-MSBuild cmdlet for this to work.
-
-Reports the results of the test run back to TFS to be viewed in the build summary.
-
-IMPORTANT: You most only call Invoke-MSTest in the TestUnits or TestAcceptance block.
+IMPORTANT: You most only call Invoke-MSTest in the TestUnits or TestAcceptance blocks.
 
 .Example
-Invoke-MSTest -list MyTestList -results AcceptanceTests\MyTests.Results.trx -vsmdi AcceptanceTests\MyTests.vsmdi -settings AcceptanceTests\TraceAndTestImpact.testsettings
+Invoke-MSTest -file MyTests.dll -results MyTestResults.trx -category AllTests
 
-.Parameter list
-The name of a test list in the file specified by the vsmdi parameter. Tests in this list will be run.
+.Parameter file
+string - The path to a file containing MSTest unit tests
 
 .Parameter results
-A path relative to the drop location (retrieved via Get-BuildDropLocation) of a test run results file (.trx) to store results in.
+string - A path relative to the drop location (retrieved via Get-BuildDropLocation) of a test run results file (.trx) to store results in.
 
-.Parameter vsmdi
-A path relative to the drop location of the tests metadata (.vsmdi) file to use.
+.Parameter category
+string - Runs tests found in the file referenced by the file parameter on any classes found with the [TestCategory] attribute present set to this value.
 
-.Parameter settings
-A path relative to the drop location of the test settings (.testsettings) file to use.
+.Parameter computerName
+string - Optional. A remote computer on which to run the tests.
+
+.Parameter sharePath
+string - Optional. A share on the remote computer into which the tests will be copied and run from.
 
 .Parameter platform
-Optional. The platform configuration (x86, x64 etc.) of the project compiled using Invoke-MSBuild containing the tests that were run. The default is "AnyCPU".
+string - Optional. The platform configuration (x86, x64 etc.) of the project compiled using Invoke-MSBuild containing the tests that were run. The default is "AnyCPU".
+
+.Parameter buildConfiguration
+string - Optional. The default is to use the Release configuration.
 #>
 function Invoke-MSTest {
     [CmdletBinding()]
@@ -37,13 +39,29 @@ function Invoke-MSTest {
 		[Parameter(Position=0,Mandatory=1)][string] $file,
 		[Parameter(Position=1,Mandatory=1)][string] $results,
 		[Parameter(Position=2,Mandatory=1)][string] $category,
-        [Parameter(Position=3,Mandatory=0)][string] $platform = 'AnyCPU',
-		[Parameter(Position=4,Mandatory=0)][string] $buildConfiguration
+		[Parameter(Position=3,Mandatory=0)][string] $computerName,
+		[Parameter(Position=4,Mandatory=0)][string] $sharePath,
+        [Parameter(Position=5,Mandatory=0)][string] $platform = 'AnyCPU',
+		[Parameter(Position=6,Mandatory=0)][string] $buildConfiguration
     )
 	
-    $currentDirectory = Get-Location
+	$isRemote = $false
+	$shareTestsPath = ""
+	
 	$environment = Get-BuildEnvironment
 	$dropLocation = Get-BuildDropLocation
+	$currentDirectory = Get-Location
+	
+	$fileName = [System.IO.Path]::GetFileName($using:file)
+	$testsDir = [System.IO.Path]::GetDirectoryName($file)
+	
+	if (![String]::IsNullOrWhiteSpace($computerName)) {
+		$isRemote = $true;
+	}
+	
+	if ($isRemote -and [String]::IsNullOrWhiteSpace($sharePath)) {
+		throw "You must specify a UNC share path to run tests from when executing MSTest on a remote computer."
+	}
 
 	if ([String]::IsNullOrWhiteSpace($buildConfiguration)) {
 		if ($environment -eq 'Local') {
@@ -53,23 +71,54 @@ function Invoke-MSTest {
 			$buildConfiguration = 'Release'
 		}
 	}
+	
+	if ($isRemote) {
+		$shareTestsPath = Join-Path $sharePath $testsDir
+		copy -Force -Recurse "$testsDir\*" "$shareTestsPath"
+	}
 
-	$localResults = "$currentDirectory\$results"
 	$dropResults = "$dropLocation\$results"
 
-	try {
+	$commandArgs = @{'ScriptBlock' = {
+
+		$workingDirectory = Get-Location
+		$filePath = $using:file
+
+		if ($using:isRemote) {
+			$shareLocalDir = (Get-WmiObject Win32_Share -filter "Name LIKE '$using:sharePath'").path
+			$workingDirectory = Join-Path $shareLocalDir $using:testsDir
+			$filePath = Join-Path $workingDirectory $using:fileName
+		}
+
+		$localResults = "$workingDirectory\$using:results"
+
 		rm -ErrorAction SilentlyContinue -Force $localResults | Out-Null
 	
-        # Run acceptance tests out of local directory
-		$command = "mstest /testcontainer:""$currentDirectory\$file"" /category:""$category"" /resultsfile:""$localResults"""
-		$command += " /usestderr /nologo"
+        # Run acceptance tests out of working directory
+        Invoke-Expression "mstest /testcontainer:`"$filePath`" /category:`"$using:category`" /resultsfile:`"$localResults`" /usestderr /nologo"
 		
-        Exec -errorMessage "Error running tests in $file" {
-			Invoke-Expression $command
-        }
-    }
-    finally {
-        if ((Test-Path $localResults -PathType Leaf) -and $powerdelivery.onServer) {
+		if ($LASTEXITCODE -ne 0) {
+			throw "Error running tests in $filePath"
+		}
+	}}
+	
+	if ($isRemote) {
+		$commandArgs.Add('ComputerName', $computerName)
+	}
+	
+	try {
+		Invoke-Command @commandArgs
+	}
+	finally {
+		
+		if ($isRemote) {
+			$remoteResults = Join-Path $shareTestsPath $results
+			if (Test-Path $remoteResults -PathType Leaf) {
+				copy -Force $remoteResults $localResults
+			}
+		}
+	
+		if ((Test-Path $localResults -PathType Leaf) -and $powerdelivery.onServer) {
 
             copy $localResults $dropResults
 
@@ -86,5 +135,5 @@ function Invoke-MSTest {
 			
 			Write-BuildSummaryMessage -name "TestUnits" -header "Unit Tests" -message "MSTest: $file -> $results"
         }
-    }
+	}
 }

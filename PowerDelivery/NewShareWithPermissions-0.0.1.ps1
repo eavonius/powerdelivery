@@ -106,11 +106,13 @@ Function New-Share (
 {
 	#Start the Text for the message.
 	$text = "$ShareName ($FolderPath): "
+
 	#Package the SecurityDescriptor via the New-SecurityDescriptor Function.
 	$SecDesc = New-SecurityDescriptor $ACEs
+
 	#Create the share via WMI, get the return code and create the return message.
 	$Share = [WMICLASS] "\\$ComputerName\Root\Cimv2:Win32_Share"
-	$result = $Share.Create("$FolderPath", "$ShareName", 0, $false , $Description, $null, $SecDesc)
+	$result = $Share.Create("$FolderPath", "$ShareName", 0, 16777216, $Description, $null, $SecDesc)
 	switch ($result.ReturnValue)
 	{
 		0 {$text += "has been success fully created" }
@@ -124,10 +126,12 @@ Function New-Share (
 		24 {$text += "Error 24: Unknown Device or Directory" }
 		25 {$text += "Error 25: Net Name Not Found" }
 	}
+
 	#Create Custom return object and Add results
 	$return = New-Object System.Object
 	$return | Add-Member -type NoteProperty -name ReturnCode -value $result.ReturnValue
 	$return | Add-Member -type NoteProperty -name Message -value $text	
+
 	#Return result object
 	$return
 }
