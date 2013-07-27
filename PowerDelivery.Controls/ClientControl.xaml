@@ -20,7 +20,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Background="Transparent">
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Background="Transparent" HorizontalAlignment="Stretch">
             <Button Name="btnPipelines" Click="btnPipelines_Click" Margin="10">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="Images/Pipelines.png" />

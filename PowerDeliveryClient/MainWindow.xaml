@@ -3,6 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:c="clr-namespace:PowerDelivery.Controls;assembly=PowerDelivery.Controls"
         Icon="Images\ExtensionManager_vsix_OSReg.ico" Title="powerdelivery"
-        WindowStartupLocation="CenterScreen" Height="630" Width="900">
+        WindowStartupLocation="CenterScreen" Height="768" Width="1024">
     <c:ClientControl />
 </Window>

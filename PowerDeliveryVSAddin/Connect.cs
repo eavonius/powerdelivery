@@ -5,11 +5,7 @@ using Microsoft.VisualStudio.CommandBars;
 using EnvDTE;
 using EnvDTE80;
 
-using Microsoft.VisualStudio.TeamFoundation;
-
 using System.Reflection;
-using Microsoft.TeamFoundation.Client;
-using Microsoft.TeamFoundation.VersionControl.Client;
 
 namespace PowerDeliveryVSAddin
 {
@@ -23,8 +19,6 @@ namespace PowerDeliveryVSAddin
         Windows2 _windows;
         Window _documentWindow;
         string _addinPath;
-        TeamFoundationServerExt _tfsExt;
-        VersionControlServer _versionControlServer;
 
         Guid powerDeliveryToolWindowId = new Guid("1E7C1152-A7C5-4170-A2B3-940719F50E35");
 
@@ -185,33 +179,11 @@ namespace PowerDeliveryVSAddin
                     "Powerdelivery",
                     powerDeliveryToolWindowId.ToString(),
                     ref controlObject);
-
-                _tfsExt = (TeamFoundationServerExt)_applicationObject.GetObject("Microsoft.VisualStudio.TeamFoundation.TeamFoundationServerExt");
-                _tfsExt.ProjectContextChanged += tfsExt_ProjectContextChanged;
-
-                ReloadSources();
             }
 
             _documentWindow.IsFloating = false;
             _documentWindow.Visible = true;
             _documentWindow.Linkable = false;
-        }
-
-        private void ReloadSources()
-        {
-            if (_tfsExt.ActiveProjectContext.DomainUri != null) 
-            {
-                TfsTeamProjectCollection collection = new TfsTeamProjectCollection(new Uri(_tfsExt.ActiveProjectContext.DomainUri));
-
-                VersionControlServer _versionControlServer = collection.GetService<VersionControlServer>();
-
-                int x = 0;
-            }
-        }
-
-        void tfsExt_ProjectContextChanged(object sender, EventArgs e)
-        {
-            ReloadSources();
         }
 
 		private DTE2 _applicationObject;

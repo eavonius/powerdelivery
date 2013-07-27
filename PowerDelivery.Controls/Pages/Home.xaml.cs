@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,13 +11,17 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Diagnostics;
 
 using Microsoft.TeamFoundation.Framework;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.Build.Client;
 using Microsoft.TeamFoundation.Server;
+using Microsoft.TeamFoundation.VersionControl.Client;
+using Microsoft.TeamFoundation.VersionControl.Common;
+using Microsoft.TeamFoundation.Build.Workflow;
 using System.ComponentModel;
+using System.Security.Principal;
 
 namespace PowerDelivery.Controls.Pages
 {
@@ -65,47 +70,56 @@ namespace PowerDelivery.Controls.Pages
 
                                 string environmentName = definition.Name.Substring(definition.Name.LastIndexOf(" - ") + 3);
 
-                                if (pipeline == null)
-                                {
-                                    pipeline = new DeliveryPipeline(source, project.Name, collection.Name);
-                                    pipelines.Add(pipeline);
-                                }
+                                IDictionary<string, object> processParams = WorkflowHelpers.DeserializeProcessParameters(definition.ProcessParameters);
 
-                                string lastBuildStatus = "Never Run";
-                                string lastBuildNumber = "";
-                                DateTime lastBuildFinishTime = DateTime.MinValue;
-
-                                if (definition.LastBuildUri != null)
+                                if (processParams.ContainsKey("PowerShellScriptPath"))
                                 {
-                                    try
+                                    string scriptPath = processParams["PowerShellScriptPath"] as string;
+
+                                    string scriptName = Path.GetFileNameWithoutExtension(scriptPath.Substring(scriptPath.LastIndexOf("/")));
+
+                                    if (pipeline == null)
                                     {
-                                        IBuildDetail lastBuild = buildServer.GetBuild(definition.LastBuildUri);
-                                        lastBuildStatus = lastBuild.Status.ToString();
-                                        lastBuildFinishTime = lastBuild.FinishTime;
-                                        lastBuildNumber = definition.LastBuildUri.ToString().Substring(definition.LastBuildUri.ToString().LastIndexOf("/") + 1);
+                                        pipeline = new DeliveryPipeline(source, project.Name, collection.Name, scriptName);
+                                        pipelines.Add(pipeline);
                                     }
-                                    catch (Exception) { // Build was deleted 
-                                        lastBuildStatus = "No Longer Exists";
+
+                                    PipelineEnvironmentBuildStatus lastBuildStatus = new PipelineEnvironmentBuildStatus(BuildStatus.None);
+                                    string lastBuildNumber = "";
+                                    DateTime lastBuildFinishTime = DateTime.MinValue;
+
+                                    if (definition.LastBuildUri != null)
+                                    {
+                                        try
+                                        {
+                                            IBuildDetail lastBuild = buildServer.GetBuild(definition.LastBuildUri);
+                                            lastBuildStatus = new PipelineEnvironmentBuildStatus(lastBuild.Status);
+                                            lastBuildFinishTime = lastBuild.FinishTime;
+                                            lastBuildNumber = definition.LastBuildUri.ToString().Substring(definition.LastBuildUri.ToString().LastIndexOf("/") + 1);
+                                        }
+                                        catch (Exception)
+                                        {
+                                        }
                                     }
-                                }
 
-                                PipelineEnvironment environment = new PipelineEnvironment(pipeline, environmentName, lastBuildStatus, lastBuildNumber, lastBuildFinishTime);
+                                    PipelineEnvironment environment = new PipelineEnvironment(pipeline, environmentName, lastBuildStatus, lastBuildNumber, lastBuildFinishTime);
 
-                                if (environmentName == "Commit")
-                                {
-                                    pipeline.Commit = environment;
-                                }
-                                else if (environmentName == "Test")
-                                {
-                                    pipeline.Test = environment;
-                                }
-                                else if (environmentName == "Capacity Test")
-                                {
-                                    pipeline.CapacityTest = environment;
-                                }
-                                else if (environmentName == "Production")
-                                {
-                                    pipeline.Production = environment;
+                                    if (environmentName == "Commit")
+                                    {
+                                        pipeline.Commit = environment;
+                                    }
+                                    else if (environmentName == "Test")
+                                    {
+                                        pipeline.Test = environment;
+                                    }
+                                    else if (environmentName == "Capacity Test")
+                                    {
+                                        pipeline.CapacityTest = environment;
+                                    }
+                                    else if (environmentName == "Production")
+                                    {
+                                        pipeline.Production = environment;
+                                    }
                                 }
                             }
                         }
@@ -129,7 +143,27 @@ namespace PowerDelivery.Controls.Pages
         {
             Button btnSource = (Button)sender;
 
-            PipelineEnvironment environment = (PipelineEnvironment)btnSource.DataContext;
+            DeliveryPipeline pipeline = (DeliveryPipeline)btnSource.DataContext;
+
+            string localDirectory = pipeline.GetWorkingDirectory();
+
+            if (localDirectory != null)
+            {
+                string envConfigPath = string.Format("{0}\\{1}.ps1", localDirectory, pipeline.ScriptName);
+
+                if (!File.Exists(envConfigPath))
+                {
+                    MessageBox.Show(string.Format("File:\n\n{0}\n\nCouldn't be found on disk. Did you move your working folder?", envConfigPath),
+                        "Environment configuration file not found", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                ProcessStartInfo psi = new ProcessStartInfo();
+                psi.Verb = "edit";
+                psi.FileName = envConfigPath;
+
+                Process.Start(psi);
+            }
         }
 
         private void btnEditEnvironmentConfig_Click(object sender, RoutedEventArgs e)
@@ -138,20 +172,73 @@ namespace PowerDelivery.Controls.Pages
 
             PipelineEnvironment environment = (PipelineEnvironment)btnSource.DataContext;
 
-            Uri collectionUri = null;
-            TfsTeamProjectCollection collection = null;
+            string localDirectory = environment.Pipeline.GetWorkingDirectory();
 
-            try
+            if (localDirectory != null)
             {
-                collectionUri = new Uri(environment.Pipeline.CollectionName);
-                collection = new TfsTeamProjectCollection(collectionUri);
+                string envConfigPath = string.Format("{0}\\{1}{2}.yml", localDirectory, environment.Pipeline.ScriptName, environment.EnvironmentName);
 
-                       
+                if (!File.Exists(envConfigPath))
+                {
+                    MessageBox.Show(string.Format("File:\n\n{0}\n\nCouldn't be found on disk. Did you move your working folder?", envConfigPath),
+                        "Environment configuration file not found", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                try
+                {
+                    ProcessStartInfo psi = new ProcessStartInfo();
+                    psi.FileName = envConfigPath;
+                    psi.WorkingDirectory = Path.GetDirectoryName(envConfigPath);
+
+                    Process.Start(psi);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(string.Format("Unable to edit configuration file:\n\n{0}\n\n{1}", envConfigPath, ex.Message),
+                        "Error opening environment configuration", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
-            catch (Exception ex)
+        }
+
+        private void btnEditPipelineEnvironment_Click(object sender, RoutedEventArgs e)
+        {
+            Button btnSource = (Button)sender;
+
+            DeliveryPipeline pipeline = (DeliveryPipeline)btnSource.DataContext;
+
+            string localDirectory = pipeline.GetWorkingDirectory();
+
+            if (localDirectory != null)
             {
-                MessageBox.Show(ex.GetBaseException().Message, "Error connecting to TFS", MessageBoxButton.OK, MessageBoxImage.Error);
+                string envConfigPath = string.Format("{0}\\{1}Shared.yml", localDirectory, pipeline.ScriptName);
+
+                if (!File.Exists(envConfigPath))
+                {
+                    MessageBox.Show(string.Format("File:\n\n{0}\n\nCouldn't be found on disk. Did you move your working folder?", envConfigPath),
+                        "Environment configuration file not found", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                try
+                {
+                    ProcessStartInfo psi = new ProcessStartInfo();
+                    psi.FileName = envConfigPath;
+                    psi.WorkingDirectory = Path.GetDirectoryName(envConfigPath);
+
+                    Process.Start(psi);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(string.Format("Unable to edit configuration file:\n\n{0}\n\n{1}", envConfigPath, ex.Message), 
+                        "Error opening shared environment configuration", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
+        }
+
+        private void btnAddPipeline_Click(object sender, EventArgs e)
+        {
+            NavigationService.Navigate(new AddPipeline(_clientControl));
         }
     }
 }

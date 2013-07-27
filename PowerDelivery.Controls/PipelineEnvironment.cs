@@ -4,19 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Microsoft.TeamFoundation.Build.Client;
-
 namespace PowerDelivery.Controls
 {
     public class PipelineEnvironment
     {
         public DeliveryPipeline Pipeline { get; private set; }
         public string EnvironmentName { get; private set; }
-        public string LastStatus { get; private set; }
+        public PipelineEnvironmentBuildStatus LastStatus { get; private set; }
         public string LastBuildNumber { get; private set; }
         public DateTime LastBuildFinishTime { get; private set; }
 
-        public PipelineEnvironment(DeliveryPipeline pipeline, string environmentName, string lastStatus, string lastBuildNumber, DateTime lastBuildFinishTime)
+        public PipelineEnvironment(DeliveryPipeline pipeline, string environmentName, PipelineEnvironmentBuildStatus lastStatus, string lastBuildNumber, DateTime lastBuildFinishTime)
         {
             Pipeline = pipeline;
             EnvironmentName = environmentName;
@@ -29,7 +27,7 @@ namespace PowerDelivery.Controls
         {
             get
             {
-                return LastBuildFinishTime == DateTime.MinValue ? "" : 
+                return LastBuildFinishTime == DateTime.MinValue ? "Not yet built." : 
                     string.Format("{0} at {1} ({2})", 
                         LastBuildFinishTime.ToShortDateString(), 
                         LastBuildFinishTime.ToShortTimeString(), 
