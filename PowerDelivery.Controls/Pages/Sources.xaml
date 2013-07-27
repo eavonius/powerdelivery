@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      mc:Ignorable="d" Title="Team Foundation Server Sources"
+      mc:Ignorable="d" Title="Team Foundation Server Sources" 
       d:DesignHeight="400" d:DesignWidth="500" Margin="20">
     <Page.Resources>
         <ResourceDictionary>
@@ -29,7 +29,7 @@
             <ItemsControl Name="itmsSource" Margin="0 15 0 0">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Button Content="{Binding Path=Uri}" DataContext="{Binding}" Click="btnAddEditSource_Click">
+                        <Button Content="{Binding Path=Uri}" DataContext="{Binding}" Click="btnAddEditSource_Click" Cursor="Hand">
                             <Button.Template>
                                 <ControlTemplate>
                                     <Border CornerRadius="6" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" BorderThickness="1">

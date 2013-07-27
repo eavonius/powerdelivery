@@ -22,6 +22,7 @@ using Microsoft.TeamFoundation.VersionControl.Common;
 using Microsoft.TeamFoundation.Build.Workflow;
 using System.ComponentModel;
 using System.Security.Principal;
+using System.Windows.Shapes;
 
 namespace PowerDelivery.Controls.Pages
 {
@@ -30,8 +31,9 @@ namespace PowerDelivery.Controls.Pages
     /// </summary>
     public partial class Home : Page
     {
-        bool _useDarkTheme = false;
         ClientControl _clientControl;
+
+        const int ENV_BLOCK_HEIGHT = 125;
 
         public Home(ClientControl clientControl)
         {
@@ -39,99 +41,16 @@ namespace PowerDelivery.Controls.Pages
 
             InitializeComponent();
 
-            LoadPipelines();
+            lstPipelines.ItemsSource = ClientConfiguration.Current.Pipelines;
         }
 
-        private void LoadPipelines()
+        void StackPanel_Loaded(object sender, RoutedEventArgs e)
         {
-            List<DeliveryPipeline> pipelines = new List<DeliveryPipeline>();
+            FrameworkElement senderElem = sender as FrameworkElement;
+            Line linePromotion = senderElem.FindName("linePrePromotion") as Line;
 
-            foreach (ClientCollectionSource source in ClientConfiguration.Current.Sources)
-            {
-                Uri collectionUri = null;
-
-                TfsTeamProjectCollection collection = null;
-
-                try
-                {
-                    collectionUri = new Uri(source.Uri);
-                    collection = new TfsTeamProjectCollection(collectionUri);
-
-                    IBuildServer buildServer = collection.GetService<IBuildServer>();
-                    ICommonStructureService commonStructure = collection.GetService<ICommonStructureService>();
-
-                    foreach (ProjectInfo project in commonStructure.ListProjects())
-                    {
-                        foreach (IBuildDefinition definition in buildServer.QueryBuildDefinitions(project.Name))
-                        {
-                            if (definition.Process.ServerPath.Contains("BuildProcessTemplates/PowerDelivery"))
-                            {
-                                DeliveryPipeline pipeline = pipelines.FirstOrDefault(p => p.ProjectName == project.Name);
-
-                                string environmentName = definition.Name.Substring(definition.Name.LastIndexOf(" - ") + 3);
-
-                                IDictionary<string, object> processParams = WorkflowHelpers.DeserializeProcessParameters(definition.ProcessParameters);
-
-                                if (processParams.ContainsKey("PowerShellScriptPath"))
-                                {
-                                    string scriptPath = processParams["PowerShellScriptPath"] as string;
-
-                                    string scriptName = Path.GetFileNameWithoutExtension(scriptPath.Substring(scriptPath.LastIndexOf("/")));
-
-                                    if (pipeline == null)
-                                    {
-                                        pipeline = new DeliveryPipeline(source, project.Name, collection.Name, scriptName);
-                                        pipelines.Add(pipeline);
-                                    }
-
-                                    PipelineEnvironmentBuildStatus lastBuildStatus = new PipelineEnvironmentBuildStatus(BuildStatus.None);
-                                    string lastBuildNumber = "";
-                                    DateTime lastBuildFinishTime = DateTime.MinValue;
-
-                                    if (definition.LastBuildUri != null)
-                                    {
-                                        try
-                                        {
-                                            IBuildDetail lastBuild = buildServer.GetBuild(definition.LastBuildUri);
-                                            lastBuildStatus = new PipelineEnvironmentBuildStatus(lastBuild.Status);
-                                            lastBuildFinishTime = lastBuild.FinishTime;
-                                            lastBuildNumber = definition.LastBuildUri.ToString().Substring(definition.LastBuildUri.ToString().LastIndexOf("/") + 1);
-                                        }
-                                        catch (Exception)
-                                        {
-                                        }
-                                    }
-
-                                    PipelineEnvironment environment = new PipelineEnvironment(pipeline, environmentName, lastBuildStatus, lastBuildNumber, lastBuildFinishTime);
-
-                                    if (environmentName == "Commit")
-                                    {
-                                        pipeline.Commit = environment;
-                                    }
-                                    else if (environmentName == "Test")
-                                    {
-                                        pipeline.Test = environment;
-                                    }
-                                    else if (environmentName == "Capacity Test")
-                                    {
-                                        pipeline.CapacityTest = environment;
-                                    }
-                                    else if (environmentName == "Production")
-                                    {
-                                        pipeline.Production = environment;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex) {
-
-                    int x = 0;
-                }
-            }
-
-            lstPipelines.ItemsSource = pipelines;
+            StackPanel parent = linePromotion.Parent as StackPanel;
+            UIElement nextElement = parent.Children[parent.Children.IndexOf(linePromotion) + 1];
         }
 
         private void btnSources_Click(object sender, RoutedEventArgs e)
@@ -189,7 +108,7 @@ namespace PowerDelivery.Controls.Pages
                 {
                     ProcessStartInfo psi = new ProcessStartInfo();
                     psi.FileName = envConfigPath;
-                    psi.WorkingDirectory = Path.GetDirectoryName(envConfigPath);
+                    psi.WorkingDirectory = System.IO.Path.GetDirectoryName(envConfigPath);
 
                     Process.Start(psi);
                 }
@@ -224,7 +143,7 @@ namespace PowerDelivery.Controls.Pages
                 {
                     ProcessStartInfo psi = new ProcessStartInfo();
                     psi.FileName = envConfigPath;
-                    psi.WorkingDirectory = Path.GetDirectoryName(envConfigPath);
+                    psi.WorkingDirectory = System.IO.Path.GetDirectoryName(envConfigPath);
 
                     Process.Start(psi);
                 }
@@ -239,6 +158,78 @@ namespace PowerDelivery.Controls.Pages
         private void btnAddPipeline_Click(object sender, EventArgs e)
         {
             NavigationService.Navigate(new AddPipeline(_clientControl));
+        }
+
+        private void itmsPipeline_Loaded(object sender, RoutedEventArgs e)
+        {
+            ItemsControl itmsPipeline = (ItemsControl)sender;
+            Canvas parentCanvas = (Canvas)itmsPipeline.Parent;
+
+            IEnumerable<PipelineEnvironment> environments = itmsPipeline.ItemsSource as IEnumerable<PipelineEnvironment>;
+
+            int middleEnvironmentsCount = environments.Count(
+                env => env.EnvironmentName != "Commit" && 
+                       env.EnvironmentName != "Production");
+
+            parentCanvas.Height = ENV_BLOCK_HEIGHT * middleEnvironmentsCount;
+        }
+
+        private void brdEnvironmentBlock_Loaded(object sender, RoutedEventArgs e)
+        {
+            Border brdEnvironmentBlock = (Border)sender;
+
+            FrameworkElement parentElement = (FrameworkElement)brdEnvironmentBlock.TemplatedParent;
+            Canvas parentCanvas = parentElement.Parent as Canvas;
+
+            PipelineEnvironment environment = brdEnvironmentBlock.DataContext as PipelineEnvironment;
+
+            IEnumerable<PipelineEnvironment> environments = environment.Pipeline.Environments.Where(env => env.EnvironmentName != "Commit" && env.EnvironmentName != "Test");
+
+            int midEnvCount = environments.Count();
+
+            if (environment.EnvironmentName == "Production")
+            {
+                Canvas.SetLeft(parentElement, 475);
+
+                Canvas.SetTop(parentElement, 0);
+            }
+            else if (environment.EnvironmentName == "Commit")
+            {
+                Canvas.SetLeft(parentElement, 0);
+
+                Canvas.SetTop(parentElement, (midEnvCount * ENV_BLOCK_HEIGHT) / 2 - (ENV_BLOCK_HEIGHT / 2));
+            }
+            else
+            {
+                Canvas.SetLeft(parentElement, 240);
+
+                int pipelineIndex = environments.ToList().IndexOf(environment) + 1;
+
+                Canvas.SetTop(parentElement, pipelineIndex * ENV_BLOCK_HEIGHT);
+
+                Line commitToMidLine = new Line();
+                commitToMidLine.StrokeThickness = 2;
+                commitToMidLine.Stroke = Brushes.LightBlue;
+                commitToMidLine.X1 = 160;
+                commitToMidLine.Y1 = (midEnvCount * ENV_BLOCK_HEIGHT) / 2;
+                commitToMidLine.X2 = Canvas.GetLeft(parentElement);
+                commitToMidLine.Y2 = Canvas.GetTop(parentElement) + (parentElement.ActualHeight / 2);
+
+                parentCanvas.Children.Add(commitToMidLine);
+
+                if (environment.EnvironmentName == "Test")
+                {
+                    Line testToProdLine = new Line();
+                    testToProdLine.StrokeThickness = 3;
+                    testToProdLine.Stroke = Brushes.LightBlue;
+                    testToProdLine.X1 = 240 + brdEnvironmentBlock.ActualWidth;
+                    testToProdLine.Y1 = Canvas.GetTop(parentElement) + (parentElement.ActualHeight / 2);
+                    testToProdLine.X2 = 475;
+                    testToProdLine.Y2 = ENV_BLOCK_HEIGHT / 2 - 3;
+
+                    parentCanvas.Children.Add(testToProdLine);
+                }
+            }
         }
     }
 }

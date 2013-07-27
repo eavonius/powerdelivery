@@ -27,6 +27,7 @@ namespace PowerDeliveryVSAddin
         /// </summary>
 		public Connect()
 		{
+            
 		}
 
 		/// <summary>
@@ -63,10 +64,10 @@ namespace PowerDeliveryVSAddin
                     //Add a command to the Commands collection:
                     Command command = commands.AddNamedCommand2(_addInInstance, 
                         "Pipelines", 
-                        "Powerdelivery", 
+                        "powerdelivery", 
                         "Opens the powerdelivery deployment pipelines page.", 
                         true, 
-                        59, 
+                        0, 
                         ref contextGUIDS, 
                         (int)vsCommandStatus.vsCommandStatusSupported + (int)vsCommandStatus.vsCommandStatusEnabled, 
                         (int)vsCommandStyle.vsCommandStylePictAndText, 
@@ -103,6 +104,7 @@ namespace PowerDeliveryVSAddin
 		/// <seealso class='IDTExtensibility2' />
 		public void OnDisconnection(ext_DisconnectMode disconnectMode, ref Array custom)
 		{
+            _documentWindow.Close(vsSaveChanges.vsSaveChangesNo);
 		}
 
 		/// <summary>Implements the OnAddInsUpdate method of the IDTExtensibility2 interface. Receives notification when the collection of Add-ins has changed.</summary>
@@ -176,7 +178,7 @@ namespace PowerDeliveryVSAddin
                 _documentWindow = _windows.CreateToolWindow2(_addin,
                     _addinPath,
                     "PowerDeliveryVSAddin.ClientDocument",
-                    "Powerdelivery",
+                    "powerdelivery",
                     powerDeliveryToolWindowId.ToString(),
                     ref controlObject);
             }

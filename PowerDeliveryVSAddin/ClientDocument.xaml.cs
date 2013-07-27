@@ -24,6 +24,9 @@ namespace PowerDeliveryVSAddin
     [ClassInterface(ClassInterfaceType.None)]
     public partial class ClientDocument : UserControl, IDispatch
     {
+        /// <summary>
+        /// Creates a new client document.
+        /// </summary>
         public ClientDocument()
         {
             InitializeComponent();

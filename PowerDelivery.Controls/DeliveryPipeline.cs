@@ -3,6 +3,7 @@ using Microsoft.TeamFoundation.Server;
 using Microsoft.TeamFoundation.VersionControl.Client;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.Principal;
 using System.Text;
@@ -11,14 +12,17 @@ using System.Windows;
 
 namespace PowerDelivery.Controls
 {
-    public class DeliveryPipeline
+    public class DeliveryPipeline : DependencyObject
     {
+        
         public DeliveryPipeline(ClientCollectionSource source, string projectName, string collectionName, string scriptName)
         {
             Source = source;
             ProjectName = projectName;
             CollectionName = collectionName;
             ScriptName = scriptName;
+
+            Environments = new ObservableCollection<PipelineEnvironment>();
         }
 
         public ClientCollectionSource Source { get; private set; }
@@ -26,10 +30,11 @@ namespace PowerDelivery.Controls
         public string CollectionName { get; private set; }
         public string ScriptName { get; private set; }
 
-        public PipelineEnvironment Commit { get; internal set; }
-        public PipelineEnvironment Test { get; internal set; }
-        public PipelineEnvironment CapacityTest { get; internal set; }
-        public PipelineEnvironment Production { get; internal set; }
+        public ObservableCollection<PipelineEnvironment> Environments
+        {
+            get;
+            set; 
+        }
 
         public string GetWorkingDirectory()
         {

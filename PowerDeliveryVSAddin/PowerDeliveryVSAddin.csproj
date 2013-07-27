@@ -44,6 +44,12 @@
     <Reference Include="Extensibility, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Microsoft.TeamFoundation.Build.Client, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.TeamFoundation.Build.Workflow, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.TeamFoundation.Client, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.TeamFoundation.Common, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.TeamFoundation.VersionControl.Client, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.TeamFoundation.VersionControl.Common, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -55,6 +61,36 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\PowerDelivery.Controls\ClientCollectionSource.cs">
+      <Link>ClientCollectionSource.cs</Link>
+    </Compile>
+    <Compile Include="..\PowerDelivery.Controls\ClientConfiguration.cs">
+      <Link>ClientConfiguration.cs</Link>
+    </Compile>
+    <Compile Include="..\PowerDelivery.Controls\ClientControl.xaml.cs">
+      <Link>ClientControl.xaml.cs</Link>
+    </Compile>
+    <Compile Include="..\PowerDelivery.Controls\DeliveryPipeline.cs">
+      <Link>DeliveryPipeline.cs</Link>
+    </Compile>
+    <Compile Include="..\PowerDelivery.Controls\Pages\AddEditSource.xaml.cs">
+      <Link>Pages\AddEditSource.xaml.cs</Link>
+    </Compile>
+    <Compile Include="..\PowerDelivery.Controls\Pages\AddPipeline.xaml.cs">
+      <Link>Pages\AddPipeline.xaml.cs</Link>
+    </Compile>
+    <Compile Include="..\PowerDelivery.Controls\Pages\Home.xaml.cs">
+      <Link>Pages\Home.xaml.cs</Link>
+    </Compile>
+    <Compile Include="..\PowerDelivery.Controls\Pages\Sources.xaml.cs">
+      <Link>Pages\Sources.xaml.cs</Link>
+    </Compile>
+    <Compile Include="..\PowerDelivery.Controls\PipelineEnvironment.cs">
+      <Link>PipelineEnvironment.cs</Link>
+    </Compile>
+    <Compile Include="..\PowerDelivery.Controls\PipelineEnvironmentBuildStatus.cs">
+      <Link>PipelineEnvironmentBuildStatus.cs</Link>
+    </Compile>
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -122,18 +158,60 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="..\PowerDelivery.Controls\Images\ExtensionManager_vsix_OSReg.ico">
+      <Link>Images\ExtensionManager_vsix_OSReg.ico</Link>
+    </Resource>
+    <Resource Include="..\PowerDelivery.Controls\Images\Pipelines.png">
+      <Link>Images\Pipelines.png</Link>
+    </Resource>
+    <Resource Include="..\PowerDelivery.Controls\Images\refresh_16xLG.png">
+      <Link>Images\refresh_16xLG.png</Link>
+    </Resource>
+    <Resource Include="..\PowerDelivery.Controls\Images\ScriptFile_452.png">
+      <Link>Images\ScriptFile_452.png</Link>
+    </Resource>
+    <Resource Include="..\PowerDelivery.Controls\Images\Server_5720.png">
+      <Link>Images\Server_5720.png</Link>
+    </Resource>
     <Content Include="C:\Users\jedwards\Documents\Visual Studio 2012\Addins\PowerDeliveryVSAddin - For Testing.AddIn">
       <Link>PowerDeliveryVSAddin - For Testing.AddIn</Link>
+      <SubType>Designer</SubType>
     </Content>
-    <Content Include="PowerDeliveryVSAddin.AddIn" />
+    <Content Include="PowerDeliveryVSAddin.AddIn">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PowerDelivery.Controls\PowerDelivery.Controls.csproj">
-      <Project>{891289c8-6e99-4626-9f9e-6cbb9e37e561}</Project>
-      <Name>PowerDelivery.Controls</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
+    <Page Include="..\PowerDelivery.Controls\ClientControl.xaml">
+      <Link>ClientControl.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\PowerDelivery.Controls\Pages\AddEditSource.xaml">
+      <Link>Pages\AddEditSource.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\PowerDelivery.Controls\Pages\AddPipeline.xaml">
+      <Link>Pages\AddPipeline.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\PowerDelivery.Controls\Pages\Home.xaml">
+      <Link>Pages\Home.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\PowerDelivery.Controls\Pages\Sources.xaml">
+      <Link>Pages\Sources.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\PowerDelivery.Controls\Styles.xaml">
+      <Link>Styles.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="ClientDocument.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

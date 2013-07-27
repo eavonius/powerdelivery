@@ -4,12 +4,87 @@
         <name>PowerDeliveryVSAddin</name>
     </assembly>
     <members>
+        <member name="T:PowerDelivery.Controls.ClientControl">
+            <summary>
+            Client control for PowerDelivery.
+            </summary>
+            <summary>
+            ClientControl
+            </summary>
+        </member>
+        <member name="M:PowerDelivery.Controls.ClientControl.#ctor">
+            <summary>
+            Creates the control.
+            </summary>
+        </member>
+        <member name="M:PowerDelivery.Controls.ClientControl.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:PowerDelivery.Controls.Pages.AddEditSource">
+            <summary>
+            Interaction logic for AddEditSource.xaml
+            </summary>
+            <summary>
+            AddEditSource
+            </summary>
+        </member>
+        <member name="M:PowerDelivery.Controls.Pages.AddEditSource.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:PowerDelivery.Controls.Pages.AddPipeline">
+            <summary>
+            Interaction logic for AddEditSource.xaml
+            </summary>
+            <summary>
+            AddPipeline
+            </summary>
+        </member>
+        <member name="M:PowerDelivery.Controls.Pages.AddPipeline.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:PowerDelivery.Controls.Pages.Home">
+            <summary>
+            Interaction logic for Home.xaml
+            </summary>
+            <summary>
+            Home
+            </summary>
+        </member>
+        <member name="M:PowerDelivery.Controls.Pages.Home.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:PowerDelivery.Controls.Pages.Sources">
+            <summary>
+            Interaction logic for Sources.xaml
+            </summary>
+            <summary>
+            Sources
+            </summary>
+        </member>
+        <member name="M:PowerDelivery.Controls.Pages.Sources.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
         <member name="T:PowerDeliveryVSAddin.ClientDocument">
             <summary>
             Interaction logic for ClientDocument.xaml
             </summary>
             <summary>
             ClientDocument
+            </summary>
+        </member>
+        <member name="M:PowerDeliveryVSAddin.ClientDocument.#ctor">
+            <summary>
+            Creates a new client document.
             </summary>
         </member>
         <member name="M:PowerDeliveryVSAddin.ClientDocument.InitializeComponent">
@@ -74,6 +149,36 @@
             <param term='varOut'>Parameters passed from the command handler to the caller.</param>
             <param term='handled'>Informs the caller if the command was handled or not.</param>
             <seealso class='Exec' />
+        </member>
+        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
+            <summary>
+            GeneratedInternalTypeHelper
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
+            <summary>
+            CreateInstance
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            GetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            SetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
+            <summary>
+            CreateDelegate
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
+            <summary>
+            AddEventHandler
+            </summary>
         </member>
     </members>
 </doc>
