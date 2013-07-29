@@ -130,7 +130,7 @@ function Invoke-Powerdelivery {
 			}
 		}
 		$subHash.Keys | % {
-			if (!$baseHash.ContainsKey($_)) {
+            if ($baseHash -eq $null -or !$baseHash.ContainsKey($_)) {
 				$mergedHash.Add($_, $subHash[$_])
 			}
 		}
@@ -158,7 +158,13 @@ function Invoke-Powerdelivery {
 							$errorMessage = $_.Exception.Message
 							throw "Error replacing setting in module configuration file: $errorMessage"
 						}
-						$replacedValue = $replacedValue -replace $_, $envSettingValue
+
+                        if ($envSettingValue.GetType().Name -eq 'Hashtable') {
+                            $replacedValue = $envSettingValue
+                        }
+                        else {
+						    $replacedValue = $replacedValue -replace $_, $envSettingValue
+                        }
 					}
 					$replacedValues.Add($_, $replacedValue)
 				}
@@ -310,8 +316,13 @@ function Invoke-Powerdelivery {
 			$yamlPath = (Resolve-Path ".\$($sharedConfigFileName)")
 			$loadedSharedConfig = $false
 			if (Test-Path $yamlPath) {
-				$sharedConfig = Get-Yaml -FromFile $yamlPath -ErrorAction SilentlyContinue
-				$loadedSharedConfig = $true
+                try {
+				    $sharedConfig = Get-Yaml -FromFile $yamlPath -ErrorAction SilentlyContinue
+				    $loadedSharedConfig = $true
+                }
+                catch {
+                    "WARNING: Tried to load $sharedConfigFileName but was empty."
+                }
 			}
 			else {
 				Write-Host "WARNING: File $yamlPath not found, not loading shared environment configuration."

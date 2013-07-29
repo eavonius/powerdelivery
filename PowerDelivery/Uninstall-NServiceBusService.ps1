@@ -28,31 +28,34 @@ function Uninstall-NServiceBusService{
 		[Parameter(Position=2,Mandatory=1)]$Directory
 	)
 
-	Write-Host "Uninstalling previous copy of $Name service if found..."
+    foreach ($curComputerName in (Get-ArrayFromStringOrHash $ComputerName)) {
 
-	Invoke-Command -ComputerName $ComputerName {
+        Write-Host "Uninstalling previous copy of $Name service from $curComputerName if found..."
 
-		if ((Get-Service -Name $using:Name -ErrorAction SilentlyContinue) -ne $null) {
+	    Invoke-Command -ComputerName $curComputerName {
 
-		 	$uninstallServiceArgs = @(
-		 		"-uninstall",
-		 		"-serviceName",
-		 		$using:Name
-			)
+		    if ((Get-Service -Name $using:Name -ErrorAction SilentlyContinue) -ne $null) {
 
-			$uninstallResult = Start-Process -WorkingDirectory $using:Directory `
-			 	-FilePath "$using:Directory\NServiceBus.Host.exe" `
-			  	-ArgumentList $uninstallServiceArgs `
-			 	-ErrorAction SilentlyContinue `
-			 	-Wait `
-			 	-PassThru
+		 	    $uninstallServiceArgs = @(
+		 		    "-uninstall",
+		 		    "-serviceName",
+		 		    $using:Name
+			    )
 
-			if ($false -eq ($uninstallResult -is [System.Diagnostics.Process]))
-			{
-			 	throw "Failed to launch NServiceBus.Host.exe"
-			}
+			    $uninstallResult = Start-Process -WorkingDirectory $using:Directory `
+			 	    -FilePath "$using:Directory\NServiceBus.Host.exe" `
+			  	    -ArgumentList $uninstallServiceArgs `
+			 	    -ErrorAction SilentlyContinue `
+			 	    -Wait `
+			 	    -PassThru
 
-			$uninstallResult.WaitForExit()
-		}
+			    if ($false -eq ($uninstallResult -is [System.Diagnostics.Process]))
+			    {
+			 	    throw "Failed to launch NServiceBus.Host.exe on $curComputerName"
+			    }
+
+			    $uninstallResult.WaitForExit()
+		    }
+        }
 	}
 }

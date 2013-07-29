@@ -52,7 +52,7 @@ function Invoke-MSTest {
 	$dropLocation = Get-BuildDropLocation
 	$currentDirectory = Get-Location
 	
-	$fileName = [System.IO.Path]::GetFileName($using:file)
+	$fileName = [System.IO.Path]::GetFileName($file)
 	$testsDir = [System.IO.Path]::GetDirectoryName($file)
 	
 	if (![String]::IsNullOrWhiteSpace($computerName)) {
@@ -79,35 +79,43 @@ function Invoke-MSTest {
 
 	$dropResults = "$dropLocation\$results"
 
-	$commandArgs = @{'ScriptBlock' = {
+    try {
+        if ($isRemote) {
+            Invoke-Command -ComputerName $computerName {
+                $workingDirectory = Get-Location
+		        $filePath = $using:file
 
-		$workingDirectory = Get-Location
-		$filePath = $using:file
+		        if ($using:isRemote) {
+			        $shareLocalDir = (Get-WmiObject Win32_Share -filter "Name LIKE '$using:sharePath'").path
+			        $workingDirectory = Join-Path $shareLocalDir $using:testsDir
+			        $filePath = Join-Path $workingDirectory $using:fileName
+		        }
 
-		if ($using:isRemote) {
-			$shareLocalDir = (Get-WmiObject Win32_Share -filter "Name LIKE '$using:sharePath'").path
-			$workingDirectory = Join-Path $shareLocalDir $using:testsDir
-			$filePath = Join-Path $workingDirectory $using:fileName
-		}
+		        $localResults = "$workingDirectory\$using:results"
 
-		$localResults = "$workingDirectory\$using:results"
-
-		rm -ErrorAction SilentlyContinue -Force $localResults | Out-Null
+		        rm -ErrorAction SilentlyContinue -Force $localResults | Out-Null
 	
-        # Run acceptance tests out of working directory
-        Invoke-Expression "mstest /testcontainer:`"$filePath`" /category:`"$using:category`" /resultsfile:`"$localResults`" /usestderr /nologo"
+                # Run acceptance tests out of working directory
+                Invoke-Expression "mstest /testcontainer:`"$filePath`" /category:`"$using:category`" /resultsfile:`"$localResults`" /usestderr /nologo"
 		
-		if ($LASTEXITCODE -ne 0) {
-			throw "Error running tests in $filePath"
-		}
-	}}
+		        if ($LASTEXITCODE -ne 0) {
+			        throw "Error running tests in $filePath"
+		        }
+            }
+        }
+        else {
+            $workingDirectory = Get-Location
+		    $filePath = $file
+
+		    $localResults = "$workingDirectory\$results"
+
+		    rm -ErrorAction SilentlyContinue -Force $localResults | Out-Null
 	
-	if ($isRemote) {
-		$commandArgs.Add('ComputerName', $computerName)
-	}
-	
-	try {
-		Invoke-Command @commandArgs
+            # Run acceptance tests out of working directory
+		    Exec -errorMessage "Error running tests in $filePath" {
+			    Invoke-Expression "mstest /testcontainer:`"$filePath`" /category:`"$category`" /resultsfile:`"$localResults`" /usestderr /nologo"    
+		    }
+        }
 	}
 	finally {
 		

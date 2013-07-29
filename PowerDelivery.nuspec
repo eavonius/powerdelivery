@@ -22,6 +22,7 @@
     <file src="PowerDelivery\Enable-SqlJobs.ps1" target="tools\PowerDelivery\Enable-SqlJobs.ps1" />
     <file src="PowerDelivery\Enable-WebDeploy.ps1" target="tools\PowerDelivery\Enable-WebDeploy.ps1" />
     <file src="PowerDelivery\Exec.ps1" target="tools\PowerDelivery\Exec.ps1" />
+    <file src="PowerDelivery\Get-ArrayFromStringOrHash.ps1" target="tools\PowerDelivery\Get-ArrayFromStringOrHash.ps1" />
     <file src="PowerDelivery\Get-BuildAppVersion.ps1" target="tools\PowerDelivery\Get-BuildAppVersion.ps1" />
     <file src="PowerDelivery\Get-BuildAssemblyVersion.ps1" target="tools\PowerDelivery\Get-BuildAssemblyVersion.ps1" />
     <file src="PowerDelivery\Get-BuildAssets.ps1" target="tools\PowerDelivery\Get-BuildAssets.ps1" />

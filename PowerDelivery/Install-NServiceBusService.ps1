@@ -41,6 +41,7 @@ Install-NServiceBusService `
 	-AccountName "MYDOMAIN\myuser" `
 	-AccountPassword "somep@ssword12"
 #>
+
 function Install-NServiceBusService {
 	param(
 		[Parameter(Position=0,Mandatory=1)] $ComputerName,
@@ -49,68 +50,87 @@ function Install-NServiceBusService {
 		[Parameter(Position=3,Mandatory=1)] $Description,
 		[Parameter(Position=4,Mandatory=1)] $Directory,
 		[Parameter(Position=5,Mandatory=1)] $AccountName,
-		[Parameter(Position=6,Mandatory=1)] $AccountPassword
+		[Parameter(Position=6,Mandatory=1)] $AccountPassword,
+        [Parameter(Position=7,Mandatory=0)] $IsMaster = $false,
+        [Parameter(Position=8,Mandatory=0)] $IsDistributor = $false,
+        [Parameter(Position=9,Mandatory=0)] $DistributorAddress,
+        [Parameter(Position=10,Mandatory=0)] $EndpointConfigurationType
 	)
 
-	Write-Host "Installing $Name service..."
+    if ($IsMaster -and $IsDistributor) {
+        throw "An instance cannot be a distributor and a master."
+    }
 
-	Invoke-Command -ComputerName $ComputerName {
+    if (($IsMaster -or $IsDistributor) -and ![String]::IsNullOrWhiteSpace($DistributorAddress)) {
+        throw "The distributor address does not need to be specified for a master or distributor."
+    }
 
-		$installServiceArgs = @(
-		 	"-install",
-		 	"-serviceName",
-		 	$using:Name,
-		 	"-displayName",
-		 	"`"$using:DisplayName`"",
-		 	"-description",
-		 	"`"$using:Description`"",
-		 	"-username",
-		 	$using:AccountName,
-		 	"-password",
-		 	$using:AccountPassword
-		)
+    foreach ($curComputerName in (Get-ArrayFromStringOrHash $ComputerName)) {
 
-	 	$installResult = Start-Process -WorkingDirectory $using:Directory `
-	 		-FilePath "$using:Directory\NServiceBus.Host.exe" `
-	 		-ArgumentList $installServiceArgs `
-	 		-Wait `
-	 		-PassThru
+        Write-Host "Installing $Name service on $curComputerName..."
 
-	 	if ($false -eq ($installResult -is [System.Diagnostics.Process])) {
-			throw "Failed to launch NServiceBus.Host.exe"
-		}
+	    Invoke-Command -ComputerName $curComputerName {
 
-	 	$installResult.WaitForExit()
+		    $installServiceArgs = @(
+		 	    "-install",
+		 	    "-serviceName",
+		 	    $using:Name,
+		 	    "-displayName",
+		 	    "`"$using:DisplayName`"",
+		 	    "-description",
+		 	    "`"$using:Description`"",
+		 	    "-username",
+		 	    $using:AccountName,
+		 	    "-password",
+		 	    $using:AccountPassword
+		    )
 
-	 	$exitCode = [convert]::ToInt32($installResult.ExitCode)
+            if (![String]::IsNullOrWhiteSpace($EndpointConfigurationType)) {
+                $installServiceArgs.Add('EndpointConfigurationType', $EndpointConfigurationType)
+            }
 
-	 	if ($exitCode -ne 0) {
-	 		throw "Error installing $using:Name - return code was $exitCode"
-		}
-	 	else {
-	 		Write-Host "$using:Name installation successful."
-		}
+	 	    $installResult = Start-Process -WorkingDirectory $using:Directory `
+	 		    -FilePath "$using:Directory\NServiceBus.Host.exe" `
+	 		    -ArgumentList $installServiceArgs `
+	 		    -Wait `
+	 		    -PassThru
 
-	 	"Starting $using:Name..."
+	 	    if ($false -eq ($installResult -is [System.Diagnostics.Process])) {
+			    throw "Failed to launch NServiceBus.Host.exe"
+		    }
 
-	 	$startServiceResult = Start-Process -WorkingDirectory $using:Directory `
-	 		-FilePath "C:\Windows\System32\net.exe" `
-	 		-ArgumentList @("start", $using:Name) `
-			-Wait `
-			-PassThru
+	 	    $installResult.WaitForExit()
 
-	 	if ($false -eq ($startServiceResult -is [System.Diagnostics.Process])) {
-	 		throw "Failed to start $using:Name service!"
-		}
+	 	    $exitCode = [convert]::ToInt32($installResult.ExitCode)
 
-	 	$startServiceResult.WaitForExit();
+	 	    if ($exitCode -ne 0) {
+	 		    throw "Error installing $using:Name - return code was $exitCode"
+		    }
+	 	    else {
+	 		    Write-Host "$using:Name installation successful."
+		    }
 
-	 	$exitCode = [convert]::ToInt32($startServiceResult.ExitCode)
-	 	if ($exitCode -ne 0) {
-	 		throw "Error starting $using:Name service - return code was $exitCode"
-		}
-	 	else {
-	 		Write-Host "$using:Name service started successfuly."
-		}
+	 	    "Starting $using:Name..."
+
+	 	    $startServiceResult = Start-Process -WorkingDirectory $using:Directory `
+	 		    -FilePath "C:\Windows\System32\net.exe" `
+	 		    -ArgumentList @("start", $using:Name) `
+			    -Wait `
+			    -PassThru
+
+	 	    if ($false -eq ($startServiceResult -is [System.Diagnostics.Process])) {
+	 		    throw "Failed to start $using:Name service!"
+		    }
+
+	 	    $startServiceResult.WaitForExit();
+
+	 	    $exitCode = [convert]::ToInt32($startServiceResult.ExitCode)
+	 	    if ($exitCode -ne 0) {
+	 		    throw "Error starting $using:Name service - return code was $exitCode"
+		    }
+	 	    else {
+	 		    Write-Host "$using:Name service started on $using:curComputerName successfuly."
+		    }
+        }
 	}
 }
