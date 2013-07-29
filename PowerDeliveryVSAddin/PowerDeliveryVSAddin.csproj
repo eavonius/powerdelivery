@@ -24,7 +24,8 @@
     <WarningLevel>4</WarningLevel>
     <IncrementalBuild>false</IncrementalBuild>
     <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>PowerDeliveryVSAddin.xml</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>false</DebugSymbols>
@@ -55,23 +56,33 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\WindowsPowerShell\3.0\System.Management.Automation.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\PowerDelivery.Controls\ClientCollectionSource.cs">
-      <Link>ClientCollectionSource.cs</Link>
-    </Compile>
-    <Compile Include="..\PowerDelivery.Controls\ClientConfiguration.cs">
-      <Link>ClientConfiguration.cs</Link>
-    </Compile>
     <Compile Include="..\PowerDelivery.Controls\ClientControl.xaml.cs">
       <Link>ClientControl.xaml.cs</Link>
     </Compile>
-    <Compile Include="..\PowerDelivery.Controls\DeliveryPipeline.cs">
-      <Link>DeliveryPipeline.cs</Link>
+    <Compile Include="..\PowerDelivery.Controls\Model\ClientCollectionSource.cs">
+      <Link>Models\ClientCollectionSource.cs</Link>
+    </Compile>
+    <Compile Include="..\PowerDelivery.Controls\Model\ClientConfiguration.cs">
+      <Link>Models\ClientConfiguration.cs</Link>
+    </Compile>
+    <Compile Include="..\PowerDelivery.Controls\Model\DeliveryPipeline.cs">
+      <Link>Models\DeliveryPipeline.cs</Link>
+    </Compile>
+    <Compile Include="..\PowerDelivery.Controls\Model\PipelineEnvironment.cs">
+      <Link>Models\PipelineEnvironment.cs</Link>
+    </Compile>
+    <Compile Include="..\PowerDelivery.Controls\Model\PipelineEnvironmentBuildStatus.cs">
+      <Link>Models\PipelineEnvironmentBuildStatus.cs</Link>
     </Compile>
     <Compile Include="..\PowerDelivery.Controls\Pages\AddEditSource.xaml.cs">
       <Link>Pages\AddEditSource.xaml.cs</Link>
@@ -85,11 +96,8 @@
     <Compile Include="..\PowerDelivery.Controls\Pages\Sources.xaml.cs">
       <Link>Pages\Sources.xaml.cs</Link>
     </Compile>
-    <Compile Include="..\PowerDelivery.Controls\PipelineEnvironment.cs">
-      <Link>PipelineEnvironment.cs</Link>
-    </Compile>
-    <Compile Include="..\PowerDelivery.Controls\PipelineEnvironmentBuildStatus.cs">
-      <Link>PipelineEnvironmentBuildStatus.cs</Link>
+    <Compile Include="..\PowerDelivery.Controls\PromoteControl.xaml.cs">
+      <Link>PromoteControl.xaml.cs</Link>
     </Compile>
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -204,6 +212,11 @@
     </Page>
     <Page Include="..\PowerDelivery.Controls\Pages\Sources.xaml">
       <Link>Pages\Sources.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\PowerDelivery.Controls\PromoteControl.xaml">
+      <Link>PromoteControl.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

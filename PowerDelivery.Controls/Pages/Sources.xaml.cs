@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using PowerDelivery.Controls.Model;
+
 namespace PowerDelivery.Controls.Pages
 {
     /// <summary>
@@ -28,7 +30,7 @@ namespace PowerDelivery.Controls.Pages
 
             InitializeComponent();
 
-            itmsSource.ItemsSource = ClientControl.Configuration.Sources;
+            itmsSource.ItemsSource = ClientConfiguration.Current.Sources;
         }
 
         private void btnAddSource_Click(object sender, RoutedEventArgs e)

@@ -16,6 +16,8 @@ using Microsoft.TeamFoundation.Framework.Common;
 using Microsoft.TeamFoundation.Server;
 using Microsoft.TeamFoundation.Build.Client;
 
+using PowerDelivery.Controls.Model;
+
 namespace PowerDelivery.Controls.Pages
 {
     /// <summary>

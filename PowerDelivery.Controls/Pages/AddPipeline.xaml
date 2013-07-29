@@ -50,8 +50,8 @@
             <TextBox Grid.Row="4" Grid.Column="1" Name="txtDropFolder" Margin="0 0 0 10" Width="450" HorizontalAlignment="Left" />
         </Grid>
         <StackPanel Grid.Row="2" Style="{StaticResource PageActions}">
-            <Button Content="Save Changes" Name="btnSaveChanges" Click="btnSaveChanges_Click" Margin="0 0 15 0" />
-            <Button Content="Cancel" Name="btnCancel" Click="btnCancel_Click" />
+            <Button Content="Save Changes" Name="btnSaveChanges" Click="btnSaveChanges_Click" Margin="0 0 15 0" Style="{StaticResource CommandButton}" />
+            <Button Content="Cancel" Name="btnCancel" Click="btnCancel_Click" Style="{StaticResource CommandButton}" />
         </StackPanel>
     </Grid>
 </Page>

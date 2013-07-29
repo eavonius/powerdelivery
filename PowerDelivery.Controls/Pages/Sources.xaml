@@ -29,14 +29,8 @@
             <ItemsControl Name="itmsSource" Margin="0 15 0 0">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Button Content="{Binding Path=Uri}" DataContext="{Binding}" Click="btnAddEditSource_Click" Cursor="Hand">
-                            <Button.Template>
-                                <ControlTemplate>
-                                    <Border CornerRadius="6" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" BorderThickness="1">
-                                        <TextBlock Text="{Binding Path=Uri}" Padding="20" FontSize="16" Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
-                                    </Border>
-                                </ControlTemplate>
-                            </Button.Template>
+                        <Button DataContext="{Binding}" Click="btnAddEditSource_Click" Style="{StaticResource CommandButton}">
+                            <TextBlock Text="{Binding Uri}" Margin="10" />
                         </Button>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
@@ -58,7 +52,7 @@
             </ItemsControl>
         </ScrollViewer>
         <StackPanel Grid.Row="2" Style="{StaticResource PageActions}">
-            <Button Content="Add Source" Name="btnAddSource" Click="btnAddSource_Click" />
+            <Button Content="Add Source" Name="btnAddSource" Click="btnAddSource_Click" Style="{StaticResource CommandButton}" />
         </StackPanel>
     </Grid>
 </Page>

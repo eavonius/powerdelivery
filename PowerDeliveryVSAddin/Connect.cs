@@ -64,7 +64,7 @@ namespace PowerDeliveryVSAddin
                     //Add a command to the Commands collection:
                     Command command = commands.AddNamedCommand2(_addInInstance, 
                         "Pipelines", 
-                        "powerdelivery", 
+                        "Deployment Pipelines", 
                         "Opens the powerdelivery deployment pipelines page.", 
                         true, 
                         0, 
@@ -178,7 +178,7 @@ namespace PowerDeliveryVSAddin
                 _documentWindow = _windows.CreateToolWindow2(_addin,
                     _addinPath,
                     "PowerDeliveryVSAddin.ClientDocument",
-                    "powerdelivery",
+                    "Deployment Pipelines",
                     powerDeliveryToolWindowId.ToString(),
                     ref controlObject);
             }

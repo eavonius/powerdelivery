@@ -46,6 +46,10 @@
     <Reference Include="Microsoft.TeamFoundation.VersionControl.Common, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\WindowsPowerShell\3.0\System.Management.Automation.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -62,10 +66,10 @@
     <Compile Include="Pages\AddPipeline.xaml.cs">
       <DependentUpon>AddPipeline.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PipelineEnvironmentBuildStatus.cs" />
-    <Compile Include="ClientCollectionSource.cs" />
-    <Compile Include="ClientConfiguration.cs" />
-    <Compile Include="DeliveryPipeline.cs" />
+    <Compile Include="Model\PipelineEnvironmentBuildStatus.cs" />
+    <Compile Include="Model\ClientCollectionSource.cs" />
+    <Compile Include="Model\ClientConfiguration.cs" />
+    <Compile Include="Model\DeliveryPipeline.cs" />
     <Compile Include="Pages\AddEditSource.xaml.cs">
       <DependentUpon>AddEditSource.xaml</DependentUpon>
     </Compile>
@@ -75,9 +79,12 @@
     <Compile Include="Pages\Sources.xaml.cs">
       <DependentUpon>Sources.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PipelineEnvironment.cs" />
+    <Compile Include="Model\PipelineEnvironment.cs" />
     <Compile Include="ClientControl.xaml.cs">
       <DependentUpon>ClientControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PromoteControl.xaml.cs">
+      <DependentUpon>PromoteControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -122,6 +129,10 @@
     <Page Include="ClientControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="PromoteControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Styles.xaml">
       <SubType>Designer</SubType>

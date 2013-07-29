@@ -10,10 +10,32 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="..\Styles.xaml" />
                 <ResourceDictionary>
-                    <Style x:Key="EnvironmentBlockControl">
+                    <Style x:Key="EnvironmentBlockButton" TargetType="Button">
+                        <Setter Property="Padding" Value="10" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding LastStatus.Description}" Value="In Progress">
+                                <Setter Property="BorderBrush" Value="Green" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding LastStatus.Description}" Value="Succeeded">
+                                <Setter Property="BorderBrush" Value="DarkGreen" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding LastStatus.Description}" Value="Partially Succeeded">
+                                <Setter Property="BorderBrush" Value="Goldenrod" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding LastStatus.Description}" Value="Failed">
+                                <Setter Property="BorderBrush" Value="DarkRed" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding LastStatus.Description}" Value="Stopped">
+                                <Setter Property="BorderBrush" Value="DarkRed" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding LastStatus.Description}" Value="Unknown Status">
+                                <Setter Property="BorderBrush" Value="#ccc" />
+                            </DataTrigger>
+                        </Style.Triggers>
                     </Style>
+                    
                     <Style TargetType="Border" x:Key="EnvironmentBlockStyle">
-                        <Setter Property="BorderThickness" Value="1" />
+                        <Setter Property="BorderThickness" Value="0" />
                         <Setter Property="Height" Value="118" />
                         <Setter Property="Width" Value="160" />
                         <Setter Property="Padding" Value="7" />
@@ -22,30 +44,25 @@
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding LastStatus.Description}" Value="In Progress">
                                 <Setter Property="Background" Value="LightGreen" />
-                                <Setter Property="BorderBrush" Value="Green" />
                             </DataTrigger>
                             <DataTrigger Binding="{Binding LastStatus.Description}" Value="Succeeded">
                                 <Setter Property="Background" Value="Green" />
-                                <Setter Property="BorderBrush" Value="LightGreen" />
                             </DataTrigger>
                             <DataTrigger Binding="{Binding LastStatus.Description}" Value="Partially Succeeded">
                                 <Setter Property="Background" Value="Gold" />
-                                <Setter Property="BorderBrush" Value="LightGoldenrodYellow" />
                             </DataTrigger>
                             <DataTrigger Binding="{Binding LastStatus.Description}" Value="Failed">
                                 <Setter Property="Background" Value="Red" />
-                                <Setter Property="BorderBrush" Value="DarkRed" />
                             </DataTrigger>
                             <DataTrigger Binding="{Binding LastStatus.Description}" Value="Stopped">
                                 <Setter Property="Background" Value="Red" />
-                                <Setter Property="BorderBrush" Value="DarkRed" />
                             </DataTrigger>
                             <DataTrigger Binding="{Binding LastStatus.Description}" Value="Unknown Status">
-                                <Setter Property="Background" Value="#eeeeee" />
-                                <Setter Property="BorderBrush" Value="LightGray" />
+                                <Setter Property="Background" Value="#dddddd" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
+                    
                     <Style TargetType="TextBlock" x:Key="EnvironmentBlockText">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding LastStatus.Description}" Value="In Progress">
@@ -68,24 +85,19 @@
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
+                    
                     <ControlTemplate x:Key="EnvironmentBlock">
                         <Border Style="{StaticResource EnvironmentBlockStyle}" Name="brdEnvironmentBlock" Loaded="brdEnvironmentBlock_Loaded">
                             <StackPanel Orientation="Vertical">
                                 <TextBlock Text="{Binding EnvironmentName}" FontSize="16" Style="{StaticResource EnvironmentBlockText}" />
                                 <TextBlock Text="{Binding LastStatus.Description}" FontSize="14" Style="{StaticResource EnvironmentBlockText}" />
                                 <TextBlock Text="{Binding LastBuildFinishString}" FontSize="12" Style="{StaticResource EnvironmentBlockText}" Margin="0 3 0 3" />
-                                <StackPanel Orientation="Horizontal" Margin="0 6 0 0" HorizontalAlignment="Center">
-                                    <Button Click="btnEditEnvironmentConfig_Click" Cursor="Hand">
-                                        <Button.Template>
-                                            <ControlTemplate TargetType="Button">
-                                                <Border BorderThickness="1" BorderBrush="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}" CornerRadius="6">
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <Image Source="..\Images\Server_5720.png" Margin="6" ToolTip="Edit Commit Environment" Width="20" Height="20" />
-                                                        <TextBlock Height="20" Text="Config" Style="{StaticResource EnvironmentBlockText}" Margin="0 5 10 0" />
-                                                    </StackPanel>
-                                                </Border>
-                                            </ControlTemplate>
-                                        </Button.Template>
+                                <StackPanel Orientation="Horizontal" Margin="0 4 0 0" HorizontalAlignment="Center">
+                                    <Button Click="btnEditEnvironmentConfig_Click" Background="Transparent" BorderThickness="1" Style="{StaticResource EnvironmentBlockButton}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image Source="..\Images\Server_5720.png" ToolTip="Edit Commit Environment" />
+                                            <TextBlock Text="Config" Style="{StaticResource EnvironmentBlockText}" Margin="5 0 0 0" />
+                                        </StackPanel>
                                     </Button>
                                 </StackPanel>
                             </StackPanel>
@@ -96,59 +108,44 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="Button">
-                                    <StackPanel Orientation="Vertical">
-                                        <Grid Width="640" HorizontalAlignment="Left" Margin="0 0 0 10">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="Auto" />
-                                            </Grid.ColumnDefinitions>
-                                            <StackPanel Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Left">
-                                                <TextBlock Text="{Binding ProjectName}" FontSize="16" />
-                                                <TextBlock Text="{Binding CollectionName}" Foreground="Gray" />
-                                            </StackPanel>
-                                            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0 6 0 0" HorizontalAlignment="Right">
-                                                <Button Click="btnEditPipelineScript_Click">
-                                                    <Button.Template>
-                                                        <ControlTemplate TargetType="Button">
-                                                            <Border BorderThickness="1" BorderBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" CornerRadius="6" Cursor="Hand">
-                                                                <StackPanel Orientation="Horizontal">
-                                                                    <Image Source="..\Images\ScriptFile_452.png" Margin="6" ToolTip="Edit Pipeline Script" Width="20" Height="20" />
-                                                                    <TextBlock Text="Script" VerticalAlignment="Center" Foreground="Black" Margin="0 2 10 0" Height="20" />
-                                                                </StackPanel>
-                                                            </Border>
-                                                        </ControlTemplate>
-                                                    </Button.Template>
-                                                </Button>
-                                                <Button Click="btnEditPipelineEnvironment_Click">
-                                                    <Button.Template>
-                                                        <ControlTemplate TargetType="Button">
-                                                            <Border BorderThickness="1" BorderBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" CornerRadius="6" Margin="6 0 0 0" Cursor="Hand">
-                                                                <StackPanel Orientation="Horizontal">
-                                                                    <Image Source="..\Images\Server_5720.png" Margin="6" ToolTip="Edit Shared Environment Configuration" Width="20" Height="20" />
-                                                                    <TextBlock Text="Config" VerticalAlignment="Center" Foreground="Black" Margin="0 2 10 0" Height="20" />
-                                                                </StackPanel>
-                                                            </Border>
-                                                        </ControlTemplate>
-                                                    </Button.Template>
-                                                </Button>
-                                            </StackPanel>
-                                        </Grid>
+                                    <StackPanel Orientation="Vertical" Margin="0 0 0 35">
+                                        <Border HorizontalAlignment="Stretch" Background="#1F1F22" Margin="0 0 20 20" CornerRadius="6 6 0 0">
+                                            <Grid HorizontalAlignment="Stretch">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Left" Margin="10">
+                                                    <TextBlock Text="{Binding ProjectName}" FontSize="16" Foreground="#F1F1F1" />
+                                                    <TextBlock Text="{Binding CollectionName}" Foreground="Gray" />
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="10" HorizontalAlignment="Right">
+                                                    <Button Click="btnEditPipelineScript_Click" Style="{StaticResource CommandButton}">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Image Source="..\Images\ScriptFile_452.png" ToolTip="Edit Pipeline Script" />
+                                                            <TextBlock Text="Script" Margin="6 0 0 0" />
+                                                        </StackPanel>
+                                                    </Button>
+                                                    <Button Click="btnEditPipelineEnvironment_Click" Margin="3 0 0 0" Style="{StaticResource CommandButton}">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Image Source="..\Images\Server_5720.png" ToolTip="Edit Shared Environment Configuration" />
+                                                            <TextBlock Text="Shared Config" Margin="6 0 0 0" />
+                                                        </StackPanel>
+                                                    </Button>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
                                         <Canvas Width="610" HorizontalAlignment="Left">
                                             <ItemsControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="canvasPipeline" ItemsSource="{Binding Environments}" Loaded="itmsPipeline_Loaded">
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate>
                                                         <Canvas>
-                                                            <ContentControl Canvas.Left="{Binding Left}" Canvas.Top="{Binding Top}" Template="{StaticResource EnvironmentBlock}" DataContext="{Binding}" Style="{StaticResource EnvironmentBlockControl}" />
+                                                            <ContentControl Canvas.Left="{Binding Left}" Canvas.Top="{Binding Top}" Template="{StaticResource EnvironmentBlock}" DataContext="{Binding}" />
                                                         </Canvas>
                                                     </DataTemplate>
                                                 </ItemsControl.ItemTemplate>
                                             </ItemsControl>    
                                         </Canvas>
-                                        <!--
-                                        <Button Margin="0" Height="30" Width="26" Padding="5" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" BorderBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}">
-                                            <Path Fill="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" Data="M 0 10 L 10 0 L 0 -10 Z" Margin="0 8 0 0"  />
-                                        </Button>-->
-                                        <Separator Height="1" Background="Wheat" Margin="0 10 0 20" />
                                     </StackPanel>
                                 </ControlTemplate>
                             </Setter.Value>
@@ -196,7 +193,7 @@
             </ScrollViewer.Content>
         </ScrollViewer>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Name="btnAddPipeline" Click="btnAddPipeline_Click" Margin="0 10 0 0" HorizontalAlignment="Right">
+            <Button Name="btnAddPipeline" Click="btnAddPipeline_Click" Margin="0 10 0 0" HorizontalAlignment="Right" Style="{StaticResource CommandButton}">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text=" Add Pipeline" />
                 </StackPanel>

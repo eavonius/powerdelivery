@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -11,14 +10,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using Microsoft.TeamFoundation.Client;
-using Microsoft.TeamFoundation.Framework.Common;
+using PowerDelivery.Controls.Model;
 
 namespace PowerDelivery.Controls.Pages
 {
-    /// <summary>
-    /// Interaction logic for AddEditSource.xaml
-    /// </summary>
     public partial class AddEditSource : Page
     {
         ClientControl _clientControl;
@@ -26,6 +21,7 @@ namespace PowerDelivery.Controls.Pages
         public AddEditSource(ClientControl clientControl, ClientCollectionSource source)
         {
             _clientControl = clientControl;
+            
             DataContext = source;
 
             InitializeComponent();
@@ -45,51 +41,21 @@ namespace PowerDelivery.Controls.Pages
 
         private void btnSaveChanges_Click(object sender, RoutedEventArgs e)
         {
-            Uri collectionUri = null;
-            TfsTeamProjectCollection collection = null;
-
             try
             {
-                collectionUri = new Uri(txtCollectionURL.Text);
-                collection = new TfsTeamProjectCollection(collectionUri);
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Invalid URL, please enter a valid URL to a TFS Project Collection.", "Invalid URL", MessageBoxButton.OK, MessageBoxImage.Stop);
-                txtCollectionURL.Focus();
-                return;
-            }
-
-            try
-            {
-                collection.Connect(ConnectOptions.IncludeServices);
-
                 ClientCollectionSource source = (ClientCollectionSource)DataContext;
+                source.Uri = txtCollectionURL.Text;
 
-                bool added = true;
+                source.Save();
 
-                if (!ClientConfiguration.Current.Sources.Contains(source))
-                {
-                    ClientControl.Configuration.Sources.Add(new ClientCollectionSource() { Uri = collectionUri.ToString() });
-
-                    added = false;
-                }
-
-                ClientControl.Configuration.Save();
-
-                if (added)
-                {
-                    NavigationService.Navigate(new Pages.Home(_clientControl));
-                }
-                else
-                {
-                    NavigationService.Navigate(new Pages.Sources(_clientControl));
-                }
+                NavigationService.Navigate(new Pages.Home(_clientControl));
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error connecting to TFS", MessageBoxButton.OK, MessageBoxImage.Stop);
+                MessageBox.Show(ex.Message, "Error saving TFS source", MessageBoxButton.OK, MessageBoxImage.Error);
+
                 txtCollectionURL.Focus();
+                
                 return;
             }
         }
@@ -101,7 +67,8 @@ namespace PowerDelivery.Controls.Pages
 
         private void btnRemove_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to remove this Team Foundation Server source?", "Confirm remove source", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (MessageBox.Show("Are you sure you want to remove this Team Foundation Server source?", "Confirm remove source", 
+                MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 ClientCollectionSource source = (ClientCollectionSource)DataContext;
 

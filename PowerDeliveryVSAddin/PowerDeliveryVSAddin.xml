@@ -24,9 +24,6 @@
         </member>
         <member name="T:PowerDelivery.Controls.Pages.AddEditSource">
             <summary>
-            Interaction logic for AddEditSource.xaml
-            </summary>
-            <summary>
             AddEditSource
             </summary>
         </member>

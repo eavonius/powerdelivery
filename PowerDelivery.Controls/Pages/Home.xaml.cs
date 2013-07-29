@@ -1,9 +1,8 @@
 ﻿using System;
 using System.IO;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -11,24 +10,14 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
+using System.Windows.Shapes;
 using System.Diagnostics;
 
-using Microsoft.TeamFoundation.Framework;
-using Microsoft.TeamFoundation.Client;
-using Microsoft.TeamFoundation.Build.Client;
-using Microsoft.TeamFoundation.Server;
-using Microsoft.TeamFoundation.VersionControl.Client;
-using Microsoft.TeamFoundation.VersionControl.Common;
-using Microsoft.TeamFoundation.Build.Workflow;
+using PowerDelivery.Controls.Model;
 using System.ComponentModel;
-using System.Security.Principal;
-using System.Windows.Shapes;
 
 namespace PowerDelivery.Controls.Pages
 {
-    /// <summary>
-    /// Interaction logic for Home.xaml
-    /// </summary>
     public partial class Home : Page
     {
         ClientControl _clientControl;
@@ -39,10 +28,15 @@ namespace PowerDelivery.Controls.Pages
         {
             _clientControl = clientControl;
 
-            InitializeComponent();
+            Loaded += Home_Loaded;
 
-            lstPipelines.ItemsSource = ClientConfiguration.Current.Pipelines;
+            InitializeComponent();
         }
+
+        async void Home_Loaded(object sender, RoutedEventArgs e)
+        {
+            lstPipelines.ItemsSource = ClientConfiguration.Current.Pipelines;
+         }
 
         void StackPanel_Loaded(object sender, RoutedEventArgs e)
         {
@@ -64,24 +58,32 @@ namespace PowerDelivery.Controls.Pages
 
             DeliveryPipeline pipeline = (DeliveryPipeline)btnSource.DataContext;
 
-            string localDirectory = pipeline.GetWorkingDirectory();
-
-            if (localDirectory != null)
+            try
             {
-                string envConfigPath = string.Format("{0}\\{1}.ps1", localDirectory, pipeline.ScriptName);
+                string localDirectory = pipeline.GetWorkingDirectory();
 
-                if (!File.Exists(envConfigPath))
+                if (localDirectory != null)
                 {
-                    MessageBox.Show(string.Format("File:\n\n{0}\n\nCouldn't be found on disk. Did you move your working folder?", envConfigPath),
-                        "Environment configuration file not found", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    string envConfigPath = string.Format("{0}\\{1}.ps1", localDirectory, pipeline.ScriptName);
+
+                    if (!File.Exists(envConfigPath))
+                    {
+                        throw new Exception(
+                            string.Format("File:\n\n{0}\n\nCouldn't be found on disk. Did you move your working folder?", envConfigPath));
+                    }
+
+                    ProcessStartInfo psi = new ProcessStartInfo();
+                    psi.Verb = "edit";
+                    psi.FileName = envConfigPath;
+
+                    Process.Start(psi);
                 }
-
-                ProcessStartInfo psi = new ProcessStartInfo();
-                psi.Verb = "edit";
-                psi.FileName = envConfigPath;
-
-                Process.Start(psi);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message,
+                    "Unable to edit powerdelivery script",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -91,32 +93,31 @@ namespace PowerDelivery.Controls.Pages
 
             PipelineEnvironment environment = (PipelineEnvironment)btnSource.DataContext;
 
-            string localDirectory = environment.Pipeline.GetWorkingDirectory();
-
-            if (localDirectory != null)
+            try
             {
-                string envConfigPath = string.Format("{0}\\{1}{2}.yml", localDirectory, environment.Pipeline.ScriptName, environment.EnvironmentName);
+                string localDirectory = environment.Pipeline.GetWorkingDirectory();
 
-                if (!File.Exists(envConfigPath))
+                if (localDirectory != null)
                 {
-                    MessageBox.Show(string.Format("File:\n\n{0}\n\nCouldn't be found on disk. Did you move your working folder?", envConfigPath),
-                        "Environment configuration file not found", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
+                    string envConfigPath = string.Format("{0}\\{1}{2}.yml", localDirectory, environment.Pipeline.ScriptName, environment.EnvironmentName);
 
-                try
-                {
+                    if (!File.Exists(envConfigPath))
+                    {
+                        throw new Exception(string.Format("File:\n\n{0}\n\nCouldn't be found on disk. Did you move your working folder?", envConfigPath));
+                    }
+
                     ProcessStartInfo psi = new ProcessStartInfo();
                     psi.FileName = envConfigPath;
                     psi.WorkingDirectory = System.IO.Path.GetDirectoryName(envConfigPath);
 
                     Process.Start(psi);
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(string.Format("Unable to edit configuration file:\n\n{0}\n\n{1}", envConfigPath, ex.Message),
-                        "Error opening environment configuration", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, 
+                    string.Format("Unable to edit {0} environment configuration file", environment.EnvironmentName), 
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -126,32 +127,40 @@ namespace PowerDelivery.Controls.Pages
 
             DeliveryPipeline pipeline = (DeliveryPipeline)btnSource.DataContext;
 
-            string localDirectory = pipeline.GetWorkingDirectory();
-
-            if (localDirectory != null)
+            try
             {
-                string envConfigPath = string.Format("{0}\\{1}Shared.yml", localDirectory, pipeline.ScriptName);
 
-                if (!File.Exists(envConfigPath))
-                {
-                    MessageBox.Show(string.Format("File:\n\n{0}\n\nCouldn't be found on disk. Did you move your working folder?", envConfigPath),
-                        "Environment configuration file not found", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
+                string localDirectory = pipeline.GetWorkingDirectory();
 
-                try
+                if (localDirectory != null)
                 {
-                    ProcessStartInfo psi = new ProcessStartInfo();
-                    psi.FileName = envConfigPath;
-                    psi.WorkingDirectory = System.IO.Path.GetDirectoryName(envConfigPath);
+                    string envConfigPath = string.Format("{0}\\{1}Shared.yml", localDirectory, pipeline.ScriptName);
 
-                    Process.Start(psi);
+                    if (!File.Exists(envConfigPath))
+                    {
+                        throw new Exception(string.Format("File:\n\n{0}\n\nCouldn't be found on disk. Did you move your working folder?", envConfigPath));
+                    }
+
+                    try
+                    {
+                        ProcessStartInfo psi = new ProcessStartInfo();
+                        psi.FileName = envConfigPath;
+                        psi.WorkingDirectory = System.IO.Path.GetDirectoryName(envConfigPath);
+
+                        Process.Start(psi);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception(string.Format("Unable to edit configuration file:\n\n{0}\n\n{1}", envConfigPath, ex.Message));
+                    }
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(string.Format("Unable to edit configuration file:\n\n{0}\n\n{1}", envConfigPath, ex.Message), 
-                        "Error opening shared environment configuration", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message,
+                    "Unable to edit shared environment configuration file",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -177,6 +186,7 @@ namespace PowerDelivery.Controls.Pages
         private void brdEnvironmentBlock_Loaded(object sender, RoutedEventArgs e)
         {
             Border brdEnvironmentBlock = (Border)sender;
+            Canvas.SetZIndex(brdEnvironmentBlock, 1);
 
             FrameworkElement parentElement = (FrameworkElement)brdEnvironmentBlock.TemplatedParent;
             Canvas parentCanvas = parentElement.Parent as Canvas;
@@ -208,8 +218,8 @@ namespace PowerDelivery.Controls.Pages
                 Canvas.SetTop(parentElement, pipelineIndex * ENV_BLOCK_HEIGHT);
 
                 Line commitToMidLine = new Line();
-                commitToMidLine.StrokeThickness = 2;
-                commitToMidLine.Stroke = Brushes.LightBlue;
+                commitToMidLine.StrokeThickness = 3;
+                commitToMidLine.Stroke = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#555"));
                 commitToMidLine.X1 = 160;
                 commitToMidLine.Y1 = (midEnvCount * ENV_BLOCK_HEIGHT) / 2;
                 commitToMidLine.X2 = Canvas.GetLeft(parentElement);
@@ -217,17 +227,53 @@ namespace PowerDelivery.Controls.Pages
 
                 parentCanvas.Children.Add(commitToMidLine);
 
+                PromoteControl promoteFromCommit = new PromoteControl();
+                parentCanvas.Children.Add(promoteFromCommit);
+
+                RotateTransform rotatePromoteButton = new RotateTransform();
+                rotatePromoteButton.CenterX = 10;
+                rotatePromoteButton.CenterY = 10;
+                promoteFromCommit.RenderTransform = rotatePromoteButton;
+
+                Double angleInRadians = Math.Atan2(commitToMidLine.Y2 - commitToMidLine.Y1, commitToMidLine.X2 - commitToMidLine.X1);
+                rotatePromoteButton.Angle = angleInRadians * (180 / Math.PI);
+
+                if (commitToMidLine.Y2 > commitToMidLine.Y1)
+                {
+                    Canvas.SetTop(promoteFromCommit, commitToMidLine.Y1 + ((commitToMidLine.Y2 - commitToMidLine.Y1) / 2) - (promoteFromCommit.ActualHeight / 2) - 16);
+                }
+                else
+                {
+                    Canvas.SetTop(promoteFromCommit, commitToMidLine.Y2 + ((commitToMidLine.Y1 - commitToMidLine.Y2) / 2) - (promoteFromCommit.ActualHeight / 2) - 16);
+                }
+
+                Canvas.SetLeft(promoteFromCommit, 190);
+
                 if (environment.EnvironmentName == "Test")
                 {
                     Line testToProdLine = new Line();
                     testToProdLine.StrokeThickness = 3;
-                    testToProdLine.Stroke = Brushes.LightBlue;
+                    testToProdLine.Stroke = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#555"));
                     testToProdLine.X1 = 240 + brdEnvironmentBlock.ActualWidth;
                     testToProdLine.Y1 = Canvas.GetTop(parentElement) + (parentElement.ActualHeight / 2);
                     testToProdLine.X2 = 475;
                     testToProdLine.Y2 = ENV_BLOCK_HEIGHT / 2 - 3;
 
                     parentCanvas.Children.Add(testToProdLine);
+
+                    PromoteControl promoteFromTest = new PromoteControl();
+                    parentCanvas.Children.Add(promoteFromTest);
+
+                    if (testToProdLine.Y2 > testToProdLine.Y1)
+                    {
+                        Canvas.SetTop(promoteFromTest, testToProdLine.Y1 + ((testToProdLine.Y2 - testToProdLine.Y1) / 2) - (promoteFromTest.ActualHeight / 2) - 15);
+                    }
+                    else
+                    {
+                        Canvas.SetTop(promoteFromTest, testToProdLine.Y2 + ((testToProdLine.Y1 - testToProdLine.Y2) / 2) - (promoteFromTest.ActualHeight / 2) - 15);
+                    }
+
+                    Canvas.SetLeft(promoteFromTest, 425);
                 }
             }
         }

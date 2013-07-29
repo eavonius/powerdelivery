@@ -14,6 +14,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Runtime.InteropServices;
 
+using PowerDelivery.Controls.Model;
+
 namespace PowerDelivery.Controls
 {
     /// <summary>
@@ -21,8 +23,6 @@ namespace PowerDelivery.Controls
     /// </summary>
     public partial class ClientControl : UserControl
     {
-        internal static ClientConfiguration Configuration { get; private set; }
-
         /// <summary>
         /// Creates the control.
         /// </summary>
@@ -30,7 +30,7 @@ namespace PowerDelivery.Controls
         {
             InitializeComponent();
 
-            Configuration = ClientConfiguration.Current;
+            DataContext = ClientConfiguration.Current;
 
             frmContent.Navigate(new Pages.Home(this));
         }
