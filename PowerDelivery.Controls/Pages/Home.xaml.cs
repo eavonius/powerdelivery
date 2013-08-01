@@ -33,10 +33,16 @@ namespace PowerDelivery.Controls.Pages
             InitializeComponent();
         }
 
+        async Task LoadPipelines()
+        {
+            var x = ClientConfiguration.Current.Pipelines;
+            lstPipelines.ItemsSource = x;
+        }
+
         async void Home_Loaded(object sender, RoutedEventArgs e)
         {
-            lstPipelines.ItemsSource = ClientConfiguration.Current.Pipelines;
-         }
+            Task loadPipelines = LoadPipelines();
+        }
 
         void StackPanel_Loaded(object sender, RoutedEventArgs e)
         {

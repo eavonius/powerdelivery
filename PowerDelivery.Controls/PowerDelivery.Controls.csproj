@@ -63,6 +63,8 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\AddPipelineCommand.cs" />
+    <Compile Include="Commands\PowerShellCommand.cs" />
     <Compile Include="Pages\AddPipeline.xaml.cs">
       <DependentUpon>AddPipeline.xaml</DependentUpon>
     </Compile>
@@ -75,6 +77,9 @@
     </Compile>
     <Compile Include="Pages\Home.xaml.cs">
       <DependentUpon>Home.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\RunPowerShell.xaml.cs">
+      <DependentUpon>RunPowerShell.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Sources.xaml.cs">
       <DependentUpon>Sources.xaml</DependentUpon>
@@ -121,6 +126,10 @@
     <Page Include="Pages\Home.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\RunPowerShell.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\Sources.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -45,7 +45,7 @@ namespace PowerDelivery.Controls.Model
         public ClientConfiguration()
         {
             Sources = new List<ClientCollectionSource>();
-
+            
             PowerShell getVersionScript = PowerShell.Create(RunspaceMode.NewRunspace);
             getVersionScript.AddScript("if (get-module -listavailable -name powerdelivery) { (get-module -listavailable -name powerdelivery | select version).Version.ToString() } else { 'Not Found' }");
 
@@ -169,10 +169,6 @@ namespace PowerDelivery.Controls.Model
                         {
                             if (definition.Process.ServerPath.Contains("BuildProcessTemplates/PowerDelivery"))
                             {
-                                DeliveryPipeline pipeline = pipelines.FirstOrDefault(p => p.ProjectName == project.Name);
-
-                                string environmentName = definition.Name.Substring(definition.Name.LastIndexOf(" - ") + 3);
-
                                 IDictionary<string, object> processParams = WorkflowHelpers.DeserializeProcessParameters(definition.ProcessParameters);
 
                                 if (processParams.ContainsKey("PowerShellScriptPath"))
@@ -180,6 +176,10 @@ namespace PowerDelivery.Controls.Model
                                     string scriptPath = processParams["PowerShellScriptPath"] as string;
 
                                     string scriptName = System.IO.Path.GetFileNameWithoutExtension(scriptPath.Substring(scriptPath.LastIndexOf("/")));
+
+                                    string environmentName = definition.Name.Substring(definition.Name.LastIndexOf(" - ") + 3);
+
+                                    DeliveryPipeline pipeline = pipelines.FirstOrDefault(p => p.ScriptName == scriptName);
 
                                     if (pipeline == null)
                                     {

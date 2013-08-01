@@ -21,10 +21,13 @@ namespace PowerDelivery.Controls.Model
             CollectionName = collectionName;
             ScriptName = scriptName;
 
+            ProjectUri = new Uri(new Uri(source.Uri), projectName).AbsoluteUri;
+
             Environments = new ObservableCollection<PipelineEnvironment>();
         }
 
         public ClientCollectionSource Source { get; private set; }
+        public string ProjectUri { get; private set; }
         public string ProjectName { get; private set; }
         public string CollectionName { get; private set; }
         public string ScriptName { get; private set; }
