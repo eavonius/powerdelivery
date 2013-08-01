@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>PowerDelivery</id>
-    <version>2.2.29</version>
+    <version>2.2.30</version>
     <title>PowerDelivery</title>
     <authors>Jayme Edwards</authors>
     <owners />
@@ -39,6 +39,8 @@
     <file src="PowerDelivery\Get-BuildUri.ps1" target="tools\PowerDelivery\Get-BuildUri.ps1" />
     <file src="PowerDelivery\Get-BuildWorkspaceName.ps1" target="tools\PowerDelivery\Get-BuildWorkspaceName.ps1" />
     <file src="PowerDelivery\Get-BuildCollectionUri.ps1" target="tools\PowerDelivery\Get-BuildCollectionUri.ps1" />
+    <file src="PowerDelivery\Get-ComputerLocalDeployPath.ps1" target="tools\PowerDelivery\Get-ComputerLocalDeployPath.ps1" />
+    <file src="PowerDelivery\Get-ComputerRemoteDeployPath.ps1" target="tools\PowerDelivery\Get-ComputerRemoteDeployPath.ps1" />
     <file src="PowerDelivery\Invoke-BuildConfigSection.ps1" target="tools\PowerDelivery\Invoke-BuildConfigSection.ps1" />
     <file src="PowerDelivery\Invoke-BuildConfigSections.ps1" target="tools\PowerDelivery\Invoke-BuildConfigSections.ps1" />
     <file src="PowerDelivery\Import-DeliveryModule.ps1" target="tools\PowerDelivery\Import-DeliveryModule.ps1" />
