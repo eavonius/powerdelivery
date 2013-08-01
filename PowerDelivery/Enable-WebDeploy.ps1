@@ -29,18 +29,36 @@ Optional. The version of .NET the application pool should be created with. Defau
 function Enable-WebDeploy {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=1)][string] $webComputer, 
+        [Parameter(Mandatory=1)] $webComputer, 
         [Parameter(Mandatory=1)][string] $webDeployDir, 
         [Parameter(Mandatory=1)][string] $webSite, 
         [Parameter(Mandatory=1)][string] $webPort, 
         [Parameter(Mandatory=1)][string] $webPassword, 
         [Parameter(Mandatory=0)][string] $runtimeVersion = '4.0'
     )
-	
-	if ($webComputer -ne 'localhost' -and $powerdelivery.environment -ne 'Local') {
 
-    	$webDeployScriptsDir = "$webDeployDir\Scripts"
-    	$siteSetupArgs = "-siteName $webSite -publishSettingSavePath C:\Inetpub\$webSite -publishSettingFileName $($webSite).publishsettings -sitePhysicalPath C:\Inetpub\$webSite -sitePort $webPort -siteAppPoolName $webSite -deploymentUserName $webSite -deploymentUserPassword '$($webPassword)' -managedRunTimeVersion v$runtimeVersion"
-    	$setupSiteResult = Invoke-Expression -Command "Invoke-Command -ComputerName $webComputer -ScriptBlock { & ""$webDeployScriptsDir\SetupSiteForPublish.ps1"" $siteSetupArgs }"
-	}
+    $computerNames = Get-ArrayFromStringOrHash $webComputer
+	
+    foreach ($curComputerName in $computerNames) {
+
+	    if ($curComputerName -ne 'localhost' -and $powerdelivery.environment -ne 'Local') {
+
+            $remoteWebDeployDir = Invoke-Command -ComputerName $curComputerName {
+
+                $msDeploy3Path = Get-ItemProperty -Path "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\IIS Extensions\MSDeploy\3" -Name InstallPath -ErrorAction SilentlyContinue
+
+                if (![String]::IsNullOrWhiteSpace($msDeploy3Path)) {
+                    Write-Host "Found web deploy 3 at $($msDeploy3Path.InstallPath) on $using:curComputerName"
+                    $msDeploy3Path.InstallPath
+                }
+                else {
+                    throw "Couldn't find web deploy 3.0 on $($using:curComputerName). Please install the Web Platform Installer with Web Deploy 3.0 to continue."
+                }
+            }
+
+    	    $webDeployScriptsDir = Join-Path $remoteWebDeployDir "Scripts"
+    	    $siteSetupArgs = "-siteName $webSite -publishSettingSavePath C:\Inetpub\$webSite -publishSettingFileName $($webSite).publishsettings -sitePhysicalPath C:\Inetpub\$webSite -sitePort $webPort -siteAppPoolName $webSite -deploymentUserName $webSite -deploymentUserPassword '$($webPassword)' -managedRunTimeVersion v$runtimeVersion"
+    	    $setupSiteResult = Invoke-Expression -Command "Invoke-Command -ComputerName $curComputerName -ScriptBlock { & ""$webDeployScriptsDir\SetupSiteForPublish.ps1"" $siteSetupArgs }"
+	    }
+    }
 }

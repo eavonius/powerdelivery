@@ -24,10 +24,12 @@ New-RemoteShare REMOTE_COMPUTER MyShare "C:\MyShareDir"
 function New-RemoteShare {
     [CmdletBinding()]
     param (
-        [Parameter(Position=0,Mandatory=1)][string] $computerName,
+        [Parameter(Position=0,Mandatory=1)] $computerName,
         [Parameter(Position=1,Mandatory=1)][string] $shareName, 
         [Parameter(Position=2,Mandatory=1)][string] $shareDirectory
     )
+
+    $logPrefix = "New-RemoteShare:"
 
     $buildAccountName = whoami
 
@@ -40,12 +42,12 @@ function New-RemoteShare {
             Invoke-Command -ComputerName $curComputerName {
         
                 if (!(Test-Path $using:shareDirectory)) {
-                    "Creating directory $using:shareDirectory on $using:curComputerName..."
+                    "$using:logPrefix Creating directory $using:shareDirectory on $using:curComputerName..."
                     mkdir $using:shareDirectory -Force | Out-Null
                 }
             }
 
-            "Creating UNC share \\$curComputerName\$shareName for $shareDirectory..."
+            "$logPrefix Creating UNC share \\$curComputerName\$shareName for $shareDirectory..."
 
             $result = New-Share -FolderPath "$shareDirectory" -ShareName "$shareName" -ComputerName "$curComputerName"
 
@@ -53,20 +55,15 @@ function New-RemoteShare {
                 throw "Error creating share \\$curComputerName\$shareName, error code was $result.ReturnCode"
             }
         }
-        else {
-            "Share \\$curComputerName\$shareName already exists, skipping creation."
-        }
-
-        "Modifying share \\$curComputerName\$shareName to be available to $buildAccountName"
 
         Invoke-Command -ComputerName $curComputerName {
 
             $user = New-Object System.Security.Principal.NTAccount($using:buildAccountName)
             $strSID = $user.Translate([System.Security.Principal.SecurityIdentifier])
             $sid = New-Object System.Security.Principal.SecurityIdentifier($strSID) 
-            [byte[]]$ba = ,0 * $sid.BinaryLength     
-            [void]$sid.GetBinaryForm($ba,0) 
-    
+            [byte[]]$ba = ,0 * $sid.BinaryLength
+            [void]$sid.GetBinaryForm($ba,0)
+
             $trustee = ([WMIClass] "Win32_Trustee").CreateInstance() 
             $trustee.SID = $ba
         

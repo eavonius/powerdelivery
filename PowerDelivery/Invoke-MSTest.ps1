@@ -24,9 +24,6 @@ string - Runs tests found in the file referenced by the file parameter on any cl
 .Parameter computerName
 string - Optional. A remote computer on which to run the tests.
 
-.Parameter sharePath
-string - Optional. A share on the remote computer into which the tests will be copied and run from.
-
 .Parameter platform
 string - Optional. The platform configuration (x86, x64 etc.) of the project compiled using Invoke-MSBuild containing the tests that were run. The default is "AnyCPU".
 
@@ -40,27 +37,26 @@ function Invoke-MSTest {
 		[Parameter(Position=1,Mandatory=1)][string] $results,
 		[Parameter(Position=2,Mandatory=1)][string] $category,
 		[Parameter(Position=3,Mandatory=0)][string] $computerName,
-		[Parameter(Position=4,Mandatory=0)][string] $sharePath,
         [Parameter(Position=5,Mandatory=0)][string] $platform = 'AnyCPU',
 		[Parameter(Position=6,Mandatory=0)][string] $buildConfiguration
     )
-	
+
+    $logPrefix = "Invoke-MSTest:"
+
 	$isRemote = $false
 	$shareTestsPath = ""
 	
 	$environment = Get-BuildEnvironment
 	$dropLocation = Get-BuildDropLocation
 	$currentDirectory = Get-Location
+
+    $localResults = Join-Path $currentDirectory $results
 	
 	$fileName = [System.IO.Path]::GetFileName($file)
 	$testsDir = [System.IO.Path]::GetDirectoryName($file)
-	
+
 	if (![String]::IsNullOrWhiteSpace($computerName)) {
 		$isRemote = $true;
-	}
-	
-	if ($isRemote -and [String]::IsNullOrWhiteSpace($sharePath)) {
-		throw "You must specify a UNC share path to run tests from when executing MSTest on a remote computer."
 	}
 
 	if ([String]::IsNullOrWhiteSpace($buildConfiguration)) {
@@ -71,32 +67,44 @@ function Invoke-MSTest {
 			$buildConfiguration = 'Release'
 		}
 	}
-	
-	if ($isRemote) {
-		$shareTestsPath = Join-Path $sharePath $testsDir
-		copy -Force -Recurse "$testsDir\*" "$shareTestsPath"
-	}
 
+    $localTestsDir = Join-Path $currentDirectory $testsDir
+    $dropTestsDir = "$($dropLocation)$testsDir"
+
+    "$logPrefix Copying $dropTestsDir\* to $localTestsDir"
+    copy -Force -Recurse "$dropTestsDir\*" $localTestsDir | Out-Null
+
+	if ($isRemote) {
+        $remoteDeployPath = Get-ComputerRemoteDeployPath $computerName
+
+        Write-Host "$logPrefix Remote Deploy Path: $remoteDeployPath"
+        Write-Host "$logPrefix Tests Dir: $testsDir"
+
+		$shareTestsPath = "$($remoteDeployPath)\$($testsDir)"
+        mkdir -force $shareTestsPath | Out-Null
+
+        "$logPrefix Copying $localTestsDir\* to $shareTestsPath"
+		copy -Force -Recurse -Path "$localTestsDir\*" $shareTestsPath | Out-Null
+	}
+    
 	$dropResults = "$dropLocation\$results"
 
     try {
         if ($isRemote) {
+            $localTestsPath = Join-Path (Get-ComputerLocalDeployPath $computerName) $testsDir
+
             Invoke-Command -ComputerName $computerName {
-                $workingDirectory = Get-Location
-		        $filePath = $using:file
+                $workingDirectory = $using:localTestsPath
+		        $filePath = Join-Path $workingDirectory $using:fileName
 
-		        if ($using:isRemote) {
-			        $shareLocalDir = (Get-WmiObject Win32_Share -filter "Name LIKE '$using:sharePath'").path
-			        $workingDirectory = Join-Path $shareLocalDir $using:testsDir
-			        $filePath = Join-Path $workingDirectory $using:fileName
-		        }
+                $shareResults = "$workingDirectory\$using:results"
 
-		        $localResults = "$workingDirectory\$using:results"
-
-		        rm -ErrorAction SilentlyContinue -Force $localResults | Out-Null
+		        rm -ErrorAction SilentlyContinue -Force $shareResults | Out-Null
 	
                 # Run acceptance tests out of working directory
-                Invoke-Expression "mstest /testcontainer:`"$filePath`" /category:`"$using:category`" /resultsfile:`"$localResults`" /usestderr /nologo"
+                $command = "mstest /testcontainer:`"$filePath`" /category:`"$using:category`" /resultsfile:`"$shareResults`" /usestderr /nologo"
+                "$logPrefix $command"
+                Invoke-Expression $command
 		
 		        if ($LASTEXITCODE -ne 0) {
 			        throw "Error running tests in $filePath"
@@ -113,35 +121,40 @@ function Invoke-MSTest {
 	
             # Run acceptance tests out of working directory
 		    Exec -errorMessage "Error running tests in $filePath" {
-			    Invoke-Expression "mstest /testcontainer:`"$filePath`" /category:`"$category`" /resultsfile:`"$localResults`" /usestderr /nologo"    
+                $command = "mstest /testcontainer:`"$filePath`" /category:`"$category`" /resultsfile:`"$localResults`" /usestderr /nologo"    			    
+                Write-Host "$logPrefix $command"
+                Invoke-Expression $command
 		    }
         }
 	}
 	finally {
 		
-		if ($isRemote) {
-			$remoteResults = Join-Path $shareTestsPath $results
-			if (Test-Path $remoteResults -PathType Leaf) {
-				copy -Force $remoteResults $localResults
-			}
-		}
+        if ($powerdelivery.onServer) {
+		 
+           if ($isRemote) {
+			    $remoteResults = Join-Path $shareTestsPath $results
+			    if (Test-Path $remoteResults -PathType Leaf) {
+				    copy -Force $remoteResults $localResults | Out-Null
+			    }
+		    }
 	
-		if ((Test-Path $localResults -PathType Leaf) -and $powerdelivery.onServer) {
+		    if (Test-Path $localResults -PathType Leaf) {
 
-            copy $localResults $dropResults
+                copy $localResults $dropResults | Out-Null
 
-            # Publish acceptance test results for this build to the TFS server
-            Exec -errorMessage "Error publishing test results for $dropResults" {
-                mstest /publish:"$(Get-BuildCollectionUri)" `
-                       /teamproject:"$(Get-BuildTeamProject)" `
-                       /publishbuild:"$(Get-BuildName)" `
-                       /publishresultsfile:"$dropResults" `
-                       /flavor:$buildConfiguration `
-                       /platform:$platform `
-					   /nologo
-            }
+                # Publish acceptance test results for this build to the TFS server
+                Exec -errorMessage "Error publishing test results for $dropResults" {
+                    mstest /publish:"$(Get-BuildCollectionUri)" `
+                           /teamproject:"$(Get-BuildTeamProject)" `
+                           /publishbuild:"$(Get-BuildName)" `
+                           /publishresultsfile:"$dropResults" `
+                           /flavor:$buildConfiguration `
+                           /platform:$platform `
+					       /nologo
+                }
 			
-			Write-BuildSummaryMessage -name "TestUnits" -header "Unit Tests" -message "MSTest: $file -> $results"
+			    Write-BuildSummaryMessage -name "TestUnits" -header "Unit Tests" -message "MSTest: $file -> $results"
+            }
         }
 	}
 }

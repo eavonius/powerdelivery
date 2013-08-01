@@ -227,6 +227,8 @@ function Invoke-Powerdelivery {
 		"PreTestCapacity" = @(); "PostTestCapacity" = @()
 	}
 
+    $powerdelivery.deployDriveLetter = "C"
+    $powerdelivery.deployShares = @{}
 	$powerdelivery.deliveryModules = @()
     $powerdelivery.assemblyInfoFiles = @()
     $powerdelivery.currentLocation = gl
