@@ -17,6 +17,7 @@ using Microsoft.TeamFoundation.Server;
 using Microsoft.TeamFoundation.Build.Client;
 
 using PowerDelivery.Controls.Model;
+using PowerDelivery.Controls.Commands;
 
 namespace PowerDelivery.Controls.Pages
 {
@@ -45,7 +46,25 @@ namespace PowerDelivery.Controls.Pages
 
         private void btnSaveChanges_Click(object sender, RoutedEventArgs e)
         {
-            
+            AddPipelineCommand command = new AddPipelineCommand();
+            command.Name = txtName.Text;
+            command.BuildController = (string)cboBuildController.Text;
+            command.CollectionURL = (string)cboCollectionURL.Text;
+            command.ProjectName = (string)cboProject.Text;
+            command.DropFolder = txtDropFolder.Text;
+
+            try
+            {
+                command.BuildCommand();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Correct invalid entries", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                return;
+            }
+
+            NavigationService.Navigate(new RunPowerShell(this, "Adding pipeline", command));
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
@@ -55,7 +74,6 @@ namespace PowerDelivery.Controls.Pages
 
         private void cboCollectionURL_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            txtName.Clear();
             cboProject.Items.Clear();
             cboBuildController.Items.Clear();
 
@@ -108,10 +126,7 @@ namespace PowerDelivery.Controls.Pages
 
         private void cboProject_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (cboProject.SelectedItem != null)
-            {
-                txtName.Text = ((ComboBoxItem)cboProject.SelectedItem).Content as string;
-            }
+            
         }
     }
 }

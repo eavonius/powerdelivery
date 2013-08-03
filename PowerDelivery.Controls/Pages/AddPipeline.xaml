@@ -47,7 +47,7 @@
             <Label Grid.Row="3" Grid.Column="0" Content="TFS Build Controller:" />
             <ComboBox Grid.Row="3" Grid.Column="1" Name="cboBuildController" Margin="0 0 0 10" Width="300" HorizontalAlignment="Left" />
             <Label Grid.Row="4" Grid.Column="0" Content="Build Drop Folder:" />
-            <TextBox Grid.Row="4" Grid.Column="1" Name="txtDropFolder" Margin="0 0 0 10" Width="450" HorizontalAlignment="Left" />
+            <TextBox Grid.Row="4" Grid.Column="1" Name="txtDropFolder" Margin="0 0 0 10" Width="450" HorizontalAlignment="Left" FontSize="14" />
         </Grid>
         <StackPanel Grid.Row="2" Style="{StaticResource PageActions}">
             <Button Content="Save Changes" Name="btnSaveChanges" Click="btnSaveChanges_Click" Margin="0 0 15 0" Style="{StaticResource CommandButton}" />

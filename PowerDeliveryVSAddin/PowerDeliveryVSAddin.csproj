@@ -69,6 +69,12 @@
     <Compile Include="..\PowerDelivery.Controls\ClientControl.xaml.cs">
       <Link>ClientControl.xaml.cs</Link>
     </Compile>
+    <Compile Include="..\PowerDelivery.Controls\Commands\AddPipelineCommand.cs">
+      <Link>Commands\AddPipelineCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\PowerDelivery.Controls\Commands\PowerShellCommand.cs">
+      <Link>Commands\PowerShellCommand.cs</Link>
+    </Compile>
     <Compile Include="..\PowerDelivery.Controls\Model\ClientCollectionSource.cs">
       <Link>Models\ClientCollectionSource.cs</Link>
     </Compile>
@@ -92,6 +98,9 @@
     </Compile>
     <Compile Include="..\PowerDelivery.Controls\Pages\Home.xaml.cs">
       <Link>Pages\Home.xaml.cs</Link>
+    </Compile>
+    <Compile Include="..\PowerDelivery.Controls\Pages\RunPowerShell.xaml.cs">
+      <Link>Pages\RunPowerShell.xaml.cs</Link>
     </Compile>
     <Compile Include="..\PowerDelivery.Controls\Pages\Sources.xaml.cs">
       <Link>Pages\Sources.xaml.cs</Link>
@@ -207,6 +216,11 @@
     </Page>
     <Page Include="..\PowerDelivery.Controls\Pages\Home.xaml">
       <Link>Pages\Home.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\PowerDelivery.Controls\Pages\RunPowerShell.xaml">
+      <Link>Pages\RunPowerShell.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

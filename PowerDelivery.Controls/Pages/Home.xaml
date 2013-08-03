@@ -116,8 +116,8 @@
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
                                                 <StackPanel Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Left" Margin="10">
-                                                    <TextBlock Text="{Binding ProjectName}" FontSize="16" Foreground="#F1F1F1" />
-                                                    <TextBlock Text="{Binding CollectionName}" Foreground="Gray" />
+                                                    <TextBlock Text="{Binding ScriptName}" FontSize="16" Foreground="#F1F1F1" />
+                                                    <TextBlock Text="{Binding ProjectUri}" Foreground="Gray" />
                                                 </StackPanel>
                                                 <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="10" HorizontalAlignment="Right">
                                                     <Button Click="btnEditPipelineScript_Click" Style="{StaticResource CommandButton}">
