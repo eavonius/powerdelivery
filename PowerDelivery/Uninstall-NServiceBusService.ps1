@@ -28,13 +28,17 @@ function Uninstall-NServiceBusService{
 		[Parameter(Position=2,Mandatory=1)]$Directory
 	)
 
-    foreach ($curComputerName in (Get-ArrayFromStringOrHash $ComputerName)) {
+    $logPrefix = "Uninstall-NServiceBusService:"
 
-        Write-Host "Uninstalling previous copy of $Name service from $curComputerName if found..."
+    $computerNames = $ComputerName -split "," | % { $_.Trim() }
+
+    foreach ($curComputerName in $computerNames) {
 
 	    Invoke-Command -ComputerName $curComputerName {
 
 		    if ((Get-Service -Name $using:Name -ErrorAction SilentlyContinue) -ne $null) {
+
+                $priorSvcCmd = (Get-WmiObject -query "SELECT PathName FROM Win32_Service WHERE Name = '$using:Name'").PathName                $priorSvcExePath = ($priorSvcCmd -replace '^\"([^\"]*)\".*$','$1').Trim('"')                $priorSvcLocalPath = (Split-Path $priorSvcExePath -Parent)
 
 		 	    $uninstallServiceArgs = @(
 		 		    "-uninstall",
@@ -42,8 +46,10 @@ function Uninstall-NServiceBusService{
 		 		    $using:Name
 			    )
 
-			    $uninstallResult = Start-Process -WorkingDirectory $using:Directory `
-			 	    -FilePath "$using:Directory\NServiceBus.Host.exe" `
+                "$using:logPrefix Uninstalling previous copy of $using:Name service from $using:curComputerName in $priorSvcLocalPath"
+
+			    $uninstallResult = Start-Process -WorkingDirectory $priorSvcLocalPath `
+			 	    -FilePath "$priorSvcLocalPath\NServiceBus.Host.exe" `
 			  	    -ArgumentList $uninstallServiceArgs `
 			 	    -ErrorAction SilentlyContinue `
 			 	    -Wait `

@@ -27,7 +27,9 @@ function New-WindowsUserAccount {
 		[Parameter(Position=2,Mandatory=0)] $computerName
 	)
 
-	$commandArgs = @{'ScriptBlock' = {
+    $logPrefix = "New-WindowsUserAccount:"
+
+    Invoke-Command -ComputerName $computerName {
 
 		$localUsersSet = [ADSI]"WinNT://$using:computerName/Users"
 		$localUsers = @($localUsersSet.psbase.Invoke("Members")) 
@@ -41,7 +43,7 @@ function New-WindowsUserAccount {
 		}
 
 		if (!$foundAccount) {
-			Write-Host "Adding $using:userName user to $($using:computerName)..."
+			Write-Host "$using:logPrefix Adding $using:userName user to $($using:computerName)..."
 
 			$addUserArgs = @(
 				"user",
@@ -56,16 +58,7 @@ function New-WindowsUserAccount {
 			$addUserProcess = Start-Process -FilePath "C:\Windows\System32\net.exe" -ArgumentList $addUserArgs -PassThru -Wait
 			$addUserProcess.WaitForExit()
 
-			"User $using:userName created successfully."
+			"$using:logPrefix User $using:userName created successfully."
 		}
-		else {
-			"User $using:userName on $($using:computerName) already exists, skipping creation."
-		}
-	}}
-	
-	if (![String]::IsNullOrWhiteSpace($computerName)) {
-		$commandArgs.Add('ComputerName', $computerName);
 	}
-	
-	Invoke-Command @commandArgs
 }

@@ -91,17 +91,18 @@ function Invoke-MSTest {
 
     try {
         if ($isRemote) {
-            $localTestsPath = Join-Path (Get-ComputerLocalDeployPath $computerName) $testsDir
+            $localDeployPath = Get-ComputerLocalDeployPath $computerName
 
             Invoke-Command -ComputerName $computerName {
-                $workingDirectory = $using:localTestsPath
-		        $filePath = Join-Path $workingDirectory $using:fileName
+                $workingDirectory = $using:localDeployPath
+		        $filePath = $using:file
 
-                $shareResults = "$workingDirectory\$using:results"
+                $shareResults = Join-Path $workingDirectory $using:results
 
 		        rm -ErrorAction SilentlyContinue -Force $shareResults | Out-Null
 	
-                # Run acceptance tests out of working directory
+                Set-Location $using:localDeployPath
+
                 $command = "mstest /testcontainer:`"$filePath`" /category:`"$using:category`" /resultsfile:`"$shareResults`" /usestderr /nologo"
                 "$logPrefix $command"
                 Invoke-Expression $command
@@ -115,11 +116,10 @@ function Invoke-MSTest {
             $workingDirectory = Get-Location
 		    $filePath = $file
 
-		    $localResults = "$workingDirectory\$results"
+		    $localResults = Join-Path $workingDirectory $results
 
 		    rm -ErrorAction SilentlyContinue -Force $localResults | Out-Null
 	
-            # Run acceptance tests out of working directory
 		    Exec -errorMessage "Error running tests in $filePath" {
                 $command = "mstest /testcontainer:`"$filePath`" /category:`"$category`" /resultsfile:`"$localResults`" /usestderr /nologo"    			    
                 Write-Host "$logPrefix $command"
@@ -144,13 +144,10 @@ function Invoke-MSTest {
 
                 # Publish acceptance test results for this build to the TFS server
                 Exec -errorMessage "Error publishing test results for $dropResults" {
-                    mstest /publish:"$(Get-BuildCollectionUri)" `
-                           /teamproject:"$(Get-BuildTeamProject)" `
-                           /publishbuild:"$(Get-BuildName)" `
-                           /publishresultsfile:"$dropResults" `
-                           /flavor:$buildConfiguration `
-                           /platform:$platform `
-					       /nologo
+
+                    $command = "mstest /publish:`"$(Get-BuildCollectionUri)`" /teamproject:`"$(Get-BuildTeamProject)`" /publishbuild:`"$(Get-BuildName)`" /publishresultsfile:`"$dropResults`" /flavor:$buildConfiguration /platform:$platform /nologo"
+                    Write-Host "$logPrefix $command"
+                    Invoke-Expression "$command"
                 }
 			
 			    Write-BuildSummaryMessage -name "TestUnits" -header "Unit Tests" -message "MSTest: $file -> $results"

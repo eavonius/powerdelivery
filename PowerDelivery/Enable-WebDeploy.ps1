@@ -34,8 +34,10 @@ function Enable-WebDeploy {
         [Parameter(Mandatory=1)][string] $webSite, 
         [Parameter(Mandatory=1)][string] $webPort, 
         [Parameter(Mandatory=1)][string] $webPassword, 
-        [Parameter(Mandatory=0)][string] $runtimeVersion = '4.0'
+        [Parameter(Mandatory=0)][string] $runtimeVersion = 'v4.0'
     )
+
+    $logPrefix = "Publish-WebDeploy:"
 
     $computerNames = Get-ArrayFromStringOrHash $webComputer
 	
@@ -48,7 +50,6 @@ function Enable-WebDeploy {
                 $msDeploy3Path = Get-ItemProperty -Path "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\IIS Extensions\MSDeploy\3" -Name InstallPath -ErrorAction SilentlyContinue
 
                 if (![String]::IsNullOrWhiteSpace($msDeploy3Path)) {
-                    Write-Host "Found web deploy 3 at $($msDeploy3Path.InstallPath) on $using:curComputerName"
                     $msDeploy3Path.InstallPath
                 }
                 else {
@@ -57,8 +58,27 @@ function Enable-WebDeploy {
             }
 
     	    $webDeployScriptsDir = Join-Path $remoteWebDeployDir "Scripts"
-    	    $siteSetupArgs = "-siteName $webSite -publishSettingSavePath C:\Inetpub\$webSite -publishSettingFileName $($webSite).publishsettings -sitePhysicalPath C:\Inetpub\$webSite -sitePort $webPort -siteAppPoolName $webSite -deploymentUserName $webSite -deploymentUserPassword '$($webPassword)' -managedRunTimeVersion v$runtimeVersion"
-    	    $setupSiteResult = Invoke-Expression -Command "Invoke-Command -ComputerName $curComputerName -ScriptBlock { & ""$webDeployScriptsDir\SetupSiteForPublish.ps1"" $siteSetupArgs }"
+
+            $siteSetupArgs = @(
+                "-siteName `"$webSite`"",
+                "-publishSettingSavePath `"C:\Inetpub\$webSite`"",
+                "-publishSettingFileName `"$($webSite).publishsettings`"",
+                "-sitePhysicalPath `"C:\Inetpub\$webSite`"",
+                "-sitePort $webPort",
+                "-siteAppPoolName `"$webSite`"",
+                "-deploymentUserName `"$webSite`"",
+                "-deploymentUserPassword '$webPassword'",
+                "-managedRunTimeVersion `"$runtimeVersion`""
+            )
+
+            Invoke-Command -ComputerName $curComputerName { 
+                $setupScriptName = "SetupSiteForPublish.ps1"
+                $setupScriptPath = Join-Path $using:webDeployScriptsDir $setupScriptName
+
+                "$using:logPrefix `"$setupScriptPath`" $using:siteSetupArgs"
+
+                Invoke-Expression "& `"$setupScriptPath`" $using:siteSetupArgs" | Out-Host
+            }
 	    }
     }
 }

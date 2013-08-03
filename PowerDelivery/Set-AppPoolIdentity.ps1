@@ -17,7 +17,7 @@ string - The username of the account to use for the identity.
 string - The password of the account to use for the identity.
 
 .Parameter computerName
-string - Optional. The computer running the IIS website to be modified.
+The computer running the IIS website to be modified.
 
 .Example
 Set-AppPoolIdentity -appPoolName MySite `
@@ -33,19 +33,17 @@ function Set-AppPoolIdentity {
 		[Parameter(Position=2,Mandatory=1)] $password,
 		[Parameter(Position=3,Mandatory=0)] $computerName
 	)
+
+    $logPrefix = "Set-AppPoolIdentity:"
 			
-	$commandArgs = @{'ScriptBlock' = {
+	Invoke-Command $computerName {
 
 		Import-Module WebAdministration
+
+        "$using:logPrefix Setting $using:userName as identity of $using:appPoolName application pool on $using:computerName"
 
 		Set-ItemProperty -Path "IIS:\AppPools\$using:appPoolName" -Name ProcessModel.IdentityType -Value 3
 		Set-ItemProperty -Path "IIS:\AppPools\$using:appPoolName" -Name ProcessModel.UserName -Value $using:userName
 		Set-ItemProperty -Path "IIS:\AppPools\$using:appPoolName" -Name ProcessModel.Password -Value $using:password
-	}}
-	
-	if (![String]::IsNullOrWhiteSpace($computerName)) {
-		$commandArgs.Add('ComputerName', $computerName);
 	}
-	
-	Invoke-Command @commandArgs
 }

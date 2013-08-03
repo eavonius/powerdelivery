@@ -53,19 +53,13 @@ function Publish-WebDeploy {
 		[Parameter(Position=5,Mandatory=1)] [string] $WebPassword,
 		[Parameter(Position=6,Mandatory=0)] [Hashtable] $Parameters,
 		[Parameter(Position=7,Mandatory=0)] [string] $BringOffline = 'false',
-		[Parameter(Position=8,Mandatory=0)] [string] $WebDeployDir = "C:\Program Files\IIS\Microsoft Web Deploy v3"
+		[Parameter(Position=8,Mandatory=0)] [string] $WebDeployDir = "C:\Program Files\IIS\Microsoft Web Deploy v3",
+        [Parameter(Position=9,Mandatory=0)] $RuntimeVersion = 'v4.0'
 	)
-	
-	$computerNames = @()
-	
-	if ($WebComputer.GetType().Name -eq 'Hashtable') {
-		$WebComputer | % {
-			$computerNames += $WebComputer[$_]
-		}
-	}
-	else  {
-		$computerNames = $WebComputer
-	}
+
+    $logPrefix = "Publish-WebDeploy:"
+
+    $computerNames = $WebComputer -split "," | % { $_.Trim() }
 	
 	foreach ($computerName in $computerNames) {
 	
@@ -78,6 +72,7 @@ function Publish-WebDeploy {
 		$invokeArgs.Add('WebPort', $WebPort)
 		$invokeArgs.Add('webSite', $WebSite)
 		$invokeArgs.Add('webPassword', $WebPassword)
+        $invokeArgs.Add('runtimeVersion', $RuntimeVersion)
 
 		& Enable-WebDeploy @invokeArgs
 		
@@ -129,12 +124,14 @@ function Publish-WebDeploy {
 					$deleteOfflineFile = "$msDeployPath -verb:delete -dest:`"contentPath=$($WebSite)/App_Offline.htm,computername=$($computerName)`""
 					
 					$deleteOfflineFileResult = Invoke-Command -ComputerName $computerName -ErrorAction SilentlyContinue {
+                        "$using:logPrefix $using:offlineCmd"
 						iex $using:deleteOfflineFile
 					}
 										
 					$offlineCmd = "$msDeployPath -verb:sync -source:iisApp=`"$($WebSite)`" -dest:`"auto,computername=$($computerName)`" -enableRule:AppOffline -enableRule:DoNotDeleteRule"
 					
 					Invoke-Command -ComputerName $computerName -ErrorAction Stop {
+                        "$using:logPrefix $using:offlineCmd"
 						iex $using:offlineCmd
 					}
 				}
