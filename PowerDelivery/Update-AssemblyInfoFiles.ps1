@@ -32,7 +32,6 @@ function Update-AssemblyInfoFiles {
 	    Get-ChildItem -r -Path $path -filter AssemblyInfo.cs | % {
 	        $filename = $_.Directory.ToString() + '\' + $_.Name
 			$powerdelivery.assemblyInfoFiles += ,$filename
-	        $filename + " -> $buildAssemblyVersion ($appVersion.$changeSetNumber)"
 	        Exec -errorMessage "Unable to update file attributes on $filename" { 
                 attrib -r "$filename"
 			}
@@ -41,7 +40,5 @@ function Update-AssemblyInfoFiles {
 	            % {$_ -replace $fileVersionPattern, $fileVersion }
 	        } | Set-Content $filename
 	    }
-		return $buildAppVersion
 	}
-	return ""
 }

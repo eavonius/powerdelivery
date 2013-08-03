@@ -22,16 +22,16 @@ function Get-ComputerRemoteDeployPath {
 
         $driveLetter = $powerdelivery.deployDriveLetter
 
-        New-RemoteShare -computerName $computerName -shareName "PowerDelivery" -shareDirectory "$($driveLetter):\PowerDelivery"
+        New-RemoteShare -computerName $computerName -shareName "PowerDelivery" -shareDirectory "$($driveLetter):\PowerDelivery" | Out-Host
 
         $buildName = Get-BuildName
         $buildNumber = Get-BuildNumber
 
-        $deployPath = "\\$computerName\PowerDelivery\$buildName\$buildNumber"
+        $deployPath = "\\$computerName\PowerDelivery\$buildName"
 
         mkdir $deployPath -Force | Out-Null
 
         $powerdelivery.deployShares.Add($computerName, $deployPath)
     }
-    return $powerdelivery.deployShares[$computerName]
+    $powerdelivery.deployShares[$computerName]
 }

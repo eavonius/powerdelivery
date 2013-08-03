@@ -44,11 +44,13 @@ function Invoke-Powerdelivery {
 		if ($condition) {
 			$actionPerformed = $false
 			
-			Write-Host
-			Write-ConsoleSpacer
-			"= Powerdelivery: $status..."
-	    	Write-ConsoleSpacer
-	    	Write-Host
+            if ($blockName -ne "Init") {
+			    Write-Host
+			    Write-ConsoleSpacer
+			    "= Powerdelivery: $status..."
+	    	    Write-ConsoleSpacer
+	            Write-Host
+            }
 			
 			try {
 				if ($blockName -eq "Init") {
@@ -175,41 +177,45 @@ function Invoke-Powerdelivery {
 		}
 	}
 	
-	function PrintSpaces($numSpaces) {
+	function PrintSpaces($numSpaces, $forYaml) {
 		$val = ""
 		$spaceIndex = 0
 		while ($spaceIndex -lt $numSpaces) {
-			$val += "  "
+            if (!$forYaml -and $spaceIndex -eq 0) {
+                $val += "| "
+            }
+            else {
+			    $val += "  "
+            }
 			$spaceIndex++
 		}
 		$val
 	}
 
-	function PrintConfiguration($configNodes, $depth) {
+	function PrintConfiguration($configNodes, $depth, $forYaml) {
 	
-		$envMessage = @()
+		$envMessage = ""
 		
 		foreach ($configSetting in $configNodes.GetEnumerator() | Sort Name) {
 			$envValue = $configSetting.Value
 			
 			if ($envValue.GetType().Name -eq 'Hashtable') {
 				$newDepth = $depth + 1
-				$nestedValSpaces = PrintSpaces -numSpaces $depth
-				$nestedVal = "$nestedValSpaces$($configSetting.Key):`n"
-				$nestedVal += (PrintConfiguration -configNodes $envValue -depth $newDepth)
+				$nestedValSpaces = PrintSpaces -numSpaces $depth -forYaml $forYaml
+				$nestedVal = "$nestedValSpaces$($configSetting.Key):`r`n"
+				$nestedVal += (PrintConfiguration -configNodes $envValue -depth $newDepth -forYaml $forYaml)
 				$envMessage += $nestedVal
 			}
 			else {		
 				if ($configSetting.Key.EndsWith("Password")) {
 	                $envValue = '********'
 	            }
-				$envValWithSpaces = PrintSpaces -numSpaces $depth
-				$envMessage += "$envValWithSpaces$($configSetting.Key): $($envValue)`n"
+				$envValWithSpaces = PrintSpaces -numSpaces $depth -forYaml $forYaml
+				$envMessage += "{0}{1}: {2}`r`n" -f $envValWithSpaces, $configSetting.Key, $envValue
 			}
 		}
 		
-		$returnMessage = $envMessage -join "`n"
-		return $returnMessage
+		$envMessage
 	}
 
     if (!$dropLocation.EndsWith('\')) {
@@ -219,7 +225,6 @@ function Invoke-Powerdelivery {
 	$powerdelivery.moduleHooks = @{
 		"PreInit" = @(); "PostInit" = @();
 		"PreCompile" = @(); "PostCompile" = @();
-		"PreSetupEnvironment" = @(); "PostSetupEnvironment" = @();
 		"PreTestEnvironment" = @(); "PostTestEnvironment" = @();
 		"PreDeploy" = @(); "PostDeploy" = @();
 		"PreTestAcceptance" = @(); "PostTestAcceptance" = @();
@@ -378,28 +383,28 @@ function Invoke-Powerdelivery {
 		
 		$scriptParams["Drop Location"] = $powerdelivery.dropLocation
 		
-		$tableFormat = @{Expression={$_.Key};Label="Key";Width=40}, `
-	                   @{Expression={$_.Value};Label="Value";Width=75}
+        if ($onServer) {
+            Write-Host
+            $scriptParams.Keys | % {
+                "{0}: {1}" -f $_, $scriptParams[$_]
+            }
+            Write-Host
+        }
+        else {
+            $tableFormat = @{Expression={$_.Key};Label="Key";Width=40}, `
+	                       @{Expression={$_.Value};Label="Value";Width=75}
 
-	    $scriptParams | Format-Table $tableFormat -HideTableHeaders
-
-	    $tableFormat = @{Expression={$_.Name};Label="Name";Width=40}, `
-	                   @{Expression={if ($_.Name.EndsWith("Password")) { '********' } else { $_.Value }};Label="Value";Width=75}
+            $scriptParams | Format-Table $tableFormat -HideTableHeaders
+        }
 
 		Write-ConsoleSpacer
-	    "= Build Environment"
+	    "= Environment"
 	    Write-ConsoleSpacer
 		Write-Host
         
-		if ($onServer)
-		{
-			$yamlContents = PrintConfiguration -configNodes $powerdelivery.config -depth 0
-			Out-File -Encoding ascii -FilePath "$($dropLocation)$($appScript).yml" -InputObject $yamlContents
-		}
-
         $configMessage = ""
-		
-		$powerdelivery.config.Keys | % {
+
+        $powerdelivery.config.Keys | % {
 			$configKey = $_
 			$configVal = $powerdelivery.config[$_]
 			
@@ -422,7 +427,19 @@ function Invoke-Powerdelivery {
 			}
 		}
 
-		$powerdelivery.config | Format-Table $tableFormat -HideTableHeaders
+		if ($onServer)
+		{
+			$yamlContents = PrintConfiguration -configNodes $powerdelivery.config -depth 0 -forYaml $true
+			$yamlContents | Out-File -FilePath (Join-Path $dropLocation "$($appScript).yml") -Encoding ASCII
+
+            PrintConfiguration -configNodes $powerdelivery.config -depth 0 -forYaml $false
+		}
+        else {
+            $tableFormat = @{Expression={$_.Name};Label="Name";Width=40}, `
+	                       @{Expression={if ($_.Name.EndsWith("Password")) { '********' } else { $_.Value }};Label="Value";Width=75}
+
+		    $powerdelivery.config | Format-Table $tableFormat -HideTableHeaders
+        }
 		
         Write-BuildSummaryMessage -name "Environment" -header "Environment Configuration" -message $configMessage
 
@@ -518,7 +535,6 @@ function Invoke-Powerdelivery {
 		Copy-Item -Force -Path "$($powerdelivery.dropLocation)\*" -Recurse -Destination $powerdelivery.currentLocation
 		
 		InvokePowerDeliveryBuildAction -condition ($powerdelivery.environment -eq 'Commit' -or $powerdelivery.environment -eq 'Local') -stage $powerdelivery.testUnits -description "Unit Tests" -status "Testing Units" -blockName "TestUnits"
-	    InvokePowerDeliveryBuildAction -condition $true -stage $powerdelivery.setupEnvironment -description "Environment Changes" -status "Setting Up Environment" -blockName "SetupEnvironment"
 	    InvokePowerDeliveryBuildAction -condition $true -stage $powerdelivery.deploy -description "Deployments" -status "Deploying" -blockName "Deploy"
 	    InvokePowerDeliveryBuildAction -condition $true -stage $powerdelivery.testEnvironment -description "Environment Tests" -status "Testing Environment" -blockName "TestEnvironment"
 	    InvokePowerDeliveryBuildAction -condition ($environment -eq 'Commit' -or $environment -eq 'Local') -stage $powerdelivery.testAcceptance -description "Acceptance Tests" -status "Testing Acceptance" -blockName "TestAcceptance"
@@ -535,24 +551,39 @@ function Invoke-Powerdelivery {
  		"= Powerdelivery: Build failure details"
  		Write-ConsoleSpacer
 
- 		"`nScript Error Details:`n"
- 		"Script Error Line: " + $ErrorRecord.InvocationInfo.Line
- 		"Script Error Position: " + $ErrorRecord.InvocationInfo.PositionMessage
- 		"Script Error Message Details: " + $ErrorRecord.PSMessageDetails
- 		"Script Error Id: " + $ErrorRecord.FullyQualifiedErrorId
- 		"Script Stack Trace: " + $ErrorRecord.ScriptStackTrace
+        $Exception = $ErrorRecord.Exception
 
- 		$Exception = $ErrorRecord.Exception
  		if ($Exception -ne $null)
 		{
- 			"`nException(s) details:`n"
+ 			"`nException(s) details:"
  			for ($i = 0; $Exception; $i++, ($Exception = $Exception.InnerException))
 			{
- 				"Exception Type: " + $Exception.GetType().FullName
- 				"Exception Message: " + $Exception.Message
- 				"Exception Stack Trace: " + $Exception.StackTrace
+                Write-Host
+
+                if (![String]::IsNullOrWhiteSpace($Exception.Message)) {
+ 				    $Exception.Message
+                }
+
+ 				$Exception.GetType().FullName
+
+                if (![String]::IsNullOrWhiteSpace($Exception.StackTrace)) {
+ 				    $Exception.StackTrace
+                }
 			}
+            Write-Host
 		}
+
+
+        if (![String]::IsNullOrWhiteSpace($ErrorRecord.PSMessageDetails)) {
+            $ErrorRecord.PSMessageDetails
+        }
+
+        if (![String]::IsNullOrWhiteSpace($ErrorRecord.FullyQualifiedErrorId)) {
+            $ErrorRecord.FullyQualifiedErrorId
+        }
+
+ 		$ErrorRecord.InvocationInfo.PositionMessage
+ 		$ErrorRecord.ScriptStackTrace
 
 	    Write-Host "`nPowerdelivery: Build Failed!`n" -ForegroundColor Red
 		throw
@@ -617,26 +648,6 @@ function Deploy {
 	param([Parameter(Position=0, Mandatory=1)][scriptblock] $action)
 	
 	$powerdelivery.deploy = $action
-}
-
-<#
-.Synopsis
-Contains code that will execute during the SetupEnvironment stage of the delivery pipeline build script.
-
-.Description
-Contains code that will execute during the SetupEnvironment stage of the delivery pipeline build script.
-
-.Parameter action
-The block of script containing the code to execute.
-
-.Example
-SetupEnvironment { DoStuff() }
-#>
-function SetupEnvironment {
-	[CmdletBinding()]
-	param([Parameter(Position=0, Mandatory=1)][scriptblock] $action)
-	
-	$powerdelivery.setupEnvironment = $action
 }
 
 <#

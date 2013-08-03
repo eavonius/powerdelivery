@@ -22,7 +22,7 @@ The name that appears in the services control panel applet.
 The description that appears in the services control panel applet.
 
 .Parameter Directory
-A local path on the computer specified by the ComputerName parameter containing the service.
+A relative path in the build drop location of files containing the service to install.
 
 .Parameter AccountName
 The user account under which the service will be configured to run. This account must already 
@@ -57,6 +57,10 @@ function Install-NServiceBusService {
         [Parameter(Position=10,Mandatory=0)][string] $EndpointConfigurationType
 	)
 
+    $logPrefix = "Install-NServiceBusService:"
+
+    $dropLocation = Get-BuildDropLocation
+
     if ($IsMaster -and $IsDistributor) {
         throw "An instance cannot be a distributor and a master."
     }
@@ -65,7 +69,9 @@ function Install-NServiceBusService {
         throw "The distributor address does not need to be specified for a master or distributor."
     }
 
-    foreach ($curComputerName in (Get-ArrayFromStringOrHash $ComputerName)) {
+    $computerNames = $ComputerName -split "," | % { $_.Trim() }
+
+    foreach ($curComputerName in $computerNames) {
 
         Invoke-Command -ComputerName $curComputerName {
             Enable-WSManCredSSP -Role Server -Force | Out-Null
@@ -73,7 +79,21 @@ function Install-NServiceBusService {
 
         Enable-WSManCredSSP -Role Client -DelegateComputer $curComputerName -Force | Out-Null
 
-        Write-Host "Installing $Name service on $curComputerName as $($AccountName)..."
+        $dropServicePath = Join-Path $dropLocation $Directory
+        
+        $remoteDeployPath = Get-ComputerRemoteDeployPath $curComputerName
+        $remoteServicePath = Join-Path $remoteDeployPath $Directory
+
+        $localDeployPath = Get-ComputerLocalDeployPath $curComputerName
+        $localServicePath = Join-Path $localDeployPath $Directory
+
+        "$logPrefix Creating $remoteServicePath"
+        mkdir -Force $remoteServicePath | Out-Null
+
+        "$logPrefix Copying $dropServicePath\* to $remoteServicePath"
+        copy "$dropServicePath\*" $remoteServicePath -Force -Recurse | Out-Null
+
+        "$logPrefix Installing $Name service on $curComputerName as $($AccountName)..."
 
         $secpasswd = ConvertTo-SecureString $AccountPassword -AsPlainText -Force        $accountCreds = New-Object System.Management.Automation.PSCredential ($AccountName, $secpasswd)
 
@@ -97,8 +117,8 @@ function Install-NServiceBusService {
                 $installServiceArgs.Add('EndpointConfigurationType', $using:EndpointConfigurationType)
             }
 
-            cd $using:Directory
-	 	    & "$using:Directory\NServiceBus.Host.exe" @installServiceArgs
+            cd $using:localServicePath
+	 	    & "$using:localServicePath\NServiceBus.Host.exe" @installServiceArgs
 
 	 	    if ($LASTEXITCODE -ne 0) {
 	 		    throw "Error installing $using:Name - return code was $LASTEXITCODE"
@@ -107,16 +127,16 @@ function Install-NServiceBusService {
 	 		    Write-Host "$using:Name service installed on $using:curComputerName."
 		    }
 
-	 	    "Starting $using:Name service on $using:curComputerName ..."
+	 	    "$using:logPrefix Starting $using:Name service on $using:curComputerName ..."
 
             Get-Service -ComputerName $using:curComputerName $using:Name | Restart-Service
 	
 	        Do {
 		        Start-Sleep -Seconds 5
-                "Polling for $using:Name on $using:curComputerName to finish restarting..."
+                "$using:logPrefix Polling for $using:Name on $using:curComputerName to finish restarting..."
 	        } Until ((Get-Service -ComputerName $using:curComputerName $using:Name).Status -eq "Running")
 
-            Write-Host "$using:Name service started on $using:curComputerName successfully."
+            "$using:logPrefix $using:Name service started on $using:curComputerName successfully."
         }
 	}
 }

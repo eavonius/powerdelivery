@@ -33,7 +33,7 @@ function New-RemoteShare {
 
     $buildAccountName = whoami
 
-    $computerNames = Get-ArrayFromStringOrHash $computerName
+    $computerNames = $computerName -split "," | % { $_.Trim() }
 
     foreach ($curComputerName in $computerNames) {
 

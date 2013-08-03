@@ -12,7 +12,7 @@ The username of the account to add to the group.
 The name of the group to add the user to.
 
 .Parameter computerName
-Optional. The computer to be modified.
+The computer to be modified.
 
 .Example
 Add-WindowsUserToGroup -userName 'DOMAIN\MyUser' `
@@ -24,38 +24,36 @@ function Add-WindowsUserToGroup {
 	param(
 		[Parameter(Position=0,Mandatory=1)] $userName,
 		[Parameter(Position=1,Mandatory=1)] $groupName,
-		[Parameter(Position=2,Mandatory=0)] $computerName
+		[Parameter(Position=2,Mandatory=1)] $computerName
 	)
 
-	$commandArgs = @{'ScriptBlock' = {
+    $logPrefix = "Add-WindowsUserToGroup:"
 
-		$group = [ADSI]"WinNT://$using:computerName/$using:groupName,group"
-		$usersSet = [ADSI]"WinNT://$using:computerName/$using:groupName"
-		$users = @($usersSet.psbase.Invoke("Members")) 
+    $computerNames = $computerName -split "," | % { $_.Trim() }
 
-		$foundAccount = $false
+    foreach ($curComputerName in $computerNames) {
 
-		$users | foreach {
-			if ($_.GetType().InvokeMember("Name", 'GetProperty', $null, $_, $null) -eq $using:userName) {
-				$foundAccount = $true
-			}
-		}
+	    Invoke-Command $curComputerName {
 
-		if (!$foundAccount) {
-			Write-Host "Adding $using:userName user to $using:groupName group..."
+		    $group = [ADSI]"WinNT://$using:curComputerName/$using:groupName,group"
+		    $usersSet = [ADSI]"WinNT://$using:curComputerName/$using:groupName"
+		    $users = @($usersSet.psbase.Invoke("Members")) 
 
-			$group.psbase.Invoke("Add", ([ADSI]"WinNT://$using:userName").path)
+		    $foundAccount = $false
 
-			"User $using:userName on $($using:computerName) added to $using:groupName group successfully."
-		}
-		else {
-			"User $using:userName on $($using:computerName) already a member of $using:groupName group, skipping addition."
-		}
-	}}
-	
-	if (![String]::IsNullOrWhiteSpace($computerName)) {
-		$commandArgs.Add('ComputerName', $computerName);
-	}
-	
-	Invoke-Command @commandArgs
+		    $users | foreach {
+			    if ($_.GetType().InvokeMember("Name", 'GetProperty', $null, $_, $null) -eq $using:userName) {
+				    $foundAccount = $true
+			    }
+		    }
+
+		    if (!$foundAccount) {
+			    "$using:logPrefix Adding $using:userName user to $using:groupName group on $($using:curComputerName)..."
+
+			    $group.psbase.Invoke("Add", ([ADSI]"WinNT://$using:userName").path)
+
+			    "$using:logPrefix User $using:userName added to $using:groupName group on $($using:curComputerName) successfully."
+		    }
+	    }
+    }
 }

@@ -57,6 +57,8 @@ function Invoke-MSBuild {
         [Parameter(Position=8,Mandatory=0)][string] $dotNetVersion = "4.0"
     )
 	
+    $logPrefix = "Invoke-MSBuild:"
+
 	if ([String]::IsNullOrWhiteSpace($buildConfiguration)) {
 	
 		if ((Get-BuildEnvironment) -eq 'Local') {
@@ -81,7 +83,7 @@ function Invoke-MSBuild {
     $msbuildExe = Join-Path -path (Get-ItemProperty $regKey).$regProperty -childpath "msbuild.exe"
 
     $msBuildCommand = "& ""$msbuildExe"""
-    $msBuildCommand += " ""/nologo"""
+    $msBuildCommand += " /nologo /m"
 
     if ($properties.length -gt 0) {
         
@@ -94,8 +96,10 @@ function Invoke-MSBuild {
         $msBuildCommand += " ""/tv:$toolsVersion"""
     }
 
+    $msBuildCommand += " `"/consoleloggerparameters:Verbosity=q`""
+
     if ([string]::IsNullOrWhiteSpace($verbosity) -eq $false) {
-        $msBuildCommand += " ""/v:$verbosity"""
+        $msBuildCommand += " /v:$verbosity"
     }
 
     if ([string]::IsNullOrWhiteSpace($ignoreProjectExtensions) -eq $false) {
@@ -111,49 +115,22 @@ function Invoke-MSBuild {
 	
 	$msBuildCommand += " ""/l:FileLogger,Microsoft.Build.Engine;logfile=$logFile"""
     $msBuildCommand += " ""$projectFile"""
-
-	Write-Host
     
-    "Project File: $projectFile"
-    "Configuration: $buildConfiguration"
-    "Platform(s): $flavor"
-    "Build .NET Version: $dotNetVersion"
-
-    if (![string]::IsNullOrWhiteSpace($ignoreProjectExtensions)) {
-        "Ignoring Extensions: $ignoreProjectExtensions"
-    }
-
-    if (![string]::IsNullOrWhiteSpace($toolsVersion)) {
-        "Tools Version: $toolsVersion"
-    }
-
-	if (![string]::IsNullOrWhiteSpace($target)) {
-		"Target: $target"
-	}
-	
-	$tableFormat = @{Expression={$_.Key};Label="Key";Width=50}, `
-                   @{Expression={$_.Value};Label="Value";Width=75}
-
-    if ($properties -ne $null) {
-        if ($properties.length -gt 0) {
-            "Build Properties:"
-			$properties | Format-Table $tableFormat -HideTableHeaders
-        }
-    }
-	
 	$currentDirectory = Get-Location
 
     if (Get-BuildOnServer) {
 			
-		$fullProjectFile = [System.IO.Path]::Combine($currentDirectory, [System.IO.Path]::GetFileName($projectFile))
+		$fullProjectFile = Join-Path $currentDirectory $projectFile
 		$shortPath = [System.IO.Path]::GetDirectoryName($fullProjectFile)
 		
 	    Update-AssemblyInfoFiles -path $shortPath
 	}
 
     try {
-        Exec -errorMessage "Invocation of MSBuild project $projectFile failed." {
-            Invoke-Expression $msBuildCommand
+        Write-Host
+        "$logPrefix $msBuildCommand"
+        Exec -errorMessage "Invocation of MSBuild project $projectFile failed." {            
+            Invoke-Expression $msBuildCommand | Out-Host
         }
     }
     finally {
