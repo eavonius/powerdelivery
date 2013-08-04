@@ -153,19 +153,25 @@ function Invoke-Powerdelivery {
 					$matches | Foreach { 
 						$envSettingName = $_.Value.Substring(2, $_.Length - 4)
 						$envSettingValue = [String]::Empty
-						try {
-							$envSettingValue = Get-BuildSetting $envSettingName
-						}
-						catch {
-							$errorMessage = $_.Exception.Message
-							throw "Error replacing setting in module configuration file: $errorMessage"
-						}
-
-                        if ($envSettingValue.GetType().Name -eq 'Hashtable') {
-                            $replacedValue = $envSettingValue
+                        if ($envSettingName -contains "Credentials:") {
+                            $userName = $envSettingName.Substring(12)
+                            $replacedValue = Get-BuildCredentials $userName
                         }
                         else {
-						    $replacedValue = $replacedValue -replace $_, $envSettingValue
+						    try {
+							    $envSettingValue = Get-BuildSetting $envSettingName
+						    }
+						    catch {
+							    $errorMessage = $_.Exception.Message
+							    throw "Error replacing setting in module configuration file: $errorMessage"
+						    }
+
+                            if ($envSettingValue.GetType().Name -eq 'Hashtable') {
+                                $replacedValue = $envSettingValue
+                            }
+                            else {
+						        $replacedValue = $replacedValue -replace $_, $envSettingValue
+                            }
                         }
 					}
 					$replacedValues.Add($_, $replacedValue)

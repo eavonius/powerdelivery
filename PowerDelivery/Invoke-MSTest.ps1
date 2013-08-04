@@ -37,6 +37,7 @@ function Invoke-MSTest {
 		[Parameter(Position=1,Mandatory=1)][string] $results,
 		[Parameter(Position=2,Mandatory=1)][string] $category,
 		[Parameter(Position=3,Mandatory=0)][string] $computerName,
+        [Parameter(Position=4,Mandatory=0)] $credentials,
         [Parameter(Position=5,Mandatory=0)][string] $platform = 'AnyCPU',
 		[Parameter(Position=6,Mandatory=0)][string] $buildConfiguration
     )
@@ -57,6 +58,10 @@ function Invoke-MSTest {
 
 	if (![String]::IsNullOrWhiteSpace($computerName)) {
 		$isRemote = $true;
+
+        if ($credentials -eq $null) {
+            throw "Credentials are required when running tests on another computer."
+        }
 	}
 
 	if ([String]::IsNullOrWhiteSpace($buildConfiguration)) {
@@ -93,7 +98,7 @@ function Invoke-MSTest {
         if ($isRemote) {
             $localDeployPath = Get-ComputerLocalDeployPath $computerName
 
-            Invoke-Command -ComputerName $computerName {
+            Invoke-Command -ComputerName $computerName -Credential $credentials {
                 $workingDirectory = $using:localDeployPath
 		        $filePath = $using:file
 
