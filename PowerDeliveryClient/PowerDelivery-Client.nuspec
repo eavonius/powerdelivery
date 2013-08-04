@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>PowerDelivery-Client</id>
+    <version>1.0.1</version>
+    <title>PowerDelivery Client</title>
+    <authors>Jayme Edwards</authors>
+    <owners />
+    <projectUrl>http://eavonius.github.com/powerdelivery/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Windows client application for using powerdelivery, a deployment framework helping you to continuously deliver software to your customers using Microsoft Team Foundation Server and Windows PowerShell.</description>
+    <summary>Client application for a PowerShell/TFS continuous delivery framework.</summary>
+    <language>es-US</language>
+    <dependencies />
+  </metadata>
+  <files>
+    <file src="bin\Release\PowerDelivery.exe" target="tools\PowerDelivery.exe" />
+    <file src="bin\Release\PowerDelivery.Controls.dll" target="tools\PowerDelivery.Controls.dll" />
+    <file src="bin\Release\PowerDelivery.exe.config" target="tools\PowerDelivery.exe.config" />
+    <file src="bin\Release\Microsoft.WITDataStore.dll" target="tools\Microsoft.WITDataStore.dll" />
+    <file src="bin\Release\Microsoft.TeamFoundation.Build.Workflow.dll" target="tools\Microsoft.TeamFoundation.Build.Workflow.dll" />
+    <file src="bin\Release\Microsoft.TeamFoundation.WorkItemTracking.Client.DataStoreLoader.dll" target="tools\Microsoft.TeamFoundation.WorkItemTracking.Client.DataStoreLoader.dll" />
+    <file src="chocolateyInstall.ps1" target="tools\chocolateyInstall.ps1" />
+    <file src="chocolateyUninstall.ps1" target="tools\chocolateyUninstall.ps1" />
+  </files>
+</package>

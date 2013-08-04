@@ -162,6 +162,7 @@ var
 sdist
 develop-eggs
 .installed.cfg
+$tf
 
 # Installer logs
 pip-log.txt

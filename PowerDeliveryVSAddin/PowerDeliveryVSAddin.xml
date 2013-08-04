@@ -47,13 +47,23 @@
         </member>
         <member name="T:PowerDelivery.Controls.Pages.Home">
             <summary>
-            Interaction logic for Home.xaml
-            </summary>
-            <summary>
             Home
             </summary>
         </member>
         <member name="M:PowerDelivery.Controls.Pages.Home.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:PowerDelivery.Controls.Pages.RunPowerShell">
+            <summary>
+            Interaction logic for RunPowerShell.xaml
+            </summary>
+            <summary>
+            RunPowerShell
+            </summary>
+        </member>
+        <member name="M:PowerDelivery.Controls.Pages.RunPowerShell.InitializeComponent">
             <summary>
             InitializeComponent
             </summary>
@@ -67,6 +77,19 @@
             </summary>
         </member>
         <member name="M:PowerDelivery.Controls.Pages.Sources.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:PowerDelivery.Controls.PromoteControl">
+            <summary>
+            Interaction logic for PromoteControl.xaml
+            </summary>
+            <summary>
+            PromoteControl
+            </summary>
+        </member>
+        <member name="M:PowerDelivery.Controls.PromoteControl.InitializeComponent">
             <summary>
             InitializeComponent
             </summary>
@@ -146,36 +169,6 @@
             <param term='varOut'>Parameters passed from the command handler to the caller.</param>
             <param term='handled'>Informs the caller if the command was handled or not.</param>
             <seealso class='Exec' />
-        </member>
-        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
-            <summary>
-            GeneratedInternalTypeHelper
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
-            <summary>
-            CreateInstance
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
-            <summary>
-            GetPropertyValue
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
-            <summary>
-            SetPropertyValue
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
-            <summary>
-            CreateDelegate
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
-            <summary>
-            AddEventHandler
-            </summary>
         </member>
     </members>
 </doc>
