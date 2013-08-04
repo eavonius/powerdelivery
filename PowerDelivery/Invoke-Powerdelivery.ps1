@@ -153,7 +153,7 @@ function Invoke-Powerdelivery {
 					$matches | Foreach { 
 						$envSettingName = $_.Value.Substring(2, $_.Length - 4)
 						$envSettingValue = [String]::Empty
-                        if ($envSettingName -contains "Credentials:") {
+                        if ($envSettingName -like "Credentials:*") {
                             $userName = $envSettingName.Substring(12)
                             $replacedValue = Get-BuildCredentials $userName
                         }
