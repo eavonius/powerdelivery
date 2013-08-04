@@ -10,14 +10,14 @@
         throw "Path $credentialsPath containing build credentials does not exist."
     }
 
-    $keyBytes = @()
+    [byte[]]$keyBytes = New-Object byte[] 0
 
     $credentialsKeyPath = Join-Path $credentialsPath "Credentials.key"
     if (!(Test-Path $credentialsKeyPath)) {
         throw "Credentials keyfile is missing."
     }
     else {
-        $keyBytes = Get-Content $credentialsKeyPath
+        try {            [System.IO.Stream]$stream = [System.IO.File]::OpenRead($credentialsKeyPath)            try {                $keyBytes = New-Object byte[] $stream.length                [void] $stream.Read($keyBytes, 0, $stream.Length)            }            finally {                $stream.Close() | Out-Null            }        }         catch {            throw "Error reading file $credentialsKeyPath - $_"        }
     }
 
     $userNameFile = $userName -replace "\\", "#"

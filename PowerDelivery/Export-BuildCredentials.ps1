@@ -12,7 +12,7 @@
     $credentialsKeyPath = Join-Path $credentialsPath "Credentials.key"
     if (!(Test-Path $credentialsKeyPath)) {
         $keyBytes = (1..32 | % { [byte](Get-Random -Minimum 0 -Maximum 255) })
-        $keyBytes | Out-File $credentialsKeyPath
+        [IO.File]::WriteAllBytes($credentialsKeyPath, $keyBytes)
     }
     else {
         $keyBytes = Get-Content $credentialsKeyPath
