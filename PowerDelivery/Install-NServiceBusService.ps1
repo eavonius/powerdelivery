@@ -77,7 +77,7 @@ function Install-NServiceBusService {
             Enable-WSManCredSSP -Role Server -Force | Out-Null
         }
 
-        Enable-WSManCredSSP -Role Client -DelegateComputer $curComputerName -Force | Out-Null
+        Add-CredSSPTrustedHost $curComputerName
 
         $dropServicePath = Join-Path $dropLocation $Directory
         

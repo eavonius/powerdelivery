@@ -16,6 +16,7 @@
   <files>
     <file src="PowerDelivery\PowerDelivery.psm1" target="tools\PowerDelivery\PowerDelivery.psm1" />
     <file src="PowerDelivery\PowerDelivery.psd1" target="tools\PowerDelivery\PowerDelivery.psd1" />
+    <file src="PowerDelivery\Add-CredSSPTrustedHost.ps1" target="tools\PowerDelivery\Add-CredSSPTrustedHost.ps1" />
     <file src="PowerDelivery\Add-Pipeline.ps1" target="tools\PowerDelivery\Add-Pipeline.ps1" />
     <file src="PowerDelivery\Add-WindowsUserToGroup.ps1" target="tools\PowerDelivery\Add-WindowsUserToGroup.ps1" />
     <file src="PowerDelivery\Disable-SqlJobs.ps1" target="tools\PowerDelivery\Disable-SqlJobs.ps1" />
