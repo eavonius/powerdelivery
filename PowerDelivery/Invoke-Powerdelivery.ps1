@@ -240,6 +240,7 @@ function Invoke-Powerdelivery {
 
     $powerdelivery.deployDriveLetter = "C"
     $powerdelivery.deployShares = @{}
+    $powerdelivery.buildCredentials = @{}
 	$powerdelivery.deliveryModules = @()
     $powerdelivery.assemblyInfoFiles = @()
     $powerdelivery.currentLocation = gl
