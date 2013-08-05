@@ -70,16 +70,16 @@ function Invoke-Roundhouse {
         [Parameter(Position=5,Mandatory=0)][string] $restoreOptions
     )
 
+    $logPrefix = "Invoke-Roundhouse:"
+
     $environment = Get-BuildEnvironment
 
     $command = "rh --silent /vf=`"sql`""
     
 	if (![String]::IsNullOrWhiteSpace($server)) {
-		"Running database migrations on $server\$database"
 		$command += " /s=$server /d=`"$database`""
 	}
 	elseif (![String]::IsNullOrWhiteSpace($connectionString)) {
-		"Running database migrations with connection string: `"$connectionString`""
 		$command += " /c=`"$connectionString`""
 	}
 	else {
@@ -95,8 +95,11 @@ function Invoke-Roundhouse {
         }
     }
 
+    Write-Host "$logPrefix $command"
+
 	Exec -ErrorAction Stop { 
 	    Invoke-Expression -Command $command	
+        Write-Host
 		
 		if ([String]::IsNullOrWhiteSpace($connectionString)) {
 			Write-BuildSummaryMessage -name "Deploy" -header "Deployments" -message "Roundhouse: $scriptsDir -> $database ($server)"

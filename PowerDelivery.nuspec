@@ -16,17 +16,20 @@
   <files>
     <file src="PowerDelivery\PowerDelivery.psm1" target="tools\PowerDelivery\PowerDelivery.psm1" />
     <file src="PowerDelivery\PowerDelivery.psd1" target="tools\PowerDelivery\PowerDelivery.psd1" />
+    <file src="PowerDelivery\Add-CredSSPTrustedHost.ps1" target="tools\PowerDelivery\Add-CredSSPTrustedHost.ps1" />
     <file src="PowerDelivery\Add-Pipeline.ps1" target="tools\PowerDelivery\Add-Pipeline.ps1" />
     <file src="PowerDelivery\Add-WindowsUserToGroup.ps1" target="tools\PowerDelivery\Add-WindowsUserToGroup.ps1" />
     <file src="PowerDelivery\Disable-SqlJobs.ps1" target="tools\PowerDelivery\Disable-SqlJobs.ps1" />
     <file src="PowerDelivery\Enable-SqlJobs.ps1" target="tools\PowerDelivery\Enable-SqlJobs.ps1" />
     <file src="PowerDelivery\Enable-WebDeploy.ps1" target="tools\PowerDelivery\Enable-WebDeploy.ps1" />
     <file src="PowerDelivery\Exec.ps1" target="tools\PowerDelivery\Exec.ps1" />
+    <file src="PowerDelivery\Export-BuildCredentials.ps1" target="tools\PowerDelivery\Export-BuildCredentials.ps1" />
     <file src="PowerDelivery\Get-ArrayFromStringOrHash.ps1" target="tools\PowerDelivery\Get-ArrayFromStringOrHash.ps1" />
     <file src="PowerDelivery\Get-BuildAppVersion.ps1" target="tools\PowerDelivery\Get-BuildAppVersion.ps1" />
     <file src="PowerDelivery\Get-BuildAssemblyVersion.ps1" target="tools\PowerDelivery\Get-BuildAssemblyVersion.ps1" />
     <file src="PowerDelivery\Get-BuildAssets.ps1" target="tools\PowerDelivery\Get-BuildAssets.ps1" />
     <file src="PowerDelivery\Get-BuildChangeSet.ps1" target="tools\PowerDelivery\Get-BuildChangeSet.ps1" />
+    <file src="PowerDelivery\Get-BuildCredentials.ps1" target="tools\PowerDelivery\Get-BuildCredentials.ps1" />
     <file src="PowerDelivery\Get-BuildDropLocation.ps1" target="tools\PowerDelivery\Get-BuildDropLocation.ps1" />
     <file src="PowerDelivery\Get-BuildEnvironment.ps1" target="tools\PowerDelivery\Get-BuildEnvironment.ps1" />
     <file src="PowerDelivery\Get-BuildConfig.ps1" target="tools\PowerDelivery\Get-BuildConfig.ps1" />

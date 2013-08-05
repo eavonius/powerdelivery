@@ -47,6 +47,7 @@ function Uninstall-NServiceBusService{
 			    )
 
                 "$using:logPrefix Uninstalling previous copy of $using:Name service from $using:curComputerName in $priorSvcLocalPath"
+                "$using:logPrefix $priorSvcLocalPath\NServiceBus.Host.exe $uninstallServiceArgs"
 
 			    $uninstallResult = Start-Process -WorkingDirectory $priorSvcLocalPath `
 			 	    -FilePath "$priorSvcLocalPath\NServiceBus.Host.exe" `
