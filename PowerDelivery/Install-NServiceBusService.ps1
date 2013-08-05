@@ -73,10 +73,6 @@ function Install-NServiceBusService {
 
     foreach ($curComputerName in $computerNames) {
 
-        Invoke-Command -ComputerName $curComputerName {
-            Enable-WSManCredSSP -Role Server -Force | Out-Null
-        }
-
         Add-CredSSPTrustedHost $curComputerName
 
         $dropServicePath = Join-Path $dropLocation $Directory
@@ -118,6 +114,7 @@ function Install-NServiceBusService {
             }
 
             cd $using:localServicePath
+            Write-Host "$using:logPrefix $using:localServicePath\NServiceBus.Host.exe $installServiceArgs"
 	 	    & "$using:localServicePath\NServiceBus.Host.exe" @installServiceArgs
 
 	 	    if ($LASTEXITCODE -ne 0) {

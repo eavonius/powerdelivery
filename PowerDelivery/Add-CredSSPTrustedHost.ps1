@@ -5,6 +5,10 @@
 
     $logPrefix = "Add-CredSSPTrustedHost:"
 
+    Invoke-Command -ComputerName $computerName {
+        Enable-WSManCredSSP -Role Server -Force | Out-Null
+    }
+
     $credSSP = Get-WSManCredSSP
 
     $computerExists = $false

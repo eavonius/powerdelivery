@@ -36,16 +36,12 @@ function Invoke-MSTest {
 		[Parameter(Position=0,Mandatory=1)][string] $file,
 		[Parameter(Position=1,Mandatory=1)][string] $results,
 		[Parameter(Position=2,Mandatory=1)][string] $category,
-		[Parameter(Position=3,Mandatory=0)][string] $computerName,
-        [Parameter(Position=4,Mandatory=0)] $credentials,
+        [Parameter(Position=5,Mandatory=0)][string] $testSettings,
         [Parameter(Position=5,Mandatory=0)][string] $platform = 'AnyCPU',
 		[Parameter(Position=6,Mandatory=0)][string] $buildConfiguration
     )
 
     $logPrefix = "Invoke-MSTest:"
-
-	$isRemote = $false
-	$shareTestsPath = ""
 	
 	$environment = Get-BuildEnvironment
 	$dropLocation = Get-BuildDropLocation
@@ -55,14 +51,6 @@ function Invoke-MSTest {
 	
 	$fileName = [System.IO.Path]::GetFileName($file)
 	$testsDir = [System.IO.Path]::GetDirectoryName($file)
-
-	if (![String]::IsNullOrWhiteSpace($computerName)) {
-		$isRemote = $true;
-
-        if ($credentials -eq $null) {
-            throw "Credentials are required when running tests on another computer."
-        }
-	}
 
 	if ([String]::IsNullOrWhiteSpace($buildConfiguration)) {
 		if ($environment -eq 'Local') {
@@ -78,70 +66,42 @@ function Invoke-MSTest {
 
     "$logPrefix Copying $dropTestsDir\* to $localTestsDir"
     copy -Force -Recurse "$dropTestsDir\*" $localTestsDir | Out-Null
-
-	if ($isRemote) {
-        $remoteDeployPath = Get-ComputerRemoteDeployPath $computerName
-
-        Write-Host "$logPrefix Remote Deploy Path: $remoteDeployPath"
-        Write-Host "$logPrefix Tests Dir: $testsDir"
-
-		$shareTestsPath = "$($remoteDeployPath)\$($testsDir)"
-        mkdir -force $shareTestsPath | Out-Null
-
-        "$logPrefix Copying $localTestsDir\* to $shareTestsPath"
-		copy -Force -Recurse -Path "$localTestsDir\*" $shareTestsPath | Out-Null
-	}
     
 	$dropResults = "$dropLocation\$results"
 
     try {
-        if ($isRemote) {
-            $localDeployPath = Get-ComputerLocalDeployPath $computerName
-
-            Invoke-Command -ComputerName $computerName -Credential $credentials {
-                $workingDirectory = $using:localDeployPath
-		        $filePath = $using:file
-
-                $shareResults = Join-Path $workingDirectory $using:results
-
-		        rm -ErrorAction SilentlyContinue -Force $shareResults | Out-Null
-	
-                Set-Location $using:localDeployPath
-
-                $command = "mstest /testcontainer:`"$filePath`" /category:`"$using:category`" /resultsfile:`"$shareResults`" /usestderr /nologo"
-                "$logPrefix $command"
-                Invoke-Expression $command
-		
-		        if ($LASTEXITCODE -ne 0) {
-			        throw "Error running tests in $filePath"
-		        }
+        $localTestSettings = $null
+        if (![String]::IsNullOrWhiteSpace($testSettings)) {
+            $dropTestSettings = Join-Path $dropLocation $testSettings
+            if (!(Test-Path $dropTestSettings -PathType Leaf)) {
+                throw "Couldn't find test settings file $testSettings"
             }
+
+            $localTestSettings = Join-Path $currentDirectory $testSettings
+            copy -Force $dropTestSettings $localTestSettings | Out-Null
         }
-        else {
-            $workingDirectory = Get-Location
-		    $filePath = $file
+            
+        $workingDirectory = Get-Location
+		$filePath = $file
 
-		    $localResults = Join-Path $workingDirectory $results
+		$localResults = Join-Path $workingDirectory $results
 
-		    rm -ErrorAction SilentlyContinue -Force $localResults | Out-Null
+		rm -ErrorAction SilentlyContinue -Force $localResults | Out-Null
 	
-		    Exec -errorMessage "Error running tests in $filePath" {
-                $command = "mstest /testcontainer:`"$filePath`" /category:`"$category`" /resultsfile:`"$localResults`" /usestderr /nologo"    			    
-                Write-Host "$logPrefix $command"
-                Invoke-Expression $command
-		    }
-        }
+		Exec -errorMessage "Error running tests in $filePath" {
+            $command = "mstest /testcontainer:`"$filePath`" /category:`"$category`" /resultsfile:`"$localResults`" /usestderr /nologo"
+            if ($localTestSettings -ne $null) {
+                $command += " /testsettings:`"$($testSettings)`""
+            }
+
+            Write-Host "$logPrefix $command"
+            Invoke-Expression $command
+            Write-Host
+		}
 	}
 	finally {
 		
         if ($powerdelivery.onServer) {
-		 
-           if ($isRemote) {
-			    $remoteResults = Join-Path $shareTestsPath $results
-			    if (Test-Path $remoteResults -PathType Leaf) {
-				    copy -Force $remoteResults $localResults | Out-Null
-			    }
-		    }
 	
 		    if (Test-Path $localResults -PathType Leaf) {
 

@@ -27,6 +27,8 @@ function Publish-BuildAssets {
 		[Parameter(Position=3,Mandatory=0)][switch] $recurse = $false
 	)
 
+    $logPrefix = "Publish-BuildAssets:"
+
 	$currentDirectory = Get-Location
 	$dropLocation = Get-BuildDropLocation
 	
@@ -37,10 +39,19 @@ function Publish-BuildAssets {
 	
 	$copyArgs = @{"Force" = $true; "Filter" = $filter; "Path" = $sourcePath; "Destination" = $destinationPath}
 	
+    $message = "$logPrefix Copying $sourcePath to $destinationPath"
+
 	if ($recurse) {
 		$copyArgs.Add("Recurse", $true)
+        $message += " recursively"
 	}
 	
+    if (![String]::IsNullOrWhiteSpace($filter)) {
+        $message += " with filter $filter"
+    }
+
+    Write-Host $message
+
 	& copy @copyArgs
 	
 	Write-BuildSummaryMessage -name "Assets" -header "Published Assets" -message $path
