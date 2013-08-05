@@ -10,30 +10,6 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="..\Styles.xaml" />
                 <ResourceDictionary>
-                    <Style x:Key="EnvironmentBlockButton" TargetType="Button">
-                        <Setter Property="Padding" Value="10" />
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding LastStatus.Description}" Value="In Progress">
-                                <Setter Property="BorderBrush" Value="Green" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding LastStatus.Description}" Value="Succeeded">
-                                <Setter Property="BorderBrush" Value="DarkGreen" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding LastStatus.Description}" Value="Partially Succeeded">
-                                <Setter Property="BorderBrush" Value="Goldenrod" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding LastStatus.Description}" Value="Failed">
-                                <Setter Property="BorderBrush" Value="DarkRed" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding LastStatus.Description}" Value="Stopped">
-                                <Setter Property="BorderBrush" Value="DarkRed" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding LastStatus.Description}" Value="Unknown Status">
-                                <Setter Property="BorderBrush" Value="#ccc" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                    
                     <Style TargetType="Border" x:Key="EnvironmentBlockStyle">
                         <Setter Property="BorderThickness" Value="0" />
                         <Setter Property="Height" Value="118" />
@@ -61,6 +37,31 @@
                                 <Setter Property="Background" Value="#dddddd" />
                             </DataTrigger>
                         </Style.Triggers>
+                    </Style>
+                    
+                    <ControlTemplate TargetType="Button" x:Key="EnvironmentBlockButtonTemplate">
+                        <Border Padding="10" BorderThickness="1" BorderBrush="#bcbcbc" x:Name="EnvironmentBlockBorder">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="True" />
+                                                <Condition Binding="{Binding LastStatus.Description}" Value="Succeeded" />
+                                            </MultiDataTrigger.Conditions>
+                                            <MultiDataTrigger.Setters>
+                                                <Setter Property="Background" Value="LightGreen" />
+                                            </MultiDataTrigger.Setters>
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                            <ContentPresenter x:Name="ButtonContent" VerticalAlignment="Center" HorizontalAlignment="Center" ContentSource="Content" />
+                        </Border>
+                    </ControlTemplate>
+                    
+                    <Style x:Key="EnvironmentBlockButtonStyle" TargetType="Button">
+                        <Setter Property="Template" Value="{StaticResource EnvironmentBlockButtonTemplate}" />
                     </Style>
                     
                     <Style TargetType="TextBlock" x:Key="EnvironmentBlockText">
@@ -93,7 +94,7 @@
                                 <TextBlock Text="{Binding LastStatus.Description}" FontSize="14" Style="{StaticResource EnvironmentBlockText}" />
                                 <TextBlock Text="{Binding LastBuildFinishString}" FontSize="12" Style="{StaticResource EnvironmentBlockText}" Margin="0 3 0 3" />
                                 <StackPanel Orientation="Horizontal" Margin="0 4 0 0" HorizontalAlignment="Center">
-                                    <Button Click="btnEditEnvironmentConfig_Click" Background="Transparent" BorderThickness="1" Style="{StaticResource EnvironmentBlockButton}">
+                                    <Button Click="btnEditEnvironmentConfig_Click" Style="{StaticResource EnvironmentBlockButtonStyle}">
                                         <StackPanel Orientation="Horizontal">
                                             <Image Source="..\Images\Server_5720.png" ToolTip="Edit Commit Environment" />
                                             <TextBlock Text="Config" Style="{StaticResource EnvironmentBlockText}" Margin="5 0 0 0" />
@@ -103,7 +104,7 @@
                             </StackPanel>
                         </Border>
                     </ControlTemplate>
-
+                    
                     <Style TargetType="Button" x:Key="PipelinePanel">
                         <Setter Property="Template">
                             <Setter.Value>
@@ -181,7 +182,7 @@
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate>
-                                                <TextBlock Text="No deployment pipelines found. Use the Sources button to add some." />
+                                                <TextBlock Foreground="#F1F1F1" Text="No deployment pipelines found. Use the Sources button to add some." />
                                             </ControlTemplate>
                                         </Setter.Value>
                                     </Setter>

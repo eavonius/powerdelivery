@@ -75,7 +75,7 @@ namespace PowerDelivery.Controls.Model
             {
                 if (!loadedPipelines)
                 {
-                    Refresh();
+                    RefreshSources();
 
                     loadedPipelines = true;
                 }
@@ -113,39 +113,44 @@ namespace PowerDelivery.Controls.Model
             {
                 if (_configuration == null)
                 {
-                    using (IsolatedStorageFile file = IsolatedStorageFile.GetUserStoreForAssembly())
-                    {
-                        if (file.FileExists(FILE_PATH))
-                        {
-                            XmlSerializer serializer = new XmlSerializer(typeof(ClientConfiguration));
-
-                            using (IsolatedStorageFileStream stream = file.OpenFile(FILE_PATH, FileMode.Open))
-                            {
-                                try
-                                {
-                                    _configuration = (ClientConfiguration)serializer.Deserialize(stream);
-                                }
-                                catch (Exception)
-                                {
-                                    stream.Close();
-
-                                    file.DeleteFile(FILE_PATH);
-
-                                    _configuration = new ClientConfiguration();
-                                }
-                            }
-                        }
-                        else
-                        {
-                            _configuration = new ClientConfiguration();
-                        }
-                    }
+                    Reload();
                 }
                 return _configuration;
             }
         }
 
-        public void Refresh()
+        public static void Reload()
+        {
+            using (IsolatedStorageFile file = IsolatedStorageFile.GetUserStoreForAssembly())
+            {
+                if (file.FileExists(FILE_PATH))
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeof(ClientConfiguration));
+
+                    using (IsolatedStorageFileStream stream = file.OpenFile(FILE_PATH, FileMode.Open))
+                    {
+                        try
+                        {
+                            _configuration = (ClientConfiguration)serializer.Deserialize(stream);
+                        }
+                        catch (Exception)
+                        {
+                            stream.Close();
+
+                            file.DeleteFile(FILE_PATH);
+
+                            _configuration = new ClientConfiguration();
+                        }
+                    }
+                }
+                else
+                {
+                    _configuration = new ClientConfiguration();
+                }
+            }
+        }
+
+        public void RefreshSources()
         {
             List<DeliveryPipeline> pipelines = new List<DeliveryPipeline>();
 

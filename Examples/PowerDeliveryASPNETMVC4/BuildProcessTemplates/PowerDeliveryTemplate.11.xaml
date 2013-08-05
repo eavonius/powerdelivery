@@ -75,7 +75,7 @@
         <mtbwa:CreateDirectory Directory="[BuildDetail.DropLocation]" DisplayName="Create the Drop Location" sap2010:WorkflowViewState.IdRef="CreateDirectory_1" mtbwt:BuildTrackingParticipant.Importance="Normal" />
       </Sequence>
     </Sequence>
-    <mtbwa:AgentScope DataToIgnore="" DisplayName="Run On Agent" sap2010:WorkflowViewState.IdRef="AgentScope_1" MaxExecutionTime="[AgentSettings.MaxExecutionTime]" MaxWaitTime="[AgentSettings.MaxWaitTime]" ReservationSpec="[AgentSettings.GetAgentReservationSpec()]" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+    <mtbwa:AgentScope DisplayName="Run On Agent" sap2010:WorkflowViewState.IdRef="AgentScope_1" MaxExecutionTime="[AgentSettings.MaxExecutionTime]" MaxWaitTime="[AgentSettings.MaxWaitTime]" ReservationSpec="[AgentSettings.GetAgentReservationSpec()]" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
       <mtbwa:AgentScope.Variables>
         <Variable x:TypeArguments="x:String" Name="BuildDirectory" />
         <Variable x:TypeArguments="mtbc:IBuildAgent" Name="BuildAgent" />
@@ -113,7 +113,9 @@
                         <ActivityAction.Argument>
                           <DelegateInArgument x:TypeArguments="x:String" Name="errOutput" />
                         </ActivityAction.Argument>
-                        <mtbwa:WriteBuildError sap2010:WorkflowViewState.IdRef="WriteBuildError_1" Message="[errOutput]" />
+                        <Sequence sap2010:WorkflowViewState.IdRef="Sequence_10">
+                          <Throw Exception="[New Exception(errOutput)]" sap2010:WorkflowViewState.IdRef="Throw_2" />
+                        </Sequence>
                       </ActivityAction>
                     </mtbwa:InvokeProcess.ErrorDataReceived>
                     <mtbwa:InvokeProcess.OutputDataReceived>
@@ -146,7 +148,7 @@
       <mtbwa:SetBuildProperties CompilationStatus="[Microsoft.TeamFoundation.Build.Client.BuildPhaseStatus.Succeeded]" DisplayName="Set CompilationStatus to Succeeded" sap2010:WorkflowViewState.IdRef="SetBuildProperties_2" PropertiesToSet="CompilationStatus" />
       <mtbwa:SetBuildProperties DisplayName="Set TestStatus to Succeeded" sap2010:WorkflowViewState.IdRef="SetBuildProperties_3" PropertiesToSet="TestStatus" TestStatus="[Microsoft.TeamFoundation.Build.Client.BuildPhaseStatus.Succeeded]" />
     </mtbwa:AgentScope>
-    <sads:DebugSymbol.Symbol>d1dEOlxQcm9qZWN0c1xQb3dlckRlbGl2ZXJ5QVNQTkVUTVZDNFxCdWlsZFByb2Nlc3NUZW1wbGF0ZXNcUG93ZXJEZWxpdmVyeVRlbXBsYXRlLjExLnhhbWxIAYkDAckDAQMBYQHwAgECOwOWAQ4CAQE/BT+DAQIBd0AFTRACAWROBZQBGAIBAj9xP4ABAgF4QQdDHwIBdEQHTBICAWVOsQFOzgECAQdOggFOpAECAQVO3wFOigICAQNVB2ESAgFJYgeRAQwCAQ2SAQeSAYYCAgELkwEHkwHxAQIBCUIJQsEBAgF1RQlJDgIBbkoJStYCAgFpSwlL1wECAWZWCVa0AQIBYVcJV8oBAgFeWAlYlgMCAVdZCWAOAgFKYhViRwIBDmQLjwEWAgEQkgEzkgF3AgEMkwGqAZMB7gECAQpCNEJmAgF2RRdFTQIBb0cNR6kCAgFxSlBKzQECAWpLKktGAgFnVqMBVrEBAgFiV7UBV8cBAgFfWMwBWJMDAgFaWLQBWMUBAgFYWRdZjAECAUtbDV4YAgFNZQ1oGAIBQGkNaaMCAgE2ag1q7gECAS9rDY4BGAIBEUdRR8wBAgFyXA9czQMCAVNdD13eAgIBTmYPZt8BAgFFZw9n0wECAUFpM2lFAgE+aU5pfQIBPWnvAWn8AQIBO2mOAmmgAgIBOWnWAWnnAQIBN2reAWrrAQIBMW0RgAEcAgEUiAEVigEgAgESXGZc5gICAVVd2gFd2wICAVFdwgFd0wECAU9mN2Y/AgFIZssBZtwBAgFGZzBnQgIBQ24TfykCARWJAReJAbkBAgETbjJugQUCASJusgVuygYCASFujgdukAkCAR18GXy1AgIBGXQZdHwCARZ8wQF8zgECARt8c3y4AQIBGnRsdHkCARc=</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>d3VEOlxQcm9qZWN0c1xwb3dlcmRlbGl2ZXJ5XG1hc3RlclxFeGFtcGxlc1xQb3dlckRlbGl2ZXJ5QVNQTkVUTVZDNFxCdWlsZFByb2Nlc3NUZW1wbGF0ZXNcUG93ZXJEZWxpdmVyeVRlbXBsYXRlLjExLnhhbWxJAYkDAckDAQMBYQHwAgECOwOYAQ4CAQE/BT+DAQIBaUAFTRACAVdOBZYBGAIBAj9xP4ABAgFqQQdDHwIBZkQHTBICAVhOoQFOvgECAQdOck6UAQIBBU7PAU76AQIBA1UHYRICAT1iB5MBDAIBDZQBB5QBhgICAQuVAQeVAfEBAgEJQglCwQECAWdFCUkOAgFhSglK1gICAVxLCUvXAQIBWVYJVrQBAgFUVwlXygECAVFYCViWAwIBSlkJYA4CAT5iFWJHAgEOZAuRARYCARCUATOUAXcCAQyVAaoBlQHuAQIBCkI0QmYCAWhFF0VNAgFiRw1HqQICAWRKUErNAQIBXUsqS0YCAVpWowFWsQECAVVXtQFXxwECAVJYzAFYkwMCAU1YtAFYxQECAUtZF1mMAQIBP1sNXhgCAUFlDWgYAgE0aQ1powICAStqDWruAQIBJWsNkAEYAgERR1FHzAECAWVcD1zNAwIBR10PXd4CAgFCZg9m3wECATlnD2fTAQIBNWkzaUUCATJpTml9AgExae8BafwBAgEwaY4CaaACAgEuadYBaecBAgEsat4BausBAgEnbRGCARwCARSKARWMASACARJcZlzmAgIBSF3aAV3bAgIBRV3CAV3TAQIBQ2Y3Zj8CATxmywFm3AECATpnMGdCAgE3bhOBASkCARWLAReLAbkBAgETbjJugQUCASNusgVuygYCASJujgdukAkCAR5+GX61AgIBGnQZdiQCARZ+wQF+zgECARx+c364AQIBG3UbdXUCARd1LHVIAgEY</sads:DebugSymbol.Symbol>
   </Sequence>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
@@ -201,11 +203,18 @@
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
       <sap2010:ViewStateData Id="CreateWorkspace_1" sap:VirtualizedContainerService.HintSize="418,22" />
-      <sap2010:ViewStateData Id="SyncWorkspace_1" sap:VirtualizedContainerService.HintSize="418,146" />
-      <sap2010:ViewStateData Id="WriteBuildError_1" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="SyncWorkspace_1" sap:VirtualizedContainerService.HintSize="418,22" />
+      <sap2010:ViewStateData Id="Throw_2" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="Sequence_10" sap:VirtualizedContainerService.HintSize="222,146">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
       <sap2010:ViewStateData Id="WriteBuildMessage_1" sap:VirtualizedContainerService.HintSize="200,22" />
-      <sap2010:ViewStateData Id="InvokeProcess_1" sap:VirtualizedContainerService.HintSize="234,270" />
-      <sap2010:ViewStateData Id="Sequence_6" sap:VirtualizedContainerService.HintSize="256,394">
+      <sap2010:ViewStateData Id="InvokeProcess_1" sap:VirtualizedContainerService.HintSize="256,394" />
+      <sap2010:ViewStateData Id="Sequence_6" sap:VirtualizedContainerService.HintSize="278,518">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -228,7 +237,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="TryCatch_1" sap:VirtualizedContainerService.HintSize="418,919" />
+      <sap2010:ViewStateData Id="TryCatch_1" sap:VirtualizedContainerService.HintSize="418,1043" />
       <sap2010:ViewStateData Id="Sequence_8" sap:VirtualizedContainerService.HintSize="440,1539">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">

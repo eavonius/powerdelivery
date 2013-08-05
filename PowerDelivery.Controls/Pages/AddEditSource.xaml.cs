@@ -31,7 +31,17 @@ namespace PowerDelivery.Controls.Pages
                 btnRemove.Visibility = Visibility.Visible;
             }
 
+            this.KeyUp += AddEditSource_KeyUp;
+
             this.Loaded += AddEditSource_Loaded;
+        }
+
+        void AddEditSource_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                btnSaveChanges_Click(this, new RoutedEventArgs());
+            }
         }
 
         void AddEditSource_Loaded(object sender, RoutedEventArgs e)
@@ -47,6 +57,8 @@ namespace PowerDelivery.Controls.Pages
                 source.Uri = txtCollectionURL.Text;
 
                 source.Save();
+
+                ClientConfiguration.Reload();
 
                 NavigationService.Navigate(new Pages.Home(_clientControl));
             }
@@ -75,7 +87,9 @@ namespace PowerDelivery.Controls.Pages
                 ClientConfiguration.Current.Sources.Remove(source);
                 ClientConfiguration.Current.Save();
 
-                NavigationService.Navigate(new Pages.Sources(_clientControl));
+                ClientConfiguration.Reload();
+
+                NavigationService.Navigate(new Pages.Home(_clientControl));
             }
         }
     }
