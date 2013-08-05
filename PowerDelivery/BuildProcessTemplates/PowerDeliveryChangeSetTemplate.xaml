@@ -55,14 +55,14 @@
   <this:Process.PowerShellScriptPath>
     <InArgument x:TypeArguments="x:String" />
   </this:Process.PowerShellScriptPath>
-  <sap:VirtualizedContainerService.HintSize>649,3769</sap:VirtualizedContainerService.HintSize>
+  <sap:VirtualizedContainerService.HintSize>649,3831</sap:VirtualizedContainerService.HintSize>
   <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
   <sap:WorkflowViewStateService.ViewState>
     <scg:Dictionary x:TypeArguments="x:String, x:Object">
       <x:Boolean x:Key="ShouldExpandAll">True</x:Boolean>
     </scg:Dictionary>
   </sap:WorkflowViewStateService.ViewState>
-  <Sequence sad:XamlDebuggerXmlReader.FileName="PowerDeliveryChangeSetTemplate.xaml" sap:VirtualizedContainerService.HintSize="609,3729" mtbwt:BuildTrackingParticipant.Importance="None" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+  <Sequence sad:XamlDebuggerXmlReader.FileName="PowerDeliveryChangeSetTemplate.xaml" sap:VirtualizedContainerService.HintSize="609,3791" mtbwt:BuildTrackingParticipant.Importance="None" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
     <Sequence.Variables>
       <Variable x:TypeArguments="mtbc:IBuildDetail" Name="BuildDetail" />
     </Sequence.Variables>
@@ -96,7 +96,7 @@
         <mtbwa:CreateDirectory Directory="[BuildDetail.DropLocation]" DisplayName="Create the Drop Location" sap:VirtualizedContainerService.HintSize="464,22" mtbwt:BuildTrackingParticipant.Importance="Normal" />
       </Sequence>
     </Sequence>
-    <mtbwa:AgentScope DisplayName="Run On Agent" sap:VirtualizedContainerService.HintSize="587,2737" MaxExecutionTime="[AgentSettings.MaxExecutionTime]" MaxWaitTime="[AgentSettings.MaxWaitTime]" ReservationSpec="[AgentSettings.GetAgentReservationSpec()]" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+    <mtbwa:AgentScope DisplayName="Run On Agent" sap:VirtualizedContainerService.HintSize="587,2799" MaxExecutionTime="[AgentSettings.MaxExecutionTime]" MaxWaitTime="[AgentSettings.MaxWaitTime]" ReservationSpec="[AgentSettings.GetAgentReservationSpec()]" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
       <mtbwa:AgentScope.Variables>
         <Variable x:TypeArguments="x:String" Name="BuildDirectory" />
         <Variable x:TypeArguments="mtbc:IBuildAgent" Name="BuildAgent" />
@@ -126,9 +126,9 @@
           </If.Then>
         </If>
       </Sequence>
-      <If Condition="[Not String.IsNullOrEmpty(PowerShellScriptPath)]" DisplayName="If Not String.IsNullOrEmpty(PowerShellScriptPath)" sap:VirtualizedContainerService.HintSize="565,1823">
+      <If Condition="[Not String.IsNullOrEmpty(PowerShellScriptPath)]" DisplayName="If Not String.IsNullOrEmpty(PowerShellScriptPath)" sap:VirtualizedContainerService.HintSize="565,1885">
         <If.Then>
-          <Sequence sap:VirtualizedContainerService.HintSize="440,1715">
+          <Sequence sap:VirtualizedContainerService.HintSize="440,1777">
             <Sequence.Variables>
               <Variable x:TypeArguments="mtbc:IBuildDetail" Name="PriorBuildDetail" />
               <Variable x:TypeArguments="x:String" Name="ScriptName" />
@@ -166,9 +166,8 @@
             </InvokeMethod>
             <mtbwa:CreateDirectory Directory="[BuildDirectory]" DisplayName="Create Working Directory" sap:VirtualizedContainerService.HintSize="418,22" />
             <mtbwa:DownloadFiles DeletionId="{x:Null}" DisplayName="Download Build Script" sap:VirtualizedContainerService.HintSize="418,22" LocalPath="[Path.Combine(BuildDirectory, PowerShellScriptPath.Substring(PowerShellScriptPath.LastIndexOf(&quot;/&quot;) + 1))]" ServerPath="[PowerShellScriptPath]" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces" Version="[PriorBuildDetail.SourceGetVersion]" />
-			<mtbwa:DownloadFiles DeletionId="{x:Null}" DisplayName="Download Environment Config (CVS)" sap:VirtualizedContainerService.HintSize="418,22" LocalPath="[Path.Combine(BuildDirectory, String.Format(&quot;{0}{1}.csv&quot;, ScriptName, Environment))]" ServerPath="[String.Format(&quot;{0}/{1}{2}.csv&quot;, PowerShellScriptPath.Substring(0, PowerShellScriptPath.LastIndexOf(&quot;/&quot;)), ScriptName, Environment)]" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces" Version="[PriorBuildDetail.SourceGetVersion]" />
-            <mtbwa:DownloadFiles DeletionId="{x:Null}" DisplayName="Download Environment Config (YML)" sap:VirtualizedContainerService.HintSize="418,22" LocalPath="[Path.Combine(BuildDirectory, String.Format(&quot;{0}{1}.yml&quot;, ScriptName, Environment))]" ServerPath="[String.Format(&quot;{0}/{1}{2}.yml&quot;, PowerShellScriptPath.Substring(0, PowerShellScriptPath.LastIndexOf(&quot;/&quot;)), ScriptName, Environment)]" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces" Version="[PriorBuildDetail.SourceGetVersion]" />
-			<mtbwa:DownloadFiles DeletionId="{x:Null}" DisplayName="Download Module Config (YML)" sap:VirtualizedContainerService.HintSize="418,22" LocalPath="[Path.Combine(BuildDirectory, String.Format(&quot;{0}Shared.yml&quot;, ScriptName))]" ServerPath="[String.Format(&quot;{0}/{1}Shared.yml&quot;, PowerShellScriptPath.Substring(0, PowerShellScriptPath.LastIndexOf(&quot;/&quot;)), ScriptName)]" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces" Version="[PriorBuildDetail.SourceGetVersion]" />
+            <mtbwa:DownloadFiles DeletionId="{x:Null}" DisplayName="Download Environment Config" sap:VirtualizedContainerService.HintSize="418,22" LocalPath="[Path.Combine(BuildDirectory, String.Format(&quot;{0}{1}.yml&quot;, ScriptName, Environment))]" ServerPath="[String.Format(&quot;{0}/{1}{2}.yml&quot;, PowerShellScriptPath.Substring(0, PowerShellScriptPath.LastIndexOf(&quot;/&quot;)), ScriptName, Environment)]" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces" Version="[PriorBuildDetail.SourceGetVersion]" />
+            <mtbwa:DownloadFiles DeletionId="{x:Null}" DisplayName="Download Shared Config" sap:VirtualizedContainerService.HintSize="418,22" LocalPath="[Path.Combine(BuildDirectory, String.Format(&quot;{0}Shared.yml&quot;, ScriptName))]" ServerPath="[String.Format(&quot;{0}/{1}Shared.yml&quot;, PowerShellScriptPath.Substring(0, PowerShellScriptPath.LastIndexOf(&quot;/&quot;)), ScriptName)]" mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces" Version="[PriorBuildDetail.SourceGetVersion]" />
             <TryCatch sap:VirtualizedContainerService.HintSize="418,759">
               <TryCatch.Try>
                 <Sequence sap:VirtualizedContainerService.HintSize="256,314">
@@ -183,7 +182,7 @@
                         <ActivityAction.Argument>
                           <DelegateInArgument x:TypeArguments="x:String" Name="errOutput" />
                         </ActivityAction.Argument>
-                        <mtbwa:WriteBuildError sap:VirtualizedContainerService.HintSize="200,22" Message="[errOutput]" />
+                        <Throw Exception="[New Exception(errOutput)]" sap:VirtualizedContainerService.HintSize="200,22" />
                       </ActivityAction>
                     </mtbwa:InvokeProcess.ErrorDataReceived>
                     <mtbwa:InvokeProcess.OutputDataReceived>
