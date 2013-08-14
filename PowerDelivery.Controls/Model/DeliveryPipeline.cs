@@ -80,5 +80,24 @@ namespace PowerDelivery.Controls.Model
 
             return localDirectory;
         }
+
+        public void StopPolling()
+        {
+            foreach (PipelineEnvironment environment in Environments)
+            {
+                environment.IsPolling = false;
+            }
+        }
+
+        public void StartPolling()
+        {
+            foreach (PipelineEnvironment environment in Environments)
+            {
+                if (!environment.IsPolling)
+                {
+                    environment.StartPolling();
+                }
+            }
+        }
     }
 }

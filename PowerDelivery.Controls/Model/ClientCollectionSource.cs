@@ -12,6 +12,9 @@ namespace PowerDelivery.Controls.Model
         [XmlAttribute(AttributeName="Uri")]
         public string Uri { get; set; }
 
+        [XmlIgnore]
+        public string Name { get; set; }
+
         public void Save()
         {
             Uri collectionUri = null;

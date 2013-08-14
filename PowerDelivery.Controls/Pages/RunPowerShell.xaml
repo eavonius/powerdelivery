@@ -3,15 +3,14 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      mc:Ignorable="d" 
-      d:DesignHeight="480" d:DesignWidth="640" Margin="20"
+      mc:Ignorable="d" d:DesignHeight="480" d:DesignWidth="640" Margin="20"
 	Title="Executing PowerShell Command">
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="..\Styles.xaml" />
                 <ResourceDictionary>
-                    <!-- Put styles here -->
+                    
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -26,11 +25,41 @@
             <TextBlock Style="{StaticResource PageTitle}" Text="{Binding Title}" />
             <TextBlock Style="{StaticResource PageDescription}" Text="{Binding Command.Script}" TextWrapping="Wrap" />
         </StackPanel>
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-            <TextBlock Name="txtCommandOutput" Foreground="#000" FontFamily="Consolas" FontSize="12" Background="#fff" TextWrapping="Wrap" />
-        </ScrollViewer>
-        <StackPanel Grid.Row="2" HorizontalAlignment="Right" Margin="0 10 0 0">
-            <Button Style="{StaticResource CommandButton}" Name="btnClose" IsEnabled="False">Close</Button>
-        </StackPanel>
+        <RichTextBox Name="txtCommandOutput" Grid.Row="1">
+            <RichTextBox.Style>
+                <Style TargetType="RichTextBox">
+                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                    <Setter Property="VerticalAlignment" Value="Stretch"/>
+                    <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
+                    <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+                    <Setter Property="FontFamily" Value="Consolas"/>
+                    <Setter Property="FontSize" Value="14" />
+                    <Setter Property="Background" Value="#333" />
+                    <Setter Property="Foreground" Value="#F1F1F1" />
+                    <Setter Property="Padding" Value="10 0 0 0" />
+                    <Setter Property="IsReadOnly" Value="True" />
+                    <Setter Property="Margin" Value="0" />
+                    <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                    <Setter Property="AllowDrop" Value="true"/>
+                </Style>
+            </RichTextBox.Style>
+        </RichTextBox>
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Foreground="#F1F1F1" VerticalAlignment="Center" Grid.Row="0" Grid.Column="0" Name="txtStatus" />
+            <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Margin="0 10 0 0" Orientation="Horizontal">
+                <Button Style="{StaticResource CommandButton}" Name="btnStop" Click="btnStop_Click">Stop</Button>
+                <Button Style="{StaticResource CommandButton}" Name="btnClose" Margin="3 0 0 0" IsEnabled="False" Click="btnClose_Click">Close</Button>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Page>

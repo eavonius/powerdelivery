@@ -1,14 +1,19 @@
 ﻿using Microsoft.TeamFoundation.Build.Client;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace PowerDelivery.Controls.Model
 {
-    public class PipelineEnvironmentBuildStatus
+    public class PipelineEnvironmentBuildStatus : INotifyPropertyChanged
     {
+        string _description;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public PipelineEnvironmentBuildStatus(BuildStatus status)
         {
             Status = status;
@@ -40,6 +45,28 @@ namespace PowerDelivery.Controls.Model
         }
 
         public BuildStatus Status { get; private set; }
-        public string Description { get; private set; }
+
+        public string Description 
+        {
+            get { return _description; }
+        
+            private set
+            {
+                if (_description != value)
+                {
+                    _description = value;
+
+                    OnPropertyChanged("Description");
+                }
+            }
+        }
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
     }
 }

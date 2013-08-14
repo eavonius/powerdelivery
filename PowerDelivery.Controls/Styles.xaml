@@ -11,6 +11,38 @@
         <Setter Property="Margin" Value="0 0 10 0" />
         <Setter Property="FontSize" Value="16" />
     </Style>
+
+    <Style TargetType="TextBlock" x:Key="EnvironmentBlockButtonText">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding LastStatus.Description}" Value="In Progress">
+                <Setter Property="Foreground" Value="Black" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding LastStatus.Description}" Value="Succeeded">
+                <Setter Property="Foreground" Value="White" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding LastStatus.Description}" Value="Partially Succeeded">
+                <Setter Property="Foreground" Value="Black" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding LastStatus.Description}" Value="Failed">
+                <Setter Property="Foreground" Value="White" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding LastStatus.Description}" Value="Stopped">
+                <Setter Property="Foreground" Value="White" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding LastStatus.Description}" Value="Unknown Status">
+                <Setter Property="Foreground" Value="Black" />
+            </DataTrigger>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding IsMouseOver, ElementName=EnvironmentBlockButton}" Value="True" />
+                </MultiDataTrigger.Conditions>
+                <MultiDataTrigger.Setters>
+                    <Setter Property="Foreground" Value="#eee" />
+                </MultiDataTrigger.Setters>
+            </MultiDataTrigger>
+        </Style.Triggers>
+    </Style>
+
     <ControlTemplate TargetType="Button" x:Key="CommandButtonTemplate">
         <Border>
             <Border.Style>
@@ -22,6 +54,9 @@
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Background" Value="#9D6EA8" />
                         </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" Value="#bbb" />
+                        </Trigger>
                     </Style.Triggers>
                 </Style>
             </Border.Style>
@@ -32,6 +67,40 @@
         <Setter Property="Foreground" Value="#F1F1F1" />
         <Setter Property="Template" Value="{StaticResource CommandButtonTemplate}" />
     </Style>
+
+    <Style TargetType="TextBlock" x:Key="PipelineButtonText">
+        <Setter Property="Foreground" Value="#68217A" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Border}}}" Value="True">
+                <Setter Property="Foreground" Value="#F1F1F1" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    
+    <ControlTemplate TargetType="Button" x:Key="PipelineButtonTemplate">
+        <Border>
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Background" Value="#F1F1F1" />
+                    <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="Padding" Value="10" />
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#9D6EA8" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" Value="#bbb" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center" ContentSource="Content" />
+        </Border>
+    </ControlTemplate>
+    <Style TargetType="Button" x:Key="PipelineButton">
+        <Setter Property="Template" Value="{StaticResource PipelineButtonTemplate}" />
+    </Style>
+
     <Style TargetType="StackPanel" x:Key="PageActions">
         <Setter Property="Orientation" Value="Horizontal" />
         <Setter Property="HorizontalAlignment" Value="Right" />
@@ -48,14 +117,23 @@
         <Setter Property="FontSize" Value="16" />
         <Setter Property="Foreground" Value="#F1F1F1" />
     </Style>
+    <Style TargetType="TextBlock" x:Key="DialogDescription">
+        <Setter Property="Margin" Value="0 10 0 10" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Foreground" Value="#F1F1F1" />
+    </Style>
     <Style TargetType="Label" x:Key="FieldExample">
         <Setter Property="Margin" Value="15 0 0 0" />
-        <Setter Property="Foreground" Value="#F1F1F1" />
+        <Setter Property="Foreground" Value="#cccccc" />
     </Style>
     <Style TargetType="Grid" x:Key="Background">
         <Setter Property="Background" Value="#28282B" />
     </Style>
     <Style TargetType="Page">
+        <Setter Property="Background" Value="#28282B" />
+        <Setter Property="Foreground" Value="#F1F1F1" />
+    </Style>
+    <Style TargetType="Window">
         <Setter Property="Background" Value="#28282B" />
         <Setter Property="Foreground" Value="#F1F1F1" />
     </Style>

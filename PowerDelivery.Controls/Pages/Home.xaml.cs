@@ -15,6 +15,10 @@ using System.Diagnostics;
 
 using PowerDelivery.Controls.Model;
 using System.ComponentModel;
+using PowerDelivery.Controls.Commands;
+using Microsoft.TeamFoundation.Client;
+using Microsoft.TeamFoundation.Server;
+using System.Web;
 
 namespace PowerDelivery.Controls.Pages
 {
@@ -24,24 +28,36 @@ namespace PowerDelivery.Controls.Pages
 
         const int ENV_BLOCK_HEIGHT = 125;
 
+        const int PROD_BLOCK_LEFT = 495;
+
         public Home(ClientControl clientControl)
         {
             _clientControl = clientControl;
 
             Loaded += Home_Loaded;
+            Unloaded += Home_Unloaded;
 
             InitializeComponent();
         }
 
-        async Task LoadPipelines()
+        void Home_Unloaded(object sender, RoutedEventArgs e)
         {
-            var x = ClientConfiguration.Current.Pipelines;
-            lstPipelines.ItemsSource = x;
+            ClientConfiguration.Current.StopPolling();
         }
 
-        async void Home_Loaded(object sender, RoutedEventArgs e)
+        void Home_Loaded(object sender, RoutedEventArgs e)
         {
-            Task loadPipelines = LoadPipelines();
+            Task.Factory.StartNew(() =>
+            {
+                Dispatcher.Invoke(new Action(delegate()
+                {
+                    var x = ClientConfiguration.Current.Pipelines;
+                    lstPipelines.ItemsSource = x;
+                    pnlLoadingPipelines.Visibility = System.Windows.Visibility.Collapsed;
+                    lstPipelines.Visibility = System.Windows.Visibility.Visible;
+                    ClientConfiguration.Current.StartPolling();
+                }), System.Windows.Threading.DispatcherPriority.Background);
+            });
         }
 
         void StackPanel_Loaded(object sender, RoutedEventArgs e)
@@ -205,7 +221,7 @@ namespace PowerDelivery.Controls.Pages
 
             if (environment.EnvironmentName == "Production")
             {
-                Canvas.SetLeft(parentElement, 475);
+                Canvas.SetLeft(parentElement, 495);
 
                 Canvas.SetTop(parentElement, 0);
             }
@@ -217,23 +233,29 @@ namespace PowerDelivery.Controls.Pages
             }
             else
             {
-                Canvas.SetLeft(parentElement, 240);
+                Canvas.SetLeft(parentElement, 250);
 
                 int pipelineIndex = environments.ToList().IndexOf(environment) + 1;
+
+                PipelineEnvironment commitEnvironment = environment.Pipeline.Environments.FirstOrDefault(env => env.EnvironmentName == "Commit");
+                PipelineEnvironment productionEnvironment = environment.Pipeline.Environments.FirstOrDefault(env => env.EnvironmentName == "Production");
 
                 Canvas.SetTop(parentElement, pipelineIndex * ENV_BLOCK_HEIGHT);
 
                 Line commitToMidLine = new Line();
                 commitToMidLine.StrokeThickness = 3;
                 commitToMidLine.Stroke = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#555"));
-                commitToMidLine.X1 = 160;
+                commitToMidLine.X1 = 170;
                 commitToMidLine.Y1 = (midEnvCount * ENV_BLOCK_HEIGHT) / 2;
                 commitToMidLine.X2 = Canvas.GetLeft(parentElement);
                 commitToMidLine.Y2 = Canvas.GetTop(parentElement) + (parentElement.ActualHeight / 2);
 
                 parentCanvas.Children.Add(commitToMidLine);
 
-                PromoteControl promoteFromCommit = new PromoteControl();
+                PromoteControl promoteFromCommit = new PromoteControl(this);
+                promoteFromCommit.Environment = commitEnvironment;
+                promoteFromCommit.NextEnvironment = environment;
+                promoteFromCommit.ToolTip = string.Format("Promote {0} from Commit to {1}", environment.Pipeline.ScriptName, environment.EnvironmentName);
                 parentCanvas.Children.Add(promoteFromCommit);
 
                 RotateTransform rotatePromoteButton = new RotateTransform();
@@ -253,21 +275,24 @@ namespace PowerDelivery.Controls.Pages
                     Canvas.SetTop(promoteFromCommit, commitToMidLine.Y2 + ((commitToMidLine.Y1 - commitToMidLine.Y2) / 2) - (promoteFromCommit.ActualHeight / 2) - 16);
                 }
 
-                Canvas.SetLeft(promoteFromCommit, 190);
+                Canvas.SetLeft(promoteFromCommit, 200);
 
                 if (environment.EnvironmentName == "Test")
                 {
                     Line testToProdLine = new Line();
                     testToProdLine.StrokeThickness = 3;
                     testToProdLine.Stroke = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#555"));
-                    testToProdLine.X1 = 240 + brdEnvironmentBlock.ActualWidth;
+                    testToProdLine.X1 = 250 + brdEnvironmentBlock.ActualWidth;
                     testToProdLine.Y1 = Canvas.GetTop(parentElement) + (parentElement.ActualHeight / 2);
-                    testToProdLine.X2 = 475;
+                    testToProdLine.X2 = PROD_BLOCK_LEFT;
                     testToProdLine.Y2 = ENV_BLOCK_HEIGHT / 2 - 3;
 
                     parentCanvas.Children.Add(testToProdLine);
 
-                    PromoteControl promoteFromTest = new PromoteControl();
+                    PromoteControl promoteFromTest = new PromoteControl(this);
+                    promoteFromTest.Environment = environment;
+                    promoteFromTest.NextEnvironment = productionEnvironment;
+                    promoteFromTest.ToolTip = string.Format("Promote {0} from {1} to Production", environment.Pipeline.ScriptName, environment.EnvironmentName);
                     parentCanvas.Children.Add(promoteFromTest);
 
                     if (testToProdLine.Y2 > testToProdLine.Y1)
@@ -279,9 +304,122 @@ namespace PowerDelivery.Controls.Pages
                         Canvas.SetTop(promoteFromTest, testToProdLine.Y2 + ((testToProdLine.Y1 - testToProdLine.Y2) / 2) - (promoteFromTest.ActualHeight / 2) - 15);
                     }
 
-                    Canvas.SetLeft(promoteFromTest, 425);
+                    Canvas.SetLeft(promoteFromTest, 445);
                 }
             }
+        }
+
+        private void btnDeletePipeline_Click(object sender, RoutedEventArgs e)
+        {
+            DeliveryPipeline pipeline = ((Button)sender).DataContext as DeliveryPipeline;
+
+            if (MessageBox.Show(string.Format("Are you sure you want to remove pipeline \"{0}\"\r\nfrom \"{1}\"?", pipeline.ScriptName, pipeline.ProjectName ), 
+                "Confirm remove pipeline", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes) {
+
+                DeletePipelineCommand command = new DeletePipelineCommand();
+                command.Name = pipeline.ScriptName;
+                command.CollectionURL = pipeline.CollectionName;
+                command.ProjectName = pipeline.ProjectName;
+
+                try
+                {
+                    command.BuildCommand();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Correct invalid entries", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                    return;
+                }
+
+                NavigationService _navService = NavigationService;
+
+                _navService.Navigate(new RunPowerShell(this, "Removing pipeline", command, null,
+                    () => { ClientConfiguration.Current.RefreshSources(); _navService.Navigate(new Home(_clientControl)); return true; },
+                    () => { _navService.Navigate(new Home(_clientControl));  return true; }
+                ));
+            }
+        }
+
+        protected void btnBuild_Click(object sender, RoutedEventArgs e)
+        {
+            Button btnSource = (Button)sender;
+
+            DeliveryPipeline pipeline = btnSource.DataContext as DeliveryPipeline;
+
+            try
+            {
+                string localDirectory = pipeline.GetWorkingDirectory();
+
+                if (localDirectory != null)
+                {
+                    string scriptName = string.Format("{0}.ps1", pipeline.ScriptName);
+
+                    string scriptPath = string.Format("{0}\\{1}", localDirectory, scriptName);
+
+                    if (!File.Exists(scriptPath))
+                    {
+                        throw new Exception(string.Format("File:\n\n{0}\n\nCouldn't be found on disk. Did you move your working folder?", scriptPath));
+                    }
+
+                    InvokePowerDeliveryCommand command = new InvokePowerDeliveryCommand();
+
+                    command.ScriptName = scriptName;
+
+                    try
+                    {
+                        command.BuildCommand();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Correct invalid entries", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                        return;
+                    }
+
+                    NavigationService _navService = NavigationService;
+
+                    _navService.Navigate(new RunPowerShell(this, "Running local build", command, localDirectory,
+                        () => { ClientConfiguration.Current.RefreshSources(); _navService.Navigate(new Home(_clientControl)); return true; },
+                        () => { _navService.Navigate(new Home(_clientControl));  return true; }
+                    ));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message,
+                    string.Format("Unable to run {0}.ps1", pipeline.ScriptName),
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void EnvironmentBlockTitle_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            FrameworkElement blockBorder = (FrameworkElement)sender;
+
+            PipelineEnvironment environment = (PipelineEnvironment)blockBorder.DataContext;
+
+            NavigationService.Navigate(new ShowPipelineEnvironment(environment));
+
+            /*
+            TfsTeamProjectCollection tfs = new TfsTeamProjectCollection(new Uri(environment.Pipeline.Source.Uri));
+
+            IRegistration registration = (IRegistration)tfs.GetService(typeof(IRegistration));
+
+            RegistrationEntry[] entries = registration.GetRegistrationEntries("Wss");
+
+            foreach (ServiceInterface si in entries[0].ServiceInterfaces)
+            {
+                if (si.Name == "BaseSiteUrl") 
+                {
+                    Process.Start(
+                        string.Format("{0}{1}/{2}/_Build#definitionUri={3}&_a=completed", 
+                            si.Url, 
+                            environment.Pipeline.Source.Name, 
+                            environment.Pipeline.ProjectName, 
+                            HttpUtility.UrlEncode(environment.BuildDefinition.Uri.ToString())));
+                }
+            }*/
         }
     }
 }

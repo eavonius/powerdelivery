@@ -34,14 +34,13 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            
-            <Label Grid.Row="0" Grid.Column="0" Content="TFS Collection URL:" />
-            <TextBox Grid.Row="0" Grid.Column="1" Name="txtCollectionURL" Text="{Binding Path=Uri}" />
+            <Label Grid.Row="0" Grid.Column="0" Content="TFS Collection URL:" FontSize="13" />
+            <TextBox Grid.Row="0" Grid.Column="1" Name="txtCollectionURL" Text="{Binding Path=Uri}" FontSize="13" VerticalContentAlignment="Stretch" Margin="0 3 0 3" />
             <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="e.g. http://www.myserver.com:8080/tfs" Style="{StaticResource FieldExample}"/>
         </Grid>
         <StackPanel Grid.Row="2" Style="{StaticResource PageActions}">
-            <Button Content="Remove" Name="btnRemove" Click="btnRemove_Click" Visibility="Collapsed" Margin="0 0 15 0" Style="{StaticResource CommandButton}" />
-            <Button Content="Save Changes" Name="btnSaveChanges" Click="btnSaveChanges_Click" Margin="0 0 15 0"  Style="{StaticResource CommandButton}" />
+            <Button Content="Remove" Name="btnRemove" Click="btnRemove_Click" Visibility="Collapsed" Margin="0 0 3 0" Style="{StaticResource CommandButton}" />
+            <Button Content="Save Changes" Name="btnSaveChanges" Click="btnSaveChanges_Click" Margin="0 0 3 0"  Style="{StaticResource CommandButton}" />
             <Button Content="Cancel" Name="btnCancel" Click="btnCancel_Click" Style="{StaticResource CommandButton}" />
         </StackPanel>
     </Grid>

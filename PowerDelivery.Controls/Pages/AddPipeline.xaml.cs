@@ -64,7 +64,12 @@ namespace PowerDelivery.Controls.Pages
                 return;
             }
 
-            NavigationService.Navigate(new RunPowerShell(this, "Adding pipeline", command));
+            NavigationService _navService = NavigationService;
+
+            _navService.Navigate(new RunPowerShell(this, "Adding pipeline", command, null,
+                () => { ClientConfiguration.Current.RefreshSources(); _navService.Navigate(new Home(_clientControl)); return true; },
+                () => { _navService.Navigate(new AddPipeline(_clientControl));  return true; }
+            ));
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)

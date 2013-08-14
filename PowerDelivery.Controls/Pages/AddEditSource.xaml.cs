@@ -34,6 +34,8 @@ namespace PowerDelivery.Controls.Pages
             this.KeyUp += AddEditSource_KeyUp;
 
             this.Loaded += AddEditSource_Loaded;
+
+            txtCollectionURL.SelectAll();
         }
 
         void AddEditSource_KeyUp(object sender, KeyEventArgs e)

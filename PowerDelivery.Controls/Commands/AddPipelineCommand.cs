@@ -51,6 +51,8 @@ namespace PowerDelivery.Controls.Commands
                 throw new Exception("Project name is required.");
             }
 
+            //Script = "ls C:\\Windows\\System32\\*.*";
+
             Script = string.Format("Add-Pipeline -Project '{0}' -Collection '{1}' -Controller '{2}' -DropFolder '{3}' -Name {4}", 
                 ProjectName, CollectionURL, BuildController, DropFolder, Name);
         }

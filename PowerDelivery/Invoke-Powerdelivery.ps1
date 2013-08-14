@@ -188,10 +188,10 @@ function Invoke-Powerdelivery {
 		$spaceIndex = 0
 		while ($spaceIndex -lt $numSpaces) {
             if (!$forYaml -and $spaceIndex -eq 0) {
-                $val += "| "
+                $val += ".."
             }
             else {
-			    $val += "  "
+			    $val += ".."
             }
 			$spaceIndex++
 		}
@@ -323,7 +323,9 @@ function Invoke-Powerdelivery {
 			$powerdelivery.config = Get-Yaml -FromFile $yamlPath
 	    }
 		else {
-		    throw "Build configuration file $envConfigFileName not found."
+			Write-Host (Get-Location)
+		
+		    throw "Build configuration file $yamlFile not found."
 	    }
 		
 		if (Test-Path -Path $sharedConfigFileName) {
@@ -390,19 +392,11 @@ function Invoke-Powerdelivery {
 		
 		$scriptParams["Drop Location"] = $powerdelivery.dropLocation
 		
-        if ($onServer) {
-            Write-Host
-            $scriptParams.Keys | % {
-                "{0}: {1}" -f $_, $scriptParams[$_]
-            }
-            Write-Host
+        Write-Host
+        $scriptParams.Keys | % {
+            "{0}: {1}" -f $_, $scriptParams[$_]
         }
-        else {
-            $tableFormat = @{Expression={$_.Key};Label="Key";Width=40}, `
-	                       @{Expression={$_.Value};Label="Value";Width=75}
-
-            $scriptParams | Format-Table $tableFormat -HideTableHeaders
-        }
+        Write-Host
 
 		Write-ConsoleSpacer
 	    "= Environment"
@@ -434,20 +428,11 @@ function Invoke-Powerdelivery {
 			}
 		}
 
-		if ($onServer)
-		{
-			$yamlContents = PrintConfiguration -configNodes $powerdelivery.config -depth 0 -forYaml $true
-			$yamlContents | Out-File -FilePath (Join-Path $dropLocation "$($appScript).yml") -Encoding ASCII
+		$yamlContents = PrintConfiguration -configNodes $powerdelivery.config -depth 0 -forYaml $true
+		$yamlContents | Out-File -FilePath (Join-Path $dropLocation "$($appScript).yml") -Encoding ASCII
 
-            PrintConfiguration -configNodes $powerdelivery.config -depth 0 -forYaml $false
-		}
-        else {
-            $tableFormat = @{Expression={$_.Name};Label="Name";Width=40}, `
-	                       @{Expression={if ($_.Name.EndsWith("Password")) { '********' } else { $_.Value }};Label="Value";Width=75}
+        PrintConfiguration -configNodes $powerdelivery.config -depth 0 -forYaml $false
 
-		    $powerdelivery.config | Format-Table $tableFormat -HideTableHeaders
-        }
-		
         Write-BuildSummaryMessage -name "Environment" -header "Environment Configuration" -message $configMessage
 
 		Write-ConsoleSpacer

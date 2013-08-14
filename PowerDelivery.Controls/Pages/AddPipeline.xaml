@@ -38,19 +38,19 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Label Grid.Row="0" Grid.Column="0" Content="Pipeline Name:" />
-            <TextBox Grid.Row="0" Grid.Column="1" Name="txtName" Width="275" Margin="0 0 0 10" HorizontalAlignment="Left" />
-            <Label Grid.Row="1" Grid.Column="0" Content="TFS Collection URL:" />
-            <ComboBox Grid.Row="1" Grid.Column="1" Name="cboCollectionURL" Margin="0 0 0 10" Width="400" HorizontalAlignment="Left" DisplayMemberPath="Uri" SelectedValuePath="Uri" SelectionChanged="cboCollectionURL_SelectionChanged" />
-            <Label Grid.Row="2" Grid.Column="0" Content="TFS Project:" />
-            <ComboBox Grid.Row="2" Grid.Column="1" Name="cboProject" Margin="0 0 0 10" Width="300" HorizontalAlignment="Left" SelectionChanged="cboProject_SelectionChanged" />
-            <Label Grid.Row="3" Grid.Column="0" Content="TFS Build Controller:" />
-            <ComboBox Grid.Row="3" Grid.Column="1" Name="cboBuildController" Margin="0 0 0 10" Width="300" HorizontalAlignment="Left" />
-            <Label Grid.Row="4" Grid.Column="0" Content="Build Drop Folder:" />
-            <TextBox Grid.Row="4" Grid.Column="1" Name="txtDropFolder" Margin="0 0 0 10" Width="450" HorizontalAlignment="Left" FontSize="14" />
+            <Label Grid.Row="0" Grid.Column="0" Content="Pipeline Name:" FontSize="13" />
+            <TextBox Grid.Row="0" Grid.Column="1" Name="txtName" Width="275" Margin="0 3 0 3" HorizontalAlignment="Left" VerticalContentAlignment="Stretch" FontSize="13" />
+            <Label Grid.Row="1" Grid.Column="0" Content="TFS Collection URL:" FontSize="13" />
+            <ComboBox Grid.Row="1" Grid.Column="1" Name="cboCollectionURL" Width="400" HorizontalAlignment="Left" DisplayMemberPath="Uri" SelectedValuePath="Uri" SelectionChanged="cboCollectionURL_SelectionChanged" VerticalContentAlignment="Stretch" Margin="0 3 0 3" />
+            <Label Grid.Row="2" Grid.Column="0" Content="TFS Project:" FontSize="13" />
+            <ComboBox Grid.Row="2" Grid.Column="1" Name="cboProject" Margin="0 3 0 3" Width="300" HorizontalAlignment="Left" SelectionChanged="cboProject_SelectionChanged" VerticalContentAlignment="Stretch" />
+            <Label Grid.Row="3" Grid.Column="0" Content="TFS Build Controller:" FontSize="13" />
+            <ComboBox Grid.Row="3" Grid.Column="1" Name="cboBuildController" Margin="0 3 0 3" Width="300" HorizontalAlignment="Left" VerticalContentAlignment="Stretch" />
+            <Label Grid.Row="4" Grid.Column="0" Content="Build Drop Folder:" FontSize="13" />
+            <TextBox Grid.Row="4" Grid.Column="1" Name="txtDropFolder" Margin="0 3 0 3" Width="450" HorizontalAlignment="Left" FontSize="13" VerticalContentAlignment="Stretch" />
         </Grid>
         <StackPanel Grid.Row="2" Style="{StaticResource PageActions}">
-            <Button Content="Save Changes" Name="btnSaveChanges" Click="btnSaveChanges_Click" Margin="0 0 15 0" Style="{StaticResource CommandButton}" />
+            <Button Content="Save Changes" Name="btnSaveChanges" Click="btnSaveChanges_Click" Margin="0 0 3 0" Style="{StaticResource CommandButton}" />
             <Button Content="Cancel" Name="btnCancel" Click="btnCancel_Click" Style="{StaticResource CommandButton}" />
         </StackPanel>
     </Grid>

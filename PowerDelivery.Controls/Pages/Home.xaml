@@ -13,7 +13,7 @@
                     <Style TargetType="Border" x:Key="EnvironmentBlockStyle">
                         <Setter Property="BorderThickness" Value="0" />
                         <Setter Property="Height" Value="118" />
-                        <Setter Property="Width" Value="160" />
+                        <Setter Property="Width" Value="170" />
                         <Setter Property="Padding" Value="7" />
                         <Setter Property="CornerRadius" Value="6" />
                         <Setter Property="HorizontalAlignment" Value="Left" />
@@ -28,10 +28,10 @@
                                 <Setter Property="Background" Value="Gold" />
                             </DataTrigger>
                             <DataTrigger Binding="{Binding LastStatus.Description}" Value="Failed">
-                                <Setter Property="Background" Value="Red" />
+                                <Setter Property="Background" Value="Firebrick" />
                             </DataTrigger>
                             <DataTrigger Binding="{Binding LastStatus.Description}" Value="Stopped">
-                                <Setter Property="Background" Value="Red" />
+                                <Setter Property="Background" Value="Firebrick" />
                             </DataTrigger>
                             <DataTrigger Binding="{Binding LastStatus.Description}" Value="Unknown Status">
                                 <Setter Property="Background" Value="#dddddd" />
@@ -40,17 +40,16 @@
                     </Style>
                     
                     <ControlTemplate TargetType="Button" x:Key="EnvironmentBlockButtonTemplate">
-                        <Border Padding="10" BorderThickness="1" BorderBrush="#bcbcbc" x:Name="EnvironmentBlockBorder">
+                        <Border Padding="10" BorderThickness="0" BorderBrush="#cdcdcd" x:Name="EnvironmentBlockBorder" CornerRadius="3">
                             <Border.Style>
                                 <Style TargetType="Border">
                                     <Style.Triggers>
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="True" />
-                                                <Condition Binding="{Binding LastStatus.Description}" Value="Succeeded" />
                                             </MultiDataTrigger.Conditions>
                                             <MultiDataTrigger.Setters>
-                                                <Setter Property="Background" Value="LightGreen" />
+                                                <Setter Property="Background" Value="#333" />
                                             </MultiDataTrigger.Setters>
                                         </MultiDataTrigger>
                                     </Style.Triggers>
@@ -88,16 +87,16 @@
                     </Style>
                     
                     <ControlTemplate x:Key="EnvironmentBlock">
-                        <Border Style="{StaticResource EnvironmentBlockStyle}" Name="brdEnvironmentBlock" Loaded="brdEnvironmentBlock_Loaded">
+                        <Border Style="{StaticResource EnvironmentBlockStyle}" Loaded="brdEnvironmentBlock_Loaded">
                             <StackPanel Orientation="Vertical">
-                                <TextBlock Text="{Binding EnvironmentName}" FontSize="16" Style="{StaticResource EnvironmentBlockText}" />
+                                <TextBlock Text="{Binding EnvironmentName}" FontSize="16" Style="{StaticResource EnvironmentBlockText}" MouseDown="EnvironmentBlockTitle_MouseDown" />
                                 <TextBlock Text="{Binding LastStatus.Description}" FontSize="14" Style="{StaticResource EnvironmentBlockText}" />
                                 <TextBlock Text="{Binding LastBuildFinishString}" FontSize="12" Style="{StaticResource EnvironmentBlockText}" Margin="0 3 0 3" />
                                 <StackPanel Orientation="Horizontal" Margin="0 4 0 0" HorizontalAlignment="Center">
-                                    <Button Click="btnEditEnvironmentConfig_Click" Style="{StaticResource EnvironmentBlockButtonStyle}">
+                                    <Button Click="btnEditEnvironmentConfig_Click" Style="{StaticResource EnvironmentBlockButtonStyle}" ToolTip="Edit Environment Configuration File" Name="EnvironmentBlockButton">
                                         <StackPanel Orientation="Horizontal">
-                                            <Image Source="..\Images\Server_5720.png" ToolTip="Edit Commit Environment" />
-                                            <TextBlock Text="Config" Style="{StaticResource EnvironmentBlockText}" Margin="5 0 0 0" />
+                                            <Image Source="..\Images\Server_5720.png" />
+                                            <TextBlock Text="Edit Config" Style="{StaticResource EnvironmentBlockButtonText}" Margin="5 0 0 0" />
                                         </StackPanel>
                                     </Button>
                                 </StackPanel>
@@ -121,27 +120,39 @@
                                                     <TextBlock Text="{Binding ProjectUri}" Foreground="Gray" />
                                                 </StackPanel>
                                                 <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="10" HorizontalAlignment="Right">
-                                                    <Button Click="btnEditPipelineScript_Click" Style="{StaticResource CommandButton}">
+                                                    <Button Click="btnBuild_Click" Margin="3 0 0 0" Style="{StaticResource PipelineButton}" ToolTip="Build Locally with PowerDelivery">
                                                         <StackPanel Orientation="Horizontal">
-                                                            <Image Source="..\Images\ScriptFile_452.png" ToolTip="Edit Pipeline Script" />
-                                                            <TextBlock Text="Script" Margin="6 0 0 0" />
+                                                            <Image Source="..\Images\BuildSolution_104.png" />
+                                                            <TextBlock Text="Build Locally" Margin="6 0 0 0" Style="{StaticResource PipelineButtonText}" />
                                                         </StackPanel>
                                                     </Button>
-                                                    <Button Click="btnEditPipelineEnvironment_Click" Margin="3 0 0 0" Style="{StaticResource CommandButton}">
+                                                    <Button Click="btnEditPipelineScript_Click" Margin="3 0 0 0" Style="{StaticResource PipelineButton}" ToolTip="Edit PowerShell Script">
                                                         <StackPanel Orientation="Horizontal">
-                                                            <Image Source="..\Images\Server_5720.png" ToolTip="Edit Shared Environment Configuration" />
-                                                            <TextBlock Text="Shared Config" Margin="6 0 0 0" />
+                                                            <Image Source="..\Images\ScriptFile_452.png" />
+                                                            <TextBlock Text="Edit Script" Margin="6 0 0 0" Style="{StaticResource PipelineButtonText}" />
+                                                        </StackPanel>
+                                                    </Button>
+                                                    <Button Click="btnEditPipelineEnvironment_Click" Margin="3 0 0 0" Style="{StaticResource PipelineButton}" ToolTip="Edit Shared Environment Configuration File" >
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Image Source="..\Images\Server_5720.png" />
+                                                            <TextBlock Text="Edit Config" Margin="6 0 0 0" Style="{StaticResource PipelineButtonText}" />
+                                                        </StackPanel>
+                                                    </Button>
+                                                    <Button Click="btnDeletePipeline_Click" Margin="10 0 0 0" Style="{StaticResource PipelineButton}" ToolTip="Remove this Pipeline from TFS">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Image Source="../Images/action_Cancel_16xLG.png" />
+                                                            <TextBlock Text="Remove" Margin="6 0 0 0" Style="{StaticResource PipelineButtonText}" />
                                                         </StackPanel>
                                                     </Button>
                                                 </StackPanel>
                                             </Grid>
                                         </Border>
-                                        <Canvas Width="610" HorizontalAlignment="Left">
+                                        <Canvas Width="665" HorizontalAlignment="Center">
                                             <ItemsControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="canvasPipeline" ItemsSource="{Binding Environments}" Loaded="itmsPipeline_Loaded">
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate>
                                                         <Canvas>
-                                                            <ContentControl Canvas.Left="{Binding Left}" Canvas.Top="{Binding Top}" Template="{StaticResource EnvironmentBlock}" DataContext="{Binding}" />
+                                                            <ContentControl Template="{StaticResource EnvironmentBlock}" DataContext="{Binding}" />
                                                         </Canvas>
                                                     </DataTemplate>
                                                 </ItemsControl.ItemTemplate>
@@ -169,28 +180,37 @@
         </StackPanel>
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
             <ScrollViewer.Content>
-                <ItemsControl Name="lstPipelines" Margin="0 10 0 0">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Button Style="{StaticResource PipelinePanel}" DataContext="{Binding}" />
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                    <ItemsControl.Style>
-                        <Style TargetType="ItemsControl">
-                            <Style.Triggers>
-                                <Trigger Property="HasItems" Value="false">
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate>
-                                                <TextBlock Foreground="#F1F1F1" Text="No deployment pipelines found. Use the Sources button to add some." />
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ItemsControl.Style>
-                </ItemsControl>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <StackPanel Name="pnlLoadingPipelines" Orientation="Vertical" VerticalAlignment="Center">
+                        <ProgressBar Height="40" IsIndeterminate="True" Margin="0 0 20 0" Background="#666" Foreground="YellowGreen" />
+                        <TextBlock Text="Connecting to TFS and Loading Pipelines..." Foreground="#F1F1F1" HorizontalAlignment="Center" FontSize="15" Margin="0 10 0 0" />
+                    </StackPanel>
+                    <ItemsControl Name="lstPipelines" Margin="0 10 0 0" Visibility="Hidden">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Style="{StaticResource PipelinePanel}" DataContext="{Binding}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.Style>
+                            <Style TargetType="ItemsControl">
+                                <Style.Triggers>
+                                    <Trigger Property="HasItems" Value="false">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate>
+                                                    <TextBlock Foreground="#F1F1F1" Text="No deployment pipelines found. Use the Sources button to add some." />
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ItemsControl.Style>
+                    </ItemsControl>
+                </Grid>
             </ScrollViewer.Content>
         </ScrollViewer>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">

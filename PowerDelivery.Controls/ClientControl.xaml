@@ -25,13 +25,13 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Background="Transparent" HorizontalAlignment="Stretch">
-            <Button Name="btnPipelines" Click="btnPipelines_Click" Margin="10" Style="{StaticResource CommandButton}">
+            <Button Name="btnPipelines" Click="btnPipelines_Click" Margin="10 10 3 10" Style="{StaticResource CommandButton}" ToolTip="Return to the Pipelines Page">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="Images/Pipelines.png" />
                     <TextBlock Text=" Pipelines" />
                 </StackPanel>
             </Button>
-            <Button Name="btnSources" Click="btnSources_Click" Margin="0 10 10 10" Style="{StaticResource CommandButton}">
+            <Button Name="btnSources" Click="btnSources_Click" Margin="0 10 10 10" Style="{StaticResource CommandButton}" ToolTip="Manage TFS Sources">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="Images/Server_5720.png" />
                     <TextBlock Text=" Sources" />

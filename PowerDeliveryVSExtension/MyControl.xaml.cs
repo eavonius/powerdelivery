@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -12,22 +11,15 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Runtime.InteropServices;
-using stdole;
 
-namespace PowerDeliveryVSAddin
+namespace JaymeEdwards.PowerDeliveryVSExtension
 {
     /// <summary>
-    /// Interaction logic for ClientDocument.xaml
+    /// Interaction logic for MyControl.xaml
     /// </summary>
-    [ComVisible(true)]
-    [ClassInterface(ClassInterfaceType.None)]
-    public partial class ClientDocument : UserControl, IDispatch
+    public partial class MyControl : UserControl
     {
-        /// <summary>
-        /// Creates a new client document.
-        /// </summary>
-        public ClientDocument()
+        public MyControl()
         {
             InitializeComponent();
         }

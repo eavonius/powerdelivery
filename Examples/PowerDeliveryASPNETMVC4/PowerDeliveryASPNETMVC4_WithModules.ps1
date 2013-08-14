@@ -33,11 +33,6 @@ Compile {
 TestUnits {
 }
 
-# Make modifications to the target environment
-#
-SetupEnvironment {
-}
-
 # Deploy your software assets to the target environment
 #
 Deploy {

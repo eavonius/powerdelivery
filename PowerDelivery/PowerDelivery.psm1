@@ -46,7 +46,7 @@ function LoadTFS($vsVersion = "11.0") {
             throw "No version of Visual Studio with the same tools as your version of TFS is installed on the build server."
         }
     }
- 
+	
     $ENV:Path += ";$($vsInstallDir.InstallDir)"
 
     $refAssemblies = "ReferenceAssemblies\v2.0"

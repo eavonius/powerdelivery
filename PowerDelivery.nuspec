@@ -60,7 +60,8 @@
     <file src="PowerDelivery\Publish-SSAS.ps1" target="tools\PowerDelivery\Publish-SSAS.ps1" />
     <file src="PowerDelivery\Publish-WebDeploy.ps1" target="tools\PowerDelivery\Publish-WebDeploy.ps1" />
     <file src="PowerDelivery\Register-DeliveryModuleHook.ps1" target="tools\PowerDelivery\Register-DeliveryModuleHook.ps1" />
-    <file src="PowerDelivery\Set-AppPoolIdentity.ps1" target="tools\PowerDelivery\Set-AppPoolIdentity.ps1" />
+    <file src="PowerDelivery\Remove-Pipeline.ps1" target="tools\PowerDelivery\Remove-Pipeline.ps1" />
+	<file src="PowerDelivery\Set-AppPoolIdentity.ps1" target="tools\PowerDelivery\Set-AppPoolIdentity.ps1" />
     <file src="PowerDelivery\Set-SSASConnection.ps1" target="tools\PowerDelivery\Set-SSASConnection.ps1" />
     <file src="PowerDelivery\Start-SqlJobs.ps1" target="tools\PowerDelivery\Start-SqlJobs.ps1" />
     <file src="PowerDelivery\Uninstall-NServiceBusService.ps1" target="tools\PowerDelivery\Uninstall-NServiceBusService.ps1" />

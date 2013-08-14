@@ -53,6 +53,7 @@ function Add-Pipeline {
 	$moduleDir = $PSScriptRoot	
 	
 	$curDir = [System.IO.Path]::GetFullPath($moduleDir)
+	$buildsDir = Join-Path -Path $curDir -ChildPath "Pipelines"
 	
 	try {
 	    Write-Host
@@ -68,7 +69,6 @@ function Add-Pipeline {
 
 		LoadTFS -vsVersion $vsVersion
 
-	    $buildsDir = Join-Path -Path $curDir -ChildPath "Pipelines"
 	    $outBaseDir = Join-Path -Path $buildsDir -ChildPath $project
 
         Remove-Item -Path $buildsDir -Force -Recurse -ErrorAction SilentlyContinue | Out-Null
@@ -131,7 +131,7 @@ function Add-Pipeline {
         tf add "$project\*.*" /noprompt /recursive | Out-Null
         tf checkin "$project\*.*" /noprompt /recursive | Out-Null
 
-        "Connecting to TFS server at $collectionUri to create builds..."
+        "Connecting to TFS server at $collection to create builds..."
 
         $projectCollection = [Microsoft.TeamFoundation.Client.TfsTeamProjectCollectionFactory]::GetTeamProjectCollection($collection)
         $buildServer = $projectCollection.GetService([Microsoft.TeamFoundation.Build.Client.IBuildServer])
@@ -264,12 +264,14 @@ function Add-Pipeline {
             }
         }
 
-        "Delivery pipeline '$name' ready at $collection for project '$project'" 
+        Write-Host "Delivery pipeline '$name' ready at $collection for project '$project'" -ForegroundColor Green
     }
     finally {
-        cd $curDir
-        tf workspace /delete "AddPowerDelivery" /collection:"$collection" | Out-Null
-        del -Path $buildsDir -Force -Recurse |Out-Null
+		try {
+        	tf workspace /delete "AddPowerDelivery" /collection:"$collection" | Out-Null
+		}
+		catch {}
+        del -Path $buildsDir -Force -Recurse -ErrorAction SilentlyContinue | Out-Null
 		cd $originalDir
     }
 }

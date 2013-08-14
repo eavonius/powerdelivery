@@ -168,6 +168,8 @@ namespace PowerDelivery.Controls.Model
                     IBuildServer buildServer = collection.GetService<IBuildServer>();
                     ICommonStructureService commonStructure = collection.GetService<ICommonStructureService>();
 
+                    source.Name = collection.CatalogNode.Resource.DisplayName;
+
                     foreach (ProjectInfo project in commonStructure.ListProjects())
                     {
                         foreach (IBuildDefinition definition in buildServer.QueryBuildDefinitions(project.Name))
@@ -192,25 +194,7 @@ namespace PowerDelivery.Controls.Model
                                         pipelines.Add(pipeline);
                                     }
 
-                                    PipelineEnvironmentBuildStatus lastBuildStatus = new PipelineEnvironmentBuildStatus(BuildStatus.None);
-                                    string lastBuildNumber = "";
-                                    DateTime lastBuildFinishTime = DateTime.MinValue;
-
-                                    if (definition.LastBuildUri != null)
-                                    {
-                                        try
-                                        {
-                                            IBuildDetail lastBuild = buildServer.GetBuild(definition.LastBuildUri);
-                                            lastBuildStatus = new PipelineEnvironmentBuildStatus(lastBuild.Status);
-                                            lastBuildFinishTime = lastBuild.FinishTime;
-                                            lastBuildNumber = definition.LastBuildUri.ToString().Substring(definition.LastBuildUri.ToString().LastIndexOf("/") + 1);
-                                        }
-                                        catch (Exception)
-                                        {
-                                        }
-                                    }
-
-                                    PipelineEnvironment environment = new PipelineEnvironment(pipeline, environmentName, lastBuildStatus, lastBuildNumber, lastBuildFinishTime);
+                                    PipelineEnvironment environment = new PipelineEnvironment(pipeline, environmentName, definition);
 
                                     pipeline.Environments.Add(environment);
                                 }
@@ -221,6 +205,22 @@ namespace PowerDelivery.Controls.Model
                 catch (Exception) { }
 
                 Pipelines = pipelines;
+            }
+        }
+
+        public void StartPolling()
+        {
+            foreach (DeliveryPipeline pipeline in Pipelines)
+            {
+                pipeline.StartPolling();
+            }
+        }
+
+        public void StopPolling()
+        {
+            foreach (DeliveryPipeline pipeline in Pipelines)
+            {
+                pipeline.StopPolling();
             }
         }
     }
