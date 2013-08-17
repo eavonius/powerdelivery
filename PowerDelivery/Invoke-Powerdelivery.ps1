@@ -139,20 +139,34 @@ function Invoke-Powerdelivery {
 		$mergedHash
 	}
 	
-	function ReplaceReferencedConfigSettings($yamlNodes) {
-		if ($yamlNodes.Keys) {
+	function ReplaceReferencedConfigSettings($yamlNodes, $replaceFor = @()) {
+		
+        if ($yamlNodes.Keys) {
 			$replacedValues = @{}
 			$yamlNodes.Keys | % {
 				$yamlNode = $yamlNodes[$_]			
 				if ($yamlNode.GetType().Name -eq 'Hashtable') {
-					ReplaceReferencedConfigSettings($yamlNode)
+
+                    $subReplacements = $replaceFor | % { $_ }
+                    $subReplacements += $_
+
+					ReplaceReferencedConfigSettings -yamlNodes $yamlNode -replaceFor $subReplacements
 				}
 				else {
+
 					$matches = Select-String "\<<.*?\>>" -InputObject $yamlNode -AllMatches | Foreach {$_.Matches}
 					$replacedValue = $yamlNode
 					$matches | Foreach { 
+
 						$envSettingName = $_.Value.Substring(2, $_.Length - 4)
 						$envSettingValue = [String]::Empty
+                        
+                        foreach ($replacement in $replaceFor) {
+                            if ($envSettingName.Equals($replacement, [System.StringComparison]::InvariantCultureIgnoreCase)) {
+                                throw "Configuration setting $envSettingName and $replacement refer to each other causing a circular dependency"
+                            }
+                        }
+
                         if ($envSettingName -like "Credentials:*") {
                             $userName = $envSettingName.Substring(12)
                             $replacedValue = Get-BuildCredentials $userName
@@ -167,10 +181,22 @@ function Invoke-Powerdelivery {
 						    }
 
                             if ($envSettingValue.GetType().Name -eq 'Hashtable') {
-                                $replacedValue = $envSettingValue
+                                
+                                $subReplacements = $replaceFor | % { $_ }
+                                $subReplacements += $envSettingName
+                                
+                                $replacedValue = ReplaceReferencedConfigSettings -yamlNodes $envSettingValue -replaceFor $subReplacements
                             }
                             else {
-						        $replacedValue = $replacedValue -replace $_, $envSettingValue
+                                $subReplacements = $replaceFor | % { $_ }
+                                $subReplacements += $envSettingName
+
+                                $forwardNodes = New-Object System.Collections.Hashtable
+                                $forwardNodes.Add($envSettingName, $envSettingValue)
+
+                                ReplaceReferencedConfigSettings -yamlNodes $forwardNodes -replaceFor $subReplacements
+
+						        $replacedValue = $replacedValue -replace $_, $forwardNodes[$envSettingName]
                             }
                         }
 					}

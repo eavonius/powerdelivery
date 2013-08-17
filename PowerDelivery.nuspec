@@ -66,6 +66,7 @@
     <file src="PowerDelivery\Start-SqlJobs.ps1" target="tools\PowerDelivery\Start-SqlJobs.ps1" />
     <file src="PowerDelivery\Uninstall-NServiceBusService.ps1" target="tools\PowerDelivery\Uninstall-NServiceBusService.ps1" />
     <file src="PowerDelivery\Update-AssemblyInfoFiles.ps1" target="tools\PowerDelivery\Update-AssemblyInfoFiles.ps1" />
+    <file src="PowerDelivery\Update-XmlFile.ps1" target="tools\PowerDelivery\Update-XmlFile.ps1" />
     <file src="PowerDelivery\Write-BuildSummaryMessage.ps1" target="tools\PowerDelivery\Write-BuildSummaryMessage.ps1" />
     <file src="PowerDelivery\BuildProcessTemplates\PowerDeliveryChangeSetTemplate.11.xaml" target="tools\PowerDelivery\BuildProcessTemplates\PowerDeliveryChangeSetTemplate.11.xaml" />
     <file src="PowerDelivery\BuildProcessTemplates\PowerDeliveryChangeSetTemplate.xaml" target="tools\PowerDelivery\BuildProcessTemplates\PowerDeliveryChangeSetTemplate.xaml" />
@@ -78,6 +79,13 @@
     <file src="PowerDelivery\Templates\Blank\BuildProduction.yml" target="tools\PowerDelivery\Templates\Blank\BuildProduction.yml" />
     <file src="PowerDelivery\Templates\Blank\BuildTest.yml" target="tools\PowerDelivery\Templates\Blank\BuildTest.yml" />
     <file src="PowerDelivery\Templates\Blank\BuildShared.yml" target="tools\PowerDelivery\Templates\Blank\BuildShared.yml" />
+    <file src="PowerDelivery\Templates\Website with Database\Build.ps1" target="tools\PowerDelivery\Templates\Website with Database\Build.ps1" />
+    <file src="PowerDelivery\Templates\Website with Database\BuildCapacityTest.yml" target="tools\PowerDelivery\Templates\Website with Database\BuildCapacityTest.yml" />
+    <file src="PowerDelivery\Templates\Website with Database\BuildCommit.yml" target="tools\PowerDelivery\Templates\Website with Database\BuildCommit.yml" />
+    <file src="PowerDelivery\Templates\Website with Database\BuildLocal.yml" target="tools\PowerDelivery\Templates\Website with Database\BuildLocal.yml" />
+    <file src="PowerDelivery\Templates\Website with Database\BuildProduction.yml" target="tools\PowerDelivery\Templates\Website with Database\BuildProduction.yml" />
+    <file src="PowerDelivery\Templates\Website with Database\BuildTest.yml" target="tools\PowerDelivery\Templates\Website with Database\BuildTest.yml" />
+    <file src="PowerDelivery\Templates\Website with Database\BuildShared.yml" target="tools\PowerDelivery\Templates\Website with Database\BuildShared.yml" />
     <file src="PowerYaml\PowerYaml.psm1" target="tools\PowerYaml\PowerYaml.psm1" />
     <file src="PowerYaml\LICENSE" target="tools\PowerYaml\LICENSE" />
     <file src="PowerYaml\Functions\Casting.ps1" target="tools\PowerYaml\Functions\Casting.ps1" />
