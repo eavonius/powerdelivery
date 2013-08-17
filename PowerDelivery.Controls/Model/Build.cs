@@ -43,7 +43,7 @@ namespace PowerDelivery.Controls.Model
             Status = new PipelineEnvironmentBuildStatus(build.Status);
             FinishDate = build.FinishTime;
 
-            _testRuns = testManagementTeamProject.TestRuns.ByBuild(build.Uri);
+            //_testRuns = testManagementTeamProject.TestRuns.ByBuild(build.Uri);
         }
 
         private void CalculateTotals()
@@ -52,6 +52,7 @@ namespace PowerDelivery.Controls.Model
             _failedTests = 0;
             _succeededTests = 0;
 
+            /*
             foreach (ITestRun testRun in _testRuns)
             {
                 ITestCaseResultCollection passedTests = testRun.QueryResultsByOutcome(TestOutcome.Passed);
@@ -62,6 +63,7 @@ namespace PowerDelivery.Controls.Model
                 _failedTests += failedTests.Count;
                 _succeededTests += passedTests.Count;
             }
+            */
 
             OnPropertyChanged("TotalTests");
             OnPropertyChanged("FailedTests");

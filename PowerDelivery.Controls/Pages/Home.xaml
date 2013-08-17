@@ -65,8 +65,8 @@
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
                                                 <StackPanel Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Left" Margin="5 0 0 5">
-                                                    <Label Content="{Binding ScriptName}" FontSize="18" />
-                                                    <Label Content="{Binding ProjectUri}" />
+                                                    <Label Content="{Binding ScriptName}" FontSize="18" Foreground="{DynamicResource PipelineActionPanelText}" />
+                                                    <Label Content="{Binding ProjectUri}" Foreground="{DynamicResource PipelineActionPanelText}" />
                                                 </StackPanel>
                                                 <StackPanel Orientation="Vertical" HorizontalAlignment="Right" Grid.Column="1" VerticalAlignment="Center">
                                                     <StackPanel Orientation="Horizontal">
@@ -152,7 +152,7 @@
                                         <Setter Property="Template">
                                             <Setter.Value>
                                                 <ControlTemplate>
-                                                    <TextBlock Foreground="#F1F1F1" Text="No deployment pipelines found. Use the Sources button to add some." />
+                                                    <TextBlock Foreground="{DynamicResource LabelColor}" Text="No deployment pipelines found. Use the Sources button to add some." />
                                                 </ControlTemplate>
                                             </Setter.Value>
                                         </Setter>

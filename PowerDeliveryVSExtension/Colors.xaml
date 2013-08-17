@@ -14,6 +14,7 @@
     <SolidColorBrush x:Key="CommandButtonBackgroundDisabledColor" Color="#bbb" />
 
     <SolidColorBrush x:Key="PipelineActionPanelColor" Color="{DynamicResource VsColor.ToolWindowButtonInactive}" />
+    <SolidColorBrush x:Key="PipelineActionPanelText" Color="{DynamicResource VsColor.ToolWindowButtonInactiveGlyph}" />
 
     <SolidColorBrush x:Key="PipelineButtonBackgroundColor" Color="{DynamicResource VsColor.ActiveBorder}" />
     <SolidColorBrush x:Key="PipelineButtonForegroundColor" Color="{DynamicResource VsColor.ButtonText}" />

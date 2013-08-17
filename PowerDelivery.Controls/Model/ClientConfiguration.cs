@@ -178,7 +178,7 @@ namespace PowerDelivery.Controls.Model
 
                                     if (pipeline == null)
                                     {
-                                        pipeline = new DeliveryPipeline(source, project.Name, collection.Name, scriptName);
+                                        pipeline = new DeliveryPipeline(source, project, collection.Name, scriptName);
                                         pipelines.Add(pipeline);
                                     }
 

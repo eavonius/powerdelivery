@@ -14,14 +14,14 @@ namespace PowerDelivery.Controls.Model
 {
     public class DeliveryPipeline : DependencyObject
     {   
-        public DeliveryPipeline(ClientCollectionSource source, string projectName, string collectionName, string scriptName)
+        public DeliveryPipeline(ClientCollectionSource source, ProjectInfo projectInfo, string collectionName, string scriptName)
         {
             Source = source;
-            ProjectName = projectName;
+            ProjectName = projectInfo.Name;
             CollectionName = collectionName;
             ScriptName = scriptName;
 
-            ProjectUri = new Uri(new Uri(source.Uri), projectName).AbsoluteUri;
+            ProjectUri = string.Format("{0}/{1}", source.Uri.TrimEnd('/'), ProjectName.TrimStart('/'));
 
             Environments = new ObservableCollection<PipelineEnvironment>();
         }
@@ -42,7 +42,7 @@ namespace PowerDelivery.Controls.Model
 
             try
             {
-                collectionUri = new Uri(CollectionName);
+                collectionUri = new Uri(Source.Uri);
                 collection = new TfsTeamProjectCollection(collectionUri);
 
                 ICommonStructureService commonStructure = collection.GetService<ICommonStructureService>();
