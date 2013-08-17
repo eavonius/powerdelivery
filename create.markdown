@@ -18,6 +18,12 @@ layout: page
 				<a href="#how_works">How powerdelivery works</a>
 			</li>
 			<li>
+				<a href="#website_pipeline_anatomy">Delivering a web solution</a>
+			</li>
+			<li>
+				<a href="#bi_pipeline_anatomy">Delivering a BI solution</a>
+			</li>
+			<li>
 				<a href="#versioning">Versioning</a>
 			</li>
 			<li class="nav-header">
@@ -61,9 +67,6 @@ layout: page
 			</li>
 			<li>
 				<a href="#test_units_block">TestUnits block</a>
-			</li>
-			<li>
-				<a href="#setup_environment_block">SetupEnvironment block</a>
 			</li>
 			<li>
 				<a href="#deploy_block">Deploy block</a>
@@ -284,6 +287,20 @@ MyProject Production Builders</pre>
 		powerdelivery within those script blocks to do work. You can also use 
 		<a href="#modules">delivery modules</a> as necessary.</p>
 		
+		<a name="website_pipeline_anatomy"><hr></a>
+		<br/>
+		<h2>Continuously delivering web applications</h2>
+		<p>The following diagram depicts the major activities that occur during deployment of web applications 
+		with powerdelivery.</p>
+		<img src="img/website_pipeline_activities.jpg" style="width: 100%; margin-left: 5px; margin-right: 5px; max-width: 802px" />
+		<p></p>
+
+		<a name="bi_pipeline_anatomy"><hr></a>
+		<br/>
+		<h2>Continuously delivering a BI solution</h2>
+		<img src="img/bi_pipeline_activities.jpg" style="width: 100%; margin-left: 5px; margin-right: 5px; max-width: 805px" />
+		<p></p>
+
 		<a name="versioning"><hr></a>
 		<br>
 		<h3>Versioning deployment pipelines</h3>
@@ -532,16 +549,13 @@ Databases:
 				<td style="text-align: right"><a href="#test_units_block">TestUnits</a></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td>
 			</tr>
 			<tr>
-				<td style="text-align: right"><a href="#setup_environment_block">SetupEnvironment</a></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"><i class="icon-ok"></i></td>
-			</tr>
-			<tr>
 				<td style="text-align: right"><a href="#deploy_block">Deploy</a></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"><i class="icon-ok"></i></td>
 			</tr>
 			<tr>
 				<td style="text-align: right"><a href="#test_environment_block">TestEnvironment</a></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"><i class="icon-ok"></i></td>
 			</tr>
 			<tr>
-				<td style="text-align: right"><a href="#test_acceptance_block">TestAcceptance</a></td><td style="text-align: center"></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td>
+				<td style="text-align: right"><a href="#test_acceptance_block">TestAcceptance</a></td><td style="text-align: center"></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"></td><td style="text-align: center"></td>
 			</tr>
 			<tr>
 				<td style="text-align: right"><a href="#test_capacity_block">TestCapacity</a></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"></td>
@@ -557,7 +571,7 @@ Databases:
 		assets from making their way into an environment than have already been evaluated in another. To prevent 
 		this, the <a href="#compile_build">Compile</a> block is only called for <a href="#local_build">Local</a> 
 		and <a href="#commit_build">Commit</a> builds.</p>
-		<p>Because of this, any files that are required for the <a href="#setup_environment_block">SetupEnvironment</a> 
+		<p>Because of this, any files that are required for the <a href="#deploy_block">Deploy</a> 
 		block or beyond in other environments must be copied to the drop location during <a href="#compile_block">Compile</a>. Do this by 
 		using the <a href="reference.html#publish_buildassets">Publish-BuildAssets</a> cmdlet before the Compile 
 		block ends.</p>
@@ -607,33 +621,6 @@ Compile {
 		with the included <a href="reference.html#invoke_mstest_cmdlet">Invoke-MSTest</a>
 		cmdlet. These tests run after compilation but prior to deployment.</p>
 		
-		<a name="setup_environment_block"><hr></a>
-		<br>
-		<h3>SetupEnvironment block</h3>
-		<p>Here is where you will make changes to the target environment nodes (computers, 
-		virtual machines, cloud hosted nodes etc.) to support deployment of your software 
-		assets.	This follows the practice of Continuous Delivery where you should no longer 
-		allow people to login to the environments and instead use automation to modify them. 
-		This is where you do it.</p>
-		<p>Try to setup the environment nodes with a base OS image with just the 
-		middleware you'd need that takes a long time to install (for instance, SQL server) 
-		pre-installed and use the script to configure and install everything else.</p>
-		<h4>Example</h4>
-		<p>This example sets an environment variable on a target computer. It is just an 
-		example of what you might need to do to support your deployment.</p>
-		{% highlight powershell %}Init {
-
-  $script:myServer      = Get-BuildSetting MyServer
-  $script:myEnvVarValue = Get-BuildSetting MyEnvVarValue
-}
-
-SetupEnvironment {
-
-  Invoke-Command -ComputerName $myServer {
-    [Environment]::SetEnvironmentVariable('MyEnvVar', $using:myEnvVarValue, 'Machine')
-  }
-}{% endhighlight %}
-
 		<a name="deploy_block"><hr></a>
 		<br>
 		<h3>Deploy block</h3>
@@ -653,7 +640,7 @@ SetupEnvironment {
 		<p>Here you should run any smoke test commands that can be used to make sure the 
 		environment was setup successfully. You might ping web servers or services, try 
 		accessing a load balancer, or verify anything else that was modified during 
-		the <a href="#setup_environment_block">SetupEnvironment</a> block.</p>
+		the <a href="#deploy_block">Deploy</a> block.</p>
 		
 		<a name="test_acceptance_block"><hr></a>
 		<br>
@@ -737,8 +724,8 @@ SetupEnvironment {
 		<p>The reusable cmdlets included with powerdelivery are easy to use and you just choose a <a href="#matrix">script block</a> 
 		(Init, Compile, Deploy etc.) to call them from. However, there are times when you might want to package 
 		up some reusable PowerShell code that does work across more than one of these script blocks. For example, 
-		to setup a website, you might want to enable the target environment to use <a href="http://www.iis.net/downloads/microsoft/web-deploy" target="_blank">Microsoft Web Deploy</a> in the 
-		<a href="#setup_environment_block">SetupEnvironment</a> block, and then do the actual deployment in the 
+		you might want to create a reusable automation process that runs a compiler in the 
+		<a href="#setup_environment_block">Compile</a> block, and then does the actual deployment in the 
 		<a href="#deploy_block">Deploy</a> block. To enable this, powerdelivery allows for the use of <b>Delivery Modules</b>.</p>
 
 		<a name="modules_referencing"><hr></a>

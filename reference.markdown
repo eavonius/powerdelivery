@@ -18,6 +18,9 @@ layout: page
 				<a href="#enable_sqljobs_cmdlet">Enable-SqlJobs</a>
 			</li>
 			<li>
+				<a href="#export_buildcredentials_cmdlet">Export-BuildCredentials</a>
+			</li>
+			<li>
 				<a href="#get_buildappversion_cmdlet">Get-BuildAppVersion</a>
 			</li>
 			<li>
@@ -34,6 +37,9 @@ layout: page
 			</li>
 			<li>
 				<a href="#get_buildconfig_cmdlet">Get-BuildConfig</a>
+			</li>
+			<li>
+				<a href="#get_buildcredentials_cmdlet">Get-BuildCredentials</a>
 			</li>
 			<li>
 				<a href="#get_builddroplocation_cmdlet">Get-BuildDropLocation</a>
@@ -66,7 +72,16 @@ layout: page
 				<a href="#get_buildworkspacename_cmdlet">Get-BuildWorkspaceName</a>
 			</li>
 			<li>
+				<a href="#get_computerlocaldeploypath_cmdlet">Get-ComputerLocalDeployPath</a>
+			</li>
+			<li>
+				<a href="#get_computerremotedeploypath_cmdlet">Get-ComputerRemoteDeployPath</a>
+			</li>
+			<li>
 				<a href="#import_deliverymodule_cmdlet">Import-DeliveryModule</a>
+			</li>
+			<li>
+				<a href="#install_nservicebusservice_cmdlet">Install-NServiceBusService</a>
 			</li>
 			<li>
 				<a href="#invoke_buildconfigsection_cmdlet">Invoke-BuildConfigSection</a>
@@ -112,6 +127,9 @@ layout: page
 			</li>
 			<li>
 				<a href="#start_sqljobs_cmdlet">Start-SqlJobs</a>
+			</li>
+			<li>
+				<a href="#uninstall_nservicebusservice_cmdlet">Uninstall-NServiceBusService</a>
 			</li>
 			<li>
 				<a href="#write_buildsummarymessage_cmdlet">Write-BuildSummaryMessage</a>
