@@ -28,19 +28,20 @@
             <Button Name="btnPipelines" Click="btnPipelines_Click" Margin="10 10 3 10" Style="{StaticResource CommandButton}" ToolTip="Return to the Pipelines Page">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="Images/Pipelines.png" />
-                    <TextBlock Text=" Pipelines" />
+                    <TextBlock Text=" Pipelines" Style="{StaticResource CommandButtonText}" />
                 </StackPanel>
             </Button>
             <Button Name="btnSources" Click="btnSources_Click" Margin="0 10 10 10" Style="{StaticResource CommandButton}" ToolTip="Manage TFS Sources">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="Images/Server_5720.png" />
-                    <TextBlock Text=" Sources" />
+                    <TextBlock Text=" Sources" Style="{StaticResource CommandButtonText}" />
                 </StackPanel>
             </Button>
         </StackPanel>
-        <StackPanel Orientation="Vertical" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="1">
-            <Label ContentStringFormat="Client Version {0}" Content="{Binding ClientVersion}" Foreground="#F1F1F1" Padding="5 5 10 0" />
-            <Label ContentStringFormat="Module Version {0}" Content="{Binding ModuleVersion}" Foreground="#F1F1F1" Padding="5 5 10 0" />
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="1" Margin="0 10 10 0">
+            <Button Style="{StaticResource CommandButton}" Name="btnAbout" Click="btnAbout_Click">
+                <TextBlock Text="About" Style="{StaticResource CommandButtonText}" />
+            </Button>
         </StackPanel>
         <Frame Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Name="frmContent" NavigationUIVisibility="Hidden" />
     </Grid>

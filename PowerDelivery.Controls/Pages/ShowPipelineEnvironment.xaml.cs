@@ -31,6 +31,9 @@ namespace PowerDelivery.Controls.Pages
 
             InitializeComponent();
 
+            lstReleases.Items.Clear();
+            lstReleases.ItemsSource = environment.Builds;
+
             txtTitle.Text = string.Format("{0} Releases of {1}", environment.EnvironmentName, environment.Pipeline.ScriptName);
         }
     }

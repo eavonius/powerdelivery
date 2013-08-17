@@ -1,0 +1,7 @@
+BuildConfiguration: Release
+DatabaseServer: TestDBServer
+DatabaseName: %BUILD_NAME%_Test
+WebServer: TestWebServer
+WebPort: "8082"
+WebSite: %BUILD_NAME%_Test
+WebURL: "http://TestWebServer:8082"

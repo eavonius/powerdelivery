@@ -178,7 +178,7 @@ namespace PowerDelivery.Controls.Pages
 
                     Dispatcher.Invoke(new Action(delegate() 
                     {
-                        txtStatus.Text = "Script failed.";
+                        txtStatus.Content = "Script failed.";
                     }));
 
                     _result = false;
@@ -192,7 +192,7 @@ namespace PowerDelivery.Controls.Pages
                 {
                     try
                     {
-                        txtStatus.Text = string.Format("Script {0}", _pipeline.PipelineStateInfo.State.ToString());
+                        txtStatus.Content = string.Format("Script {0}", _pipeline.PipelineStateInfo.State.ToString());
                     }
                     catch (TaskCanceledException)
                     {
@@ -226,7 +226,7 @@ namespace PowerDelivery.Controls.Pages
                     btnClose.IsEnabled = true;
                     btnStop.IsEnabled = false;
 
-                    txtStatus.Text = "Script Stopped";
+                    txtStatus.Content = "Script Stopped";
 
                     _result = false;
                 }

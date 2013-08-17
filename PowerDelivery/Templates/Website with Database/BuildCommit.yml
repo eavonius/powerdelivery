@@ -1,0 +1,7 @@
+BuildConfiguration: Release
+DatabaseServer: DevDBServer
+DatabaseName: %BUILD_NAME%_Dev
+WebServer: DevWebServer
+WebPort: "8081"
+WebSite: %BUILD_NAME%_Dev
+WebURL: "http://DevWebServer:8081"

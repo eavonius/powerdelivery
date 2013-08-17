@@ -6,11 +6,7 @@ using System.IO.IsolatedStorage;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-
-using System.Management.Automation;
 
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.Build.Client;
@@ -35,8 +31,8 @@ namespace PowerDelivery.Controls.Model
         [NonSerialized]
         static ClientConfiguration _configuration;
 
-        [NonSerialized]
-        List<ClientCollectionSource> _sources;
+        [XmlIgnore]
+        ClientInfo _info;
 
         public static DependencyProperty PipelinesProperty = DependencyProperty.Register(
             "Pipelines", typeof(List<DeliveryPipeline>), typeof(ClientConfiguration),
@@ -45,28 +41,20 @@ namespace PowerDelivery.Controls.Model
         public ClientConfiguration()
         {
             Sources = new List<ClientCollectionSource>();
-            
-            PowerShell getVersionScript = PowerShell.Create(RunspaceMode.NewRunspace);
-            getVersionScript.AddScript("if (get-module -listavailable -name powerdelivery) { (get-module -listavailable -name powerdelivery | select version).Version.ToString() } else { 'Not Found' }");
-
-            try
-            {
-                IEnumerable<PSObject> results = getVersionScript.Invoke();
-                ModuleVersion = results.First().ToString();
-            }
-            catch (Exception)
-            {
-                ModuleVersion = "Not Found";
-            }
-
-            ClientVersion = Assembly.GetAssembly(typeof(ClientControl)).GetName().Version.ToString();
         }
 
         [XmlIgnore]
-        public string ModuleVersion { get; private set; }
-
-        [XmlIgnore]
-        public string ClientVersion { get; private set; }
+        public ClientInfo ClientInfo
+        {
+            get
+            {
+                if (_info == null)
+                {
+                    _info = new ClientInfo();
+                }
+                return _info;
+            }
+        }
 
         [XmlIgnore]
         public List<DeliveryPipeline> Pipelines

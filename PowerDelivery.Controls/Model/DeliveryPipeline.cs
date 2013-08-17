@@ -50,11 +50,11 @@ namespace PowerDelivery.Controls.Model
 
                 ProjectInfo project = commonStructure.GetProjectFromName(ProjectName);
 
-                Workspace[] workspaces = vcServer.QueryWorkspaces(null, WindowsIdentity.GetCurrent().Name, Environment.MachineName);
+                Workspace[] workspaces = vcServer.QueryWorkspaces(null, vcServer.AuthorizedUser, Environment.MachineName);
 
                 foreach (Workspace workspace in workspaces)
                 {
-                    WorkingFolder workingFolder = workspace.Folders.FirstOrDefault(f => f.ServerItem == ("$/" + project.Name));
+                    WorkingFolder workingFolder = workspace.Folders.FirstOrDefault(f => f.ServerItem.ToLower() == "$/" + project.Name.ToLower());
 
                     if (workingFolder != null)
                     {

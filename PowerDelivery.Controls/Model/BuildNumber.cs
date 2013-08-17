@@ -12,7 +12,10 @@ namespace PowerDelivery.Controls.Model
     {
         public BuildNumber(IBuildDetail build)
         {
-            string buildUri = build.Uri.ToString();
+            string buildUriString = build.Uri.ToString();
+
+            string buildUri = buildUriString.Contains("?") ? buildUriString.Substring(0, buildUriString.IndexOf("?")) : buildUriString;
+
             Number = Int32.Parse(buildUri.Substring(buildUri.LastIndexOf("/") + 1));
 
             DisplayString = string.Format("{0} (Build succeeded on {1} at {2})",

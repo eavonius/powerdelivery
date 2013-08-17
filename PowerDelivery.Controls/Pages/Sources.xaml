@@ -4,7 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       mc:Ignorable="d" Title="Team Foundation Server Sources" 
-      d:DesignHeight="400" d:DesignWidth="500">
+      d:DesignHeight="500" d:DesignWidth="800">
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -41,7 +41,7 @@
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate>
-                                            <TextBlock Foreground="#F1F1F1" Text="No sources found. Use the Add Source button to add a Team Foundation Server source." />
+                                            <Label Content="No sources found. Use the Add Source button to add a Team Foundation Server source." />
                                         </ControlTemplate>
                                     </Setter.Value>
                                 </Setter>
@@ -52,7 +52,9 @@
             </ItemsControl>
         </ScrollViewer>
         <StackPanel Grid.Row="2" Style="{StaticResource PageActions}">
-            <Button Content="Add Source" Name="btnAddSource" Click="btnAddSource_Click" Style="{StaticResource CommandButton}" />
+            <Button Name="btnAddSource" Click="btnAddSource_Click" Style="{StaticResource CommandButton}">
+                <TextBlock Text="Add Source" Style="{StaticResource CommandButtonText}" />
+            </Button>
         </StackPanel>
     </Grid>
 </Page>

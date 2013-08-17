@@ -1,0 +1,7 @@
+BuildConfiguration: Release
+DatabaseServer: CapacityTestDBServer
+DatabaseName: %BUILD_NAME%_CapacityTest
+WebServer: CapacityTestWebServer
+WebPort: "8083"
+WebSite: %BUILD_NAME%_CapacityTest
+WebURL: "http://CapacityTestWebServer:8083"

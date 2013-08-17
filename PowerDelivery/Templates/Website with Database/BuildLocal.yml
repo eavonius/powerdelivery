@@ -1,0 +1,7 @@
+BuildConfiguration: Debug
+DatabaseServer: localhost
+DatabaseName: %BUILD_NAME%_Local
+WebServer: localhost
+WebPort: "8080"
+WebSite: %BUILD_NAME%_Local
+WebURL: "http://localhost:8080"

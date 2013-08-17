@@ -52,9 +52,15 @@ namespace PowerDelivery.Controls.Pages
                 Dispatcher.Invoke(new Action(delegate()
                 {
                     var x = ClientConfiguration.Current.Pipelines;
-                    lstPipelines.ItemsSource = x;
+                }));
+
+                Dispatcher.Invoke(new Action(delegate()
+                {
+                    lstPipelines.ItemsSource = ClientConfiguration.Current.Pipelines;
+               
                     pnlLoadingPipelines.Visibility = System.Windows.Visibility.Collapsed;
                     lstPipelines.Visibility = System.Windows.Visibility.Visible;
+
                     ClientConfiguration.Current.StartPolling();
                 }), System.Windows.Threading.DispatcherPriority.Background);
             });

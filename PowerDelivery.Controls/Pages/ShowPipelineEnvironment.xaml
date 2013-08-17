@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:m="clr-namespace:PowerDelivery.Controls.Model"
       mc:Ignorable="d" 
       d:DesignHeight="500" d:DesignWidth="800">
     <Page.Resources>
@@ -30,14 +31,76 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Border Grid.Row="0" Background="#222">
-                <StackPanel Orientation="Horizontal" Background="#222" HorizontalAlignment="Right">
-                    <Button Name="btnBuilds" HorizontalAlignment="Left" FontSize="13" Margin="10 10 10 10" VerticalContentAlignment="Stretch" Content="Builds" Style="{StaticResource PipelineButton}" />
+            <Border Grid.Row="0" Style="{StaticResource PipelineActionPanel}" Margin="0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Name="btnBuilds" Margin="5 10 10 10" Style="{StaticResource PipelineButton}">
+                        <TextBlock Text="Builds" Style="{StaticResource PipelineButtonText}" />
+                    </Button>
                 </StackPanel>
             </Border>
-            
-            <ListBox Grid.Row="1" Name="lstReleases" Background="#666" Margin="0 20 0 0" ItemsSource="{Binding Builds}">
-            </ListBox>
+            <ScrollViewer Grid.Row="1">
+                <ItemsControl Name="lstReleases" AlternationCount="2">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Name="grdRelease">
+                                <Grid.RowDefinitions />
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="90" />
+                                    <ColumnDefinition Width="150" />
+                                    <ColumnDefinition Width="270" />
+                                    <ColumnDefinition Width="165" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <StackPanel.Style>
+                                        <Style TargetType="StackPanel">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Status.Description}" Value="In Progress">
+                                                    <Setter Property="Background" Value="LightGreen" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Status.Description}" Value="Succeeded">
+                                                    <Setter Property="Background" Value="Green" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Status.Description}" Value="Partially Succeeded">
+                                                    <Setter Property="Background" Value="Gold" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Status.Description}" Value="Failed">
+                                                    <Setter Property="Background" Value="Firebrick" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Status.Description}" Value="Stopped">
+                                                    <Setter Property="Background" Value="Firebrick" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Status.Description}" Value="Unknown Status">
+                                                    <Setter Property="Background" Value="#dddddd" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </StackPanel.Style>
+                                    <Canvas Width="50" Height="50" />
+                                </StackPanel>
+                                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Number}" Style="{StaticResource PageTitle}" Margin="0" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding Status.Description}" Style="{StaticResource PageDescription}" Margin="0" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                <StackPanel Grid.Row="0" Grid.Column="3" Orientation="Horizontal" Margin="0" VerticalAlignment="Center">
+                                    <Label Content="{Binding SucceededTests}" FontSize="15" />
+                                    <Label Content="/" FontSize="15" />
+                                    <Label Content="{Binding TotalTests}" FontSize="15" />
+                                    <Label Content="tests passed" FontSize="15" />
+                                    <Label Content="{Binding FailedTests}" ContentStringFormat="({0} failed)" FontSize="15" />
+                                </StackPanel>
+                                <StackPanel Grid.Row="0" Grid.Column="4" Orientation="Vertical" Margin="0">
+                                    <Label Content="{Binding FinishDate, StringFormat={}{0:MM/dd/yyyy hh:mm tt}}" />
+                                    <Label Content="{Binding RequestedBy}" ContentStringFormat="by {0}" />
+                                </StackPanel>
+                            </Grid>
+                            <DataTemplate.Triggers>
+                                <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                    <Setter TargetName="grdRelease" Property="Background" Value="{StaticResource PipelineActionPanelColor}" />
+                                </Trigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
         </Grid>
     </Grid>
 </Page>

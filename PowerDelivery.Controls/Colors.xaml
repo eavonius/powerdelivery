@@ -1,0 +1,20 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
+    <SolidColorBrush x:Key="BackgroundColor" Color="#28282B" />
+    <SolidColorBrush x:Key="LabelColor" Color="#F1F1F1" />
+    <SolidColorBrush x:Key="CommandButtonBackgroundColor" Color="#68217A" />
+    <SolidColorBrush x:Key="CommandButtonBackgroundHoverColor" Color="#9D6EA8" />
+    <SolidColorBrush x:Key="CommandButtonBackgroundDisabledColor" Color="#bbb" />
+    <SolidColorBrush x:Key="CommandButtonForegroundColor" Color="#F1F1F1" />
+    <SolidColorBrush x:Key="PipelineActionPanelColor" Color="#1F1F22" />
+    <SolidColorBrush x:Key="PipelineButtonBackgroundColor" Color="#F1F1F1" />
+    <SolidColorBrush x:Key="PipelineButtonBackgroundHoverColor" Color="#9D6EA8" />
+    <SolidColorBrush x:Key="PipelineButtonBackgroundDisabledColor" Color="#bbb" />
+    <SolidColorBrush x:Key="PipelineButtonForegroundColor" Color="#68217A" />
+    <SolidColorBrush x:Key="PipelineButtonForegroundHoverColor" Color="#F1F1F1" />
+    <SolidColorBrush x:Key="PowerShellConsoleBackgroundColor" Color="#333" />
+    <SolidColorBrush x:Key="PowerShellConsoleForegroundColor" Color="#F1F1F1" />
+    <SolidColorBrush x:Key="FieldExampleColor" Color="#cccccc" />
+    
+</ResourceDictionary>

@@ -50,5 +50,13 @@ namespace PowerDelivery.Controls
                 frmContent.Navigate(new Pages.Sources(this));
             }
         }
+
+        private void btnAbout_Click(object sender, RoutedEventArgs e)
+        {
+            if (!(frmContent.Content is Pages.About))
+            {
+                frmContent.Navigate(new Pages.About());
+            }
+        }
     }
 }

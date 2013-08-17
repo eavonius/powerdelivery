@@ -35,6 +35,9 @@ namespace PowerDelivery.Controls.Pages
             InitializeComponent();
 
             cboCollectionURL.ItemsSource = ClientConfiguration.Current.Sources;
+            cboTemplate.ItemsSource = ClientConfiguration.Current.ClientInfo.Templates;
+
+            cboTemplate.SelectedValue = "Blank";
 
             this.Loaded += AddEditSource_Loaded;
         }
@@ -52,6 +55,7 @@ namespace PowerDelivery.Controls.Pages
             command.CollectionURL = (string)cboCollectionURL.Text;
             command.ProjectName = (string)cboProject.Text;
             command.DropFolder = txtDropFolder.Text;
+            command.Template = cboTemplate.SelectedValue as string;
 
             try
             {

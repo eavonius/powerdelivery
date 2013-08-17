@@ -34,7 +34,7 @@ namespace PowerDelivery.Controls.Dialogs
 
             InitializeComponent();
 
-            lblPromote.Text = string.Format("{0} Build to Promote:  ", Environment.EnvironmentName);
+            lblPromote.Content = string.Format("{0} Build to Promote:  ", Environment.EnvironmentName);
 
             SelectedBuildNumber = 0;
 

@@ -1,0 +1,68 @@
+# MSBuild: Put entries in here for MSBuild projects containing
+# code to compile. To use web deploy, your web project(s) 
+# must be configured to create a web deployment package 
+# (.zip file) so the path to it can be referenced in the 
+# WebDeploy section
+#
+# MSBuild:
+#   MyWebSite:
+#     ProjectFile: MyWebSite.sln
+#     Properties: 
+#       DeployOnBuild: true
+#       PublishProfile: Default
+
+# Assets: Put entries in here for files that are needed 
+# for deployment. Anything in your source or that you 
+# compile needed for deployment must be referenced here.
+#
+# Assets:
+#   WebSite:
+#     Path: MyWebSite\DeploymentPackage\MyWebSite.zip
+#     Destination: WebSites\MyProject
+#   AcceptanceTests:
+#     Path: MyWebSite.AcceptanceTests\bin\<<BuildConfiguration>>\*.* 
+#     Destination: AcceptanceTests
+#   UnitTests:
+#     Path: MyWebSite.UnitTests\bin\<<BuildConfiguration>>\*.* 
+#     Destination: UnitTests
+#   Databases:
+#     Path: MyDatabase
+#     Destination: Databases
+#     Recurse: true
+
+# WebDeploy: Put entries in here for web sites to deploy. 
+# You can deploy the same website to multiple computers 
+# by specifying a comma-separated list of computer names 
+# for the "WebComputer" setting.
+#
+# WebDeploy:
+#   MyWebSite:
+#     WebComputer: <<WebServer>>
+#     WebPort: <<WebPort>>
+#     WebSite: <<WebSite>>
+#     WebPassword: "TODO: PUT A UNIQUE PASSWORD HERE"
+#     WebURL: <<WebUrl>>
+#     Package: WebSites\MyWebSite\MyWebSite.zip
+#     Parameters:
+#       "IIS Web Application Name": <<WebSite>>
+#       "DefaultConnection-Web.config Connection String": "Data Source=<<DatabaseServer>>;Initial Catalog=<<DatabaseName>>;Integrated Security=True"
+
+# UnitTests: Put entries in here for any unit tests to run. 
+# Unit tests will run before deployment so these can't rely 
+# on deployment actions having already occurred (use 
+# acceptance tests in that case).
+#
+# UnitTests:
+#   MyWebSite.UnitTests:
+#     File: UnitTests\MyWebSite.UnitTests.dll
+#     Results: MyWebSiteUnitTestResults.trx
+#     Category: All
+
+# Roundhouse: Put entries in here for any databases to be 
+# deployed using RoundhousE database migrations.
+#
+# Roundhouse:
+#   MyDatabase:
+#     Server: <<DatabaseServer>>
+#     Database: <<DatabaseName>>
+#     ScriptsDir: Databases\MyDatabase

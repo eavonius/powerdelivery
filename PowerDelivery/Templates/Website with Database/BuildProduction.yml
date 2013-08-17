@@ -1,0 +1,7 @@
+BuildConfiguration: Release
+DatabaseServer: ProdDBServer
+DatabaseName: %BUILD_NAME%
+WebServer: ProdWebServer
+WebPort: "8084"
+WebSite: %BUILD_NAME%
+WebURL: "http://ProdWebServer:8084"

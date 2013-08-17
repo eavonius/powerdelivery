@@ -4,7 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       mc:Ignorable="d" Title="Add/Edit Team Foundation Server Source" 
-      d:DesignHeight="400" d:DesignWidth="500">
+      d:DesignHeight="500" d:DesignWidth="800">
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -34,14 +34,20 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Label Grid.Row="0" Grid.Column="0" Content="TFS Collection URL:" FontSize="13" />
-            <TextBox Grid.Row="0" Grid.Column="1" Name="txtCollectionURL" Text="{Binding Path=Uri}" FontSize="13" VerticalContentAlignment="Stretch" Margin="0 3 0 3" />
+            <Label Grid.Row="0" Grid.Column="0" Content="TFS Collection URL:" />
+            <TextBox Grid.Row="0" Grid.Column="1" Name="txtCollectionURL" Text="{Binding Path=Uri}" Margin="0 3 0 3" />
             <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="e.g. http://www.myserver.com:8080/tfs" Style="{StaticResource FieldExample}"/>
         </Grid>
         <StackPanel Grid.Row="2" Style="{StaticResource PageActions}">
-            <Button Content="Remove" Name="btnRemove" Click="btnRemove_Click" Visibility="Collapsed" Margin="0 0 3 0" Style="{StaticResource CommandButton}" />
-            <Button Content="Save Changes" Name="btnSaveChanges" Click="btnSaveChanges_Click" Margin="0 0 3 0"  Style="{StaticResource CommandButton}" />
-            <Button Content="Cancel" Name="btnCancel" Click="btnCancel_Click" Style="{StaticResource CommandButton}" />
+            <Button Name="btnRemove" Click="btnRemove_Click" Visibility="Collapsed" Margin="0 0 3 0" Style="{StaticResource CommandButton}">
+                <TextBlock Text="Remove" Style="{StaticResource CommandButtonText}" />
+            </Button>
+            <Button Name="btnSaveChanges" Click="btnSaveChanges_Click" Margin="0 0 3 0"  Style="{StaticResource CommandButton}">
+                <TextBlock Text="Save Changes" Style="{StaticResource CommandButtonText}" />
+            </Button>
+            <Button Name="btnCancel" Click="btnCancel_Click" Style="{StaticResource CommandButton}">
+                <TextBlock Text="Cancel" Style="{StaticResource CommandButtonText}" />
+            </Button>
         </StackPanel>
     </Grid>
 </Page>
