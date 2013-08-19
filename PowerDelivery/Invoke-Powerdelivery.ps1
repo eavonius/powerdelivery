@@ -290,6 +290,7 @@ function Invoke-Powerdelivery {
     "powerdelivery $($powerdelivery.version) - https://github.com/eavonius/powerdelivery"
 	Write-Host
 	$appScript = [System.IO.Path]::GetFileNameWithoutExtension($buildScript)
+    $powerdelivery.scriptName = $appScript
 
     try {
 		if ($onServer -eq $true) {
