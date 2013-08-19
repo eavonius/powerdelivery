@@ -38,15 +38,13 @@ function Get-ComputerRemoteDeployPath {
 
         $prevBuildCount = (gci -Directory $deployPath | where-object -Property Name -Like $buildMatches).count
 
-        if ($prevBuildCount > 5) {
+        if ($prevBuildCount -gt 5) {
+
+            Write-Host "Removing builds older than newest 5 on $computerName for $buildMatches"
 
             $numberToDelete = $prevBuildCount - 5
             
-            gci -Directory $deployPath | `
-                where-object -Property Name -Like $buildMatches | `
-                Sort-Object -Property LastWriteTime | `
-                select -first $numberToDelete | `
-                Remove-Item -Force -Recurse | Out-Null
+            gci -Directory $deployPath | where-object -Property Name -Like $buildMatches | Sort-Object -Property LastWriteTime | select -first $numberToDelete | Remove-Item -Force -Recurse | Out-Null
         }
 
         $powerdelivery.deployShares.Add($computerName, $buildPath)
