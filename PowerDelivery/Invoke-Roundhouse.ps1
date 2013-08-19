@@ -82,7 +82,7 @@ function Invoke-Roundhouse {
 
     rmdir -ErrorAction SilentlyContinue -Recurse -Force $localScriptsDir | Out-Null
     mkdir -Force $localScriptsDir | Out-Null
-    copy -Recurse -Force "$dropScriptsDir\*" $localScriptsDir| Out-Null
+    Copy-FilesWithLongPath $dropScriptsDir $localScriptsDir
 
     $command = "rh --silent /vf=`"sql`""
     
@@ -108,16 +108,16 @@ function Invoke-Roundhouse {
     Write-Host "$logPrefix $command"
 
 	Exec -ErrorAction Stop { 
-	    Invoke-Expression -Command $command	
+	    Invoke-Expression -Command $command	    
+	}
 
-        copy -Recurse -Force "$localOutDir\*" $dropOutDir | Out-Null
-        rmdir -Recurse -ErrorAction SilentlyContinue -Force $roundhouseDir | Out-Null
+    Copy-FilesWithLongPath $localOutDir $dropOutDir
+    rmdir -Recurse -ErrorAction SilentlyContinue -Force $roundhouseDir | Out-Null
 		
-		if ([String]::IsNullOrWhiteSpace($connectionString)) {
-			Write-BuildSummaryMessage -name "Deploy" -header "Deployments" -message "Roundhouse: $scriptsDir -> $database ($server)"
-		}
-		else {
-			Write-BuildSummaryMessage -name "Deploy" -header "Deployments" -message "Roundhouse: $scriptsDir -> `"$connectionString`""
-		}
+	if ([String]::IsNullOrWhiteSpace($connectionString)) {
+		Write-BuildSummaryMessage -name "Deploy" -header "Deployments" -message "Roundhouse: $scriptsDir -> $database ($server)"
+	}
+	else {
+		Write-BuildSummaryMessage -name "Deploy" -header "Deployments" -message "Roundhouse: $scriptsDir -> `"$connectionString`""
 	}
 }
