@@ -3,7 +3,8 @@
     param(
         [Parameter(Position=0,Mandatory=0)] $ComputerName,
         [Parameter(Position=1,Mandatory=1)][string] $FileName, 
-        [Parameter(Position=2,Mandatory=1)] $Replacements
+        [Parameter(Position=2,Mandatory=1)] $Replacements,
+        [Parameter(Position=3,Mandatory=0)] $Namespaces
     )
 
     $logPrefix = "Update-XmlFile:"
@@ -24,13 +25,23 @@
 
                 [xml]$xmlFile = Get-Content $using:FileName
 
+                $ComputerNamespaces = $using:Namespaces
+
+                $ns = new-object Xml.XmlNamespaceManager $xmlFile.NameTable
+                if ($ComputerNamespaces -ne $null) {
+                    $ComuterNamespaces.Keys | % {
+                        $NamespaceEntry = $ComputerNamespaces[$_]
+                        $ns.AddNamespace($NamespaceEntry.Prefix, $NamespaceEntry.URI)
+                    }
+                }
+
                 $ComputerReplacements = $using:Replacements
 
                 $ComputerReplacements.Keys | % {
 
                     $replacement = $ComputerReplacements[$_]
 
-                    $node = $xmlFile.SelectSingleNode($replacement.XPath)
+                    $node = $xmlFile.SelectSingleNode($replacement.XPath, $ns)
 
                     if ($node -eq $null) {
                         throw "Path $($replacement.XPath) didn't match a node on $using:computer in $using:FileName"
@@ -56,13 +67,21 @@
 
         [xml]$xmlFile = Get-Content $FileName
 
+        $ns = new-object Xml.XmlNamespaceManager $xmlFile.NameTable
+        if ($Namespaces -ne $null) {
+            $Namespaces.Keys | % {
+                $NamespaceEntry = $Namespaces[$_]
+                $ns.AddNamespace($NamespaceEntry.Prefix, $NamespaceEntry.URI)
+            }
+        }
+
         $ComputerReplacements = $Replacements
 
         $ComputerReplacements.Keys | % {
 
             $replacement = $ComputerReplacements[$_]
 
-            $node = $xmlFile.SelectSingleNode($replacement.XPath)
+            $node = $xmlFile.SelectSingleNode($replacement.XPath, $ns)
 
             if ($node -eq $null) {
                 throw "Path $($replacement.XPath) didn't match a node in $FileName"
