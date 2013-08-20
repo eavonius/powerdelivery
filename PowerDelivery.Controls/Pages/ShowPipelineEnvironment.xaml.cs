@@ -14,6 +14,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using System.Diagnostics;
+using System.Web;
+using System.Text.RegularExpressions;
+
 namespace PowerDelivery.Controls.Pages
 {
     /// <summary>
@@ -31,10 +35,24 @@ namespace PowerDelivery.Controls.Pages
 
             InitializeComponent();
 
-            lstReleases.Items.Clear();
-            lstReleases.ItemsSource = environment.Builds;
-
             txtTitle.Text = string.Format("{0} Releases of {1}", environment.EnvironmentName, environment.Pipeline.ScriptName);
+        }
+
+        static string UrlEncodeUpperCase(string value)
+        {
+            value = HttpUtility.UrlEncode(value);
+            return Regex.Replace(value, "(%[0-9a-f][0-9a-f])", c => c.Value.ToUpper());
+        }
+
+        private void btnBuilds_Click(object sender, RoutedEventArgs e)
+        {
+            //if (ClientConfiguration.Current.IsInVisualStudio)
+            
+            Process.Start(string.Format("{0}/{1}/{2}/_build#definitionUri={3}&_a=completed",
+                Environment.Pipeline.PortalUrl.TrimEnd('/'),
+                Environment.Pipeline.Source.Name,
+                Environment.Pipeline.ProjectName,
+                HttpUtility.UrlEncode(Environment.BuildDefinition.Uri.ToString())));
         }
     }
 }

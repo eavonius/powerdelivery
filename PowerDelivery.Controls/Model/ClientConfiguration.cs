@@ -57,6 +57,15 @@ namespace PowerDelivery.Controls.Model
         }
 
         [XmlIgnore]
+        public bool IsInVisualStudio
+        {
+            get 
+            {
+                return Process.GetCurrentProcess().MainModule.FileName.Contains("devenv.exe");
+            }
+        }
+
+        [XmlIgnore]
         public List<DeliveryPipeline> Pipelines
         {
             get
@@ -155,6 +164,7 @@ namespace PowerDelivery.Controls.Model
 
                     IBuildServer buildServer = collection.GetService<IBuildServer>();
                     ICommonStructureService commonStructure = collection.GetService<ICommonStructureService>();
+                    IRegistration registration = (IRegistration)collection.GetService(typeof(IRegistration));
 
                     source.Name = collection.CatalogNode.Resource.DisplayName;
 
@@ -178,7 +188,7 @@ namespace PowerDelivery.Controls.Model
 
                                     if (pipeline == null)
                                     {
-                                        pipeline = new DeliveryPipeline(source, project, collection.Name, scriptName);
+                                        pipeline = new DeliveryPipeline(registration, source, project, collection.Name, scriptName);
                                         pipelines.Add(pipeline);
                                     }
 

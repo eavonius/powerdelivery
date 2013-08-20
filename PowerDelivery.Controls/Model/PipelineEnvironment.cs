@@ -130,7 +130,7 @@ namespace PowerDelivery.Controls.Model
             IQueuedBuildsView queuedBuildsView = BuildDefinition.BuildServer.CreateQueuedBuildsView(new Uri[] { BuildDefinition.Uri });
 
             queuedBuildsView.StatusFilter = QueueStatus.InProgress | QueueStatus.Queued;
-            queuedBuildsView.QueryOptions = QueryOptions.All;
+            queuedBuildsView.QueryOptions = QueryOptions.Controllers;
 
             queuedBuildsView.Refresh(false);
 

@@ -13,8 +13,8 @@ using System.Windows;
 namespace PowerDelivery.Controls.Model
 {
     public class DeliveryPipeline : DependencyObject
-    {   
-        public DeliveryPipeline(ClientCollectionSource source, ProjectInfo projectInfo, string collectionName, string scriptName)
+    {
+        public DeliveryPipeline(IRegistration registration, ClientCollectionSource source, ProjectInfo projectInfo, string collectionName, string scriptName)
         {
             Source = source;
             ProjectName = projectInfo.Name;
@@ -24,9 +24,20 @@ namespace PowerDelivery.Controls.Model
             ProjectUri = string.Format("{0}/{1}", source.Uri.TrimEnd('/'), ProjectName.TrimStart('/'));
 
             Environments = new ObservableCollection<PipelineEnvironment>();
+
+            RegistrationEntry[] entries = registration.GetRegistrationEntries("Wss");
+
+            foreach (ServiceInterface si in entries[0].ServiceInterfaces)
+            {
+                if (si.Name == "BaseSiteUrl")
+                {
+                    PortalUrl = si.Url;
+                }
+            }
         }
 
         public ClientCollectionSource Source { get; private set; }
+        public string PortalUrl { get; private set; }
         public string ProjectUri { get; private set; }
         public string ProjectName { get; private set; }
         public string CollectionName { get; private set; }

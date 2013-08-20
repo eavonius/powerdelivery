@@ -33,8 +33,8 @@
             </Grid.RowDefinitions>
             <Border Grid.Row="0" Style="{StaticResource PipelineActionPanel}" Margin="0">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Name="btnBuilds" Margin="5 10 10 10" Style="{StaticResource PipelineButton}">
-                        <TextBlock Text="Builds" Style="{StaticResource PipelineButtonText}" />
+                    <Button Name="btnBuilds" Margin="5 10 10 10" Style="{StaticResource PipelineButton}" Click="btnBuilds_Click" >
+                        <TextBlock Text="Builds on TFS" Style="{StaticResource PipelineButtonText}" />
                     </Button>
                 </StackPanel>
             </Border>
