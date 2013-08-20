@@ -18,6 +18,8 @@ function Get-ComputerRemoteDeployPath {
         [Parameter(Position=0,Mandatory=1)][string] $computerName
     )
 
+    $buildEnvironment = Get-BuildEnvironment
+
     if (!$powerdelivery.deployShares.ContainsKey($computerName)) {
 
         $driveLetter = $powerdelivery.deployDriveLetter
@@ -27,11 +29,25 @@ function Get-ComputerRemoteDeployPath {
         $buildName = Get-BuildName
         $buildNumber = Get-BuildNumber
 
-        $deployPath = "\\$computerName\PowerDelivery\$buildName"
+        $deployPath = "\\$computerName\PowerDelivery"
+        $buildPath = "$deployPath\$buildName"
 
-        mkdir $deployPath -Force | Out-Null
+        mkdir $buildPath -Force | Out-Null
 
-        $powerdelivery.deployShares.Add($computerName, $deployPath)
+        $buildMatches = "$($powerdelivery.scriptName) - $($buildEnvironment)*"
+
+        $prevBuildCount = (gci -Directory $deployPath | where-object -Property Name -Like $buildMatches).count
+
+        if ($prevBuildCount -gt 5) {
+
+            Write-Host "Removing builds older than newest 5 on $computerName for $buildMatches"
+
+            $numberToDelete = $prevBuildCount - 5
+            
+            gci -Directory $deployPath | where-object -Property Name -Like $buildMatches | Sort-Object -Property LastWriteTime | select -first $numberToDelete | Remove-Item -Force -Recurse | Out-Null
+        }
+
+        $powerdelivery.deployShares.Add($computerName, $buildPath)
     }
     $powerdelivery.deployShares[$computerName]
 }

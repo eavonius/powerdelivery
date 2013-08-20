@@ -63,8 +63,8 @@ function Invoke-Roundhouse {
     [CmdletBinding()]
     param(
         [Parameter(Position=0,Mandatory=1)][string] $scriptsDir, 
-    		[Parameter(Position=1,Mandatory=1)][string] $database, 
-		    [Parameter(Position=2,Mandatory=0)][string] $server, 
+   		[Parameter(Position=1,Mandatory=1)][string] $database, 
+	    [Parameter(Position=2,Mandatory=0)][string] $server, 
         [Parameter(Position=3,Mandatory=0)][string] $connectionString,
         [Parameter(Position=4,Mandatory=0)][string] $restorePath, 
         [Parameter(Position=5,Mandatory=0)][string] $restoreOptions
@@ -73,6 +73,16 @@ function Invoke-Roundhouse {
     $logPrefix = "Invoke-Roundhouse:"
 
     $environment = Get-BuildEnvironment
+    $dropLocation = Get-BuildDropLocation
+    $roundhouseDir = Join-Path (gl) "rhtmp"
+    $dropScriptsDir = Join-Path $dropLocation $scriptsDir
+    $localScriptsDir = Join-Path $roundhouseDir $scriptsDir
+    $localOutDir = Join-Path $localScriptsDir output
+    $dropOutDir = Join-Path $dropScriptsDir output
+
+    rmdir -ErrorAction SilentlyContinue -Recurse -Force $localScriptsDir | Out-Null
+    mkdir -Force $localScriptsDir | Out-Null
+    Copy-FilesWithLongPath $dropScriptsDir $localScriptsDir
 
     $command = "rh --silent /vf=`"sql`""
     
@@ -86,7 +96,7 @@ function Invoke-Roundhouse {
 		throw "You must specify the server or connectionString parameter."
 	}
 	
-	$command += " /f=""$scriptsDir"" /env=$environment /o=Databases\$database\output /simple"
+	$command += " /f=""$localScriptsDir"" /env=$environment /o=""$localScriptsDir\output"" /simple"
 	
     if ($environment -ne 'Production' -and ![String]::IsNullOrWhitespace($restorePath)) {
         $command += " --restore --restorefrompath=`"$restorePath`""
@@ -98,14 +108,16 @@ function Invoke-Roundhouse {
     Write-Host "$logPrefix $command"
 
 	Exec -ErrorAction Stop { 
-	    Invoke-Expression -Command $command	
-        Write-Host
+	    Invoke-Expression -Command $command	    
+	}
+
+    Copy-FilesWithLongPath $localOutDir $dropOutDir
+    rmdir -Recurse -ErrorAction SilentlyContinue -Force $roundhouseDir | Out-Null
 		
-		if ([String]::IsNullOrWhiteSpace($connectionString)) {
-			Write-BuildSummaryMessage -name "Deploy" -header "Deployments" -message "Roundhouse: $scriptsDir -> $database ($server)"
-		}
-		else {
-			Write-BuildSummaryMessage -name "Deploy" -header "Deployments" -message "Roundhouse: $scriptsDir -> `"$connectionString`""
-		}
+	if ([String]::IsNullOrWhiteSpace($connectionString)) {
+		Write-BuildSummaryMessage -name "Deploy" -header "Deployments" -message "Roundhouse: $scriptsDir -> $database ($server)"
+	}
+	else {
+		Write-BuildSummaryMessage -name "Deploy" -header "Deployments" -message "Roundhouse: $scriptsDir -> `"$connectionString`""
 	}
 }

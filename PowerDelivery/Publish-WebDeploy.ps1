@@ -52,15 +52,22 @@ function Publish-WebDeploy {
 		[Parameter(Position=4,Mandatory=1)] [string] $WebURL,
 		[Parameter(Position=5,Mandatory=1)] [string] $WebPassword,
 		[Parameter(Position=6,Mandatory=0)] [Hashtable] $Parameters,
-		[Parameter(Position=7,Mandatory=0)] [string] $BringOffline = 'false',
-		[Parameter(Position=8,Mandatory=0)] [string] $WebDeployDir = "C:\Program Files\IIS\Microsoft Web Deploy v3",
-        [Parameter(Position=9,Mandatory=0)] $RuntimeVersion = 'v4.0'
+        [Parameter(Position=7,Mandatory=0)] [string] $AppPoolAccountUser,
+        [Parameter(Position=8,Mandatory=0)] [string] $AppPoolAccountPassword,
+		[Parameter(Position=9,Mandatory=0)] [string] $BringOffline = 'false',
+		[Parameter(Position=10,Mandatory=0)] [string] $WebDeployDir = "C:\Program Files\IIS\Microsoft Web Deploy v3",
+        [Parameter(Position=11,Mandatory=0)] $RuntimeVersion = 'v4.0'
 	)
 
     $logPrefix = "Publish-WebDeploy:"
 
     $computerNames = $WebComputer -split "," | % { $_.Trim() }
 	
+    if (([string]::IsNullOrWhiteSpace($AppPoolAccountUser) -and ![string]::IsNullOrWhiteSpace($AppPoolAccountPassword)) -or `
+        (![string]::IsNullOrWhiteSpace($AppPoolAccountUser) -and [string]::IsNullOrWhiteSpace($AppPoolAccountPassword))) {
+        throw "You must specify both the AppPool account username and password parameters to set the AppPool identity during web deployment"
+    }
+
 	foreach ($computerName in $computerNames) {
 	
 		$msDeployPath = Join-Path $WebDeployDir "msdeploy.exe"
@@ -141,6 +148,14 @@ function Publish-WebDeploy {
 							-DestinationPublishSettings $publishSettingsFile `
 							-Parameters $Parameters `
 							-ErrorAction Stop
+
+            if (![String]::IsNullOrWhiteSpace($AppPoolAccountUser)) {
+            
+                New-WindowsUserAccount -userName $AppPoolAccountUser -password $AppPoolAccountPassword -computerName $computerName
+                Add-WindowsUserToGroup -userName $AppPoolAccountUser -groupName "Performance Monitor Users" -computerName $computerName
+                Set-AppPoolIdentity -appPoolName $WebSite -userName $AppPoolAccountUser -password $AppPoolAccountPassword -computerName $computerName
+            }
+
 		}
 		catch {
 			"The web deployment failed. Please review the parameters you are passing and ensure that they match those expected by the parameters.xml file in your web deploy package .zip file."

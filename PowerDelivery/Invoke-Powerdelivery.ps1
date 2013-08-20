@@ -290,6 +290,7 @@ function Invoke-Powerdelivery {
     "powerdelivery $($powerdelivery.version) - https://github.com/eavonius/powerdelivery"
 	Write-Host
 	$appScript = [System.IO.Path]::GetFileNameWithoutExtension($buildScript)
+    $powerdelivery.scriptName = $appScript
 
     try {
 		if ($onServer -eq $true) {
@@ -544,18 +545,23 @@ function Invoke-Powerdelivery {
 		InvokePowerDeliveryBuildAction -condition $true -stage $powerdelivery.init -description "Initialization" -status "Initializing" -blockName "Init"
 	    InvokePowerDeliveryBuildAction -condition ($powerdelivery.environment -eq 'Commit' -or $powerdelivery.environment -eq 'Local') -stage $powerdelivery.compile -description "Compilations" -status "Compiling" -blockName "Compile"
 	    
+        $destDropLocation = $powerdelivery.dropLocation.TrimEnd('\')
+        $destCurrentLocation = $powerdelivery.currentLocation.Path.TrimEnd('\')
+
 		if ($powerdelivery.environment -ne "Local" -and $powerdelivery.environment -ne "Commit" -and $powerdelivery.onServer) {
 	        $priorBuildDrop = $powerdelivery.priorBuild.DropLocation
-			"Cloning deployed assets from prior build..."
-	        Copy-Item -Path "$priorBuildDrop\*" -Recurse -Destination $powerdelivery.dropLocation
+
+            "Powerdelivery: Cloning deployed assets from $priorBuildDrop to $destDropLocation"
+            Copy-FilesWithLongPath $priorBuildDrop $destDropLocation
 	    }
-		
-		Copy-Item -Force -Path "$($powerdelivery.dropLocation)\*" -Recurse -Destination $powerdelivery.currentLocation
-		
+        
+        "Powerdelivery: Retrieving assets from $destDropLocation into current directory..."
+        Copy-FilesWithLongPath $destDropLocation $destCurrentLocation
+
 		InvokePowerDeliveryBuildAction -condition ($powerdelivery.environment -eq 'Commit' -or $powerdelivery.environment -eq 'Local') -stage $powerdelivery.testUnits -description "Unit Tests" -status "Testing Units" -blockName "TestUnits"
 	    InvokePowerDeliveryBuildAction -condition $true -stage $powerdelivery.deploy -description "Deployments" -status "Deploying" -blockName "Deploy"
 	    InvokePowerDeliveryBuildAction -condition $true -stage $powerdelivery.testEnvironment -description "Environment Tests" -status "Testing Environment" -blockName "TestEnvironment"
-	    InvokePowerDeliveryBuildAction -condition ($environment -eq 'Commit' -or $environment -eq 'Local') -stage $powerdelivery.testAcceptance -description "Acceptance Tests" -status "Testing Acceptance" -blockName "TestAcceptance"
+	    InvokePowerDeliveryBuildAction -condition ($environment -eq 'Commit' -or $environment -eq 'Local' -or $environment -eq 'Test') -stage $powerdelivery.testAcceptance -description "Acceptance Tests" -status "Testing Acceptance" -blockName "TestAcceptance"
 	    InvokePowerDeliveryBuildAction -condition ($environment -eq 'CapacityTest') -stage $powerdelivery.testCapacity -description "Capacity Tests" -status "Testing Capacity" -blockName "TestCapacity"
         
 	    Write-Host "`nPowerdelivery: Build succeeded!`n" -ForegroundColor DarkGreen

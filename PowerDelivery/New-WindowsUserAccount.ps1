@@ -29,36 +29,41 @@ function New-WindowsUserAccount {
 
     $logPrefix = "New-WindowsUserAccount:"
 
-    Invoke-Command -ComputerName $computerName {
+    $computerNames = $computerName -split "," | % { $_.Trim() }
 
-		$localUsersSet = [ADSI]"WinNT://$using:computerName/Users"
-		$localUsers = @($localUsersSet.psbase.Invoke("Members")) 
+    foreach ($curComputerName in $computerNames) {
 
-		$foundAccount = $false
+        Invoke-Command -ComputerName $curComputerName {
 
-		$localUsers | foreach {
-			if ($_.GetType().InvokeMember("Name", 'GetProperty', $null, $_, $null) -eq $using:userName) {
-				$foundAccount = $true
-			}
-		}
+		    $localUsersSet = [ADSI]"WinNT://$using:curComputerName/Users"
+		    $localUsers = @($localUsersSet.psbase.Invoke("Members")) 
 
-		if (!$foundAccount) {
-			Write-Host "$using:logPrefix Adding $using:userName user to $($using:computerName)..."
+		    $foundAccount = $false
 
-			$addUserArgs = @(
-				"user",
-				$using:userName,
-				$using:password,
-				"/add",
-				"/active:YES",
-				"/expires:NEVER",
-				"/FullName:`"$using:userName`""
-			)
+		    $localUsers | foreach {
+			    if ($_.GetType().InvokeMember("Name", 'GetProperty', $null, $_, $null) -eq $using:userName) {
+				    $foundAccount = $true
+			    }
+		    }
 
-			$addUserProcess = Start-Process -FilePath "C:\Windows\System32\net.exe" -ArgumentList $addUserArgs -PassThru -Wait
-			$addUserProcess.WaitForExit()
+		    if (!$foundAccount) {
+			    Write-Host "$using:logPrefix Adding $using:userName user to $($using:curComputerName)..."
 
-			"$using:logPrefix User $using:userName created successfully."
-		}
-	}
+			    $addUserArgs = @(
+				    "user",
+				    $using:userName,
+				    $using:password,
+				    "/add",
+				    "/active:YES",
+				    "/expires:NEVER",
+				    "/FullName:`"$using:userName`""
+			    )
+
+			    $addUserProcess = Start-Process -FilePath "C:\Windows\System32\net.exe" -ArgumentList $addUserArgs -PassThru -Wait
+			    $addUserProcess.WaitForExit()
+
+			    "$using:logPrefix User $using:userName created on $using:curComputerName successfully."
+		    }
+	    }
+    }
 }
