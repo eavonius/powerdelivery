@@ -39,19 +39,23 @@ function Publish-SSAS {
 		[Parameter(Mandatory=0)][string] $cubeName
     )
 
+    $logPrefix = "Publish-SSAS:"
+
     $asModelName = [System.IO.Path]::GetFileNameWithoutExtension($asDatabase)
     $asFilesDir = [System.IO.Path]::GetDirectoryName($asDatabase)
     $xmlaPath = Join-Path -Path $asFilesDir -ChildPath "$($asModelName).xmla"
 
-    $remoteCommand = "& ""$deploymentUtilityPath"" ""$asDatabase"" ""/d"" ""/o:$xmlaPath"" | Out-Null"
+    $remoteCommand = "& `"$deploymentUtilityPath`" `"$asDatabase`" `"/d`" `"/o:$xmlaPath`""
+
+    "$logPrefix $remoteCommand"
 
 	Invoke-Command -ComputerName $computer -ErrorAction Stop {
-		$using:remoteCommand
+		iex $using:remoteCommand | Out-Host
 	}
 	
-	if ($lastexitcode -ne $null -and $lastexitcode -ne 0) {
-		throw "Failed to deploy SSAS cube $asModelName exit code from Microsoft.AnalysisServices.Deployment.exe was $lastexitcode"
-	}
+	#if ($lastexitcode -ne $null -and $lastexitcode -ne 0) {
+#		throw "Failed to deploy SSAS cube $asModelName exit code from Microsoft.AnalysisServices.Deployment.exe was $lastexitcode"
+	#}
 
 	$newModelName = $asModelName
 
@@ -83,13 +87,15 @@ function Publish-SSAS {
 
     $remoteCommand = "Invoke-ASCMD -server ""$tabularServer"" -inputFile ""$xmlaPath"""
 
+    "$logPrefix $remoteCommand"
+
 	Invoke-Command -ComputerName $computer -ErrorAction Stop {
-		$using:remoteCommand
+		iex $using:remoteCommand | Out-Host
 	}
 	
-	if ($lastexitcode -ne $null -and $lastexitcode -ne 0) {
-		throw "Failed to deploy SSAS cube $asModelName exit code from Invoke-ASCMD was $lastexitcode"
-	}
+	#if ($lastexitcode -ne $null -and $lastexitcode -ne 0) {
+	#	throw "Failed to deploy SSAS cube $asModelName exit code from Invoke-ASCMD was $lastexitcode"
+	#}
 	
 	Write-BuildSummaryMessage -name "Deploy" -header "Deployments" -message "SSAS: $($asModelName).asdatabase -> $newModelName ($tabularServer)"
 }

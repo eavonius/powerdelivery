@@ -128,14 +128,14 @@ function Publish-WebDeploy {
 			if ($BringOffline) {
 				if ($BringOffline -eq 'true') {
 
-					$deleteOfflineFile = "$msDeployPath -verb:delete -dest:`"contentPath=$($WebSite)/App_Offline.htm,computername=$($computerName)`""
+					$deleteOfflineFile = "& `"$msDeployPath`" -verb:delete -dest:`"contentPath=$($WebSite)/App_Offline.htm,computername=$($computerName)`""
 					
 					$deleteOfflineFileResult = Invoke-Command -ComputerName $computerName -ErrorAction SilentlyContinue {
                         "$using:logPrefix $using:offlineCmd"
 						iex $using:deleteOfflineFile
 					}
 										
-					$offlineCmd = "$msDeployPath -verb:sync -source:iisApp=`"$($WebSite)`" -dest:`"auto,computername=$($computerName)`" -enableRule:AppOffline -enableRule:DoNotDeleteRule"
+					$offlineCmd = "& `"$msDeployPath`" -verb:sync -source:iisApp=`"$($WebSite)`" -dest:`"auto,computername=$($computerName)`" -enableRule:AppOffline -enableRule:DoNotDeleteRule"
 					
 					Invoke-Command -ComputerName $computerName -ErrorAction Stop {
                         "$using:logPrefix $using:offlineCmd"
