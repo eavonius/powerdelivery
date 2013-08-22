@@ -45,18 +45,12 @@ function Publish-SSAS {
     $asFilesDir = [System.IO.Path]::GetDirectoryName($asDatabase)
     $xmlaPath = Join-Path -Path $asFilesDir -ChildPath "$($asModelName).xmla"
 
-    $remoteCommand = "& `"$deploymentUtilityPath`" `"$asDatabase`" `"/d`" `"/o:$xmlaPath`""
+    $remoteCommand = "& `"$deploymentUtilityPath`" `"$asDatabase`" `"/d`" `"/o:$xmlaPath`" | Out-Null"
 
     "$logPrefix $remoteCommand"
 
-	Invoke-Command -ComputerName $computer -ErrorAction Stop {
-		iex $using:remoteCommand | Out-Host
-	}
+    Invoke-Expression "Invoke-Command -ComputerName $computer -ScriptBlock { $remoteCommand }"
 	
-	#if ($lastexitcode -ne $null -and $lastexitcode -ne 0) {
-#		throw "Failed to deploy SSAS cube $asModelName exit code from Microsoft.AnalysisServices.Deployment.exe was $lastexitcode"
-	#}
-
 	$newModelName = $asModelName
 
 	if (![String]::IsNullOrWhiteSpace($cubeName)) {
@@ -89,13 +83,7 @@ function Publish-SSAS {
 
     "$logPrefix $remoteCommand"
 
-	Invoke-Command -ComputerName $computer -ErrorAction Stop {
-		iex $using:remoteCommand | Out-Host
-	}
-	
-	#if ($lastexitcode -ne $null -and $lastexitcode -ne 0) {
-	#	throw "Failed to deploy SSAS cube $asModelName exit code from Invoke-ASCMD was $lastexitcode"
-	#}
+	Invoke-Expression "Invoke-Command -ComputerName $computer -ScriptBlock { $remoteCommand }"
 	
 	Write-BuildSummaryMessage -name "Deploy" -header "Deployments" -message "SSAS: $($asModelName).asdatabase -> $newModelName ($tabularServer)"
 }
