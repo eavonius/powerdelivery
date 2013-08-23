@@ -24,11 +24,11 @@ function Disable-SqlJobs {
         [Parameter(Mandatory=1)][string] $jobs
     )
 
+    $logPrefix = "Disable-SqlJobs:"
+
 	[Reflection.Assembly]::LoadWithPartialName('Microsoft.SqlServer.SMO') | Out-Null
 
-	Write-Host
-    "Disabling SQL jobs with pattern $jobs on $serverName"
-	Write-Host
+    "$logPrefix Disabling SQL jobs with pattern $jobs on $serverName"
 
     $dataMartServer = New-Object Microsoft.SqlServer.Management.SMO.Server("$serverName")
     $dataMartJobs = $dataMartServer.jobserver.jobs | where-object {$_.Isenabled -eq $true -and  $_.name -like "$jobs"}

@@ -36,7 +36,8 @@ function Publish-SSAS {
         [Parameter(Mandatory=1)][string] $tabularServer, 
         [Parameter(Mandatory=0)][string] $sqlVersion = '11.0',
 		[Parameter(Mandatory=0)][string] $deploymentUtilityPath = "C:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn\ManagementStudio\Microsoft.AnalysisServices.Deployment.exe",
-		[Parameter(Mandatory=0)][string] $cubeName
+		[Parameter(Mandatory=0)][string] $cubeName,
+        [Parameter(Mandatory=0)] $connections
     )
 
     $logPrefix = "Publish-SSAS:"
@@ -86,4 +87,17 @@ function Publish-SSAS {
 	Invoke-Expression "Invoke-Command -ComputerName $computer -ScriptBlock { $remoteCommand }"
 	
 	Write-BuildSummaryMessage -name "Deploy" -header "Deployments" -message "SSAS: $($asModelName).asdatabase -> $newModelName ($tabularServer)"
+
+    if ($connections -ne $null) {
+    
+        $connections.Keys | % {
+			$connection = $connections[$_]
+			Set-SSASConnection -computer $computer `
+						       -tabularServer $tabularServer `
+						       -databaseName $cubeName `
+						       -connectionName $connection.Name `
+						       -datasourceID $connection.ID `
+						       -connectionString $connection.ConnectionString
+		}
+    }
 }
