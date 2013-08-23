@@ -44,7 +44,7 @@ function Publish-SSAS {
 
     $asModelName = [System.IO.Path]::GetFileNameWithoutExtension($asDatabase)
     $asFilesDir = [System.IO.Path]::GetDirectoryName($asDatabase)
-    $xmlaPath = Join-Path -Path $asFilesDir -ChildPath "$($asModelName).xmla"
+    $xmlaPath = Invoke-Command -ComputerName $computer { Join-Path -Path $using:asFilesDir -ChildPath "$($using:asModelName).xmla" }
 
     $remoteCommand = "& `"$deploymentUtilityPath`" `"$asDatabase`" `"/d`" `"/o:$xmlaPath`" | Out-Null"
 
