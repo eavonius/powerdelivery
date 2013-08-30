@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>PowerDelivery</id>
-    <version>2.2.31</version>
+    <version>2.2.32</version>
     <title>PowerDelivery</title>
     <authors>Jayme Edwards</authors>
     <owners />
@@ -21,7 +21,7 @@
     <file src="PowerDelivery\Add-WindowsUserToGroup.ps1" target="tools\PowerDelivery\Add-WindowsUserToGroup.ps1" />
     <file src="PowerDelivery\Copy-FilesWithLongPath.ps1" target="tools\PowerDelivery\Copy-FilesWithLongPath.ps1" />
     <file src="PowerDelivery\Deploy-BuildAssets.ps1" target="tools\PowerDelivery\Deploy-BuildAssets.ps1" />
-	<file src="PowerDelivery\Disable-SqlJobs.ps1" target="tools\PowerDelivery\Disable-SqlJobs.ps1" />
+    <file src="PowerDelivery\Disable-SqlJobs.ps1" target="tools\PowerDelivery\Disable-SqlJobs.ps1" />
     <file src="PowerDelivery\Enable-SqlJobs.ps1" target="tools\PowerDelivery\Enable-SqlJobs.ps1" />
     <file src="PowerDelivery\Enable-WebDeploy.ps1" target="tools\PowerDelivery\Enable-WebDeploy.ps1" />
     <file src="PowerDelivery\Exec.ps1" target="tools\PowerDelivery\Exec.ps1" />
@@ -64,7 +64,7 @@
     <file src="PowerDelivery\Publish-WebDeploy.ps1" target="tools\PowerDelivery\Publish-WebDeploy.ps1" />
     <file src="PowerDelivery\Register-DeliveryModuleHook.ps1" target="tools\PowerDelivery\Register-DeliveryModuleHook.ps1" />
     <file src="PowerDelivery\Remove-Pipeline.ps1" target="tools\PowerDelivery\Remove-Pipeline.ps1" />
-	<file src="PowerDelivery\Set-AppPoolIdentity.ps1" target="tools\PowerDelivery\Set-AppPoolIdentity.ps1" />
+    <file src="PowerDelivery\Set-AppPoolIdentity.ps1" target="tools\PowerDelivery\Set-AppPoolIdentity.ps1" />
     <file src="PowerDelivery\Set-EnvironmentVariable.ps1" target="tools\PowerDelivery\Set-EnvironmentVariable.ps1" />
     <file src="PowerDelivery\Set-SSASConnection.ps1" target="tools\PowerDelivery\Set-SSASConnection.ps1" />
     <file src="PowerDelivery\Start-SqlJobs.ps1" target="tools\PowerDelivery\Start-SqlJobs.ps1" />
