@@ -13,7 +13,7 @@
 	$computerNames = $ComputerName -split "," | % { $_.Trim() }
 	
 	$dropLocation = Get-BuildDropLocation
-	$dropSource = Join-Path $dropLocation $path
+	$dropSource = Join-Path $powerdelivery.deployDir $path
 	
 	foreach ($curComputerName in $computerNames) {
 	

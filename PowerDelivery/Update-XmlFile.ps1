@@ -62,7 +62,7 @@
     else {
 
         if (![System.IO.Path]::IsPathRooted($FileName)) {
-            $FileName = Join-Path (Get-BuildDropLocation) $FileName
+            $FileName = Join-Path $powerdelivery.deployDir $FileName
         }
 
         Write-Host "$logPrefix Replacing values in $FileName"

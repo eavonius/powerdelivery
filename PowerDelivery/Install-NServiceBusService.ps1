@@ -61,8 +61,6 @@ function Install-NServiceBusService {
 
     $logPrefix = "Install-NServiceBusService:"
 
-    $dropLocation = Get-BuildDropLocation
-
     if ($IsMaster -and $IsDistributor) {
         throw "An instance cannot be a distributor and a master."
     }
@@ -77,7 +75,7 @@ function Install-NServiceBusService {
 
         Add-CredSSPTrustedHost $curComputerName
 
-        $dropServicePath = Join-Path $dropLocation $Directory
+        $dropServicePath = Join-Path $powerdelivery.deployDir $Directory
         
         $remoteDeployPath = Get-ComputerRemoteDeployPath $curComputerName
         $remoteServicePath = Join-Path $remoteDeployPath $Directory
