@@ -9,7 +9,16 @@ layout: page
 				<a href="#cmdlets">PowerShell cmdlets</a>
 			</li>
 			<li>
+				<a href="create.html#add_pipeline">Add-Pipeline</a>
+			</li>
+			<li>
 				<a href="#add_windowsusertogroup_cmdlet">Add-WindowsUserToGroup</a>
+			</li>
+			<li>
+				<a href="#copy_robust_cmdlet">Copy-Robust</a>
+			</li>
+			<li>
+				<a href="#deploy_buildassets_cmdlet">Deploy-BuildAssets</a>
 			</li>
 			<li>
 				<a href="#disable_sqljobs_cmdlet">Disable-SqlJobs</a>
@@ -30,7 +39,7 @@ layout: page
 				<a href="#get_buildassets_cmdlet">Get-BuildAssets</a>
 			</li>
 			<li>
-				<a href="#get_buildchangeset_cmdlet">Get-BuildChangeset</a>
+				<a href="#get_buildchangeset_cmdlet">Get-BuildChangeSet</a>
 			</li>
 			<li>
 				<a href="#get_buildcollectionuri_cmdlet">Get-BuildCollectionUri</a>
@@ -81,6 +90,9 @@ layout: page
 				<a href="#import_deliverymodule_cmdlet">Import-DeliveryModule</a>
 			</li>
 			<li>
+				<a href="#import_snapin_cmdlet">Import-Snapin</a>
+			</li>
+			<li>
 				<a href="#install_nservicebusservice_cmdlet">Install-NServiceBusService</a>
 			</li>
 			<li>
@@ -105,6 +117,9 @@ layout: page
 				<a href="#invoke_ssispackage_cmdlet">Invoke-SSISPackage</a>
 			</li>
 			<li>
+				<a href="#new_remoteshare_cmdlet">New-RemoteShare</a>
+			</li>
+			<li>
 				<a href="#new_windowsuseraccount_cmdlet">New-WindowsUserAccount</a>
 			</li>
 			<li>
@@ -120,6 +135,9 @@ layout: page
 				<a href="#register_deliverymodulehook_cmdlet">Register-DeliveryModuleHook</a>
 			</li>
 			<li>
+				<a href="#remove_pipeline_cmdlet">Remove-Pipeline</a>
+			</li>
+			<li>
 				<a href="#set_apppoolidentity_cmdlet">Set-AppPoolIdentity</a>
 			</li>
 			<li>
@@ -130,6 +148,12 @@ layout: page
 			</li>
 			<li>
 				<a href="#uninstall_nservicebusservice_cmdlet">Uninstall-NServiceBusService</a>
+			</li>
+			<li>
+				<a href="#update_xmlfile_cmdlet">Update-XmlFile</a>
+			</li>
+			<li>
+				<a href="#wait_forleapfrogbi_cmdlet">Wait-ForLeapFrogBI</a>
 			</li>
 			<li>
 				<a href="#write_buildsummarymessage_cmdlet">Write-BuildSummaryMessage</a>
