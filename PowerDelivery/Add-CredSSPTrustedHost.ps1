@@ -3,6 +3,8 @@
         [Parameter(Position=0,Mandatory=1)] [string] $computerName
     )
 
+	Set-Location $powerdelivery.deployDir
+
     $logPrefix = "Add-CredSSPTrustedHost:"
 
     Invoke-Command -ComputerName $computerName {

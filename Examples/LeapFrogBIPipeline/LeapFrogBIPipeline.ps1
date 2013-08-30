@@ -42,8 +42,8 @@ Deploy {
 	
 		$packagesDeployPath = "\\$tabularServer\DataMartPackages\$buildEnvironment"
 	
-		Copy-FilesWithLongPath Cubes\MSDFGlobal $packagesDeployPath
-		Copy-FilesWithLongPath Cubes\MSDFGlobal_Source $packagesDeployPath
+		Copy-Robust Cubes\MSDFGlobal $packagesDeployPath -recurse
+		Copy-Robust Cubes\MSDFGlobal_Source $packagesDeployPath -recurse
 	}
 }
 

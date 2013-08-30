@@ -1,5 +1,7 @@
 ﻿function Export-BuildCredentials {
 
+	Set-Location $powerdelivery.deployDir
+
     $currentDirectory = Get-Location
     $credentialsPath = Join-Path $currentDirectory Credentials
 

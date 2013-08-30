@@ -34,6 +34,8 @@ function Set-AppPoolIdentity {
 		[Parameter(Position=3,Mandatory=0)] $computerName
 	)
 
+	Set-Location $powerdelivery.deployDir
+
     $logPrefix = "Set-AppPoolIdentity:"
 			
 	Invoke-Command $computerName {

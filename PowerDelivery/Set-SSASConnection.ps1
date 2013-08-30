@@ -37,6 +37,8 @@ function Set-SSASConnection {
         [Parameter(Mandatory=1)][string] $connectionString
     )
 
+	Set-Location $powerdelivery.deployDir
+
     $query = @"
     <Alter ObjectExpansion=""ObjectProperties"" xmlns=""http://schemas.microsoft.com/analysisservices/2003/engine"">
 	    <Object>

@@ -4,6 +4,8 @@
         [Parameter(Position=0,Mandatory=1)] $timeoutMinutes
     )
 
+	Set-Location $powerdelivery.deployDir
+
     $logPrefix = "Wait-ForLeapFrogBI:"
 
     # Poll for completion of LeapFrog processing with a timeout

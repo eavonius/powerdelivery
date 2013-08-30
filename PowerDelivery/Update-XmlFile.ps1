@@ -7,6 +7,8 @@
         [Parameter(Position=3,Mandatory=0)] $Namespaces
     )
 
+	Set-Location $powerdelivery.deployDir
+
     $logPrefix = "Update-XmlFile:"
 
     if (![String]::IsNullOrWhiteSpace($ComputerName)) {

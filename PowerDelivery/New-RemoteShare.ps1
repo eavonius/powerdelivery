@@ -28,6 +28,8 @@ function New-RemoteShare {
         [Parameter(Position=1,Mandatory=1)][string] $shareName, 
         [Parameter(Position=2,Mandatory=1)][string] $shareDirectory
     )
+	
+	Set-Location $powerdelivery.deployDir
 
     $logPrefix = "New-RemoteShare:"
 

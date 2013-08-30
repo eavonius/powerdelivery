@@ -40,6 +40,8 @@ function Invoke-MSTest {
         [Parameter(Position=5,Mandatory=0)][string] $platform = 'AnyCPU',
 		[Parameter(Position=6,Mandatory=0)][string] $buildConfiguration
     )
+	
+	Set-Location $powerdelivery.deployDir
 
     $logPrefix = "Invoke-MSTest:"
 	
@@ -64,9 +66,6 @@ function Invoke-MSTest {
     $localTestsDir = Join-Path $currentDirectory $testsDir
     $dropTestsDir = "$($dropLocation)$testsDir"
 
-    "$logPrefix Copying $dropTestsDir\* to $localTestsDir"
-    copy -Force -Recurse "$dropTestsDir\*" $localTestsDir | Out-Null
-    
 	$dropResults = "$dropLocation\$results"
 
     try {
@@ -81,10 +80,9 @@ function Invoke-MSTest {
             copy -Force $dropTestSettings $localTestSettings | Out-Null
         }
             
-        $workingDirectory = Get-Location
 		$filePath = $file
 
-		$localResults = Join-Path $workingDirectory $results
+		$localResults = Join-Path $currentDirectory $results
 
 		rm -ErrorAction SilentlyContinue -Force $localResults | Out-Null
 	

@@ -36,6 +36,8 @@ function Enable-WebDeploy {
         [Parameter(Mandatory=1)][string] $webPassword, 
         [Parameter(Mandatory=0)][string] $runtimeVersion = 'v4.0'
     )
+	
+	Set-Location $powerdelivery.deployDir
 
     $logPrefix = "Publish-WebDeploy:"
 

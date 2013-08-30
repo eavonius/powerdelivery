@@ -27,6 +27,8 @@ function Uninstall-NServiceBusService{
 		[Parameter(Position=1,Mandatory=1)]$Name,
 		[Parameter(Position=2,Mandatory=1)]$Directory
 	)
+	
+	Set-Location $powerdelivery.deployDir
 
     $logPrefix = "Uninstall-NServiceBusService:"
 
@@ -38,7 +40,9 @@ function Uninstall-NServiceBusService{
 
 		    if ((Get-Service -Name $using:Name -ErrorAction SilentlyContinue) -ne $null) {
 
-                $priorSvcCmd = (Get-WmiObject -query "SELECT PathName FROM Win32_Service WHERE Name = '$using:Name'").PathName                $priorSvcExePath = ($priorSvcCmd -replace '^\"([^\"]*)\".*$','$1').Trim('"')                $priorSvcLocalPath = (Split-Path $priorSvcExePath -Parent)
+                $priorSvcCmd = (Get-WmiObject -query "SELECT PathName FROM Win32_Service WHERE Name = '$using:Name'").PathName
+                $priorSvcExePath = ($priorSvcCmd -replace '^\"([^\"]*)\".*$','$1').Trim('"')
+                $priorSvcLocalPath = (Split-Path $priorSvcExePath -Parent)
 
 		 	    $uninstallServiceArgs = @(
 		 		    "-uninstall",

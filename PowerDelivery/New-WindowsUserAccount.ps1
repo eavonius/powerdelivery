@@ -26,6 +26,8 @@ function New-WindowsUserAccount {
 		[Parameter(Position=1,Mandatory=1)] $password,
 		[Parameter(Position=2,Mandatory=0)] $computerName
 	)
+	
+	Set-Location $powerdelivery.deployDir
 
     $logPrefix = "New-WindowsUserAccount:"
 

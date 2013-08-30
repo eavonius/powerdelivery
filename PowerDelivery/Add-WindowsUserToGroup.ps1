@@ -26,6 +26,8 @@ function Add-WindowsUserToGroup {
 		[Parameter(Position=1,Mandatory=1)] $groupName,
 		[Parameter(Position=2,Mandatory=1)] $computerName
 	)
+	
+	Set-Location $powerdelivery.deployDir
 
     $logPrefix = "Add-WindowsUserToGroup:"
 

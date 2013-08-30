@@ -30,6 +30,10 @@ function Invoke-SSISPackage {
         [Parameter(Position=2,Mandatory=1)][string] $dtExecPath, 
         [Parameter(Position=3,Mandatory=0)][string] $packageArgs
     )
+	
+	Set-Location $powerdelivery.deployDir
+	
+	$logPrefix = "Invoke-SSISPackage:"
 
     Invoke-Command -ComputerName $server -ScriptBlock {
 
@@ -42,6 +46,8 @@ function Invoke-SSISPackage {
 	    if ($innerPackageArgs) {
 		    $packageExecStatment += " $innerPackageArgs"
 	    }
+
+		"$using:logPrefix $packageExecStatement"
 
         Invoke-Expression -Command $packageExecStatement
 

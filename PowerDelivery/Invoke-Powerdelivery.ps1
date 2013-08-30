@@ -29,6 +29,8 @@ function Invoke-Powerdelivery {
 	    [Parameter(Position=10,Mandatory=0)][string] $priorBuild
     )
 	
+	$logPrefix = "Powerdelivery:"
+	
 	$ErrorActionPreference = 'Stop'
 
 	function InvokePowerDeliveryModuleHook($blockName, $stage) {
@@ -47,7 +49,7 @@ function Invoke-Powerdelivery {
             if ($blockName -ne "Init") {
 			    Write-Host
 			    Write-ConsoleSpacer
-			    "= Powerdelivery: $status..."
+			    "= $logPrefix $status..."
 	    	    Write-ConsoleSpacer
 	            Write-Host
             }
@@ -284,6 +286,9 @@ function Invoke-Powerdelivery {
     $powerdelivery.buildNumber = $null
     $powerdelivery.buildName = $null
 	$powerdelivery.priorBuild = $priorBuild
+	$powerdelivery.deployDir = Join-Path (Get-Location) "PowerDeliveryDeploy"
+	
+	mkdir -Force $($powerdelivery.deployDir) | Out-Null
 
     Write-Host
 	$powerdelivery.version = Get-Module powerdelivery | select version | ForEach-Object { $_.Version.ToString() }
@@ -551,12 +556,15 @@ function Invoke-Powerdelivery {
 		if ($powerdelivery.environment -ne "Local" -and $powerdelivery.environment -ne "Commit" -and $powerdelivery.onServer) {
 	        $priorBuildDrop = $powerdelivery.priorBuild.DropLocation
 
-            "Powerdelivery: Cloning deployed assets from $priorBuildDrop to $destDropLocation"
-            Copy-FilesWithLongPath $priorBuildDrop $destDropLocation
+            "$logPrefix Cloning deployed assets from $priorBuildDrop to $destDropLocation"
+            Copy-Robust $priorBuildDrop $destDropLocation -recurse
 	    }
         
-        "Powerdelivery: Retrieving assets from $destDropLocation into current directory..."
-        Copy-FilesWithLongPath $destDropLocation $destCurrentLocation
+        "$logPrefix Retrieving assets from $destDropLocation into deploy directory"
+        Copy-Robust $destDropLocation $($powerdelivery.deployDir) -recurse
+
+		"$logPrefix Setting location to $($powerdelivery.deployDir)"
+		Set-Location $powerdelivery.deployDir
 
 		InvokePowerDeliveryBuildAction -condition ($powerdelivery.environment -eq 'Commit' -or $powerdelivery.environment -eq 'Local') -stage $powerdelivery.testUnits -description "Unit Tests" -status "Testing Units" -blockName "TestUnits"
 	    InvokePowerDeliveryBuildAction -condition $true -stage $powerdelivery.deploy -description "Deployments" -status "Deploying" -blockName "Deploy"
@@ -572,7 +580,7 @@ function Invoke-Powerdelivery {
 		$ErrorRecord = $_[0]
 
  		Write-ConsoleSpacer
- 		"= Powerdelivery: Build failure details"
+ 		"= $logPrefix Build failure details"
  		Write-ConsoleSpacer
 
         $Exception = $ErrorRecord.Exception
@@ -612,6 +620,15 @@ function Invoke-Powerdelivery {
 	    Write-Host "`nPowerdelivery: Build Failed!`n" -ForegroundColor Red
 		throw
     }
+	finally {
+		Set-Location $powerdelivery.currentLocation
+		
+		Remove-Item -Path $powerdelivery.deployDir -Force -Recurse | Out-Null
+		
+		if ($powerdelivery.environment -eq 'Local') {
+			Remove-Item -Path $powerdelivery.dropLocation -Force -Recurse | Out-Null
+		}
+	}
 }
 
 <#

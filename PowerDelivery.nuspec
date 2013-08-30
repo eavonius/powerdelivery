@@ -19,7 +19,7 @@
     <file src="PowerDelivery\Add-CredSSPTrustedHost.ps1" target="tools\PowerDelivery\Add-CredSSPTrustedHost.ps1" />
     <file src="PowerDelivery\Add-Pipeline.ps1" target="tools\PowerDelivery\Add-Pipeline.ps1" />
     <file src="PowerDelivery\Add-WindowsUserToGroup.ps1" target="tools\PowerDelivery\Add-WindowsUserToGroup.ps1" />
-    <file src="PowerDelivery\Copy-FilesWithLongPath.ps1" target="tools\PowerDelivery\Copy-FilesWithLongPath.ps1" />
+    <file src="PowerDelivery\Copy-Robust.ps1" target="tools\PowerDelivery\Copy-Robust.ps1" />
     <file src="PowerDelivery\Deploy-BuildAssets.ps1" target="tools\PowerDelivery\Deploy-BuildAssets.ps1" />
     <file src="PowerDelivery\Disable-SqlJobs.ps1" target="tools\PowerDelivery\Disable-SqlJobs.ps1" />
     <file src="PowerDelivery\Enable-SqlJobs.ps1" target="tools\PowerDelivery\Enable-SqlJobs.ps1" />

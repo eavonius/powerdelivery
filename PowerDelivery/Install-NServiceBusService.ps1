@@ -57,6 +57,8 @@ function Install-NServiceBusService {
         [Parameter(Position=10,Mandatory=0)][string] $EndpointConfigurationType
 	)
 
+	Set-Location $powerdelivery.deployDir
+
     $logPrefix = "Install-NServiceBusService:"
 
     $dropLocation = Get-BuildDropLocation
@@ -91,7 +93,8 @@ function Install-NServiceBusService {
 
         "$logPrefix Installing $Name service on $curComputerName as $($AccountName)..."
 
-        $secpasswd = ConvertTo-SecureString $AccountPassword -AsPlainText -Force        $accountCreds = New-Object System.Management.Automation.PSCredential ($AccountName, $secpasswd)
+        $secpasswd = ConvertTo-SecureString $AccountPassword -AsPlainText -Force
+        $accountCreds = New-Object System.Management.Automation.PSCredential ($AccountName, $secpasswd)
 
 	    Invoke-Command -ComputerName $curComputerName -Authentication Credssp -Credential $accountCreds {
 

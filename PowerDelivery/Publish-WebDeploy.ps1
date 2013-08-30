@@ -13,6 +13,8 @@
 		[Parameter(Position=10,Mandatory=0)] [string] $WebDeployDir = "C:\Program Files\IIS\Microsoft Web Deploy v3",
         [Parameter(Position=11,Mandatory=0)] $RuntimeVersion = 'v4.0'
 	)
+	
+	Set-Location $powerdelivery.deployDir
 
     $logPrefix = "Publish-WebDeploy:"
 

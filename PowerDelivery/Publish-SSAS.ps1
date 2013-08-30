@@ -39,6 +39,8 @@ function Publish-SSAS {
 		[Parameter(Mandatory=0)][string] $cubeName,
         [Parameter(Mandatory=0)] $connections
     )
+	
+	Set-Location $powerdelivery.deployDir
 
     $logPrefix = "Publish-SSAS:"
 
