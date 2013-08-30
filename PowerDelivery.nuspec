@@ -49,6 +49,7 @@
     <file src="PowerDelivery\Invoke-BuildConfigSection.ps1" target="tools\PowerDelivery\Invoke-BuildConfigSection.ps1" />
     <file src="PowerDelivery\Invoke-BuildConfigSections.ps1" target="tools\PowerDelivery\Invoke-BuildConfigSections.ps1" />
     <file src="PowerDelivery\Import-DeliveryModule.ps1" target="tools\PowerDelivery\Import-DeliveryModule.ps1" />
+    <file src="PowerDelivery\Import-Snapin.ps1" target="tools\PowerDelivery\Import-Snapin.ps1" />
     <file src="PowerDelivery\Install-NServiceBusService.ps1" target="tools\PowerDelivery\Install-NServiceBusService.ps1" />
     <file src="PowerDelivery\Invoke-MSBuild.ps1" target="tools\PowerDelivery\Invoke-MSBuild.ps1" />
     <file src="PowerDelivery\Invoke-MSTest.ps1" target="tools\PowerDelivery\Invoke-MSTest.ps1" />
@@ -64,11 +65,13 @@
     <file src="PowerDelivery\Register-DeliveryModuleHook.ps1" target="tools\PowerDelivery\Register-DeliveryModuleHook.ps1" />
     <file src="PowerDelivery\Remove-Pipeline.ps1" target="tools\PowerDelivery\Remove-Pipeline.ps1" />
 	<file src="PowerDelivery\Set-AppPoolIdentity.ps1" target="tools\PowerDelivery\Set-AppPoolIdentity.ps1" />
+    <file src="PowerDelivery\Set-EnvironmentVariable.ps1" target="tools\PowerDelivery\Set-EnvironmentVariable.ps1" />
     <file src="PowerDelivery\Set-SSASConnection.ps1" target="tools\PowerDelivery\Set-SSASConnection.ps1" />
     <file src="PowerDelivery\Start-SqlJobs.ps1" target="tools\PowerDelivery\Start-SqlJobs.ps1" />
     <file src="PowerDelivery\Uninstall-NServiceBusService.ps1" target="tools\PowerDelivery\Uninstall-NServiceBusService.ps1" />
     <file src="PowerDelivery\Update-AssemblyInfoFiles.ps1" target="tools\PowerDelivery\Update-AssemblyInfoFiles.ps1" />
     <file src="PowerDelivery\Update-XmlFile.ps1" target="tools\PowerDelivery\Update-XmlFile.ps1" />
+    <file src="PowerDelivery\Wait-ForLeapFrogBI.ps1" target="tools\PowerDelivery\Wait-ForLeapFrogBI.ps1" />
     <file src="PowerDelivery\Write-BuildSummaryMessage.ps1" target="tools\PowerDelivery\Write-BuildSummaryMessage.ps1" />
     <file src="PowerDelivery\BuildProcessTemplates\PowerDeliveryChangeSetTemplate.11.xaml" target="tools\PowerDelivery\BuildProcessTemplates\PowerDeliveryChangeSetTemplate.11.xaml" />
     <file src="PowerDelivery\BuildProcessTemplates\PowerDeliveryChangeSetTemplate.xaml" target="tools\PowerDelivery\BuildProcessTemplates\PowerDeliveryChangeSetTemplate.xaml" />

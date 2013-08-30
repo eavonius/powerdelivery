@@ -36,23 +36,22 @@ function Publish-SSAS {
         [Parameter(Mandatory=1)][string] $tabularServer, 
         [Parameter(Mandatory=0)][string] $sqlVersion = '11.0',
 		[Parameter(Mandatory=0)][string] $deploymentUtilityPath = "C:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn\ManagementStudio\Microsoft.AnalysisServices.Deployment.exe",
-		[Parameter(Mandatory=0)][string] $cubeName
+		[Parameter(Mandatory=0)][string] $cubeName,
+        [Parameter(Mandatory=0)] $connections
     )
+
+    $logPrefix = "Publish-SSAS:"
 
     $asModelName = [System.IO.Path]::GetFileNameWithoutExtension($asDatabase)
     $asFilesDir = [System.IO.Path]::GetDirectoryName($asDatabase)
-    $xmlaPath = Join-Path -Path $asFilesDir -ChildPath "$($asModelName).xmla"
+    $xmlaPath = Invoke-Command -ComputerName $computer { Join-Path -Path $using:asFilesDir -ChildPath "$($using:asModelName).xmla" }
 
-    $remoteCommand = "& ""$deploymentUtilityPath"" ""$asDatabase"" ""/d"" ""/o:$xmlaPath"" | Out-Null"
+    $remoteCommand = "& `"$deploymentUtilityPath`" `"$asDatabase`" `"/d`" `"/o:$xmlaPath`" | Out-Null"
 
-	Invoke-Command -ComputerName $computer -ErrorAction Stop {
-		$using:remoteCommand
-	}
+    "$logPrefix $remoteCommand"
+
+    Invoke-Expression "Invoke-Command -ComputerName $computer -ScriptBlock { $remoteCommand }"
 	
-	if ($lastexitcode -ne $null -and $lastexitcode -ne 0) {
-		throw "Failed to deploy SSAS cube $asModelName exit code from Microsoft.AnalysisServices.Deployment.exe was $lastexitcode"
-	}
-
 	$newModelName = $asModelName
 
 	if (![String]::IsNullOrWhiteSpace($cubeName)) {
@@ -83,13 +82,22 @@ function Publish-SSAS {
 
     $remoteCommand = "Invoke-ASCMD -server ""$tabularServer"" -inputFile ""$xmlaPath"""
 
-	Invoke-Command -ComputerName $computer -ErrorAction Stop {
-		$using:remoteCommand
-	}
-	
-	if ($lastexitcode -ne $null -and $lastexitcode -ne 0) {
-		throw "Failed to deploy SSAS cube $asModelName exit code from Invoke-ASCMD was $lastexitcode"
-	}
+    "$logPrefix $remoteCommand"
+
+	Invoke-Expression "Invoke-Command -ComputerName $computer -ScriptBlock { $remoteCommand }"
 	
 	Write-BuildSummaryMessage -name "Deploy" -header "Deployments" -message "SSAS: $($asModelName).asdatabase -> $newModelName ($tabularServer)"
+
+    if ($connections -ne $null) {
+    
+        $connections.Keys | % {
+			$connection = $connections[$_]
+			Set-SSASConnection -computer $computer `
+						       -tabularServer $tabularServer `
+						       -databaseName $cubeName `
+						       -connectionName $connection.Name `
+						       -datasourceID $connection.ID `
+						       -connectionString $connection.ConnectionString
+		}
+    }
 }
