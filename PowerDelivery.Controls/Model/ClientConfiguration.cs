@@ -16,11 +16,12 @@ using Microsoft.TeamFoundation.Framework.Common;
 
 using System.Diagnostics;
 using System.Reflection;
+using System.ComponentModel;
 
 namespace PowerDelivery.Controls.Model
 {
     [XmlRoot(ElementName="Configuration")]
-    public class ClientConfiguration : DependencyObject
+    public class ClientConfiguration : INotifyPropertyChanged
     {
         [NonSerialized]
         bool loadedPipelines = false;
@@ -34,14 +35,13 @@ namespace PowerDelivery.Controls.Model
         [XmlIgnore]
         ClientInfo _info;
 
-        public static DependencyProperty PipelinesProperty = DependencyProperty.Register(
-            "Pipelines", typeof(List<DeliveryPipeline>), typeof(ClientConfiguration),
-            new PropertyMetadata(new List<DeliveryPipeline>()));
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        public ClientConfiguration()
-        {
-            Sources = new List<ClientCollectionSource>();
-        }
+        [XmlIgnore]
+        List<ClientCollectionSource> _sources = new List<ClientCollectionSource>();
+
+        [XmlIgnore]
+        List<DeliveryPipeline> _pipelines = new List<DeliveryPipeline>();
 
         [XmlIgnore]
         public ClientInfo ClientInfo
@@ -50,9 +50,16 @@ namespace PowerDelivery.Controls.Model
             {
                 if (_info == null)
                 {
-                    _info = new ClientInfo();
+                    ClientInfo = new ClientInfo();
                 }
                 return _info;
+            }
+
+            private set
+            {
+                _info = value;
+
+                OnPropertyChanged("ClientInfo");
             }
         }
 
@@ -77,12 +84,14 @@ namespace PowerDelivery.Controls.Model
                     loadedPipelines = true;
                 }
 
-                return (List<DeliveryPipeline>)GetValue(PipelinesProperty);
+                return _pipelines;
             }
 
             set
             {
-                SetValue(PipelinesProperty, value);
+                _pipelines = value;
+
+                OnPropertyChanged("Pipelines");
             }
         }
 
@@ -102,7 +111,11 @@ namespace PowerDelivery.Controls.Model
         }
 
         [XmlArray(ElementName = "Sources")]
-        public List<ClientCollectionSource> Sources { get; set; }
+        public List<ClientCollectionSource> Sources 
+        {
+            get { return _sources; }
+            set { _sources = value; OnPropertyChanged("Sources"); }
+        }
 
         public static ClientConfiguration Current
         {
@@ -219,6 +232,14 @@ namespace PowerDelivery.Controls.Model
             foreach (DeliveryPipeline pipeline in Pipelines)
             {
                 pipeline.StopPolling();
+            }
+        }
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
     }

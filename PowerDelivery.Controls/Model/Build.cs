@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 
 using Microsoft.TeamFoundation.Build.Client;
-using Microsoft.TeamFoundation.TestManagement.Client;
 using System.ComponentModel;
 
 namespace PowerDelivery.Controls.Model
@@ -15,24 +14,16 @@ namespace PowerDelivery.Controls.Model
         public event PropertyChangedEventHandler PropertyChanged;
 
         IBuildDetail _build;
-        ITestManagementTeamProject _testManagementTeamProject;
-        IEnumerable<ITestRun> _testRuns;
 
-        object _totalsCalcLock = new object();
-
-        int _totalTests = -1;
-        int _failedTests = -1;
-        int _succeededTests = -1;
-
-        public Build()
-        {
-        }
-
-        public Build(IBuildDetail build, ITestManagementTeamProject testManagementTeamProject)
+        int _number;
+        string _requestedBy;
+        PipelineEnvironmentBuildStatus _status;
+        DateTime _finishDate;
+        
+        public Build(IBuildDetail build)
         {
             _build = build;
-            _testManagementTeamProject = testManagementTeamProject;
-
+        
             string buildUriString = build.Uri.ToString();
 
             string buildUri = buildUriString.Contains("?") ? buildUriString.Substring(0, buildUriString.IndexOf("?")) : buildUriString;
@@ -42,17 +33,20 @@ namespace PowerDelivery.Controls.Model
             RequestedBy = build.RequestedFor;
             Status = new PipelineEnvironmentBuildStatus(build.Status);
             FinishDate = build.FinishTime;
-
-            //_testRuns = testManagementTeamProject.TestRuns.ByBuild(build.Uri);
         }
 
+        public IBuildDetail BuildDetail
+        {
+            get { return _build; }
+        }
+
+        /*
         private void CalculateTotals()
         {
             _totalTests = 0;
             _failedTests = 0;
             _succeededTests = 0;
 
-            /*
             foreach (ITestRun testRun in _testRuns)
             {
                 ITestCaseResultCollection passedTests = testRun.QueryResultsByOutcome(TestOutcome.Passed);
@@ -63,7 +57,6 @@ namespace PowerDelivery.Controls.Model
                 _failedTests += failedTests.Count;
                 _succeededTests += passedTests.Count;
             }
-            */
 
             OnPropertyChanged("TotalTests");
             OnPropertyChanged("FailedTests");
@@ -122,12 +115,12 @@ namespace PowerDelivery.Controls.Model
                 }
                 return _totalTests;
             }
-        }
+        }*/
 
         public int Number
         {
-            get;
-            set; 
+            get { return _number; }
+            set { _number = value; OnPropertyChanged("Number"); }
         }
 
         /*
@@ -153,20 +146,20 @@ namespace PowerDelivery.Controls.Model
 
         public PipelineEnvironmentBuildStatus Status
         {
-            get;
-            set;
+            get { return _status; }
+            set { _status = value; OnPropertyChanged("Status"); }
         }
 
         public DateTime FinishDate
         {
-            get;
-            set;
+            get { return _finishDate; }
+            set { _finishDate = value; OnPropertyChanged("FinishDate"); }
         }
 
         public string RequestedBy
         {
-            get;
-            set;
+            get { return _requestedBy; }
+            set { _requestedBy = value; OnPropertyChanged("RequestedBy"); }
         }
 
         protected void OnPropertyChanged(string propertyName)

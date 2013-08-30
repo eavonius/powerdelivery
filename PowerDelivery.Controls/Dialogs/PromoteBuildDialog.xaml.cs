@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 
 using PowerDelivery.Controls.Model;
 using Microsoft.TeamFoundation.Build.Client;
+using PowerDelivery.Controls.Pages;
 
 namespace PowerDelivery.Controls.Dialogs
 {
@@ -22,7 +23,7 @@ namespace PowerDelivery.Controls.Dialogs
     /// </summary>
     public partial class PromoteBuildDialog : Window
     {
-        public PromoteBuildDialog(PipelineEnvironment environment, PipelineEnvironment nextEnvironment)
+        public PromoteBuildDialog(IList<BuildNumber> buildNumbers, PipelineEnvironment environment, PipelineEnvironment nextEnvironment)
         {
             DataContext = this;
 
@@ -38,42 +39,17 @@ namespace PowerDelivery.Controls.Dialogs
 
             SelectedBuildNumber = 0;
 
-            try
+            cboBuilds.ItemsSource = buildNumbers.OrderByDescending(b => b.Number);
+
+            if (buildNumbers.Count > 0)
             {
-                int lastGoodBuildNumber = Int32.Parse(NextEnvironment.LastBuildNumber);
-
-                PromotableBuilds = Environment.GetPromotableBuilds(lastGoodBuildNumber);
-
-                if (PromotableBuilds.Length == 0)
-                {
-                    MessageBox.Show(string.Format("No successful {0} builds newer than the one in {1} are available for promotion.", Environment.EnvironmentName, NextEnvironment.EnvironmentName), "No promotable builds", MessageBoxButton.OK, MessageBoxImage.Information);
-                    Close();
-                }
-
-                List<BuildNumber> buildNumbers = new List<BuildNumber>();
-
-                foreach (IBuildDetail build in PromotableBuilds)
-                {
-                    buildNumbers.Add(new BuildNumber(build));
-                }
-
-                cboBuilds.ItemsSource = buildNumbers.OrderByDescending(b => b.Number);
-
-                if (PromotableBuilds.Length > 0)
-                {
-                    cboBuilds.SelectedIndex = 0;
-                }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message, "Error loading builds for promotion", MessageBoxButton.OK, MessageBoxImage.Error);
+                cboBuilds.SelectedIndex = 0;
             }
         }
 
         public string PageTitle { get; set; }
         public string PageDescription { get; set; }
 
-        public IBuildDetail[] PromotableBuilds { get; set; }
         public PipelineEnvironment Environment { get; set; }
         public PipelineEnvironment NextEnvironment { get; set; }
         public int SelectedBuildNumber { get; set; }

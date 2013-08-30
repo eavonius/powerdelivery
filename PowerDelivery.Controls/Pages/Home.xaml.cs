@@ -49,21 +49,31 @@ namespace PowerDelivery.Controls.Pages
         {
             Task.Factory.StartNew(() =>
             {
-                Dispatcher.Invoke(new Action(delegate()
-                {
-                    var x = ClientConfiguration.Current.Pipelines;
-                }));
-
+                var x = ClientConfiguration.Current.Pipelines;
+                
                 Dispatcher.Invoke(new Action(delegate()
                 {
                     lstPipelines.ItemsSource = ClientConfiguration.Current.Pipelines;
-               
-                    pnlLoadingPipelines.Visibility = System.Windows.Visibility.Collapsed;
-                    lstPipelines.Visibility = System.Windows.Visibility.Visible;
+
+                    HideProgress();
 
                     ClientConfiguration.Current.StartPolling();
                 }), System.Windows.Threading.DispatcherPriority.Background);
             });
+        }
+
+        public void ShowProgress(string progressMessage)
+        {
+            txtProgressMessage.Text = progressMessage;
+
+            lstPipelines.Visibility = System.Windows.Visibility.Collapsed;
+            pnlLoadingPipelines.Visibility = System.Windows.Visibility.Visible;
+        }
+
+        public void HideProgress()
+        {
+            pnlLoadingPipelines.Visibility = System.Windows.Visibility.Collapsed;
+            lstPipelines.Visibility = System.Windows.Visibility.Visible;
         }
 
         void StackPanel_Loaded(object sender, RoutedEventArgs e)

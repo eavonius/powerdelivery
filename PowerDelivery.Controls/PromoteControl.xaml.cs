@@ -17,6 +17,7 @@ using System.Windows.Shapes;
 using PowerDelivery.Controls.Pages;
 using PowerDelivery.Controls.Dialogs;
 using PowerDelivery.Controls.Model;
+using Microsoft.TeamFoundation.Build.Client;
 
 namespace PowerDelivery.Controls
 {
@@ -39,22 +40,68 @@ namespace PowerDelivery.Controls
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            PromoteBuildDialog dlg = new PromoteBuildDialog(Environment, NextEnvironment);
+            ClientConfiguration.Current.StopPolling();
 
-            if (dlg.PromotableBuilds.Length > 0)
+            _home.ShowProgress("Retrieving builds sufficient for promotion...");
+
+            Task.Factory.StartNew(() =>
             {
-                dlg.ShowDialog();
+                IList<BuildNumber> buildNumbers = new List<BuildNumber>();
 
-                if (dlg.DialogResult.Value)
+                try
                 {
-                    int selectedBuildNumber = dlg.SelectedBuildNumber;
+                    int lastGoodBuildNumber = Int32.Parse(NextEnvironment.LastBuildNumber);
 
-                    if (selectedBuildNumber > 0)
+                    buildNumbers = Environment.GetPromotableBuilds(lastGoodBuildNumber);
+
+                    if (buildNumbers.Count == 0)
                     {
-                        NextEnvironment.Promote(selectedBuildNumber);
+                        Dispatcher.Invoke(new Action(delegate()
+                        {
+                            _home.HideProgress();
+                            MessageBox.Show(string.Format("No successful {0} builds newer than the one in {1} are available for promotion.", Environment.EnvironmentName, NextEnvironment.EnvironmentName), "No promotable builds", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }), System.Windows.Threading.DispatcherPriority.Background);
+                        
+                        return;
                     }
+
+                    Dispatcher.Invoke(new Action(delegate()
+                    {
+                        _home.HideProgress();
+                    }), System.Windows.Threading.DispatcherPriority.Background);
                 }
-            }
+                catch (Exception ex)
+                {
+                    Dispatcher.Invoke(new Action(delegate()
+                    {
+                        _home.HideProgress();
+                        MessageBox.Show(ex.Message, "Error loading builds for promotion", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }), System.Windows.Threading.DispatcherPriority.Background);
+                }
+
+                if (buildNumbers.Count > 0)
+                {
+                    Dispatcher.Invoke(new Action(delegate()
+                    {
+                        PromoteBuildDialog dlg = new PromoteBuildDialog(buildNumbers, Environment, NextEnvironment);
+
+                        dlg.ShowDialog();
+
+                        if (dlg.DialogResult.Value)
+                        {
+                            int selectedBuildNumber = dlg.SelectedBuildNumber;
+
+                            if (selectedBuildNumber > 0)
+                            {
+                                NextEnvironment.Promote(selectedBuildNumber);
+                            }
+                        }
+
+                        ClientConfiguration.Current.StartPolling();
+
+                    }), System.Windows.Threading.DispatcherPriority.Background);
+                }
+            });
         }
     }
 }

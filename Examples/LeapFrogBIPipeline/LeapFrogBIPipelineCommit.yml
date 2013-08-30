@@ -1,0 +1,14 @@
+TabularServer: localhost
+
+AdventureWorksCubeName: AdventureWorks_Dev
+AdventureWorksCubeName_Source: AdventureWorks_Dev_Source
+
+AdventureWorksDBConnection: 
+AdventureWorksDataMartConnection: 
+
+AdventureWorksDataMart: AdventureWorksDataMart_Dev
+
+LeapFrogLifecycle: Development
+LeapFrogEnvironmentVariable: LFBICONSOLEDEV
+LeapFrogJobPrefix: LFBIDev_
+LeapFrogProcessingTimeoutMinutes: 5

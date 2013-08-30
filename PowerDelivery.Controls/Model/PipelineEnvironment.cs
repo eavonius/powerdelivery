@@ -11,7 +11,6 @@ using Microsoft.TeamFoundation.Build.Workflow;
 using System.Threading;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
-using Microsoft.TeamFoundation.TestManagement.Client;
 
 namespace PowerDelivery.Controls.Model
 {
@@ -98,8 +97,8 @@ namespace PowerDelivery.Controls.Model
 
             Builds = new List<Build>();
 
-            LastStatus = new PipelineEnvironmentBuildStatus(BuildStatus.None);
-            LastBuildFinishTime = DateTime.MinValue;
+            LastStatus = new PipelineEnvironmentBuildStatus(null);
+            LastBuildFinishTime = DateTime.MaxValue;
             LastBuildNumber = "0";
 
             StartPolling();
@@ -124,13 +123,10 @@ namespace PowerDelivery.Controls.Model
         {
             bool isQueued = false;
 
-            ITestManagementService testManagementService = BuildDefinition.BuildServer.TeamProjectCollection.GetService<ITestManagementService>();
-            ITestManagementTeamProject testManagementTeamProject = testManagementService.GetTeamProject(Pipeline.ProjectName);
-
             IQueuedBuildsView queuedBuildsView = BuildDefinition.BuildServer.CreateQueuedBuildsView(new Uri[] { BuildDefinition.Uri });
 
             queuedBuildsView.StatusFilter = QueueStatus.InProgress | QueueStatus.Queued;
-            queuedBuildsView.QueryOptions = QueryOptions.Controllers;
+            queuedBuildsView.QueryOptions = QueryOptions.All;
 
             queuedBuildsView.Refresh(false);
 
@@ -151,7 +147,7 @@ namespace PowerDelivery.Controls.Model
 
             foreach (IBuildDetail build in existingBuilds)
             {
-                Builds.Add(new Build(build, testManagementTeamProject));
+                Builds.Add(new Build(build));
 
                 try
                 {
@@ -170,7 +166,7 @@ namespace PowerDelivery.Controls.Model
 
                             if (EnvironmentName == "Commit")
                             {
-                                LastBuildNumber = new Build(build, testManagementTeamProject).Number.ToString();
+                                LastBuildNumber = new Build(build).Number.ToString();
                             }
                             else if (EnvironmentName == "Production")
                             {
@@ -227,37 +223,60 @@ namespace PowerDelivery.Controls.Model
             IQueuedBuild queuedBuild = BuildDefinition.BuildServer.QueueBuild(request);
         }
 
-        public IBuildDetail[] GetPromotableBuilds(int targetEnvironmentBuildNumber)
+        public IList<BuildNumber> GetPromotableBuilds(int targetEnvironmentBuildNumber)
         {
             try
             {
-                List<IBuildDetail> promotableBuilds = new List<IBuildDetail>();
+                List<BuildNumber> promotableBuilds = new List<BuildNumber>();
 
-                foreach (IBuildDetail buildDetail in BuildDefinition.QueryBuilds())
+                IBuildDetail[] buildDetails = BuildDefinition.BuildServer.QueryBuilds(BuildDefinition);
+
+                foreach (IBuildDetail buildDetail in buildDetails)
                 {
+                    IDictionary<string, object> processParams = WorkflowHelpers.DeserializeProcessParameters(buildDetail.ProcessParameters);
+
                     if (buildDetail.BuildFinished && buildDetail.Status == BuildStatus.Succeeded)
                     {
-                        if (targetEnvironmentBuildNumber > 0)
+                        Build build = new Build(buildDetail);
+
+                        int visibleBuildNumber = build.Number;
+
+                        if (EnvironmentName == "Production")
                         {
                             string buildUriString = buildDetail.Uri.ToString();
 
                             string buildUri = buildUriString.Contains("?") ? buildUriString.Substring(0, buildUriString.IndexOf("?")) : buildUriString;
 
-                            int sourceBuildNumber = Int32.Parse(buildUri.Substring(buildUri.LastIndexOf("/") + 1));
+                            string buildUriPrefix = buildUri.Substring(0, buildUri.LastIndexOf("/") + 1);
 
-                            if (sourceBuildNumber > targetEnvironmentBuildNumber)
+                            Uri commitBuildUri = new Uri(string.Format("{0}{1}", buildUriPrefix, processParams["PriorBuild"] as string));
+
+                            IBuildDetail[] commitBuildDetail = BuildDefinition.BuildServer.QueryBuildsByUri(new Uri[] { commitBuildUri }, new string[] { "*" }, QueryOptions.Definitions);
+
+                            IDictionary<string, object> commitProcessParams = WorkflowHelpers.DeserializeProcessParameters(commitBuildDetail[0].ProcessParameters);
+
+                            visibleBuildNumber = Int32.Parse((string)commitProcessParams["PriorBuild"]);
+                        }
+                        else if (EnvironmentName != "Commit")
+                        {
+                            visibleBuildNumber = Int32.Parse((string)processParams["PriorBuild"]);
+                        }
+
+                        if (targetEnvironmentBuildNumber > 0)
+                        {
+                            if (visibleBuildNumber > targetEnvironmentBuildNumber)
                             {
-                                promotableBuilds.Add(buildDetail);
+                                promotableBuilds.Add(new BuildNumber(build, visibleBuildNumber));
                             }
                         }
                         else
                         {
-                            promotableBuilds.Add(buildDetail);
+                            promotableBuilds.Add(new BuildNumber(build, visibleBuildNumber));
                         }
                     }
                 }
 
-                return promotableBuilds.ToArray();
+                return promotableBuilds;
 
             }
             catch (Exception ex)
@@ -270,11 +289,21 @@ namespace PowerDelivery.Controls.Model
         {
             get
             {
-                return LastBuildFinishTime == DateTime.MinValue ? "Not yet built." : 
-                    string.Format("{0} at {1} ({2})", 
-                        LastBuildFinishTime.ToShortDateString(), 
-                        LastBuildFinishTime.ToShortTimeString(), 
-                        LastBuildNumber);
+                if (LastBuildFinishTime == DateTime.MaxValue)
+                {
+                    return "";
+                }
+                else if (LastBuildFinishTime == DateTime.MinValue)
+                {
+                    return "Not yet built.";
+                }
+                else
+                {
+                    return string.Format("{0} at {1} ({2})",
+                            LastBuildFinishTime.ToShortDateString(),
+                            LastBuildFinishTime.ToShortTimeString(),
+                            LastBuildNumber);
+                }
             }
         }
 

@@ -10,18 +10,14 @@ namespace PowerDelivery.Controls.Model
 {
     public class BuildNumber
     {
-        public BuildNumber(IBuildDetail build)
+        public BuildNumber(Build build, int visibleNumber)
         {
-            string buildUriString = build.Uri.ToString();
-
-            string buildUri = buildUriString.Contains("?") ? buildUriString.Substring(0, buildUriString.IndexOf("?")) : buildUriString;
-
-            Number = Int32.Parse(buildUri.Substring(buildUri.LastIndexOf("/") + 1));
+            Number = build.Number;
 
             DisplayString = string.Format("{0} (Build succeeded on {1} at {2})",
-                        Number,
-                        build.FinishTime.ToShortDateString(),
-                        build.FinishTime.ToShortTimeString());
+                        visibleNumber,
+                        build.BuildDetail.FinishTime.ToShortDateString(),
+                        build.BuildDetail.FinishTime.ToShortTimeString());
         }
 
         public int Number
