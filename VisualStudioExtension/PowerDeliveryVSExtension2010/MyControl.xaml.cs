@@ -1,4 +1,7 @@
-﻿using System;
+﻿using EnvDTE;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.TeamFoundation.Build;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +25,16 @@ namespace JaymeEdwards.PowerDeliveryVSExtension
         public MyControl()
         {
             InitializeComponent();
+
+            clientControl.UrlOpened += clientControl_UrlOpened;
+        }
+
+        public IVsTeamFoundationBuild TfsBuild { get; set; }
+        public Package Package { get; set; }
+
+        void clientControl_UrlOpened(object sender, PowerDelivery.Controls.UrlOpenedEventArgs e)
+        {
+            TfsBuild.DetailsManager.OpenBuild(new Uri(e.Url));
         }
     }
 }

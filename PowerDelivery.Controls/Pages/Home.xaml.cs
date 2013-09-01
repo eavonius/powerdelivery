@@ -19,6 +19,7 @@ using PowerDelivery.Controls.Commands;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.Server;
 using System.Web;
+using System.Text.RegularExpressions;
 
 namespace PowerDelivery.Controls.Pages
 {
@@ -30,14 +31,31 @@ namespace PowerDelivery.Controls.Pages
 
         const int PROD_BLOCK_LEFT = 495;
 
+        bool _loaded = false;
+
         public Home(ClientControl clientControl)
         {
             _clientControl = clientControl;
 
+            LostFocus += Home_LostFocus;
+            GotFocus += Home_GotFocus;
             Loaded += Home_Loaded;
             Unloaded += Home_Unloaded;
 
             InitializeComponent();
+        }
+
+        void Home_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (_loaded)
+            {
+                ClientConfiguration.Current.StartPolling();
+            }
+        }
+
+        void Home_LostFocus(object sender, RoutedEventArgs e)
+        {
+            ClientConfiguration.Current.StopPolling();
         }
 
         void Home_Unloaded(object sender, RoutedEventArgs e)
@@ -49,8 +67,9 @@ namespace PowerDelivery.Controls.Pages
         {
             Task.Factory.StartNew(() =>
             {
+                var t = ClientConfiguration.Current.ClientInfo.Templates;
                 var x = ClientConfiguration.Current.Pipelines;
-                
+
                 Dispatcher.Invoke(new Action(delegate()
                 {
                     lstPipelines.ItemsSource = ClientConfiguration.Current.Pipelines;
@@ -58,6 +77,9 @@ namespace PowerDelivery.Controls.Pages
                     HideProgress();
 
                     ClientConfiguration.Current.StartPolling();
+
+                    _loaded = true;
+
                 }), System.Windows.Threading.DispatcherPriority.Background);
             });
         }
@@ -409,33 +431,39 @@ namespace PowerDelivery.Controls.Pages
             }
         }
 
+        static string UrlEncodeUpperCase(string value)
+        {
+            value = HttpUtility.UrlEncode(value);
+            return Regex.Replace(value, "(%[0-9a-f][0-9a-f])", c => c.Value.ToUpper());
+        }
+
         private void EnvironmentBlockTitle_MouseDown(object sender, MouseButtonEventArgs e)
         {
             FrameworkElement blockBorder = (FrameworkElement)sender;
 
             PipelineEnvironment environment = (PipelineEnvironment)blockBorder.DataContext;
 
-            NavigationService.Navigate(new ShowPipelineEnvironment(environment));
+            if (environment.LastBuildUri != null)
+            {
+                if (ClientConfiguration.Current.IsInVisualStudio)
+                {
+                    _clientControl.OnUrlOpened(new UrlOpenedEventArgs(environment.LastBuildUri.ToString()));
+                }
+                else
+                {
+                    Uri viewBuildDetailsUri = environment.Pipeline.Source.ClientHyperlinkService.GetViewBuildDetailsUrl(environment.LastBuildUri);
+
+                    Process.Start(viewBuildDetailsUri.ToString());
+                }
+            }
 
             /*
-            TfsTeamProjectCollection tfs = new TfsTeamProjectCollection(new Uri(environment.Pipeline.Source.Uri));
+            FrameworkElement blockBorder = (FrameworkElement)sender;
 
-            IRegistration registration = (IRegistration)tfs.GetService(typeof(IRegistration));
+            PipelineEnvironment environment = (PipelineEnvironment)blockBorder.DataContext;
 
-            RegistrationEntry[] entries = registration.GetRegistrationEntries("Wss");
-
-            foreach (ServiceInterface si in entries[0].ServiceInterfaces)
-            {
-                if (si.Name == "BaseSiteUrl") 
-                {
-                    Process.Start(
-                        string.Format("{0}{1}/{2}/_Build#definitionUri={3}&_a=completed", 
-                            si.Url, 
-                            environment.Pipeline.Source.Name, 
-                            environment.Pipeline.ProjectName, 
-                            HttpUtility.UrlEncode(environment.BuildDefinition.Uri.ToString())));
-                }
-            }*/
+            NavigationService.Navigate(new ShowPipelineEnvironment(environment));
+            */
         }
     }
 }

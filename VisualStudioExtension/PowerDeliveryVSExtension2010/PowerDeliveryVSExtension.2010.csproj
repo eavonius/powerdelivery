@@ -10,7 +10,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>JaymeEdwards.PowerDeliveryVSExtension</RootNamespace>
-    <AssemblyName>PowerDeliveryVSExtension</AssemblyName>
+    <AssemblyName>PowerDeliveryVSExtension.2010</AssemblyName>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
@@ -59,22 +59,47 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.TeamFoundation, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.TeamFoundation.Build.Client, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.TeamFoundation.Build.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.TeamFoundation, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="Microsoft.TeamFoundation.Build.Client, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="Microsoft.TeamFoundation.Build.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="Microsoft.TeamFoundation.Build.Workflow, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\PrivateAssemblies\Microsoft.TeamFoundation.Build.Workflow.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="Microsoft.TeamFoundation.Client, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.TeamFoundation.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.TeamFoundation.VersionControl.Client, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.TeamFoundation.VersionControl.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Client, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.TeamFoundation.Client, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="Microsoft.TeamFoundation.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="Microsoft.TeamFoundation.VersionControl.Client, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="Microsoft.TeamFoundation.VersionControl.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Client, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.OLE.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.9.0" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0" />
+    <Reference Include="Microsoft.VisualStudio.TeamFoundation, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.TeamFoundation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TeamFoundation.Build, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.TeamFoundation.Build.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.TextManager.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.10.0">
       <Private>false</Private>
@@ -154,82 +179,82 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\PowerDelivery.Controls\ClientControl.xaml.cs">
+    <Compile Include="..\..\PowerDelivery.Controls\ClientControl.xaml.cs">
       <Link>ClientControl.xaml.cs</Link>
     </Compile>
-    <Compile Include="..\PowerDelivery.Controls\ClientHost.cs">
+    <Compile Include="..\..\PowerDelivery.Controls\ClientHost.cs">
       <Link>ClientHost.cs</Link>
     </Compile>
-    <Compile Include="..\PowerDelivery.Controls\Commands\AddPipelineCommand.cs">
+    <Compile Include="..\..\PowerDelivery.Controls\Commands\AddPipelineCommand.cs">
       <Link>Commands\AddPipelineCommand.cs</Link>
     </Compile>
-    <Compile Include="..\PowerDelivery.Controls\Commands\InvokePowerDeliveryCommand.cs">
+    <Compile Include="..\..\PowerDelivery.Controls\Commands\InvokePowerDeliveryCommand.cs">
       <Link>Commands\InvokePowerDeliveryCommand.cs</Link>
     </Compile>
-    <Compile Include="..\PowerDelivery.Controls\Commands\PowerShellCommand.cs">
+    <Compile Include="..\..\PowerDelivery.Controls\Commands\PowerShellCommand.cs">
       <Link>Commands\PowerShellCommand.cs</Link>
     </Compile>
-    <Compile Include="..\PowerDelivery.Controls\Commands\RemovePipelineCommand.cs">
+    <Compile Include="..\..\PowerDelivery.Controls\Commands\RemovePipelineCommand.cs">
       <Link>Commands\RemovePipelineCommand.cs</Link>
     </Compile>
-    <Compile Include="..\PowerDelivery.Controls\Dialogs\PromoteBuildDialog.xaml.cs">
+    <Compile Include="..\..\PowerDelivery.Controls\Dialogs\PromoteBuildDialog.xaml.cs">
       <Link>Dialogs\PromoteBuildDialog.xaml.cs</Link>
     </Compile>
-    <Compile Include="..\PowerDelivery.Controls\Dialogs\PromptForChoiceDialog.xaml.cs">
+    <Compile Include="..\..\PowerDelivery.Controls\Dialogs\PromptForChoiceDialog.xaml.cs">
       <Link>Dialogs\PromptForChoiceDialog.xaml.cs</Link>
     </Compile>
-    <Compile Include="..\PowerDelivery.Controls\Model\Build.cs">
+    <Compile Include="..\..\PowerDelivery.Controls\Model\Build.cs">
       <Link>Models\Build.cs</Link>
     </Compile>
-    <Compile Include="..\PowerDelivery.Controls\Model\BuildNumber.cs">
+    <Compile Include="..\..\PowerDelivery.Controls\Model\BuildNumber.cs">
       <Link>Models\BuildNumber.cs</Link>
     </Compile>
-    <Compile Include="..\PowerDelivery.Controls\Model\Choice.cs">
+    <Compile Include="..\..\PowerDelivery.Controls\Model\Choice.cs">
       <Link>Models\Choice.cs</Link>
     </Compile>
-    <Compile Include="..\PowerDelivery.Controls\Model\ClientCollectionSource.cs">
+    <Compile Include="..\..\PowerDelivery.Controls\Model\ClientCollectionSource.cs">
       <Link>Models\ClientCollectionSource.cs</Link>
     </Compile>
-    <Compile Include="..\PowerDelivery.Controls\Model\ClientConfiguration.cs">
+    <Compile Include="..\..\PowerDelivery.Controls\Model\ClientConfiguration.cs">
       <Link>Models\ClientConfiguration.cs</Link>
     </Compile>
-    <Compile Include="..\PowerDelivery.Controls\Model\ClientInfo.cs">
+    <Compile Include="..\..\PowerDelivery.Controls\Model\ClientInfo.cs">
       <Link>Models\ClientInfo.cs</Link>
     </Compile>
-    <Compile Include="..\PowerDelivery.Controls\Model\DeliveryModule.cs">
+    <Compile Include="..\..\PowerDelivery.Controls\Model\DeliveryModule.cs">
       <Link>Models\DeliveryModule.cs</Link>
     </Compile>
-    <Compile Include="..\PowerDelivery.Controls\Model\DeliveryPipeline.cs">
+    <Compile Include="..\..\PowerDelivery.Controls\Model\DeliveryPipeline.cs">
       <Link>Models\DeliveryPipeline.cs</Link>
     </Compile>
-    <Compile Include="..\PowerDelivery.Controls\Model\PipelineEnvironment.cs">
+    <Compile Include="..\..\PowerDelivery.Controls\Model\PipelineEnvironment.cs">
       <Link>Models\PipelineEnvironment.cs</Link>
     </Compile>
-    <Compile Include="..\PowerDelivery.Controls\Model\PipelineEnvironmentBuildStatus.cs">
+    <Compile Include="..\..\PowerDelivery.Controls\Model\PipelineEnvironmentBuildStatus.cs">
       <Link>Models\PipelineEnvironmentBuildStatus.cs</Link>
     </Compile>
-    <Compile Include="..\PowerDelivery.Controls\Pages\About.xaml.cs">
+    <Compile Include="..\..\PowerDelivery.Controls\Pages\About.xaml.cs">
       <Link>Pages\About.xaml.cs</Link>
     </Compile>
-    <Compile Include="..\PowerDelivery.Controls\Pages\AddEditSource.xaml.cs">
+    <Compile Include="..\..\PowerDelivery.Controls\Pages\AddEditSource.xaml.cs">
       <Link>Pages\AddEditSource.xaml.cs</Link>
     </Compile>
-    <Compile Include="..\PowerDelivery.Controls\Pages\AddPipeline.xaml.cs">
+    <Compile Include="..\..\PowerDelivery.Controls\Pages\AddPipeline.xaml.cs">
       <Link>Pages\AddPipeline.xaml.cs</Link>
     </Compile>
-    <Compile Include="..\PowerDelivery.Controls\Pages\Home.xaml.cs">
+    <Compile Include="..\..\PowerDelivery.Controls\Pages\Home.xaml.cs">
       <Link>Pages\Home.xaml.cs</Link>
     </Compile>
-    <Compile Include="..\PowerDelivery.Controls\Pages\RunPowerShell.xaml.cs">
+    <Compile Include="..\..\PowerDelivery.Controls\Pages\RunPowerShell.xaml.cs">
       <Link>Pages\RunPowerShell.xaml.cs</Link>
     </Compile>
-    <Compile Include="..\PowerDelivery.Controls\Pages\ShowPipelineEnvironment.xaml.cs">
+    <Compile Include="..\..\PowerDelivery.Controls\Pages\ShowPipelineEnvironment.xaml.cs">
       <Link>Pages\ShowPipelineEnvironment.xaml.cs</Link>
     </Compile>
-    <Compile Include="..\PowerDelivery.Controls\Pages\Sources.xaml.cs">
+    <Compile Include="..\..\PowerDelivery.Controls\Pages\Sources.xaml.cs">
       <Link>Pages\Sources.xaml.cs</Link>
     </Compile>
-    <Compile Include="..\PowerDelivery.Controls\PromoteControl.xaml.cs">
+    <Compile Include="..\..\PowerDelivery.Controls\PromoteControl.xaml.cs">
       <Link>PromoteControl.xaml.cs</Link>
     </Compile>
     <Compile Include="MyControl.xaml.cs">
@@ -276,86 +301,86 @@
     <None Include="Resources\Images_24bit.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="..\PowerDelivery.Controls\Images\action_Cancel_16xLG.png">
+    <Resource Include="..\..\PowerDelivery.Controls\Images\action_Cancel_16xLG.png">
       <Link>Images\action_Cancel_16xLG.png</Link>
     </Resource>
-    <Resource Include="..\PowerDelivery.Controls\Images\BuildSolution_104.png">
+    <Resource Include="..\..\PowerDelivery.Controls\Images\BuildSolution_104.png">
       <Link>Images\BuildSolution_104.png</Link>
     </Resource>
-    <Resource Include="..\PowerDelivery.Controls\Images\ExtensionManager_vsix_OSReg.ico">
+    <Resource Include="..\..\PowerDelivery.Controls\Images\ExtensionManager_vsix_OSReg.ico">
       <Link>Images\ExtensionManager_vsix_OSReg.ico</Link>
     </Resource>
-    <Resource Include="..\PowerDelivery.Controls\Images\Pipelines.png">
+    <Resource Include="..\..\PowerDelivery.Controls\Images\Pipelines.png">
       <Link>Images\Pipelines.png</Link>
     </Resource>
-    <Resource Include="..\PowerDelivery.Controls\Images\refresh_16xLG.png">
+    <Resource Include="..\..\PowerDelivery.Controls\Images\refresh_16xLG.png">
       <Link>Images\refresh_16xLG.png</Link>
     </Resource>
-    <Resource Include="..\PowerDelivery.Controls\Images\ScriptFile_452.png">
+    <Resource Include="..\..\PowerDelivery.Controls\Images\ScriptFile_452.png">
       <Link>Images\ScriptFile_452.png</Link>
     </Resource>
-    <Resource Include="..\PowerDelivery.Controls\Images\Server_5720.png">
+    <Resource Include="..\..\PowerDelivery.Controls\Images\Server_5720.png">
       <Link>Images\Server_5720.png</Link>
     </Resource>
     <Content Include="Resources\Package.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="..\PowerDelivery.Controls\ClientControl.xaml">
+    <Page Include="..\..\PowerDelivery.Controls\ClientControl.xaml">
       <Link>ClientControl.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\PowerDelivery.Controls\Dialogs\PromoteBuildDialog.xaml">
+    <Page Include="..\..\PowerDelivery.Controls\Dialogs\PromoteBuildDialog.xaml">
       <Link>Dialogs\PromoteBuildDialog.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\PowerDelivery.Controls\Dialogs\PromptForChoiceDialog.xaml">
+    <Page Include="..\..\PowerDelivery.Controls\Dialogs\PromptForChoiceDialog.xaml">
       <Link>Dialogs\PromptForChoiceDialog.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\PowerDelivery.Controls\Pages\About.xaml">
+    <Page Include="..\..\PowerDelivery.Controls\Pages\About.xaml">
       <Link>Pages\About.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\PowerDelivery.Controls\Pages\AddEditSource.xaml">
+    <Page Include="..\..\PowerDelivery.Controls\Pages\AddEditSource.xaml">
       <Link>Pages\AddEditSource.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\PowerDelivery.Controls\Pages\AddPipeline.xaml">
+    <Page Include="..\..\PowerDelivery.Controls\Pages\AddPipeline.xaml">
       <Link>Pages\AddPipeline.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\PowerDelivery.Controls\Pages\Home.xaml">
+    <Page Include="..\..\PowerDelivery.Controls\Pages\Home.xaml">
       <Link>Pages\Home.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\PowerDelivery.Controls\Pages\RunPowerShell.xaml">
+    <Page Include="..\..\PowerDelivery.Controls\Pages\RunPowerShell.xaml">
       <Link>Pages\RunPowerShell.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\PowerDelivery.Controls\Pages\ShowPipelineEnvironment.xaml">
+    <Page Include="..\..\PowerDelivery.Controls\Pages\ShowPipelineEnvironment.xaml">
       <Link>Pages\ShowPipelineEnvironment.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\PowerDelivery.Controls\Pages\Sources.xaml">
+    <Page Include="..\..\PowerDelivery.Controls\Pages\Sources.xaml">
       <Link>Pages\Sources.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\PowerDelivery.Controls\PromoteControl.xaml">
+    <Page Include="..\..\PowerDelivery.Controls\PromoteControl.xaml">
       <Link>PromoteControl.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\PowerDelivery.Controls\Styles.xaml">
+    <Page Include="..\..\PowerDelivery.Controls\Styles.xaml">
       <Link>Styles.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

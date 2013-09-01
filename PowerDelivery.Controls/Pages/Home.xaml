@@ -129,13 +129,13 @@
             <TextBlock Style="{StaticResource PageDescription}">Review the pipelines continuously delivering software using the 
             TFS sources you are connected to.</TextBlock>
         </StackPanel>
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
             <ScrollViewer.Content>
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition />
                     </Grid.RowDefinitions>
-                    <StackPanel Name="pnlLoadingPipelines" Orientation="Vertical" VerticalAlignment="Center">
+                    <StackPanel Name="pnlLoadingPipelines" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
                         <ProgressBar Height="40" IsIndeterminate="True" Margin="0 0 20 0" Background="#666" Foreground="YellowGreen" />
                         <TextBlock Name="txtProgressMessage" Text="Connecting to TFS and Loading Pipelines..." Foreground="{StaticResource LabelColor}" HorizontalAlignment="Center" FontSize="15" Margin="0 10 0 0" />
                     </StackPanel>

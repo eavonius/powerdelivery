@@ -16,6 +16,7 @@ namespace PowerDelivery.Controls.Model
 {
     public class PipelineEnvironment : INotifyPropertyChanged
     {
+        Uri _lastBuildUri;
         PipelineEnvironmentBuildStatus _lastStatus;
         string _lastBuildNumber;
         DateTime _lastBuildFinishTime;
@@ -40,6 +41,12 @@ namespace PowerDelivery.Controls.Model
                     OnPropertyChanged("Builds");
                 }
             }
+        }
+
+        public Uri LastBuildUri
+        {
+            get { return _lastBuildUri; }
+            set { _lastBuildUri = value; OnPropertyChanged("LastBuildUri"); }
         }
 
         public PipelineEnvironmentBuildStatus LastStatus 
@@ -134,6 +141,7 @@ namespace PowerDelivery.Controls.Model
             {
                 IQueuedBuild nextQueuedBuild = queuedBuildsView.QueuedBuilds.OrderBy(b => b.QueuePosition).First();
 
+                LastBuildUri = nextQueuedBuild.Build.Uri;
                 LastStatus = new PipelineEnvironmentBuildStatus(BuildStatus.InProgress);
 
                 isQueued = true;
@@ -163,6 +171,8 @@ namespace PowerDelivery.Controls.Model
                             }
 
                             LastBuildFinishTime = build.FinishTime;
+
+                            LastBuildUri = build.Uri;
 
                             if (EnvironmentName == "Commit")
                             {
@@ -206,6 +216,7 @@ namespace PowerDelivery.Controls.Model
                 LastStatus = new PipelineEnvironmentBuildStatus(BuildStatus.None);
             }
 
+            LastBuildUri = null;
             LastBuildFinishTime = DateTime.MinValue;
             LastBuildNumber = "0";
         }
@@ -229,14 +240,14 @@ namespace PowerDelivery.Controls.Model
             {
                 List<BuildNumber> promotableBuilds = new List<BuildNumber>();
 
-                IBuildDetail[] buildDetails = BuildDefinition.BuildServer.QueryBuilds(BuildDefinition);
+                IBuildDetail[] buildDetails = Pipeline.Source.BuildServer.QueryBuilds(BuildDefinition);
 
                 foreach (IBuildDetail buildDetail in buildDetails)
                 {
-                    IDictionary<string, object> processParams = WorkflowHelpers.DeserializeProcessParameters(buildDetail.ProcessParameters);
-
                     if (buildDetail.BuildFinished && buildDetail.Status == BuildStatus.Succeeded)
                     {
+                        IDictionary<string, object> processParams = WorkflowHelpers.DeserializeProcessParameters(buildDetail.ProcessParameters);
+
                         Build build = new Build(buildDetail);
 
                         int visibleBuildNumber = build.Number;

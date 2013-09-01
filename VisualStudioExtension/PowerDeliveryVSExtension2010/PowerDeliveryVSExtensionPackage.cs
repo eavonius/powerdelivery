@@ -9,6 +9,9 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 
+using Microsoft.VisualStudio.TeamFoundation;
+using Microsoft.VisualStudio.TeamFoundation.Build;
+
 namespace JaymeEdwards.PowerDeliveryVSExtension
 {
     /// <summary>
@@ -53,6 +56,8 @@ namespace JaymeEdwards.PowerDeliveryVSExtension
         /// </summary>
         private void ShowToolWindow(object sender, EventArgs e)
         {
+            IVsTeamFoundationBuild tfsBuild = (IVsTeamFoundationBuild)GetService(typeof(IVsTeamFoundationBuild));
+
             // Get the instance number 0 of this tool window. This window is single instance so this instance
             // is actually the only one.
             // The last flag is set to true so that if the tool window does not exists it will be created.
@@ -61,6 +66,12 @@ namespace JaymeEdwards.PowerDeliveryVSExtension
             {
                 throw new NotSupportedException(Resources.CanNotCreateWindow);
             }
+
+            MyToolWindow myWindow = (MyToolWindow)window;
+            MyControl myControl = (MyControl)myWindow.Content;
+            myControl.Package = this;
+            myControl.TfsBuild = tfsBuild;
+
             IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
         }
@@ -87,6 +98,17 @@ namespace JaymeEdwards.PowerDeliveryVSExtension
                 CommandID toolwndCommandID = new CommandID(GuidList.guidPowerDeliveryVSExtensionCmdSet, (int)PkgCmdIDList.cmdidDeploymentPipelines);
                 MenuCommand menuToolWin = new MenuCommand(ShowToolWindow, toolwndCommandID);
                 mcs.AddCommand( menuToolWin );
+            }
+
+            ToolWindowPane window = this.FindToolWindow(typeof(MyToolWindow), 0, true);
+
+            if (window != null)
+            {
+                MyToolWindow myWindow = (MyToolWindow)window;
+                IVsTeamFoundationBuild tfsBuild = (IVsTeamFoundationBuild)GetService(typeof(IVsTeamFoundationBuild));
+                MyControl myControl = (MyControl)myWindow.Content;
+                myControl.Package = this;
+                myControl.TfsBuild = tfsBuild;
             }
         }
         #endregion

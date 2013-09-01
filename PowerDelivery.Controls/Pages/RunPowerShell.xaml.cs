@@ -100,10 +100,11 @@ namespace PowerDelivery.Controls.Pages
 
                 _pipeline = _runspace.CreatePipeline();
 
-                Command setExecutionPolicyCommand = new System.Management.Automation.Runspaces.Command("Set-ExecutionPolicy");
-                setExecutionPolicyCommand.Parameters.Add("ExecutionPolicy", "Unrestricted");
-                setExecutionPolicyCommand.Parameters.Add("Scope", "Process");
-                _pipeline.Commands.Add(setExecutionPolicyCommand);
+                //Command setExecutionPolicyCommand = new System.Management.Automation.Runspaces.Command("Set-ExecutionPolicy");
+                //setExecutionPolicyCommand.Parameters.Add("ExecutionPolicy", "Unrestricted");
+                //setExecutionPolicyCommand.Parameters.Add("Scope", "User");
+                //setExecutionPolicyCommand.Parameters.Add("Force", new SwitchParameter(true));
+                //_pipeline.Commands.Add(setExecutionPolicyCommand);
 
                 _pipeline.Commands.AddScript(Command.Script);
 

@@ -46,7 +46,7 @@ namespace PowerDelivery.Controls
 
             Task.Factory.StartNew(() =>
             {
-                IList<BuildNumber> buildNumbers = new List<BuildNumber>();
+                IList<BuildNumber> buildNumbers = null;
 
                 try
                 {

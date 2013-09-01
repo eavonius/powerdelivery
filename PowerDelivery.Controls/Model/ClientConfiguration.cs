@@ -166,57 +166,18 @@ namespace PowerDelivery.Controls.Model
 
             foreach (ClientCollectionSource source in Sources)
             {
-                Uri collectionUri = null;
-
-                TfsTeamProjectCollection collection = null;
-
                 try
                 {
-                    collectionUri = new Uri(source.Uri);
-                    collection = new TfsTeamProjectCollection(collectionUri);
+                    IList<DeliveryPipeline> sourcePipelines = source.GetPipelines();
 
-                    IBuildServer buildServer = collection.GetService<IBuildServer>();
-                    ICommonStructureService commonStructure = collection.GetService<ICommonStructureService>();
-                    IRegistration registration = (IRegistration)collection.GetService(typeof(IRegistration));
-
-                    source.Name = collection.CatalogNode.Resource.DisplayName;
-
-                    foreach (ProjectInfo project in commonStructure.ListProjects())
-                    {
-                        foreach (IBuildDefinition definition in buildServer.QueryBuildDefinitions(project.Name))
-                        {
-                            if (definition.Process.ServerPath.Contains("BuildProcessTemplates/PowerDelivery"))
-                            {
-                                IDictionary<string, object> processParams = WorkflowHelpers.DeserializeProcessParameters(definition.ProcessParameters);
-
-                                if (processParams.ContainsKey("PowerShellScriptPath"))
-                                {
-                                    string scriptPath = processParams["PowerShellScriptPath"] as string;
-
-                                    string scriptName = System.IO.Path.GetFileNameWithoutExtension(scriptPath.Substring(scriptPath.LastIndexOf("/")));
-
-                                    string environmentName = definition.Name.Substring(definition.Name.LastIndexOf(" - ") + 3);
-
-                                    DeliveryPipeline pipeline = pipelines.FirstOrDefault(p => p.ScriptName == scriptName);
-
-                                    if (pipeline == null)
-                                    {
-                                        pipeline = new DeliveryPipeline(registration, source, project, collection.Name, scriptName);
-                                        pipelines.Add(pipeline);
-                                    }
-
-                                    PipelineEnvironment environment = new PipelineEnvironment(pipeline, environmentName, definition);
-
-                                    pipeline.Environments.Add(environment);
-                                }
-                            }
-                        }
+                    if (sourcePipelines.Count > 0) {
+                        pipelines.AddRange(sourcePipelines);
                     }
                 }
                 catch (Exception) { }
-
-                Pipelines = pipelines;
             }
+
+            Pipelines = pipelines;
         }
 
         public void StartPolling()

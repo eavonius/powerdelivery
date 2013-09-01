@@ -18,6 +18,16 @@ using PowerDelivery.Controls.Model;
 
 namespace PowerDelivery.Controls
 {
+    public class UrlOpenedEventArgs : EventArgs
+    {
+        public UrlOpenedEventArgs(string url)
+        {
+            Url = url;
+        }
+
+        public string Url { get; private set; }
+    }
+
     /// <summary>
     /// Client control for PowerDelivery.
     /// </summary>
@@ -34,6 +44,8 @@ namespace PowerDelivery.Controls
 
             frmContent.Navigate(new Pages.Home(this));
         }
+
+        public event EventHandler<UrlOpenedEventArgs> UrlOpened;
 
         private void btnPipelines_Click(object sender, RoutedEventArgs e)
         {
@@ -56,6 +68,14 @@ namespace PowerDelivery.Controls
             if (!(frmContent.Content is Pages.About))
             {
                 frmContent.Navigate(new Pages.About());
+            }
+        }
+
+        internal void OnUrlOpened(UrlOpenedEventArgs e)
+        {
+            if (UrlOpened != null)
+            {
+                UrlOpened(this, e);
             }
         }
     }

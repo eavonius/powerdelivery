@@ -8,5 +8,5 @@
              mc:Ignorable="d" 
              d:DesignHeight="480" d:DesignWidth="640"
              Name="DeploymentPipelines">
-    <c:ClientControl />
+    <c:ClientControl x:Name="clientControl" />
 </UserControl>
