@@ -56,7 +56,7 @@ namespace JaymeEdwards.PowerDeliveryVSExtension
         /// </summary>
         private void ShowToolWindow(object sender, EventArgs e)
         {
-            IVsTeamFoundationBuild tfsBuild = (IVsTeamFoundationBuild)GetService(typeof(IVsTeamFoundationBuild));
+            VsTeamFoundationBuild tfsBuild = (VsTeamFoundationBuild)GetService(typeof(IVsTeamFoundationBuild));
 
             // Get the instance number 0 of this tool window. This window is single instance so this instance
             // is actually the only one.
@@ -105,7 +105,7 @@ namespace JaymeEdwards.PowerDeliveryVSExtension
             if (window != null)
             {
                 MyToolWindow myWindow = (MyToolWindow)window;
-                IVsTeamFoundationBuild tfsBuild = (IVsTeamFoundationBuild)GetService(typeof(IVsTeamFoundationBuild));
+                VsTeamFoundationBuild tfsBuild = (VsTeamFoundationBuild)GetService(typeof(IVsTeamFoundationBuild));
                 MyControl myControl = (MyControl)myWindow.Content;
                 myControl.Package = this;
                 myControl.TfsBuild = tfsBuild;

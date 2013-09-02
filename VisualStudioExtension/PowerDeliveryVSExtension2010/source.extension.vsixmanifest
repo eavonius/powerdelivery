@@ -3,7 +3,7 @@
   <Identifier Id="E4D8E826-0144-4775-B7BA-1FA37BE8EB74">
     <Name>PowerDelivery for Visual Studio 2010</Name>
     <Author>Jayme Edwards</Author>
-    <Version>1.0</Version>
+    <Version>1.0.1</Version>
     <Description xml:space="preserve">Continuous delivery of software to your customers using Windows PowerShell and Microsoft Team Foundation Server.</Description>
     <Locale>1033</Locale>
     <InstalledByMsi>false</InstalledByMsi>
@@ -18,7 +18,7 @@
   </Identifier>
   <References>
     <Reference Id="Microsoft.VisualStudio.MPF" MinVersion="10.0" MaxVersion="10.0">
-        <Name>Visual Studio MPF</Name>
+      <Name>Visual Studio MPF</Name>
     </Reference>
   </References>
   <Content>

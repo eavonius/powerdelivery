@@ -20,7 +20,9 @@ namespace PowerDelivery.Controls.Model
         PipelineEnvironmentBuildStatus _lastStatus;
         string _lastBuildNumber;
         DateTime _lastBuildFinishTime;
-        List<Build> _builds;
+        //List<Build> _builds;
+        IQueuedBuildsView _queuedBuildsView;
+        IBuildDetailSpec _buildSpec;
 
         public DeliveryPipeline Pipeline { get; private set; }
         public string EnvironmentName { get; private set; }
@@ -28,6 +30,7 @@ namespace PowerDelivery.Controls.Model
         public bool IsPolling { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /*
         public List<Build> Builds
         {
             get { return _builds; }
@@ -42,6 +45,7 @@ namespace PowerDelivery.Controls.Model
                 }
             }
         }
+        */
 
         public Uri LastBuildUri
         {
@@ -102,12 +106,20 @@ namespace PowerDelivery.Controls.Model
             EnvironmentName = environmentName;
             BuildDefinition = buildDefinition;
 
-            Builds = new List<Build>();
+            //Builds = new List<Build>();
 
             LastStatus = new PipelineEnvironmentBuildStatus(null);
             LastBuildFinishTime = DateTime.MaxValue;
             LastBuildNumber = "0";
 
+            _queuedBuildsView = BuildDefinition.BuildServer.CreateQueuedBuildsView(new Uri[] { BuildDefinition.Uri });
+
+            _queuedBuildsView.StatusFilter = QueueStatus.InProgress | QueueStatus.Queued;
+            _queuedBuildsView.QueryOptions = QueryOptions.Definitions;
+
+            _buildSpec = Pipeline.Source.BuildServer.CreateBuildDetailSpec(BuildDefinition);
+            _buildSpec.InformationTypes = null;
+            
             StartPolling();
         }
 
@@ -130,88 +142,82 @@ namespace PowerDelivery.Controls.Model
         {
             bool isQueued = false;
 
-            IQueuedBuildsView queuedBuildsView = BuildDefinition.BuildServer.CreateQueuedBuildsView(new Uri[] { BuildDefinition.Uri });
+            _queuedBuildsView.Refresh(false);
 
-            queuedBuildsView.StatusFilter = QueueStatus.InProgress | QueueStatus.Queued;
-            queuedBuildsView.QueryOptions = QueryOptions.All;
-
-            queuedBuildsView.Refresh(false);
-
-            if (queuedBuildsView.QueuedBuilds.Length > 0) 
+            if (_queuedBuildsView.QueuedBuilds.Length > 0) 
             {
-                IQueuedBuild nextQueuedBuild = queuedBuildsView.QueuedBuilds.OrderBy(b => b.QueuePosition).First();
+                IQueuedBuild nextQueuedBuild = _queuedBuildsView.QueuedBuilds.OrderBy(b => b.QueuePosition).First();
 
                 LastBuildUri = nextQueuedBuild.Build.Uri;
                 LastStatus = new PipelineEnvironmentBuildStatus(BuildStatus.InProgress);
 
                 isQueued = true;
             }
-            
-            IOrderedEnumerable<IBuildDetail> existingBuilds = BuildDefinition.QueryBuilds().OrderByDescending(b => b.StartTime);
-
-            Builds.Clear();
-
-            bool foundStatusBuild = false;
-
-            foreach (IBuildDetail build in existingBuilds)
-            {
-                Builds.Add(new Build(build));
-
-                try
-                {
-                    if (!foundStatusBuild)
-                    {
-                        IDictionary<string, object> processParams = WorkflowHelpers.DeserializeProcessParameters(build.ProcessParameters);
-
-                        if (EnvironmentName == "Commit" || processParams.ContainsKey("PriorBuild"))
-                        {
-                            if (!isQueued)
-                            {
-                                LastStatus = new PipelineEnvironmentBuildStatus(build.Status);
-                            }
-
-                            LastBuildFinishTime = build.FinishTime;
-
-                            LastBuildUri = build.Uri;
-
-                            if (EnvironmentName == "Commit")
-                            {
-                                LastBuildNumber = new Build(build).Number.ToString();
-                            }
-                            else if (EnvironmentName == "Production")
-                            {
-                                string buildUriString = build.Uri.ToString();
-
-                                string buildUri = buildUriString.Contains("?") ? buildUriString.Substring(0, buildUriString.IndexOf("?")) : buildUriString;
-
-                                string buildUriPrefix = buildUri.Substring(0, buildUri.LastIndexOf("/") + 1);
-
-                                Uri commitBuildUri = new Uri(string.Format("{0}{1}", buildUriPrefix, processParams["PriorBuild"] as string));
-
-                                IBuildDetail[] buildDetail = BuildDefinition.BuildServer.QueryBuildsByUri(new Uri[] { commitBuildUri }, new string[] { "*" }, QueryOptions.Definitions);
-
-                                processParams = WorkflowHelpers.DeserializeProcessParameters(buildDetail[0].ProcessParameters);
-
-                                LastBuildNumber = processParams["PriorBuild"] as string;
-                            }
-                            else
-                            {
-                                LastBuildNumber = processParams["PriorBuild"] as string;
-                            }
-
-                            foundStatusBuild = true;
-                        }
-                    }
-                }
-                catch (Exception) {}
-            }
-
-            if (foundStatusBuild)
-            {
-                return;
-            }
 
             if (!isQueued)
+            {
+                IOrderedEnumerable<IBuildDetail> existingBuilds = BuildDefinition.BuildServer.QueryBuilds(_buildSpec).Builds.OrderByDescending(b => b.StartTime);
+
+                bool foundStatusBuild = false;
+
+                foreach (IBuildDetail build in existingBuilds)
+                {
+                    try
+                    {
+                        if (!foundStatusBuild)
+                        {
+                            IDictionary<string, object> processParams = WorkflowHelpers.DeserializeProcessParameters(build.ProcessParameters);
+
+                            if (EnvironmentName == "Commit" || processParams.ContainsKey("PriorBuild"))
+                            {
+                                if (!isQueued)
+                                {
+                                    LastStatus = new PipelineEnvironmentBuildStatus(build.Status);
+                                }
+
+                                LastBuildFinishTime = build.FinishTime;
+
+                                LastBuildUri = build.Uri;
+
+                                if (EnvironmentName == "Commit")
+                                {
+                                    LastBuildNumber = new Build(build).Number.ToString();
+                                }
+                                else if (EnvironmentName == "Production")
+                                {
+                                    string buildUriString = build.Uri.ToString();
+
+                                    string buildUri = buildUriString.Contains("?") ? buildUriString.Substring(0, buildUriString.IndexOf("?")) : buildUriString;
+
+                                    string buildUriPrefix = buildUri.Substring(0, buildUri.LastIndexOf("/") + 1);
+
+                                    Uri commitBuildUri = new Uri(string.Format("{0}{1}", buildUriPrefix, processParams["PriorBuild"] as string));
+
+                                    IBuildDetail buildDetail = BuildDefinition.BuildServer.GetMinimalBuildDetails(commitBuildUri);
+
+                                    processParams = WorkflowHelpers.DeserializeProcessParameters(buildDetail.ProcessParameters);
+
+                                    LastBuildNumber = processParams["PriorBuild"] as string;
+                                }
+                                else
+                                {
+                                    LastBuildNumber = processParams["PriorBuild"] as string;
+                                }
+
+                                foundStatusBuild = true;
+                                break;
+                            }
+                        }
+                    }
+                    catch (Exception) { }
+                }
+
+                if (foundStatusBuild)
+                {
+                    return;
+                }
+            }
+            else
             {
                 LastStatus = new PipelineEnvironmentBuildStatus(BuildStatus.None);
             }
@@ -240,11 +246,15 @@ namespace PowerDelivery.Controls.Model
             {
                 List<BuildNumber> promotableBuilds = new List<BuildNumber>();
 
-                IBuildDetail[] buildDetails = Pipeline.Source.BuildServer.QueryBuilds(BuildDefinition);
+                IBuildDetailSpec buildSpec = Pipeline.Source.BuildServer.CreateBuildDetailSpec(BuildDefinition);
+                buildSpec.InformationTypes = null;
+                buildSpec.Status = BuildStatus.Succeeded;
 
-                foreach (IBuildDetail buildDetail in buildDetails)
+                IBuildQueryResult buildDetails = Pipeline.Source.BuildServer.QueryBuilds(buildSpec);
+
+                foreach (IBuildDetail buildDetail in buildDetails.Builds)
                 {
-                    if (buildDetail.BuildFinished && buildDetail.Status == BuildStatus.Succeeded)
+                    if (buildDetail.BuildFinished)
                     {
                         IDictionary<string, object> processParams = WorkflowHelpers.DeserializeProcessParameters(buildDetail.ProcessParameters);
 
@@ -262,9 +272,9 @@ namespace PowerDelivery.Controls.Model
 
                             Uri commitBuildUri = new Uri(string.Format("{0}{1}", buildUriPrefix, processParams["PriorBuild"] as string));
 
-                            IBuildDetail[] commitBuildDetail = BuildDefinition.BuildServer.QueryBuildsByUri(new Uri[] { commitBuildUri }, new string[] { "*" }, QueryOptions.Definitions);
+                            IBuildDetail commitBuildDetail = BuildDefinition.BuildServer.GetMinimalBuildDetails(commitBuildUri);
 
-                            IDictionary<string, object> commitProcessParams = WorkflowHelpers.DeserializeProcessParameters(commitBuildDetail[0].ProcessParameters);
+                            IDictionary<string, object> commitProcessParams = WorkflowHelpers.DeserializeProcessParameters(commitBuildDetail.ProcessParameters);
 
                             visibleBuildNumber = Int32.Parse((string)commitProcessParams["PriorBuild"]);
                         }

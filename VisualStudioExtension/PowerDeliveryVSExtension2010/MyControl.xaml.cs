@@ -29,7 +29,7 @@ namespace JaymeEdwards.PowerDeliveryVSExtension
             clientControl.UrlOpened += clientControl_UrlOpened;
         }
 
-        public IVsTeamFoundationBuild TfsBuild { get; set; }
+        public VsTeamFoundationBuild TfsBuild { get; set; }
         public Package Package { get; set; }
 
         void clientControl_UrlOpened(object sender, PowerDelivery.Controls.UrlOpenedEventArgs e)
