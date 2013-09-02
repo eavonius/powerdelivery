@@ -21,7 +21,7 @@ try {
         $s = [System.Diagnostics.Process]::Start($psi)
         $s.WaitForExit()
 
-        if ($s.ExitCode -gt 0 -and $s.ExitCode -ne 1001) {
+        if ($s.ExitCode -gt 0 -and $s.ExitCode -ne 2003) {
             throw "Unable to uninstall $($vsix). The exit code returned was $($s.ExitCode)"
         }
 
