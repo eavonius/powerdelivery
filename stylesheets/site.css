@@ -69,6 +69,18 @@
 	font-size: 12px;
 }
 
+.feature-overview h2 {
+	margin-top: 0px;
+	font-size: 25px;
+	font-weight: normal;
+	color: #555;
+}
+
+.feature-overview p {
+	margin-top: 10px;
+	margin-bottom: 15px;
+}
+
 #feature-highlight h2 {
 	font-weight: normal;
 }
