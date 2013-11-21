@@ -356,7 +356,7 @@ namespace PowerDelivery.Controls.Pages
 
                 DeletePipelineCommand command = new DeletePipelineCommand();
                 command.Name = pipeline.ScriptName;
-                command.CollectionURL = pipeline.CollectionName;
+                command.CollectionURL = pipeline.Source.Uri;
                 command.ProjectName = pipeline.ProjectName;
 
                 try
