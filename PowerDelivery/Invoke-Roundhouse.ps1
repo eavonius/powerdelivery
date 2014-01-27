@@ -63,7 +63,7 @@ function Invoke-Roundhouse {
     [CmdletBinding()]
     param(
       [Parameter(Position=0,Mandatory=1)][string] $scriptsDir, 
-   		[Parameter(Position=1,Mandatory=1)][string] $database, 
+   		[Parameter(Position=1,Mandatory=0)][string] $database, 
 	    [Parameter(Position=2,Mandatory=0)][string] $server, 
       [Parameter(Position=3,Mandatory=0)][string] $connectionString,
       [Parameter(Position=4,Mandatory=0)][string] $restorePath, 
@@ -84,14 +84,14 @@ function Invoke-Roundhouse {
 
     $command = "rh --silent /vf=`"sql`""
     
-	if (![String]::IsNullOrWhiteSpace($server)) {
+	if (![String]::IsNullOrWhiteSpace($server) -and ![String]::IsNullOrWhiteSpace($database)) {
 		$command += " /s=$server /d=`"$database`""
 	}
 	elseif (![String]::IsNullOrWhiteSpace($connectionString)) {
 		$command += " /c=`"$connectionString`""
 	}
 	else {
-		throw "You must specify the server or connectionString parameter."
+		throw "You must specify the server and database, or connectionString parameter."
 	}
 	
 	$command += " /f=""$localScriptsDir"" /env=$environment /o=""$localScriptsDir\output"" /simple"
