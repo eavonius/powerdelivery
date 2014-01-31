@@ -63,11 +63,18 @@ function Invoke-Roundhouse {
     [CmdletBinding()]
     param(
       [Parameter(Position=0,Mandatory=1)][string] $scriptsDir, 
-   		[Parameter(Position=1,Mandatory=0)][string] $database, 
-	    [Parameter(Position=2,Mandatory=0)][string] $server, 
+   	  [Parameter(Position=1,Mandatory=0)][string] $database, 
+	  [Parameter(Position=2,Mandatory=0)][string] $server, 
       [Parameter(Position=3,Mandatory=0)][string] $connectionString,
       [Parameter(Position=4,Mandatory=0)][string] $restorePath, 
-      [Parameter(Position=5,Mandatory=0)][string] $restoreOptions
+      [Parameter(Position=5,Mandatory=0)][string] $restoreOptions,
+	  [Parameter(Position=6,Mandatory=0)][int] $commandTimeout = 60,
+	  [Parameter(Position=7,Mandatory=0)][string] $databaseType = 'sqlserver',
+	  [Parameter(Position=8,Mandatory=0)][string] $versionFile = '_BuildInfo.xml',
+	  [Parameter(Position=10,Mandatory=0)][switch] $doNotCreateDatabase = $false,
+	  [Parameter(Position=11,Mandatory=0)][switch] $disableOutput = $false,
+	  [Parameter(Position=10,Mandatory=0)][switch] $withTransaction = $true,
+	  [Parameter(Position=10,Mandatory=0)][string] $recoveryMode = 'NoChange'
     )
 
 	Set-Location $powerdelivery.deployDir
@@ -82,8 +89,24 @@ function Invoke-Roundhouse {
     $localOutDir = Join-Path $localScriptsDir output
     $dropOutDir = Join-Path $dropScriptsDir output
 
-    $command = "rh --silent /vf=`"sql`""
-    
+    $command = "rh --silent --commandtimeout=$commandTimeout --databasetype=`"$databaseType`" --versionfile=`"$versionFile`" --recoverymode=`"$recoveryMode`""
+	
+	if ($doNotCreateDatabase -eq $true) {
+		$command += " --dc"
+	}
+	
+	if ($disableOutput -eq $true) {
+		$command += " --disableoutput"
+	}
+	
+	if ($withTransaction -eq $true) {
+		$command += " --withtransaction"
+	}
+	
+	if ($debug -eq $true) {
+		$command += " --debug"
+	}
+	
 	if (![String]::IsNullOrWhiteSpace($server) -and ![String]::IsNullOrWhiteSpace($database)) {
 		$command += " /s=$server /d=`"$database`""
 	}
@@ -94,7 +117,7 @@ function Invoke-Roundhouse {
 		throw "You must specify the server and database, or connectionString parameter."
 	}
 	
-	$command += " /f=""$localScriptsDir"" /env=$environment /o=""$localScriptsDir\output"" /simple"
+	$command += " /f=""$localScriptsDir"" /env=$environment /o=""$localScriptsDir\output"""
 	
     if ($environment -ne 'Production' -and ![String]::IsNullOrWhitespace($restorePath)) {
         $command += " --restore --restorefrompath=`"$restorePath`""
@@ -102,7 +125,7 @@ function Invoke-Roundhouse {
             $command += " --restorecustomoptions=`"$restoreOptions`""
         }
     }
-
+	
     Write-Host "$logPrefix $command"
 
 	  Exec -ErrorAction Stop { 
