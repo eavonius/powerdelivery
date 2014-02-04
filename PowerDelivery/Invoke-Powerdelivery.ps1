@@ -178,8 +178,19 @@ function Invoke-Powerdelivery {
 							    $envSettingValue = Get-BuildSetting $envSettingName
 						    }
 						    catch {
-							    $errorMessage = $_.Exception.Message
-							    throw "Error replacing setting in module configuration file: $errorMessage"
+						    	if ($envSettingName -eq 'BuildAppVersion') {
+						    		$envSettingValue = Get-BuildAppVersion
+					    		}
+					    		elseif ($envSettingName -eq 'BuildEnvironment') {
+						    		$envSettingValue = Get-BuildEnvironment
+					    		}
+					    		elseif ($envSettingName -eq 'BuildNumber') {
+						    		$envSettingValue = Get-BuildNumber
+					    		}
+					    		else {
+					    			$errorMessage = $_.Exception.Message
+							    	throw "Error replacing setting in module configuration file: $errorMessage"
+					    		}
 						    }
 
                             if ($envSettingValue.GetType().Name -eq 'Hashtable') {
@@ -342,6 +353,11 @@ function Invoke-Powerdelivery {
 		    $powerdelivery.requestedBy = whoami
 			$currentDirectory = Get-Location
 			$powerdelivery.dropLocation = [System.IO.Path]::Combine($currentDirectory, "$($appScript)BuildDrop")
+			
+			if ($powerdelivery.environment -eq 'Local') {
+				Remove-Item -Path $powerdelivery.dropLocation -Force -Recurse | Out-Null
+			}
+
 			mkdir $powerdelivery.dropLocation -Force | Out-Null
 			$dropLocation = $powerdelivery.dropLocation
 	    }
@@ -624,10 +640,6 @@ function Invoke-Powerdelivery {
 		Set-Location $powerdelivery.currentLocation
 		
 		Remove-Item -Path $powerdelivery.deployDir -Force -Recurse | Out-Null
-		
-		if ($powerdelivery.environment -eq 'Local') {
-			Remove-Item -Path $powerdelivery.dropLocation -Force -Recurse | Out-Null
-		}
 	}
 }
 
