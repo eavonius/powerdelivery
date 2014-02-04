@@ -35,6 +35,9 @@ function Invoke-Powerdelivery {
 
 	function InvokePowerDeliveryModuleHook($blockName, $stage) {
 		$actionPerformed = $false
+
+		$powerdelivery.blockName = $blockName
+
 		$powerdelivery.moduleHooks["$stage$blockName"] | % { 
 			& $_ 
 			$actionPerformed = $true
@@ -45,6 +48,8 @@ function Invoke-Powerdelivery {
 	function InvokePowerDeliveryBuildAction($condition, $stage, $description, $status, $blockName) {
 		if ($condition) {
 			$actionPerformed = $false
+
+			$powerdelivery.blockName = $blockName
 			
             if ($blockName -ne "Init") {
 			    Write-Host
