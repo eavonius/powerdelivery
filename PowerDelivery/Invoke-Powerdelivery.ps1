@@ -192,6 +192,9 @@ function Invoke-Powerdelivery {
 					    		elseif ($envSettingName -eq 'BuildNumber') {
 						    		$envSettingValue = Get-BuildNumber
 					    		}
+					    		elseif ($envSettingName -eq 'BuildDropLocation') {
+						    		$envSettingValue = Get-BuildDropLocation
+					    		}
 					    		else {
 					    			$errorMessage = $_.Exception.Message
 							    	throw "Error replacing setting in module configuration file: $errorMessage"
@@ -360,7 +363,9 @@ function Invoke-Powerdelivery {
 			$powerdelivery.dropLocation = [System.IO.Path]::Combine($currentDirectory, "$($appScript)BuildDrop")
 			
 			if ($powerdelivery.environment -eq 'Local') {
-				Remove-Item -Path $powerdelivery.dropLocation -Force -Recurse | Out-Null
+				if (Test-Path $powerdelivery.dropLocation) {
+					Remove-Item -Path $powerdelivery.dropLocation -Force -Recurse | Out-Null
+				}
 			}
 
 			mkdir $powerdelivery.dropLocation -Force | Out-Null

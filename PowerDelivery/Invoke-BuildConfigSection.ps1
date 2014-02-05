@@ -29,9 +29,21 @@ function Invoke-BuildConfigSection {
 
 	if ($section.Keys) {
 		$section.Keys | % {
-			$invokeArgs.Add($_, $section[$_])
+			$sectionValue = $section[$_]
+			if ($sectionValue.GetType().Name -ne 'Hashtable' -and $sectionValue.StartsWith(":")) {
+				$present = $sectionValue.Substring(1)
+				$isPresent = [boolean]$present
+				$switchParameter = New-Object System.Management.Automation.SwitchParameter -ArgumentList @($isPresent)
+				$invokeArgs.Add($_, $switchParameter)
+			}
+			else {
+				$invokeArgs.Add($_, $section[$_])	
+			}
 		}
 	}
 	
+	$outArgs = $invokeArgs | Out-String
+	#Write-Host "$cmdlet $outArgs"
+
 	Invoke-Expression "& $cmdlet @invokeArgs"
 }
