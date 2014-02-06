@@ -6,6 +6,8 @@
         [Parameter(Position=2,Mandatory=1)] $Replacements,
         [Parameter(Position=3,Mandatory=0)] $Namespaces
     )
+	
+	$originalLocation = Get-Location
 
 	Set-Location $powerdelivery.deployDir
 
@@ -103,4 +105,6 @@
 
         $xmlFile.Save($FileName)
     }
+	
+	Set-Location $originalLocation
 }
