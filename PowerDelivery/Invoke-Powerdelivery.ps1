@@ -161,66 +161,65 @@ function Invoke-Powerdelivery {
 				}
 				else {
 					$matches = Select-String "\<<.*?\>>" -InputObject $yamlNode -AllMatches | Foreach {$_.Matches}
+
 					$replacedValue = $yamlNode
-					if ($matches) {
-						$matches | Foreach { 
+					$matches | Foreach { 
 
-							$envSettingName = $_.Value.Substring(2, $_.Length - 4)
-							$envSettingValue = [String]::Empty
-	                        
-	                        foreach ($replacement in $replaceFor) {
-	                            if ($envSettingName.Equals($replacement, [System.StringComparison]::InvariantCultureIgnoreCase)) {
-	                                throw "Configuration setting $envSettingName and $replacement refer to each other causing a circular dependency"
-	                            }
+						$envSettingName = $_.Value.Substring(2, $_.Length - 4)
+						$envSettingValue = [String]::Empty
+    
+	                    foreach ($replacement in $replaceFor) {
+	                        if ($envSettingName.Equals($replacement, [System.StringComparison]::InvariantCultureIgnoreCase)) {
+	                            throw "Configuration setting $envSettingName and $replacement refer to each other causing a circular dependency"
 	                        }
+	                    }
 
-	                        if ($envSettingName -like "Credentials:*") {
-	                            $userName = $envSettingName.Substring(12)
-	                            $replacedValue = Get-BuildCredentials $userName
+	                    if ($envSettingName -like "Credentials:*") {
+	                        $userName = $envSettingName.Substring(12)
+	                        $replacedValue = Get-BuildCredentials $userName
+	                    }
+	                    else {
+							try {
+								$envSettingValue = Get-BuildSetting $envSettingName
+							}
+							catch {
+							    if ($envSettingName -eq "BuildAppVersion") {
+    					    	    $envSettingValue = $powerdelivery.buildAppVersion
+    					    	}
+						    	elseif ($envSettingName -eq "BuildEnvironment") {
+						    	    $envSettingValue = $powerdelivery.environment
+    					    	}
+						    	elseif ($envSettingName -eq "BuildNumber") {
+							    	$envSettingValue = $powerdelivery.buildNumber
+						    	}
+						    	elseif ($envSettingName -eq "BuildDropLocation") {
+							    	$envSettingValue = $powerdelivery.dropLocation
+						    	}
+						    	else {
+						    		$errorMessage = $_.Exception.Message
+								    throw "Error replacing setting in module configuration file: $errorMessage"
+						    	}
+							}
+
+	                        if ($envSettingValue.GetType().Name -eq 'Hashtable') {
+	                                
+	                            $subReplacements = $replaceFor | % { $_ }
+	                            $subReplacements += $envSettingName
+	                                
+	                            $replacedValue = ReplaceReferencedConfigSettings -yamlNodes $envSettingValue -replaceFor $subReplacements
 	                        }
 	                        else {
-							    try {
-								    $envSettingValue = Get-BuildSetting $envSettingName
-							    }
-							    catch {
-							    	if ($envSettingName -eq 'BuildAppVersion') {
-							    		$envSettingValue = Get-BuildAppVersion
-						    		}
-						    		elseif ($envSettingName -eq 'BuildEnvironment') {
-							    		$envSettingValue = Get-BuildEnvironment
-						    		}
-						    		elseif ($envSettingName -eq 'BuildNumber') {
-							    		$envSettingValue = Get-BuildNumber
-						    		}
-						    		elseif ($envSettingName -eq 'BuildDropLocation') {
-							    		$envSettingValue = Get-BuildDropLocation
-						    		}
-						    		else {
-						    			$errorMessage = $_.Exception.Message
-								    	throw "Error replacing setting in module configuration file: $errorMessage"
-						    		}
-							    }
+	                            $subReplacements = $replaceFor | % { $_ }
+	                            $subReplacements += $envSettingName
 
-	                            if ($envSettingValue.GetType().Name -eq 'Hashtable') {
-	                                
-	                                $subReplacements = $replaceFor | % { $_ }
-	                                $subReplacements += $envSettingName
-	                                
-	                                $replacedValue = ReplaceReferencedConfigSettings -yamlNodes $envSettingValue -replaceFor $subReplacements
-	                            }
-	                            else {
-	                                $subReplacements = $replaceFor | % { $_ }
-	                                $subReplacements += $envSettingName
+	                            $forwardNodes = New-Object System.Collections.Hashtable
+	                            $forwardNodes.Add($envSettingName, $envSettingValue)
 
-	                                $forwardNodes = New-Object System.Collections.Hashtable
-	                                $forwardNodes.Add($envSettingName, $envSettingValue)
+	                            ReplaceReferencedConfigSettings -yamlNodes $forwardNodes -replaceFor $subReplacements
 
-	                                ReplaceReferencedConfigSettings -yamlNodes $forwardNodes -replaceFor $subReplacements
-
-							        $replacedValue = $replacedValue -replace $_, $forwardNodes[$envSettingName]
-	                            }
+							    $replacedValue = $replacedValue -replace $_, $forwardNodes[$envSettingName]
 	                        }
-						}
+	                    }
 					}
 					$replacedValues.Add($_, $replacedValue)
 				}
@@ -407,10 +406,8 @@ function Invoke-Powerdelivery {
 			}
 		}
 		
-		ReplaceReferencedConfigSettings($powerdelivery.config)
-		
 		Invoke-Expression -Command ".\$appScript"
-		
+
 		Write-Host
 		Write-ConsoleSpacer
 	    "= Deployment Pipeline"
@@ -448,6 +445,8 @@ function Invoke-Powerdelivery {
 
             Write-BuildSummaryMessage -name "Application" -header "Release" -message "Version: $($powerdelivery.buildAppVersion)`nEnvironment: $($powerdelivery.environment)`nBuild: $($powerdelivery.buildNumber)"
 	    }
+
+        ReplaceReferencedConfigSettings($powerdelivery.config)
 		
 		$scriptParams["Drop Location"] = $powerdelivery.dropLocation
 		
