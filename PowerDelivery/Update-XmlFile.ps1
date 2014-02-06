@@ -64,6 +64,7 @@
         if (![System.IO.Path]::IsPathRooted($FileName)) {
             if ($powerdelivery.blockName -eq 'Compile') {
                 $FileName = Join-Path $powerdelivery.currentLocation $FileName
+				Set-ItemProperty $FileName -Name IsReadOnly -Value $false
             }
             else {
                 $FileName = Join-Path $powerdelivery.deployDir $FileName
