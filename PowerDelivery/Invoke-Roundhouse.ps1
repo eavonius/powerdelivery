@@ -73,7 +73,7 @@ function Invoke-Roundhouse {
 	  [Parameter(Position=8,Mandatory=0)][string] $versionFile = '_BuildInfo.xml',
 	  [Parameter(Position=10,Mandatory=0)][switch] $doNotCreateDatabase = $false,
 	  [Parameter(Position=11,Mandatory=0)][switch] $disableOutput = $false,
-	  [Parameter(Position=10,Mandatory=0)][switch] $withTransaction = $true,
+	  [Parameter(Position=10,Mandatory=0)][switch] $withTransaction = $false,
 	  [Parameter(Position=10,Mandatory=0)][string] $recoveryMode = 'NoChange'
     )
 
