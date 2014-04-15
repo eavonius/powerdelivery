@@ -20,7 +20,7 @@ function UpdateVsix {
 
 function BuildSource {
 
-	msbuild PowerDeliveryVSExtension.2013.csproj "/consoleloggerparameters:Verbosity=q" /p:Configuration=Release /nologo
+	msbuild PowerDeliveryVSExtension2013.csproj "/consoleloggerparameters:Verbosity=q" /p:Configuration=Release /nologo
 	
 	if ($LASTEXITCODE -ne 0) {
 		throw "MSBuild compilation failed. Last exit code was $LASTEXITCODE"
