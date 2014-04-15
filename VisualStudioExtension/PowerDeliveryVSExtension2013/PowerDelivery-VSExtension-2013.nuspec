@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>PowerDelivery-VSExtension-2013</id>
+    <version>1.0.1</version>
+    <title>PowerDelivery for Visual Studio 2013</title>
+    <authors>Jayme Edwards</authors>
+    <owners />
+    <projectUrl>http://eavonius.github.io/powerdelivery/index.html</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A Visual Studio 2013 extension for powerdelivery, a deployment framework helping you to continuously deliver software to your customers using Microsoft Team Foundation Server and Windows PowerShell.</description>
+    <summary>Visual Studio 2013 extension for PowerShell/TFS continuous delivery framework.</summary>
+    <language>es-US</language>
+    <dependencies>
+      <dependency id="powerdelivery" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin\Release\PowerDeliveryVSExtension.2013.vsix" target="tools\PowerDeliveryVSExtension.2013.vsix" />
+    <file src="chocolateyInstall.ps1" target="tools\chocolateyInstall.ps1" />
+    <file src="chocolateyUninstall.ps1" target="tools\chocolateyUninstall.ps1" />
+  </files>
+</package>
