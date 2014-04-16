@@ -150,6 +150,9 @@ layout: page
 				<a href="#uninstall_nservicebusservice_cmdlet">Uninstall-NServiceBusService</a>
 			</li>
 			<li>
+				<a href="#update_assemblyinfofiles_cmdlet">Update-AssemblyInfoFiles</a>
+			</li>
+			<li>
 				<a href="#update_xmlfile_cmdlet">Update-XmlFile</a>
 			</li>
 			<li>
@@ -182,6 +185,7 @@ layout: page
 		to learn more about what powerdelivery can do "out of the box". Many 
 		of these features will save you significant time over rolling your own 
 		solution.</p>
+
 		<a name="cmdlets"><hr></a>
 		<br />
 		<h2>PowerShell cmdlets</h2>
@@ -190,6 +194,209 @@ layout: page
 		topic from the <a href="create.html">creating deployment pipelines</a> article 
 		for an overview of the philosophy behind using these cmdlets.</p>
 		
+		<div class="row-fluid">
+			<div class="span4">
+				<h3>Databases</h3>
+				<p>Running SQL jobs, scripts, and packages.</p>
+				<ul class="nav nav-list">
+					<li>
+						<a href="#disable_sqljobs_cmdlet">Disable-SqlJobs</a>
+					</li>
+					<li>
+						<a href="#enable_sqljobs_cmdlet">Enable-SqlJobs</a>
+					</li>
+					<li>
+						<a href="#start_sqljobs_cmdlet">Start-SqlJobs</a>
+					</li>
+					<li>
+						<a href="#invoke_roundhouse_cmdlet">Invoke-Roundhouse</a>
+					</li>
+				</ul>
+				<h3>Business Intelligence</h3>
+				<p>Deploying cubes and data marts, and running SSIS packages.</p>
+				<ul class="nav nav-list">
+					<li>
+						<a href="#invoke_ssispackage_cmdlet">Invoke-SSISPackage</a>
+					</li>
+					<li>
+						<a href="#publish_ssas_cmdlet">Publish-SSAS</a>
+					</li>
+					<li>
+						<a href="#set_ssasconnection_cmdlet">Set-SSASConnection</a>
+					</li>
+					<li>
+						<a href="#wait_forleapfrogbi_cmdlet">Wait-ForLeapFrogBI</a>
+					</li>
+				</ul>
+				<h3>Websites</h3>
+				<p>Deploying websites in Microsoft IIS.</p>
+				<ul class="nav nav-list">
+					<li>
+						<a href="#publish_webdeploy_cmdlet">Publish-WebDeploy</a>
+					</li>
+					<li>
+						<a href="#set_apppoolidentity_cmdlet">Set-AppPoolIdentity</a>
+					</li>
+				</ul>
+				<h3>Windows Services</h3>
+				<p>Installing and controlling Windows services.</p>
+				<ul class="nav nav-list">
+					<li>
+						<a href="#install_nservicebusservice_cmdlet">Install-NServiceBusService</a>
+					</li>
+					<li>
+						<a href="#uninstall_nservicebusservice_cmdlet">Uninstall-NServiceBusService</a>
+					</li>
+				</ul>
+			</div>
+			<div class="span4">
+				<h3>Pipelines</h3>
+				<p>Creating, authoring, and running deployment pipeline scripts.</p>
+				<ul class="nav nav-list">
+					<li>
+						<a href="create.html#add_pipeline">Add-Pipeline</a>
+					</li>
+					<li>
+						<a href="create.html#remove_pipeline">Remove-Pipeline</a>
+					</li>
+					<li>
+						<a href="#get_buildappversion_cmdlet">Get-BuildAppVersion</a>
+					</li>
+					<li>
+						<a href="#get_buildassemblyversion_cmdlet">Get-BuildAssemblyVersion</a>
+					</li>
+					<li>
+						<a href="#get_buildchangeset_cmdlet">Get-BuildChangeSet</a>
+					</li>
+					<li>
+						<a href="#get_buildcollectionuri_cmdlet">Get-BuildCollectionUri</a>
+					</li>
+					<li>
+						<a href="#get_buildconfig_cmdlet">Get-BuildConfig</a>
+					</li>
+					<li>
+						<a href="#get_buildcredentials_cmdlet">Get-BuildCredentials</a>
+					</li>
+					<li>
+						<a href="#get_builddroplocation_cmdlet">Get-BuildDropLocation</a>
+					</li>
+					<li>
+						<a href="#get_buildenvironment_cmdlet">Get-BuildEnvironment</a>
+					</li>
+					<li>
+						<a href="#get_buildname_cmdlet">Get-BuildName</a>
+					</li>
+					<li>
+						<a href="#get_buildnumber_cmdlet">Get-BuildNumber</a>
+					</li>
+					<li>
+						<a href="#get_buildonserver_cmdlet">Get-BuildOnServer</a>
+					</li>
+					<li>
+						<a href="#get_buildrequestedby_cmdlet">Get-BuildRequestedBy</a>
+					</li>
+					<li>
+						<a href="#get_buildsetting_cmdlet">Get-BuildSetting</a>
+					</li>
+					<li>
+						<a href="#get_buildteamproject_cmdlet">Get-BuildTeamProject</a>
+					</li>
+					<li>
+						<a href="#get_builduri_cmdlet">Get-BuildUri</a>
+					</li>
+					<li>
+						<a href="#get_buildworkspacename_cmdlet">Get-BuildWorkspaceName</a>
+					</li>
+					<li>
+						<a href="#invoke_buildconfigsection_cmdlet">Invoke-BuildConfigSection</a>
+					</li>
+					<li>
+						<a href="#invoke_buildconfigsections_cmdlet">Invoke-BuildConfigSections</a>
+					</li>
+					<li>
+						<a href="#invoke_powerdelivery_cmdlet">Invoke-PowerDelivery</a>
+					</li>
+					<li>
+						<a href="#write_buildsummarymessage_cmdlet">Write-BuildSummaryMessage</a>
+					</li>
+				</ul>
+				<h3>Compiling</h3>
+				<p>Generating output to be deployed from source files.</p>
+				<ul class="nav nav-list">
+					<li>
+						<a href="#invoke_msbuild_cmdlet">Invoke-MSBuild</a>
+					</li>
+				</ul>
+				<h3>Testing</h3>
+				<p>Running automated tests to obtain results that can pass or fail the build.</p>
+				<ul class="nav nav-list">
+					<li>
+						<a href="#invoke_mstest_cmdlet">Invoke-MSTest</a>
+					</li>
+				</ul>
+			</div>
+			<div class="span4">
+				<h3>Files</h3>
+				<p>Changing files and deploying them to a variety of locations.</p>
+				<ul class="nav nav-list">
+					<li>
+						<a href="#copy_robust_cmdlet">Copy-Robust</a>
+					</li>
+					<li>
+						<a href="#deploy_buildassets_cmdlet">Deploy-BuildAssets</a>
+					</li>
+					<li>
+						<a href="#get_buildassets_cmdlet">Get-BuildAssets</a>
+					</li>
+					<li>
+						<a href="#get_computerlocaldeploypath_cmdlet">Get-ComputerLocalDeployPath</a>
+					</li>
+					<li>
+						<a href="#get_computerremotedeploypath_cmdlet">Get-ComputerRemoteDeployPath</a>
+					</li>
+					<li>
+						<a href="#new_remoteshare_cmdlet">New-RemoteShare</a>
+					</li>
+					<li>
+						<a href="#publish_buildassets_cmdlet">Publish-BuildAssets</a>
+					</li>
+					<li>
+						<a href="#update_assemblyinfofiles_cmdlet">Update-AssemblyInfoFiles</a>
+					</li>
+					<li>
+						<a href="#update_xmlfile_cmdlet">Update-XmlFile</a>
+					</li>
+				</ul>
+				<h3>Security</h3>
+				<p>Obtaining and modifying user accounts, credentials, and permissions necessary for deployment.</p>
+				<ul class="nav nav-list">
+					<li>
+						<a href="#add_windowsusertogroup_cmdlet">Add-WindowsUserToGroup</a>
+					</li>
+					<li>
+						<a href="#export_buildcredentials_cmdlet">Export-BuildCredentials</a>
+					</li>
+					<li>
+						<a href="#new_windowsuseraccount_cmdlet">New-WindowsUserAccount</a>
+					</li>
+				</ul>
+				<h3>Extensibility</h3>
+				<p>Extending the deployment pipeline script using other powershell snapins or 
+					modules, and extending PowerDelivery with your own custom delivery modules.</p>
+				<ul class="nav nav-list">
+					<li>
+						<a href="#import_deliverymodule_cmdlet">Import-DeliveryModule</a>
+					</li>
+					<li>
+						<a href="#import_snapin_cmdlet">Import-Snapin</a>
+					</li>
+					<li>
+						<a href="#register_deliverymodulehook_cmdlet">Register-DeliveryModuleHook</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+
 		<a name="add_windowsusertogroup_cmdlet"><hr></a>
 		<h3>Add-WindowsUserToGroup</h3>
 		<p>Adds a non-domain (local) user account to a group on a Windows computer. This cmdlet executes without error if the user is already a member of the group specified.</p>
@@ -204,6 +411,43 @@ layout: page
 		<p>string - The group to add the user to.</p>
 		<h5>computerName</h5>
 		<p>Optional. string - The computer to add the user to a group on. Adds the user to the group on the local computer if no computer name is specified.</p>
+
+		<a name="copy_robust_cmdlet"><hr></a>
+		<h3>Copy-Robust</h3>
+		<p>Copies files using robocopy.exe.</p>
+		<h4>Example</h4>
+		{% highlight powershell %}Copy-Robust SrcPath DstPath *.* -recurse{% endhighlight %}
+		<h4>Parameters</h4>
+		<h5>path</h5>
+		<p>string - The path of the source files to copy.</p>
+		<h5>destination</h5>
+		<p>string - The path of the destination to copy files to.</p>
+		<h5>filter</h5>
+		<p>Optional. string - A set of wildcards for file extensions to copy.</p>
+		<h5>recurse</h5>
+		<p>Optional. switch - Whether to recursively copy.</p>
+		<h5>excludeNewer</h5>
+		<p>Optional. switch - Whether to not copy files that are newer than the destination.</p>
+		<h5>excludeOlder</h5>
+		<p>Optional. Set by default. switch - Whether to not copy files that are older than the destination.</p>
+
+		<a name="deploy_buildassets_cmdlet"><hr></a>
+		<h3>Deploy-BuildAssets</h3>
+		<p>Copies files from the current build directory to the TFS drop folder. If you pass a 
+			value to the ComputerName parameter, deploys the files onto those computers instead.</p>
+		<h4>Example</h4>
+		{% highlight powershell %}Deploy-BuildAssets -path SrcPath -destination DstPath {% endhighlight %}
+		<h4>Parameters</h4>
+		<h5>computerName</h5>
+		<p>Optional. string - A comma-separated list of computer names to copy to.</p>
+		<h5>path</h5>
+		<p>string - The source path relative to the build directory of the files to copy.</p>
+		<h5>destination</h5>
+		<p>string - The relative path of the destination to copy files to.</p>
+		<h5>filter</h5>
+		<p>Optional. string - A set of wildcards for file extensions to copy.</p>
+		<h5>recurse</h5>
+		<p>Optional. switch - Whether to recursively copy.</p>
 
 		<a name="disable_sqljobs_cmdlet"><hr></a>
 		<h3>Disable-SqlJobs</h3>
@@ -382,6 +626,28 @@ if ($config.MySetting) {
 		<h4>Outputs</h4>
 		<p>string - The name of the TFS source control workspace name used to get a copy of the source code to compile.</p>
 		
+		<a name="get_computerlocaldeploypath_cmdlet"><hr></a>
+		<h3>Get-ComputerLocalDeployPath</h3>
+		<p>Retrieves the local path on a remote computer to deploy files into. This path 
+		will be a subdirectory named after the build number, nested within another 
+		directory named after the build.</p>
+		<h4>Example</h4>
+		{% highlight powershell %}$deployPath = Get-ComputerLocalDeployPath{% endhighlight %}
+		<h4>Parameters</h4>
+		<h5>computerName</h5>
+		<p>string - The computer to get the local deployment path for.</p>
+
+		<a name="get_computerremotedeploypath_cmdlet"><hr></a>
+		<h3>Get-ComputerRemoteDeployPath</h3>
+		<p>Retrieves the UNC path on a remote computer to deploy files into. This path 
+		will be a subdirectory named after the build number, nested within another 
+		directory named after the build.</p>
+		<h4>Example</h4>
+		{% highlight powershell %}$deployPath = Get-ComputerRemoteDeployPath{% endhighlight %}
+		<h4>Parameters</h4>
+		<h5>computerName</h5>
+		<p>string - The computer to get the remote deployment path for.</p>
+
 		<a name="import_deliverymodule_cmdlet"><hr></a>
 		<h3>Import-DeliveryModule</h3>
 		<p>Imports a <a href="#modules">delivery module</a> for use by a delivery pipeline.</p>
@@ -390,7 +656,46 @@ if ($config.MySetting) {
 		<h4>Parameters</h4>
 		<h5>name</h5>
 		<p>string - The name of the delivery module to import functions for.</p>
-		
+
+		<a name="import_snapin_cmdlet"><hr></a>
+		<h3>Import-Snapin</h3>
+		<p>Imports a powershell module or snapin. Use this cmdlet over Add-Module or Add-PSSnapin 
+			to ensure that the module is loaded properly within the pipeline script.</p>
+		<h4>Example</h4>
+		{% highlight powershell %}Import-Snapin Azure{% endhighlight %}
+		<h4>Parameters</h4>
+		<h5>moduleName</h5>
+		<p>string - The name of the powershell module or snapin to load.</p>
+
+		<a name="install_nservicebusservice_cmdlet"><hr></a>
+		<h3>Install-NServiceBusService</h3>
+		<p>Installs a Windows Service for an NServiceBus version 4+ Enterprise Service Bus host.</p>
+		<h4>Example</h4>
+		{% highlight powershell %}Install-NServiceBusService `
+	-ComputerName MyComputer `
+	-Name MyService `
+	-DisplayName "My Service" `
+	-Description "Does something wonderful" `
+	-Directory "C:\Share\MyService" `
+	-AccountName "MYDOMAIN\myuser" `
+	-AccountPassword "somep@ssword12"{% endhighlight %}
+		<h4>Parameters</h4>
+		<h5>computerName</h5>
+		<p>string - A comma-separated list of the computers to deploy the service onto.</p>
+		<h5>name</h5>
+		<p>string - The name of the service. This can be used to start/stop the service with the "net" command.</p>
+		<h5>displayName</h5>
+		<p>string - The name that appears in the services control panel applet.</p>
+		<h5>description</h5>
+		<p>string - The description that appears in the services control panel applet.</p>
+		<h5>directory</h5>
+		<p>string - A relative path in the build drop location of files containing the service to install.</p>
+		<h5>accountName</h5>
+		<p>string - The user account under which the service will be configured to run. This account must already 
+		exist on the computer specified by the ComputerName parameter.</p>
+		<h5>accountPassword</h5>
+		<p>string - The password under which the service will be configured to run.</p>
+
 		<a name="invoke_buildconfigsection_cmdlet"><hr></a>
 		<h3>Invoke-BuildConfigSection</h3>
 		<p>Invokes a PowerShell cmdlet passing a section of YAML from the build 
@@ -559,6 +864,20 @@ Deploy {
 		<p>string - Optional. Path to a .mdf file (backup) of a database file to restore. Until you have a database in production don't specify this property in your build. Once you have a database in production, if you specify the path to your latest production backup file, this be restored prior to running migration scripts. This allows you to test the changes exactly as they would be applied were the current build released to production.</p>
 		<h5>restoreOptions</h5>
 		<p>string - Optional. A string of options to pass to the RESTORE T-SQL statement performed. Use this to specify for instance the .sql and .log file paths that should be used instead of the ones contained within the backup file.</p>
+		<h5>commandTimeout</h5>
+		<p>int - Optional. Default is 60. The number of seconds after which the deployment will timeout.</p>
+		<h5>databaseType</h5>
+		<p>string - Optional. Default is 'sqlserver'. The type of database being deployed to.</p>
+		<h5>versionFile</h5>
+		<p>string - Optional. Default is '_BuildInfo.xml'. This file is only needed if using an XML file to manage versions.</p>
+		<h5>doNotCreateDatabase</h5>
+		<p>switch - Optional. Default is false. Whether the database should not be created if it doesn't exist.</p>
+		<h5>disableOutput</h5>
+		<p>switch - Optional. Default is false. Whether output should not be displayed in the console.</p>
+		<h5>withTransaction</h5>
+		<p>switch - Optional. Default is false. Whether deployment should occur within a transaction.</p>
+		<h5>recoveryMode</h5>
+		<p>string - Optional. Default is 'NoChange'. The mode of recovery used if deployment fails.</p>
 		
 		<a name="invoke_ssispackage_cmdlet"><hr></a>
 		<h3>Invoke-SSISPackage</h3>
@@ -578,6 +897,19 @@ Invoke-SSIS -package MyPackage.dtsx -server MyServer -dtExecPath $dtExecPath{% e
 		<h5>packageArgs</h5>
 		<p>Optional. A PowerShell hash containing name/value pairs to set as package arguments to dtexec.</p>
 		
+		<a name="new_remoteshare_cmdlet"><hr></a>
+		<h3>New-RemoteShare</h3>
+		<p>The New-RemoteShare cmdlet will create a UNC share on the remote computer if it does not exist.</p>
+		<h4>Example</h4>
+		{% highlight powershell %}New-RemoteShare REMOTE_COMPUTER MyShare "C:\MyShareDir"{% endhighlight %}
+		<h4>Parameters</h4>
+		<h5>computerName</h5>
+		<p>string - A comma-separated list of computers to create the share on.</p>
+		<h5>shareName</h5>
+		<p>string - The name to give the new share.</p>
+		<h5>shareDirectory</h5>
+		<p>string - The local path on the remote computer to share.</p>
+
 		<a name="new_windowsuseraccount_cmdlet"><hr></a>
 		<h3>New-WindowsUserAccount</h3>
 		<p>Creates a non-domain (local) user account on a Windows computer. This cmdlet executes without error if the user already exists.</p>
@@ -626,7 +958,7 @@ Invoke-SSIS -package MyPackage.dtsx -server MyServer -dtExecPath $dtExecPath{% e
 		<h5>sqlVersion</h5>
 		<p>string - Optional. The version of SQL to use. Default is "11.0"</p>
 		<h5>deploymentUtilityPath</h5>
-		<p>string - Optional. The full path to the Microsoft.AnalysisServices.DeploymentUtility.exe command-line tool on the computer specified by the <b>computer</b> parameter.</p>
+		<p>string - Optional. The full path to the Microsoft.AnalysisServices.DeploymentUtility.exe command-line tool on the computer specified by the <b>computer</b> parameter. Defaults to C:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn\ManagementStudio\Microsoft.AnalysisServices.Deployment.exe</p>
 		
 		<a name="publish_webdeploy_cmdlet"></hr></a>
 		<h3>Publish-WebDeploy</h3>
@@ -649,22 +981,30 @@ Invoke-SSIS -package MyPackage.dtsx -server MyServer -dtExecPath $dtExecPath{% e
                  -parameters: @{'DatabaseName' = 'MyDatabase'}{% endhighlight %}
 		<h4>Parameters</h4>
 		<h5>WebComputer</h5>
-		<p>string - The computer to deploy to.</p>
-		<h5>WebPort</h5>
-		<p>int - The HTTP/HTTPS port to create the web site on.</p>
+		<p>string - A comma-separated list of computers to deploy the website onto.</p>
+		<h5>Package</h5>
+		<p>string - The path to the web deployment zip file containing the package to deploy.</p>
 		<h5>WebSite</h5>
 		<p>string - The name of the virtual directory to create the web site within. A folder will also be created below the <i>Inetpub</i> directory on the target server with this name containing your web application's files.</p>
+		<h5>WebPort</h5>
+		<p>int - The HTTP/HTTPS port to create the web site on.</p>
+		<h5>WebURL</h5>
+		<p>string - The URL, including the port, that users will use to access the site.</p>
 		<h5>WebPassword</h5>
 		<p>string - A password that meets the strength requirements of the destination computer that deployment will occur on. A user will be created with the 
 		same name as the <b>WebSite</b> property and this account, combined with this password, will control the ability to perform deployments.</p>
-		<h5>WebURL</h5>
-		<p>string - The URL, including the port, that users will use to access the site.</p>
-		<h5>Package</h5>
-		<p>string - The path to the web deployment zip file containing the package to deploy.</p>
 		<h5>Parameters</h5>
 		<p>hash - Optional. Nested YAML settings for parameters that will be passed during web deployment. See the parameters.xml file inside your web deployment zip file for possible options for your specific deployment.</p>
+		<h5>AppPoolAccountUser</h5>
+		<p>string - Optional. The username of an account to create for the app pool to run under on the destination computers.</p>
+		<h5>AppPoolAccountPassword</h5>
+		<p>string - Optional. The password of an account to create for the app pool to run under on the destination computers.</p>
 		<h5>BringOffline</h5>
 		<p>bool - Optional. Must be true or false. If present, takes the web application <a href="http://www.iis.net/learn/publish/deploying-application-packages/taking-an-application-offline-before-publishing" target="_blank">offline</a> during publishing.</p>
+		<h5>DeployDir</h5>
+		<p>string - Optional. The directory containing webdeploy. Defaults to "C:\Program Files\IIS\Microsoft Web Deploy v3".</p>
+		<h5>RuntimeVersion</h5>
+		<p>string - Optional. The runtime version of .NET to set on the app pool. Defaults to "v4.0".</p>
 
 		<a name="register_deliverymodulehook_cmdlet"><hr></a>
 		<h3>Register-DeliveryModuleHook</h3>
@@ -704,6 +1044,23 @@ Invoke-SSIS -package MyPackage.dtsx -server MyServer -dtExecPath $dtExecPath{% e
 			<li>PreTestCapacity</li>
 			<li>PostTestCapacity</li>
 		</ul>
+
+		<a name="remove_pipeline_cmdlet"><hr></a>
+		<h3>Remove-Pipeline</h3>
+		<p>Removes a powerdelivery build pipeline from a TFS project. You will need to use source control history to 
+		recover your files if you accidentally remove a build pipeline using this cmdlet. The TFS security groups, 
+		TFS builds, PowerShell script, and YML configuration files associated with the pipeline will be removed.</p>
+		<h4>Example</h4>
+		{% highlight powershell %}Remove-Pipeline -name "MyApp" -collection "http://your-tfsserver/tfs" -project "My Project"{% endhighlight %}
+		<h4>Parameters</h4>
+		<h5>name</h5>
+		<p>string - The name of the product or component that will be no longer be delivered by this pipeline.</p>
+		<h5>collection</h5>
+		<p>string - The URI of the TFS collection to remove powerdelivery from.</p>
+		<h5>project</h5>
+		<p>string - The TFS project to remove powerdelivery from.</p>
+		<h5>vsVersion</h5>
+		<p>Optional. string - The version of TFS. Defaults to "10.0" (TFS 2010).</p>
 
 		<a name="set_apppoolidentity_cmdlet"><hr></a>
 		<h3>Set-AppPoolIdentity</h3>
@@ -759,6 +1116,90 @@ Invoke-SSIS -package MyPackage.dtsx -server MyServer -dtExecPath $dtExecPath{% e
 		<h5>jobs</h5>
 		<p>string - The name of the job(s) to start. You can use wildcards or a single name.</p>
 		
+		<a name="uninstall_nservicebusservice_cmdlet"><hr></a>
+		<h3>Uninstall-NServiceBusService</h3>
+		<p>Stops and then uninstalls a Windows Service for an NServiceBus version 4+ Enterprise Service Bus host. 
+		You should call this cmdlet prior to Install-NServiceBusService otherwise files will be in use.</p>
+		<h4>Example</h4>
+		{% highlight powershell %}Uninstall-NServiceBusService `
+		-ComputerName MyComputer `
+		-Name MyService `
+		-Directory "C:\Share\MyService"{% endhighlight %}
+		<h4>Parameters</h4>
+		<h5>computerName</h5>
+		<p>string - A comma-separated list of the computers to uninstall the service from.</p>
+		<h5>name</h5>
+		<p>string - The name of the service. This can be used to start/stop the service with the "net" command.</p>
+		<h5>directory</h5>
+		<p>string - A local path on the computer specified by the ComputerName parameter containing the service to uninstall.</p>
+
+		<a name="update_assemblinfofiles_cmdlet"><hr></a>
+		<h3>Update-AssemblyInfoFiles</h3>
+		<p>Updates the AssemblyInfo.cs/AssemblyInfo.vb files to include the build application version. 
+		When a delivery pipeline script uses the Pipeline function to declare a version, this function 
+		will update the version of assemblies to match that version with the changeset appended at the end.
+
+		NOTE: You do not need to call this method if using the Invoke-MSBuild cmdlet to compile your code, 
+		and if all the AssemblyInfo files you want to change are at or below the path to that project. If 
+		this is the case, Invoke-MSBuild updates them automatically.</p>
+		<h4>Example</h4>
+		{% highlight powershell %}Update-AssemblyInfoFiles "MyPath\MyProject"{% endhighlight %}
+		<h4>Parameters</h4>
+		<h5>path</h5>
+		<p>string - The path to update the version of AssemblyInfo files under.</p>
+
+		<a name="update_xmlfile_cmdlet"><hr></a>
+		<h3>Update-XmlFile</h3>
+		<p>Selects nodes in an XML file using an XPath statement and updates attributes or content of those nodes.</p>
+		<h4>Example</h4>
+		<p>The example below demonstrates replacing the someelement/someotherelement "someOtherAttribute" attribute to 
+			"Hello World 1!" where the "name" attribute matches "test1", and updating the same attribute on the element 
+			where the "name" attribute matches "test2" to "Hello World 2!" in SomeDir\SomeFile.xml.</p>
+		{% highlight yaml %}# MyConfigFile.yml
+
+XmlReplacements:
+  SomeFile:
+    FileName: SomeDir\SomeFile.xml
+    Replacements:
+      MyFirstSetting:
+        XPath: //mn:somelement/mn:someotherelement[@name='test1']
+        Attribute: someOtherAttribute
+        NewValue: Hello World 1!
+      MySecondSetting:
+        XPath: //mn:somelement/mn:someotherelement[@name='test2']
+        Attribute: someOtherAttribute
+        NewValue: Hello World 2!
+    Namespaces:
+      MyNs:
+        Prefix: mn
+        URI: http://www.mynamespace.com/{% endhighlight %}
+		{% highlight powershell %}# MyScript.ps1
+
+$XmlReplacements = Get-BuildSetting XmlReplacements
+Invoke-BuildConfigSections $XmlReplacements Update-XmlFile{% endhighlight %}
+		<h4>Parameters</h4>
+		<h5>computerName</h5>
+		<p>string - Optional. A comma-separated list of computers to update the XML file on.</p>
+		<h5>fileName</h5>
+		<p>string - A relative path to the file to update.</p>
+		<h5>replacements</h5>
+		<p>hash - A set of named replacements to make. Each hash entry requires an XPath, Attribute, and NewValue.</p>
+		<h5>namespaces</h5>
+		<p>Optional. hash - A set of XML namespaces used in the XPath statements being replaced.</p>
+
+		<a name="wait_forleapfrogbi_cmdlet"><hr></a>
+		<h3>Wait-ForLeapFrogBI</h3>
+		<p>Waits for a LeapFrogBI data mart to complete processing data from its source systems into the mart. If 
+			processing times out, or one or more SSIS packages in the data mart fail to process, the overall build 
+			will fail and details will be logged to the build output.</p>
+		<h4>Example</h4>
+		{% highlight powershell %}Wait-ForLeapFrogBI "Server=localhost;Initial Catalog=MyLFBIDB" 15{% endhighlight %}
+		<h4>Parameters</h4>
+		<h5>dataMartConnectionString</h5>
+		<p>string - A connection string to the data mart database.</p>
+		<h5>timeoutMinutes</h5>
+		<p>int - The number of minutes to wait for processing to complete before timing out.</p>
+
 		<a name="write_buildsummarymessage_cmdlet"><hr></a>
 		<h3>Write-BuildSummaryMessage</h3>
 		<p>Writes a message to a section to the <a href="use.html#build_summary">build summary</a>. Specify as the <b>name</b> parameter 
