@@ -24,8 +24,8 @@
 
     <SolidColorBrush x:Key="PipelineButtonBackgroundDisabledColor" Color="#bbb" />
 
-    <SolidColorBrush x:Key="PowerShellConsoleBackgroundColor" Color="{DynamicResource VsColor.Window}" />
-    <SolidColorBrush x:Key="PowerShellConsoleForegroundColor" Color="{DynamicResource VsColor.WindowText}" />
+    <SolidColorBrush x:Key="PowerShellConsoleBackgroundColor" Color="#012456" />
+    <SolidColorBrush x:Key="PowerShellConsoleForegroundColor" Color="#eee" />
 
     <SolidColorBrush x:Key="FieldExampleColor" Color="{DynamicResource VsColor.GrayText}" />
 

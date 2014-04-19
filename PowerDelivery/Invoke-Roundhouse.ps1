@@ -58,6 +58,27 @@ Optional. Path to a .mdf file (backup) of a database file to restore. Until you 
 
 .Parameter restoreOptions
 Optional. A string of options to pass to the RESTORE T-SQL statement performed. Use this to specify for instance the .sql and .log file paths that should be used instead of the ones contained within the backup file.
+
+.Parameter commandTimeout
+Optional. Default is 60. The number of seconds after which the deployment will timeout.
+
+.Parameter databaseType
+Optional. Default is 'sqlserver'. The type of database being deployed to.
+
+.Parameter versionFile
+Optional. Default is '_BuildInfo.xml'. This file is only needed if using an XML file to manage versions.
+
+.Parameter doNotCreateDatabase
+Optional. Default is false. Whether the database should not be created if it doesn't exist.
+
+.Parameter disableOutput
+Optional. Default is false. Whether output should not be displayed in the console.
+
+.Parameter withTransaction
+Optional. Default is false. Whether deployment should occur within a transaction.
+
+.Parameter recoveryMode
+Optional. Default is 'NoChange'. The mode of recovery used if deployment fails.
 #>
 function Invoke-Roundhouse {
     [CmdletBinding()]

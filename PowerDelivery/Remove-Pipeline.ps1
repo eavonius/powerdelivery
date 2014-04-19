@@ -18,6 +18,9 @@ The URI of the TFS collection to remove powerdelivery from.
 
 .Parameter project
 The TFS project to remove powerdelivery from.
+
+.Parameter vsVersion
+The version of TFS. Defaults to "10.0" (TFS 2010)
 #>
 function Remove-Pipeline {
     [CmdletBinding()]

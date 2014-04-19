@@ -7,7 +7,7 @@ Updates the AssemblyInfo.cs/AssemblyInfo.vb files to include the build applicati
 When a delivery pipeline script uses the Pipeline function to declare a version, this function 
 will update the version of assemblies to match that version with the changeset appended at the end.
 
-NOTE: You do not need to call this method if using hte Invoke-MSBuild cmdlet to compile your code, 
+NOTE: You do not need to call this method if using the Invoke-MSBuild cmdlet to compile your code, 
 and if all the AssemblyInfo files you want to change are at or below the path to that project. If 
 this is the case, Invoke-MSBuild updates them automatically.
 

@@ -1,4 +1,44 @@
-﻿function Update-XmlFile {
+﻿<#
+.Synopsis
+Updates data in an XML file.
+
+.Description
+Selects nodes in an XML file using an XPath statement and updates attributes or content 
+of those nodes.
+
+.Parameter ComputerName
+Optional. A comma-separated list of computers to update the XML file on.
+
+.Parameter FileName
+A relative path to the file to update.
+
+.Parameter Replacements
+hash - A set of named replacements to make. Each hash entry requires an XPath, Attribute, and NewValue.
+
+.Parameter Namespaces
+hash - A set of XML namespaces used in the XPath statements being replaced.
+
+.Example
+# MyConfigFile.yml
+
+XmlReplacements:
+  SomeFile:
+    FileName: SomeDir\SomeFile.xml
+    Replacements:
+      TabularConnection:
+        XPath: //mn:somelement/mn:someotherelement[@name='test']
+        Attribute: someOtherAttribute
+        NewValue: Hello World!
+    Namespaces:
+      MyNs:
+        Prefix: mn
+        URI: http://www.mynamespace.com/
+
+# MyScript.ps1
+$XmlReplacements = Get-BuildSetting XmlReplacements
+Invoke-BuildConfigSections $XmlReplacements Update-XmlFile
+#>
+function Update-XmlFile {
     [CmdletBinding()]
     param(
         [Parameter(Position=0,Mandatory=0)] $ComputerName,

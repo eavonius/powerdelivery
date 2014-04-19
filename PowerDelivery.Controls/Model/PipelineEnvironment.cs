@@ -148,7 +148,11 @@ namespace PowerDelivery.Controls.Model
             {
                 IQueuedBuild nextQueuedBuild = _queuedBuildsView.QueuedBuilds.OrderBy(b => b.QueuePosition).First();
 
-                LastBuildUri = nextQueuedBuild.Build.Uri;
+                if (nextQueuedBuild.Build != null)
+                {
+                    LastBuildUri = nextQueuedBuild.Build.Uri;
+                }
+                
                 LastStatus = new PipelineEnvironmentBuildStatus(BuildStatus.InProgress);
 
                 isQueued = true;

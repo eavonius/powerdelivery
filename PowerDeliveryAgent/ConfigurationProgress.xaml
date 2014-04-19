@@ -1,0 +1,15 @@
+﻿<Window x:Class="PowerDeliveryAgent.ConfigurationProgress"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Powerdelivery Deployment Target Configuration Progress" Height="400" Width="500" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <ScrollViewer Grid.Row="0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Visible">
+            <TextBlock Name="txtProgress" TextWrapping="NoWrap" />
+        </ScrollViewer>
+        <Button Name="btnFinish" Grid.Row="1" Content="Finish" IsEnabled="false" Padding="15" HorizontalAlignment="Center" Margin="0 10 0 0" Click="btnFinish_Click" />
+    </Grid>
+</Window>
