@@ -57,7 +57,7 @@ function Publish-SSAS {
 
     Start-Sleep -Seconds 15
 
-    #$xmlaPath = Join-Path -Path (Get-Location) -ChildPath $xmlaPath
+    $xmlaPath = Join-Path -Path (Get-Location) -ChildPath $xmlaPath
 
     $computerNames = $computer -split "," | % { $_.Trim() }
 

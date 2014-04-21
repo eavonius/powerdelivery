@@ -5,21 +5,21 @@
   DTS:CreationName="SSIS.Package.3"
   DTS:CreatorComputerName="CATAUSLB65CRM1"
   DTS:CreatorName="CATAPULT\jedwards"
-  DTS:DTSID="{816D76C1-678E-4B14-816F-2F9A2BB7F2BA}"
+  DTS:DTSID="{2FC2EE58-484C-437B-8D95-06E34C1618CD}"
   DTS:ExecutableType="SSIS.Package.3"
   DTS:LastModifiedProductVersion="11.0.3369.0"
   DTS:LocaleID="1033"
-  DTS:ObjectName="Staging Manufacturing"
+  DTS:ObjectName="Staging Products"
   DTS:PackageType="5"
-  DTS:VersionBuild="7"
-  DTS:VersionGUID="{E71D4795-30D0-46FE-8247-60B0F870EB61}">
+  DTS:VersionBuild="10"
+  DTS:VersionGUID="{DA0EC752-0CB0-47FE-B258-D37AEB2E42DE}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">6</DTS:Property>
   <DTS:ConnectionManagers>
     <DTS:ConnectionManager
       DTS:refId="Package.ConnectionManagers[localhost.ProductStore]"
       DTS:CreationName="OLEDB"
-      DTS:DTSID="{CD7D6890-7585-4107-A5D2-06DD11D691D1}"
+      DTS:DTSID="{3C6465F8-B971-4BC8-B189-411D6D220927}"
       DTS:ObjectName="localhost.ProductStore">
       <DTS:ObjectData>
         <DTS:ConnectionManager
@@ -29,7 +29,7 @@
     <DTS:ConnectionManager
       DTS:refId="Package.ConnectionManagers[localhost.ProductStoreDataMart]"
       DTS:CreationName="OLEDB"
-      DTS:DTSID="{7b3dc3a4-241c-423f-b72b-0fa3e8b1834d}"
+      DTS:DTSID="{4DC4627F-33E6-4CD6-AAAD-1D5B6544DFC7}"
       DTS:ObjectName="localhost.ProductStoreDataMart">
       <DTS:ObjectData>
         <DTS:ConnectionManager
@@ -43,7 +43,7 @@
       DTS:refId="Package\Sequence Container"
       DTS:CreationName="STOCK:SEQUENCE"
       DTS:Description="Sequence Container"
-      DTS:DTSID="{946A3F5C-A951-4BF7-860B-9D67D9C5CA4C}"
+      DTS:DTSID="{E7CF09E2-8C1B-434F-88ED-41BA07E69967}"
       DTS:ExecutableType="STOCK:SEQUENCE"
       DTS:LocaleID="-1"
       DTS:ObjectName="Sequence Container">
@@ -53,7 +53,7 @@
           DTS:refId="Package\Sequence Container\Stage Data"
           DTS:CreationName="{5918251B-2970-45A4-AB5F-01C3C588FE5A}"
           DTS:Description="Data Flow Task"
-          DTS:DTSID="{FAF5859C-865E-465B-8A9F-2AEE613426EA}"
+          DTS:DTSID="{D6DA97AF-CADC-415C-A2F1-027CB288DAD0}"
           DTS:ExecutableType="{5918251B-2970-45A4-AB5F-01C3C588FE5A}"
           DTS:LocaleID="-1"
           DTS:ObjectName="Stage Data">
@@ -63,11 +63,11 @@
               version="1">
               <components>
                 <component
-                  refId="Package\Sequence Container\Stage Data\Manufacturers Source"
+                  refId="Package\Sequence Container\Stage Data\Products Source"
                   componentClassID="{165A526D-D5DE-47FF-96A6-F8274C19826B}"
                   contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
                   description="OLE DB Source"
-                  name="Manufacturers Source"
+                  name="Products Source"
                   usesDispositions="true"
                   version="7">
                   <properties>
@@ -78,7 +78,7 @@
                     <property
                       dataType="System.String"
                       description="Specifies the name of the database object used to open a rowset."
-                      name="OpenRowset">[dbo].[Manufacturers]</property>
+                      name="OpenRowset">[dbo].[Products]</property>
                     <property
                       dataType="System.String"
                       description="Specifies the variable that contains the name of the database object used to open a rowset."
@@ -112,7 +112,7 @@
                   </properties>
                   <connections>
                     <connection
-                      refId="Package\Sequence Container\Stage Data\Manufacturers Source.Connections[OleDbConnection]"
+                      refId="Package\Sequence Container\Stage Data\Products Source.Connections[OleDbConnection]"
                       connectionManagerID="Package.ConnectionManagers[localhost.ProductStore]"
                       connectionManagerRefId="Package.ConnectionManagers[localhost.ProductStore]"
                       description="The OLE DB runtime connection used to access the database."
@@ -120,65 +120,101 @@
                   </connections>
                   <outputs>
                     <output
-                      refId="Package\Sequence Container\Stage Data\Manufacturers Source.Outputs[OLE DB Source Output]"
+                      refId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Output]"
                       name="OLE DB Source Output">
                       <outputColumns>
                         <outputColumn
-                          refId="Package\Sequence Container\Stage Data\Manufacturers Source.Outputs[OLE DB Source Output].Columns[ManufacturerID]"
-                          dataType="i4"
-                          errorOrTruncationOperation="Conversion"
-                          errorRowDisposition="FailComponent"
-                          externalMetadataColumnId="Package\Sequence Container\Stage Data\Manufacturers Source.Outputs[OLE DB Source Output].ExternalColumns[ManufacturerID]"
-                          lineageId="Package\Sequence Container\Stage Data\Manufacturers Source.Outputs[OLE DB Source Output].Columns[ManufacturerID]"
-                          name="ManufacturerID"
-                          truncationRowDisposition="FailComponent" />
-                        <outputColumn
-                          refId="Package\Sequence Container\Stage Data\Manufacturers Source.Outputs[OLE DB Source Output].Columns[Name]"
+                          refId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Output].Columns[Name]"
                           dataType="nText"
                           errorOrTruncationOperation="Conversion"
                           errorRowDisposition="FailComponent"
-                          externalMetadataColumnId="Package\Sequence Container\Stage Data\Manufacturers Source.Outputs[OLE DB Source Output].ExternalColumns[Name]"
-                          lineageId="Package\Sequence Container\Stage Data\Manufacturers Source.Outputs[OLE DB Source Output].Columns[Name]"
+                          externalMetadataColumnId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Output].ExternalColumns[Name]"
+                          lineageId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Output].Columns[Name]"
                           name="Name"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Output].Columns[ProductID]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Output].ExternalColumns[ProductID]"
+                          lineageId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Output].Columns[ProductID]"
+                          name="ProductID"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Output].Columns[ManufacturerID]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Output].ExternalColumns[ManufacturerID]"
+                          lineageId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Output].Columns[ManufacturerID]"
+                          name="ManufacturerID"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Output].Columns[Price]"
+                          dataType="cy"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Output].ExternalColumns[Price]"
+                          lineageId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Output].Columns[Price]"
+                          name="Price"
                           truncationRowDisposition="FailComponent" />
                       </outputColumns>
                       <externalMetadataColumns
                         isUsed="True">
                         <externalMetadataColumn
-                          refId="Package\Sequence Container\Stage Data\Manufacturers Source.Outputs[OLE DB Source Output].ExternalColumns[ManufacturerID]"
+                          refId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Output].ExternalColumns[Name]"
+                          dataType="nText"
+                          name="Name" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Output].ExternalColumns[ProductID]"
+                          dataType="i4"
+                          name="ProductID" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Output].ExternalColumns[ManufacturerID]"
                           dataType="i4"
                           name="ManufacturerID" />
                         <externalMetadataColumn
-                          refId="Package\Sequence Container\Stage Data\Manufacturers Source.Outputs[OLE DB Source Output].ExternalColumns[Name]"
-                          dataType="nText"
-                          name="Name" />
+                          refId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Output].ExternalColumns[Price]"
+                          dataType="cy"
+                          name="Price" />
                       </externalMetadataColumns>
                     </output>
                     <output
-                      refId="Package\Sequence Container\Stage Data\Manufacturers Source.Outputs[OLE DB Source Error Output]"
+                      refId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Error Output]"
                       isErrorOut="true"
                       name="OLE DB Source Error Output">
                       <outputColumns>
                         <outputColumn
-                          refId="Package\Sequence Container\Stage Data\Manufacturers Source.Outputs[OLE DB Source Error Output].Columns[ManufacturerID]"
+                          refId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Error Output].Columns[ProductID]"
                           dataType="i4"
-                          lineageId="Package\Sequence Container\Stage Data\Manufacturers Source.Outputs[OLE DB Source Error Output].Columns[ManufacturerID]"
+                          lineageId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Error Output].Columns[ProductID]"
+                          name="ProductID" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Error Output].Columns[ManufacturerID]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Error Output].Columns[ManufacturerID]"
                           name="ManufacturerID" />
                         <outputColumn
-                          refId="Package\Sequence Container\Stage Data\Manufacturers Source.Outputs[OLE DB Source Error Output].Columns[Name]"
+                          refId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Error Output].Columns[Name]"
                           dataType="nText"
-                          lineageId="Package\Sequence Container\Stage Data\Manufacturers Source.Outputs[OLE DB Source Error Output].Columns[Name]"
+                          lineageId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Error Output].Columns[Name]"
                           name="Name" />
                         <outputColumn
-                          refId="Package\Sequence Container\Stage Data\Manufacturers Source.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                          refId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Error Output].Columns[Price]"
+                          dataType="cy"
+                          lineageId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Error Output].Columns[Price]"
+                          name="Price" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
                           dataType="i4"
-                          lineageId="Package\Sequence Container\Stage Data\Manufacturers Source.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                          lineageId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
                           name="ErrorCode"
                           specialFlags="1" />
                         <outputColumn
-                          refId="Package\Sequence Container\Stage Data\Manufacturers Source.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                          refId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
                           dataType="i4"
-                          lineageId="Package\Sequence Container\Stage Data\Manufacturers Source.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                          lineageId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
                           name="ErrorColumn"
                           specialFlags="2" />
                       </outputColumns>
@@ -187,11 +223,11 @@
                   </outputs>
                 </component>
                 <component
-                  refId="Package\Sequence Container\Stage Data\Manufacturers Staging"
+                  refId="Package\Sequence Container\Stage Data\Products Staging"
                   componentClassID="{4ADA7EAA-136C-4215-8098-D7A7C27FC0D1}"
                   contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
                   description="OLE DB Destination"
-                  name="Manufacturers Staging"
+                  name="Products Staging"
                   usesDispositions="true"
                   version="4">
                   <properties>
@@ -202,7 +238,7 @@
                     <property
                       dataType="System.String"
                       description="Specifies the name of the database object used to open a rowset."
-                      name="OpenRowset">[staging].[Manufacturers]</property>
+                      name="OpenRowset">[staging].[Products]</property>
                     <property
                       dataType="System.String"
                       description="Specifies the variable that contains the name of the database object used to open a rowset."
@@ -244,7 +280,7 @@
                   </properties>
                   <connections>
                     <connection
-                      refId="Package\Sequence Container\Stage Data\Manufacturers Staging.Connections[OleDbConnection]"
+                      refId="Package\Sequence Container\Stage Data\Products Staging.Connections[OleDbConnection]"
                       connectionManagerID="Package.ConnectionManagers[localhost.ProductStoreDataMart]"
                       connectionManagerRefId="Package.ConnectionManagers[localhost.ProductStoreDataMart]"
                       description="The OLE DB runtime connection used to access the database."
@@ -252,56 +288,76 @@
                   </connections>
                   <inputs>
                     <input
-                      refId="Package\Sequence Container\Stage Data\Manufacturers Staging.Inputs[OLE DB Destination Input]"
+                      refId="Package\Sequence Container\Stage Data\Products Staging.Inputs[OLE DB Destination Input]"
                       errorOrTruncationOperation="Insert"
                       errorRowDisposition="FailComponent"
                       hasSideEffects="true"
                       name="OLE DB Destination Input">
                       <inputColumns>
                         <inputColumn
-                          refId="Package\Sequence Container\Stage Data\Manufacturers Staging.Inputs[OLE DB Destination Input].Columns[ManufacturerID]"
-                          cachedDataType="i4"
-                          cachedName="ManufacturerID"
-                          externalMetadataColumnId="Package\Sequence Container\Stage Data\Manufacturers Staging.Inputs[OLE DB Destination Input].ExternalColumns[ManufacturerID]"
-                          lineageId="Package\Sequence Container\Stage Data\Manufacturers Source.Outputs[OLE DB Source Output].Columns[ManufacturerID]" />
-                        <inputColumn
-                          refId="Package\Sequence Container\Stage Data\Manufacturers Staging.Inputs[OLE DB Destination Input].Columns[Name]"
+                          refId="Package\Sequence Container\Stage Data\Products Staging.Inputs[OLE DB Destination Input].Columns[Name]"
                           cachedDataType="nText"
                           cachedName="Name"
-                          externalMetadataColumnId="Package\Sequence Container\Stage Data\Manufacturers Staging.Inputs[OLE DB Destination Input].ExternalColumns[Name]"
-                          lineageId="Package\Sequence Container\Stage Data\Manufacturers Source.Outputs[OLE DB Source Output].Columns[Name]" />
+                          externalMetadataColumnId="Package\Sequence Container\Stage Data\Products Staging.Inputs[OLE DB Destination Input].ExternalColumns[Name]"
+                          lineageId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Output].Columns[Name]" />
+                        <inputColumn
+                          refId="Package\Sequence Container\Stage Data\Products Staging.Inputs[OLE DB Destination Input].Columns[ProductID]"
+                          cachedDataType="i4"
+                          cachedName="ProductID"
+                          externalMetadataColumnId="Package\Sequence Container\Stage Data\Products Staging.Inputs[OLE DB Destination Input].ExternalColumns[ProductID]"
+                          lineageId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Output].Columns[ProductID]" />
+                        <inputColumn
+                          refId="Package\Sequence Container\Stage Data\Products Staging.Inputs[OLE DB Destination Input].Columns[ManufacturerID]"
+                          cachedDataType="i4"
+                          cachedName="ManufacturerID"
+                          externalMetadataColumnId="Package\Sequence Container\Stage Data\Products Staging.Inputs[OLE DB Destination Input].ExternalColumns[ManufacturerID]"
+                          lineageId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Output].Columns[ManufacturerID]" />
+                        <inputColumn
+                          refId="Package\Sequence Container\Stage Data\Products Staging.Inputs[OLE DB Destination Input].Columns[Price]"
+                          cachedDataType="cy"
+                          cachedName="Price"
+                          externalMetadataColumnId="Package\Sequence Container\Stage Data\Products Staging.Inputs[OLE DB Destination Input].ExternalColumns[Price]"
+                          lineageId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Output].Columns[Price]" />
                       </inputColumns>
                       <externalMetadataColumns
                         isUsed="True">
                         <externalMetadataColumn
-                          refId="Package\Sequence Container\Stage Data\Manufacturers Staging.Inputs[OLE DB Destination Input].ExternalColumns[ManufacturerID]"
+                          refId="Package\Sequence Container\Stage Data\Products Staging.Inputs[OLE DB Destination Input].ExternalColumns[Name]"
+                          dataType="nText"
+                          name="Name" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Stage Data\Products Staging.Inputs[OLE DB Destination Input].ExternalColumns[ProductID]"
+                          dataType="i4"
+                          name="ProductID" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Stage Data\Products Staging.Inputs[OLE DB Destination Input].ExternalColumns[ManufacturerID]"
                           dataType="i4"
                           name="ManufacturerID" />
                         <externalMetadataColumn
-                          refId="Package\Sequence Container\Stage Data\Manufacturers Staging.Inputs[OLE DB Destination Input].ExternalColumns[Name]"
-                          dataType="nText"
-                          name="Name" />
+                          refId="Package\Sequence Container\Stage Data\Products Staging.Inputs[OLE DB Destination Input].ExternalColumns[Price]"
+                          dataType="cy"
+                          name="Price" />
                       </externalMetadataColumns>
                     </input>
                   </inputs>
                   <outputs>
                     <output
-                      refId="Package\Sequence Container\Stage Data\Manufacturers Staging.Outputs[OLE DB Destination Error Output]"
+                      refId="Package\Sequence Container\Stage Data\Products Staging.Outputs[OLE DB Destination Error Output]"
                       exclusionGroup="1"
                       isErrorOut="true"
                       name="OLE DB Destination Error Output"
-                      synchronousInputId="Package\Sequence Container\Stage Data\Manufacturers Staging.Inputs[OLE DB Destination Input]">
+                      synchronousInputId="Package\Sequence Container\Stage Data\Products Staging.Inputs[OLE DB Destination Input]">
                       <outputColumns>
                         <outputColumn
-                          refId="Package\Sequence Container\Stage Data\Manufacturers Staging.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          refId="Package\Sequence Container\Stage Data\Products Staging.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
                           dataType="i4"
-                          lineageId="Package\Sequence Container\Stage Data\Manufacturers Staging.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          lineageId="Package\Sequence Container\Stage Data\Products Staging.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
                           name="ErrorCode"
                           specialFlags="1" />
                         <outputColumn
-                          refId="Package\Sequence Container\Stage Data\Manufacturers Staging.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          refId="Package\Sequence Container\Stage Data\Products Staging.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
                           dataType="i4"
-                          lineageId="Package\Sequence Container\Stage Data\Manufacturers Staging.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          lineageId="Package\Sequence Container\Stage Data\Products Staging.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
                           name="ErrorColumn"
                           specialFlags="2" />
                       </outputColumns>
@@ -313,29 +369,29 @@
               <paths>
                 <path
                   refId="Package\Sequence Container\Stage Data.Paths[OLE DB Source Output]"
-                  endId="Package\Sequence Container\Stage Data\Manufacturers Staging.Inputs[OLE DB Destination Input]"
+                  endId="Package\Sequence Container\Stage Data\Products Staging.Inputs[OLE DB Destination Input]"
                   name="OLE DB Source Output"
-                  startId="Package\Sequence Container\Stage Data\Manufacturers Source.Outputs[OLE DB Source Output]" />
+                  startId="Package\Sequence Container\Stage Data\Products Source.Outputs[OLE DB Source Output]" />
               </paths>
             </pipeline>
           </DTS:ObjectData>
         </DTS:Executable>
         <DTS:Executable
-          DTS:refId="Package\Sequence Container\Truncate Manufacturers"
+          DTS:refId="Package\Sequence Container\Truncate Products"
           DTS:CreationName="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
           DTS:Description="Execute SQL Task"
-          DTS:DTSID="{01450DA3-0E3C-42D1-9CBF-3D633DEBC94E}"
+          DTS:DTSID="{712FF56E-0D27-478B-81F5-ED0D89BBD0A9}"
           DTS:ExecutableType="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
           DTS:LocaleID="-1"
-          DTS:ObjectName="Truncate Manufacturers"
+          DTS:ObjectName="Truncate Products"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2012; © 2007 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
           DTS:ThreadHint="0">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
-              SQLTask:Connection="{7b3dc3a4-241c-423f-b72b-0fa3e8b1834d}"
+              SQLTask:Connection="{4DC4627F-33E6-4CD6-AAAD-1D5B6544DFC7}"
               SQLTask:BypassPrepare="False"
-              SQLTask:SqlStatementSource="TRUNCATE TABLE [staging].[Manufacturers]" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              SQLTask:SqlStatementSource="TRUNCATE TABLE [staging].[Products]" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
           </DTS:ObjectData>
         </DTS:Executable>
       </DTS:Executables>
@@ -343,8 +399,8 @@
         <DTS:PrecedenceConstraint
           DTS:refId="Package\Sequence Container.PrecedenceConstraints[Constraint]"
           DTS:CreationName=""
-          DTS:DTSID="{02C1011F-EA50-4416-A58D-A9679E616029}"
-          DTS:From="Package\Sequence Container\Truncate Manufacturers"
+          DTS:DTSID="{C39DB5E7-0510-4ED0-AC50-FE9A5460788A}"
+          DTS:From="Package\Sequence Container\Truncate Products"
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint"
           DTS:To="Package\Sequence Container\Stage Data" />
@@ -369,7 +425,7 @@
           TopLeft="43.4735819473743,144.360441152279" />
         <NodeLayout
           Size="163,42"
-          Id="Package\Sequence Container\Truncate Manufacturers"
+          Id="Package\Sequence Container\Truncate Products"
           TopLeft="26.9848219345967,55.0118114311167" />
         <EdgeLayout
           Id="Package\Sequence Container.PrecedenceConstraints[Constraint]"
@@ -421,13 +477,13 @@
       <GraphLayout
         Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
-          Size="185,42"
-          Id="Package\Sequence Container\Stage Data\Manufacturers Staging"
-          TopLeft="107,167" />
-        <NodeLayout
           Size="182,42"
-          Id="Package\Sequence Container\Stage Data\Manufacturers Source"
+          Id="Package\Sequence Container\Stage Data\Products Source"
           TopLeft="106.721894157866,46.3159333805309" />
+        <NodeLayout
+          Size="185,42"
+          Id="Package\Sequence Container\Stage Data\Products Staging"
+          TopLeft="107,167" />
         <EdgeLayout
           Id="Package\Sequence Container\Stage Data.Paths[OLE DB Source Output]"
           TopLeft="198.610947078933,88.3159333805309">
@@ -454,7 +510,7 @@
     </LayoutInfo>
   </TaskHost>
   <PipelineComponentMetadata
-    design-time-name="Package\Sequence Container\Stage Data\Manufacturers Source">
+    design-time-name="Package\Sequence Container\Stage Data\Products Source">
     <Properties>
       <Property>
         <Name>DataSourceViewID</Name>
@@ -467,7 +523,7 @@
     </Properties>
   </PipelineComponentMetadata>
   <PipelineComponentMetadata
-    design-time-name="Package\Sequence Container\Stage Data\Manufacturers Staging">
+    design-time-name="Package\Sequence Container\Stage Data\Products Staging">
     <Properties>
       <Property>
         <Name>DataSourceViewID</Name>
