@@ -108,7 +108,7 @@ DeploymentPackage
 *BuildDrop
 *.zip
 TestResults
-packages
+/packages
 sql
 TestResults
 *.trx
@@ -183,3 +183,5 @@ pip-log.txt
 .DS_Store
 gh-pages/
 _site
+
+/Examples/PowerDeliveryASPNETMVC4/packages
