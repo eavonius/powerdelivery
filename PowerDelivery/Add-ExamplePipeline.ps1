@@ -1,21 +1,29 @@
 <#
 .Synopsis
-Adds a powerdelivery build pipeline to a TFS project.
+Adds a powerdelivery build pipeline to a TFS project from an example.
 
 .Description
-You can enable a Microsoft Team Foundation Server project to use powerdelivery in under a minute using this cmdlet. It allows you to select from one of several included templates as a starting point, and creates builds targeting each environment on Team Foundation Server with a powerdelivery PowerShell script for you to automate deployment. You can run this cmdlet multiple times specifying a different name each time to create a delivery pipeline for each software product you wish to deploy independently.
+You need an existing TFS project that is empty already created and to have 
+rights as a Project Administrator (to create builds, security groups, 
+and add files to source control) to run this cmdlet.
 
 .Example
-Add-Pipeline -name "MyApp" -collection "http://your-tfsserver/tfs" -project "My Project" -controller "MyController" -dropFolder "\\SERVER\share"
+Add-ExamplePipeline -example "ProductStoreTabular" -collection "http://your-tfsserver/tfs" -project "My Project" -controller "MyController" -dropFolder "\\SERVER\share"
 
-.Parameter name
-The name of the product or component that will be delivered by this pipeline.
+.Parameter example
+Optional. The name of an example folder in the Examples subdirectory of a powerdelivery Chocolatey installation. Either this or the examplePath parameter must be supplied.
+
+.Parameter examplePath
+Optional. The path to a custom example. Can be used to create new deployment pipelines from add your own starter projects. Either this or the example parameter must be supplied.
+
+.Parameter outputPath
+The path to map your working folder to work with the example.
 
 .Parameter collection
-The URI of the TFS collection to add powerdelivery to.
+The URI of the TFS collection to add the example to.
 
 .Parameter project
-The TFS project to add powerdelivery to.
+The TFS project to add the example to.
 
 .Parameter dropFolder
 The folder compiled assets should go into from the pipeline.
@@ -23,110 +31,92 @@ The folder compiled assets should go into from the pipeline.
 .Parameter controller
 The name of the TFS build controller the pipeline should use.
 
-.Parameter template
-Optional. The name of a directory within the "Templates" directory of wherever you installed powerdelivery to (usually C:\Chocolatey\lib\powerdelivery<version>). The default is "Blank". A template minimally must have the following files:
-
-Build.ps1
-BuildLocal.yml
-BuildCommit.yml
-BuildTest.yml
-BuildCapacityTest.yml
-BuildProduction.yml
-BuildShared.yml
-
-Check out the templates page on the wiki (https://github.com/eavonius/powerdelivery/wiki/Templates) for more about which to use.
+.Parameter vsVersion
+Which version of the Visual Studio command-line tools to load for calling the TFS API. Set to "10.0" by default.
 #>
-function Add-Pipeline {
+function Add-ExamplePipeline {
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory=1)][string] $name,
+        [Parameter(Mandatory=0)][string] $example,
+        [Parameter(Mandatory=0)][string] $examplePath,
+        [Parameter(Mandatory=1)][string] $outputPath,
         [Parameter(Mandatory=1)][string] $collection,
         [Parameter(Mandatory=1)][string] $project,
         [Parameter(Mandatory=1)][string] $dropFolder,
         [Parameter(Mandatory=1)][string] $controller,
-        [Parameter(Mandatory=0)][string] $template = "Blank",
         [Parameter(Mandatory=0)][string] $vsVersion = "10.0"
     )
-	
-	$originalDir = Get-Location
-	
-	$moduleDir = $PSScriptRoot	
-	
-	$curDir = [System.IO.Path]::GetFullPath($moduleDir)
-	$buildsDir = Join-Path -Path $curDir -ChildPath "Pipelines"
-	
-	try {
-	    Write-Host
-	    "Add Pipeline Utility"
-	    Write-Host
-	    "powerdelivery - http://github.com/eavonius/powerdelivery"
-	    Write-Host
 
-	    if ($(get-host).version.major -lt 3) {
-	        "Powershell 3.0 or greater is required."
-	        exit
-	    }
+    $originalDir = Get-Location
+    
+    $moduleDir = $PSScriptRoot  
+    
+    $curDir = [System.IO.Path]::GetFullPath($moduleDir)
 
-		LoadTFS -vsVersion $vsVersion
+    if (!(Test-Path -Path $outputPath)) {
+        Write-Error "Output path '$outputPath' does not exist."
+        exit
+    }
 
-	    $outBaseDir = Join-Path -Path $buildsDir -ChildPath $project
+    $outBaseDir = Join-Path -Path $outputPath -ChildPath $project
 
-        Remove-Item -Path $buildsDir -Force -Recurse -ErrorAction SilentlyContinue | Out-Null
+    if ([String]::IsNullOrWhiteSpace($example) -eq $false) {
+        $exampleDir = Join-Path -Path $curDir -ChildPath "..\Examples\$example"
+    }
+    elseif ([String]::IsNullOrWhiteSpace($exampleDir)) {
+        Write-Error "Example or example directory must be specified."
+        exit
+    }
 
-	    mkdir -Force $outBaseDir | Out-Null
-	    cd $buildsDir
+    if (!(Test-Path -Path $exampleDir)) {
+        Write-Error "Example '$exampleDir' does not exist."
+        exit
+    }
 
-	    "Removing existing workspace at $collection if it exists..."
-	    tf workspace /delete "AddPowerDelivery_$($project)" /collection:"$collection" | Out-Null
+    $name = Split-Path $exampleDir -Leaf
 
-	    if ($LASTEXITCODE -ne 0) {
-	        Write-Host "NOTE: Error above is normal. This occurs if there wasn't a mapped working folder already."
-	    }
+    try {
+        Write-Host
+        "Add Example Pipeline Utility"
+        Write-Host
+        "powerdelivery - http://github.com/eavonius/powerdelivery"
+        Write-Host
 
-        "Creating TFS workspace for $collection..."
-        tf workspace /new /noprompt "AddPowerDelivery_$($project)" /collection:"$collection"
-
-        "Getting files from project $project..."
-        tf get "$project\*" /recursive /noprompt
-
-        $templateDir = Join-Path -Path $curDir -ChildPath "Templates\$template"
-
-        if (!(Test-Path -Path $templateDir)) {
-            Write-Error "Template '$template' does not exist."
+        if ($(get-host).version.major -lt 3) {
+            "Powershell 3.0 or greater is required."
             exit
         }
 
-        "$templateDir -> $outBaseDir"
-        Copy-Item -Recurse -Path "$templateDir\*" -Destination $outBaseDir -Force | Out-Null
+        LoadTFS -vsVersion $vsVersion    
+
+        Remove-Item -Path $outBaseDir -Force -Recurse -ErrorAction SilentlyContinue | Out-Null
+
+        mkdir -Force $outBaseDir | Out-Null
+        cd $outputPath
+
+        $computerName = $env:COMPUTERNAME
+
+        "Creating TFS working folder for $project in $collection..."
+        tf workfold /map "`$/$project" $outBaseDir /collection:"$collection" /workspace:"$computerName"
+
+        "Getting files from project $project..."
+        tf get "$project\*" /recursive /noprompt
+        tf checkout /recursive "$project\*"
+
+        "$exampleDir -> $outBaseDir"
+        Copy-Item -Recurse -Path "$exampleDir\*" -Destination $outBaseDir -Force | Out-Null
         Copy-Item -Path (Join-Path -Path $curDir -ChildPath "BuildProcessTemplates") -Recurse -Destination "$outBaseDir" -Force
 
         $newScriptName = "$outBaseDir\$name.ps1"
 
-        Move-Item -Force "$outBaseDir\Build.ps1" "$newScriptName"
-		Move-Item -Force "$outBaseDir\BuildShared.yml" "$outBaseDir\$($name)Shared.yml"
-
-		$buildDictionary = @{
+        $buildDictionary = @{
             "$name - Local" = "Local";
             "$name - Commit" = "Commit";
             "$name - Test" = "Test";
             "$name - Capacity Test" = "CapacityTest";
             "$name - Production" = "Production";
         }
-		
-		$buildDictionary.Values | % {
-			$envName = $_
-			$sourcePath = "$outBaseDir\Build$($envName).yml"
-			$destPath = "$outBaseDir\$($name)$($envName).yml"
-			if (Test-Path $sourcePath) {
-				Move-Item -Force $sourcePath $destPath
-			}
-		}
-
-        "Replacing build template variables..."
-        (Get-Content "$newScriptName") | % {
-            $_ -replace '%BUILD_NAME%', $name
-        } | Set-Content "$newScriptName"
-
+        
         "Checking in changed or new files to source control..."
         tf add "$project\*.*" /noprompt /recursive | Out-Null
         tf checkin "$project\*.*" /noprompt /recursive | Out-Null
@@ -137,17 +127,17 @@ function Add-Pipeline {
         $buildServer = $projectCollection.GetService([Microsoft.TeamFoundation.Build.Client.IBuildServer])
         $structure = $projectCollection.GetService([Microsoft.TeamFoundation.Server.ICommonStructureService])
 
-		$buildServerVersion = $buildServer.BuildServerVersion
-				
-		if ($buildServerVersion -eq 'v3') {
-			$powerdelivery.tfsVersion = '2010'
-		}
-		elseif ($buildServerVersion -eq 'v4') {
-			$powerdelivery.tfsVersion = '2012'
-		}
-		else {
-			throw "TFS server must be version 2010 or 2012, a different version was detected."
-		}
+        $buildServerVersion = $buildServer.BuildServerVersion
+                
+        if ($buildServerVersion -eq 'v3') {
+            $powerdelivery.tfsVersion = '2010'
+        }
+        elseif ($buildServerVersion -eq 'v4') {
+            $powerdelivery.tfsVersion = '2012'
+        }
+        else {
+            throw "TFS server must be version 2010 or 2012, a different version was detected."
+        }
 
         $projectInfo = $structure.GetProjectFromName($project)
         if (!$projectInfo) {
@@ -185,13 +175,13 @@ function Add-Pipeline {
 
                 $buildFound = $false
 
-		        $processTemplatePath = "`$/$project/BuildProcessTemplates/PowerDeliveryTemplate.xaml"
+                $processTemplatePath = "`$/$project/BuildProcessTemplates/PowerDeliveryTemplate.xaml"
                 $changeSetTemplatePath = "`$/$project/BuildProcessTemplates/PowerDeliveryChangeSetTemplate.xaml"
 
-		        if ($powerdelivery.tfsVersion -eq 2012) {
-        	        $processTemplatePath = "`$/$project/BuildProcessTemplates/PowerDeliveryTemplate.11.xaml"
-			        $changeSetTemplatePath = "`$/$project/BuildProcessTemplates/PowerDeliveryChangeSetTemplate.11.xaml"
-		        }
+                if ($powerdelivery.tfsVersion -eq 2012) {
+                    $processTemplatePath = "`$/$project/BuildProcessTemplates/PowerDeliveryTemplate.11.xaml"
+                    $changeSetTemplatePath = "`$/$project/BuildProcessTemplates/PowerDeliveryChangeSetTemplate.11.xaml"
+                }
 
                 $processTemplates = $buildServer.QueryProcessTemplates($project)
 
@@ -263,15 +253,10 @@ function Add-Pipeline {
                 }
             }
         }
-
+        #>
         Write-Host "Delivery pipeline '$name' ready at $collection for project '$project'" -ForegroundColor Green
     }
     finally {
-		try {
-        	tf workspace /delete "AddPowerDelivery_$($project)" /collection:"$collection" | Out-Null
-		}
-		catch {}
-        del -Path $buildsDir -Force -Recurse -ErrorAction SilentlyContinue | Out-Null
-		cd $originalDir
+        cd $originalDir
     }
 }

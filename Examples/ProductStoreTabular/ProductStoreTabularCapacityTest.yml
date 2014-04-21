@@ -1,0 +1,6 @@
+DatabaseServer: localhost
+SSASServer: localhost\TABULAR
+
+ProductStoreDBName: ProductStore_CapacityTest
+ProductStoreDataMartDBName: ProductStoreDataMart_CapacityTest
+ProductStoreCubeName: ProductStore_CapacityTest

@@ -8,9 +8,6 @@ Sets a connection string on a deployed Microsoft SQL Server Analysis Services mo
 .Parameter computer
 The computer on which the connection will be changed.
 
-.Parameter tabularServer
-The instance of the SSAS server to change the connection on.
-
 .Parameter databaseName
 The name of the SSAS database/model to change the connection on.
 
@@ -30,7 +27,6 @@ function Set-SSASConnection {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=1)][string] $computer, 
-        [Parameter(Mandatory=1)][string] $tabularServer, 
         [Parameter(Mandatory=1)][string] $databaseName, 
         [Parameter(Mandatory=1)][string] $datasourceID, 
         [Parameter(Mandatory=1)][string] $connectionName, 
@@ -63,10 +59,8 @@ function Set-SSASConnection {
     </Alter>
 "@
 
-    $command = "Invoke-ASCMD -server $tabularServer -query ""$query"""
+    Invoke-ASCMD -server $computer -query """$query"""
     
-	Invoke-Expression "Invoke-Command -ComputerName $computer -ErrorAction Stop -ScriptBlock { $command }"
-	
 	#if ($result -contains 'Exception xmlns') {
 	#	throw "Error setting connection $connectionName of $databaseName on $tabularServer - see build log for details."
 	#}

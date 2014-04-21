@@ -306,6 +306,10 @@ function Invoke-Powerdelivery {
     $powerdelivery.buildName = $null
 	$powerdelivery.priorBuild = $priorBuild
 	$powerdelivery.deployDir = Join-Path (Get-Location) "PowerDeliveryDeploy"
+
+	if (Test-Path $powerdelivery.deployDir) {
+		Remove-Item -Path $powerdelivery.deployDir -Force -Recurse | Out-Null
+	}
 	
 	mkdir -Force $($powerdelivery.deployDir) | Out-Null
 
@@ -493,14 +497,20 @@ function Invoke-Powerdelivery {
 
         Write-BuildSummaryMessage -name "Environment" -header "Environment Configuration" -message $configMessage
 
-		Write-ConsoleSpacer
-		"= Delivery Modules"
-		Write-ConsoleSpacer
-		Write-Host
+        $noModules = $true
 
 		if ($powerdelivery.deliveryModules) {
 			$deliveryModules = @()
 			$powerdelivery.deliveryModules | ForEach-Object {
+
+				if ($noModules) {								
+					Write-ConsoleSpacer
+					"= Delivery Modules"
+					Write-ConsoleSpacer
+					Write-Host
+					$noModules = $false
+				}
+
 				$moduleVersion = $null
 				try {
 					$moduleVersion = Get-Module "$($_)DeliveryModule" | select version | ForEach-Object { $_.Version.ToString() }
@@ -648,8 +658,6 @@ function Invoke-Powerdelivery {
     }
 	finally {
 		Set-Location $powerdelivery.currentLocation
-		
-		Remove-Item -Path $powerdelivery.deployDir -Force -Recurse | Out-Null
 	}
 }
 

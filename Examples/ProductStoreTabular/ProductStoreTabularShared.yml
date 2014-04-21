@@ -1,0 +1,60 @@
+# Environment configuration files (commit, test, production etc.) must define these dependent settings:
+#
+# DatabaseServer - The server to host the Microsoft SQL Server 2012 databases.
+# SSASServer - The server to host Microsoft SQL Server Analysis Services (SSAS) 2012 Tabular.
+# ProductStoreDBName - The name of the ProductStore operational SQL database.
+# ProductStoreDataMartDBName - The name of the ProductStore dimensional SQL database.
+# ProductStoreCubeName - The name of the ProductStore SSAS Tabular cube.
+
+ProductStoreConnection: Server=<<DatabaseServer>>;Initial Catalog=<<ProductStoreDBName>>;Integrated Security=SSPI
+ProductStoreDataMartConnection: Server=<<DatabaseServer>>;Initial Catalog=<<ProductStoreDataMartDBName>>;Integrated Security=SSPI
+ProductStoreCubeConnection: Data Source=<<SSASServer>>;Catalog=<<ProductStoreCubeName>>
+
+MSBuild:
+  ProjectFile: ProductStoreTabular.sln
+
+Assets:
+  ProductStoreCube:
+    Path: Cubes\ProductStore\bin\Release\ProductStore.asdatabase
+    Destination: Cubes\ProductStore
+  #ProductStoreAcceptanceTests:
+    #Path: Tests\ProductStore.AcceptanceTests\bin\Release\*.*
+    #Destination: Tests\ProductStore.AcceptanceTests
+  Databases:
+    Path: Databases
+    Destination: .
+    Recurse: true
+
+Databases:
+  ProductStore:
+    Database: <<ProductStoreDBName>>
+    Server: <<DatabaseServer>>
+    ScriptsDir: Databases\ProductStore
+  ProductStoreDataMart:
+    Database: <<ProductStoreDataMartDBName>>
+    Server: <<DatabaseServer>>
+    ScriptsDir: Databases\ProductStoreDataMart
+
+Cubes:
+  ProductStore:
+    Computer: <<SSASServer>>
+    CubeName: <<ProductStoreCubeName>>
+    AsDatabase: Cubes\ProductStore\ProductStore.asdatabase
+    Connections:
+      ProductStore:
+        ConnectionName: ProductStore
+        DataSourceID: 55651370-2d73-4440-9068-326266c88038
+        ConnectionString: <<ProductStoreDataMartConnection>>
+
+#AcceptanceTests:
+  #File: Tests\ProductStore.AcceptanceTests\ProductStore.AcceptanceTests.dll
+  #Results: ProductStore.AcceptanceTests.trx
+  #Category: All
+
+#AcceptanceTestAppConfigReplacements:
+  #FileName: AcceptanceTests\ProductStore\ProductStore.AcceptanceTests.dll.config
+  #Replacements:
+    #TabularConnection:
+      #XPath: //configuration/connectionStrings/add[@name='tabularConnection']
+      #Attribute: connectionString
+      #NewValue: <<ProductStoreCubeConnectionString>>

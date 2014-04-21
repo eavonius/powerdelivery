@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cubes", "Cubes", "{4B247C81-1CCD-4CA7-A4D6-CB23CE69227F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Databases", "Databases", "{C30191BC-87CE-4885-AAD8-0CFE9243DCDD}"
+EndProject
+Project("{6870E480-7721-4708-BFB8-9AE898AA21B3}") = "ProductStore", "Cubes\ProductStore\ProductStore.smproj", "{8CE414BB-95B2-4C99-9E03-51BA72086E22}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Packages", "Packages", "{35483D78-ED0C-4E1E-974C-EB043F368600}"
+EndProject
+Project("{159641D6-6404-4A2A-AE62-294DE0FE8301}") = "ProductStoreDataMart", "Packages\ProductStoreDataMart\ProductStoreDataMart.dtproj", "{231DB5E6-479C-49CC-9AFD-F1D0F74AF001}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Development|x86 = Development|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8CE414BB-95B2-4C99-9E03-51BA72086E22}.Debug|x86.ActiveCfg = Debug|x86
+		{8CE414BB-95B2-4C99-9E03-51BA72086E22}.Debug|x86.Build.0 = Debug|x86
+		{8CE414BB-95B2-4C99-9E03-51BA72086E22}.Debug|x86.Deploy.0 = Debug|x86
+		{8CE414BB-95B2-4C99-9E03-51BA72086E22}.Development|x86.ActiveCfg = Development|x86
+		{8CE414BB-95B2-4C99-9E03-51BA72086E22}.Development|x86.Build.0 = Development|x86
+		{8CE414BB-95B2-4C99-9E03-51BA72086E22}.Development|x86.Deploy.0 = Development|x86
+		{8CE414BB-95B2-4C99-9E03-51BA72086E22}.Release|x86.ActiveCfg = Release|x86
+		{8CE414BB-95B2-4C99-9E03-51BA72086E22}.Release|x86.Build.0 = Release|x86
+		{8CE414BB-95B2-4C99-9E03-51BA72086E22}.Release|x86.Deploy.0 = Release|x86
+		{231DB5E6-479C-49CC-9AFD-F1D0F74AF001}.Debug|x86.ActiveCfg = Development
+		{231DB5E6-479C-49CC-9AFD-F1D0F74AF001}.Debug|x86.Build.0 = Development
+		{231DB5E6-479C-49CC-9AFD-F1D0F74AF001}.Development|x86.ActiveCfg = Development
+		{231DB5E6-479C-49CC-9AFD-F1D0F74AF001}.Development|x86.Build.0 = Development
+		{231DB5E6-479C-49CC-9AFD-F1D0F74AF001}.Release|x86.ActiveCfg = Development
+		{231DB5E6-479C-49CC-9AFD-F1D0F74AF001}.Release|x86.Build.0 = Development
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8CE414BB-95B2-4C99-9E03-51BA72086E22} = {4B247C81-1CCD-4CA7-A4D6-CB23CE69227F}
+		{231DB5E6-479C-49CC-9AFD-F1D0F74AF001} = {35483D78-ED0C-4E1E-974C-EB043F368600}
+	EndGlobalSection
+EndGlobal
