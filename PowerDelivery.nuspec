@@ -66,7 +66,6 @@
     <file src="PowerDelivery\Remove-Pipeline.ps1" target="tools\PowerDelivery\Remove-Pipeline.ps1" />
     <file src="PowerDelivery\Set-AppPoolIdentity.ps1" target="tools\PowerDelivery\Set-AppPoolIdentity.ps1" />
     <file src="PowerDelivery\Set-EnvironmentVariable.ps1" target="tools\PowerDelivery\Set-EnvironmentVariable.ps1" />
-    <file src="PowerDelivery\Set-SSASConnection.ps1" target="tools\PowerDelivery\Set-SSASConnection.ps1" />
     <file src="PowerDelivery\Start-SqlJobs.ps1" target="tools\PowerDelivery\Start-SqlJobs.ps1" />
     <file src="PowerDelivery\Uninstall-NServiceBusService.ps1" target="tools\PowerDelivery\Uninstall-NServiceBusService.ps1" />
     <file src="PowerDelivery\Update-AssemblyInfoFiles.ps1" target="tools\PowerDelivery\Update-AssemblyInfoFiles.ps1" />
