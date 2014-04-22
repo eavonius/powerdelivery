@@ -141,9 +141,6 @@ layout: page
 				<a href="#set_apppoolidentity_cmdlet">Set-AppPoolIdentity</a>
 			</li>
 			<li>
-				<a href="#set_ssasconnection_cmdlet">Set-SSASConnection</a>
-			</li>
-			<li>
 				<a href="#start_sqljobs_cmdlet">Start-SqlJobs</a>
 			</li>
 			<li>
@@ -220,9 +217,6 @@ layout: page
 					</li>
 					<li>
 						<a href="#publish_ssas_cmdlet">Publish-SSAS</a>
-					</li>
-					<li>
-						<a href="#set_ssasconnection_cmdlet">Set-SSASConnection</a>
 					</li>
 					<li>
 						<a href="#wait_forleapfrogbi_cmdlet">Wait-ForLeapFrogBI</a>
@@ -943,7 +937,7 @@ Invoke-SSIS -package MyPackage.dtsx -server MyServer -dtExecPath $dtExecPath{% e
 		<a name="publish_ssas_cmdlet"><hr></a>
 		<h3>Publish-SSAS</h3>
 		<p>The Publish-SSAS cmdlet will deploy a <a href="http://msdn.microsoft.com/en-us/library/ms175609(v=sql.90).aspx" target="_blank">Microsoft SQL Server Analysis Services</a> (SSAS) .asdatabase file to a server.</p>
-		<p>Before you call the cmdlet, copy the .asdatabase to a computer that has the <a href="http://msdn.microsoft.com/en-us/library/ms162758.aspx" target="_blank">SQL Server Analysis Services Deployment Utility</a> installed.</p>
+		<p>Before you call the cmdlet, the build server must have the <a href="http://msdn.microsoft.com/en-us/library/ms162758.aspx" target="_blank">SQL Server Analysis Services Deployment Utility</a> installed.</p>
 		<h4>Example</h4>
 		{% highlight powershell %}Publish-SSAS -computer MyServer -tabularServer "MyServer\INSTANCE" -asDatabase "Cubes\MyModel.asdatabase"{% endhighlight %}
 		<h4>Parameters</h4>
@@ -959,6 +953,14 @@ Invoke-SSIS -package MyPackage.dtsx -server MyServer -dtExecPath $dtExecPath{% e
 		<p>string - Optional. The version of SQL to use. Default is "11.0"</p>
 		<h5>deploymentUtilityPath</h5>
 		<p>string - Optional. The full path to the Microsoft.AnalysisServices.DeploymentUtility.exe command-line tool on the computer specified by the <b>computer</b> parameter. Defaults to C:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn\ManagementStudio\Microsoft.AnalysisServices.Deployment.exe</p>
+                <h5>properties</h5>
+                <p>hash - Optional. A set of nested sets for each connection to update. Connections require the following parameters.
+                <blockquote>
+                	<h5>connectionName</h5>
+			<p>The name of the connection to change.</p>
+			<h5>connectionString</h5>
+			<p>The value to change the connection to.</p>
+                </blockquote>
 		
 		<a name="publish_webdeploy_cmdlet"></hr></a>
 		<h3>Publish-WebDeploy</h3>
@@ -1079,31 +1081,6 @@ Invoke-SSIS -package MyPackage.dtsx -server MyServer -dtExecPath $dtExecPath{% e
 		<p>string - The password of the account to use for the identity.</p>
 		<h5>computerName</h5>
 		<p>Optional. string - The computer to set the app pool identity on. Modifies the local computer if no computer name is specified.</p>
-
-		<a name="set_ssasconnection_cmdlet"><hr></a>
-		<h3>Set-SSASConnection</h3>
-		<p>Sets a connection string on a deployed <a href="http://msdn.microsoft.com/en-us/library/ms175609(v=sql.90).aspx" target="_blank">Microsoft SQL Server Analysis Services</a> (SSAS) cube.</p>
-		<h4>Example</h4>
-		{% highlight powershell %}Set-SSASConnection -computer MyServer `
-                   -tabularServer MyServer\TABULAR `
-                   -databaseName MyCube `
-                   -datasourceID "{4CC0937D-61D3-421E-B607-B3E36D1D09B5}" `
-                   -connectionString "Initial Catalog=MyDB;Server=localhost;Trusted Connection=yes"{% endhighlight %}
-		<h4>Parameters</h4>
-		<h5>computer</h5>
-		<p>string - The computer to which the SSAS cube was deployed.</p>
-		<h5>tabularServer</h5>
-		<p>string - The instance of the SSAS server to change the connection on.</p>
-		<h5>databaseName</h5>
-		<p>string - The name of the SSAS database/cube to change the connection on.</p>
-		<h5>datasourceID</h5>
-		<p>string - The GUID of the connection to change. Use SQL Server Management Studio to browse the 
-		cube deployed locally or remotely and open the properties dialog on the connection to change. The ID 
-		will be listed there. This value does not change between deployments but is a required parameter here.</p>
-		<h5>connectionName</h5>
-		<p>The name of the connection to change.</p>
-		<h5>connectionString</h5>
-		<p>The value to change the connection to.</p>
 
 		<a name="start_sqljobs_cmdlet"><hr></a>
 		<h3>Start-SqlJobs</h3>
