@@ -953,14 +953,14 @@ Invoke-SSIS -package MyPackage.dtsx -server MyServer -dtExecPath $dtExecPath{% e
 		<p>string - Optional. The version of SQL to use. Default is "11.0"</p>
 		<h5>deploymentUtilityPath</h5>
 		<p>string - Optional. The full path to the Microsoft.AnalysisServices.DeploymentUtility.exe command-line tool on the computer specified by the <b>computer</b> parameter. Defaults to C:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn\ManagementStudio\Microsoft.AnalysisServices.Deployment.exe</p>
-                <h5>properties</h5>
-                <p>hash - Optional. A set of nested sets for each connection to update. Connections require the following parameters.
-                <blockquote>
-                	<h5>connectionName</h5>
+        <h5>properties</h5>
+        <p>hash - Optional. A set of nested sets for each connection to update. Connections require the following parameters.</p>
+        <blockquote>
+           	<h5>connectionName</h5>
 			<p>The name of the connection to change.</p>
 			<h5>connectionString</h5>
 			<p>The value to change the connection to.</p>
-                </blockquote>
+        </blockquote>
 		
 		<a name="publish_webdeploy_cmdlet"></hr></a>
 		<h3>Publish-WebDeploy</h3>
