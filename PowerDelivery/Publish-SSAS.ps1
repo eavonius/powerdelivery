@@ -17,16 +17,20 @@ The computer(s) to deploy to.
 Optional. The version of SQL to use. Default is "11.0"
 
 .Parameter deploymentUtilityPath
-Optional. The full path to the Microsoft.AnalysisServices.DeploymentUtility.exe command-line tool.
+Optional. The full path to the Microsoft.AnalysisServices.DeploymentUtility.exe command-line tool on the TFS build agent computer. 
+Defaults to C:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn\ManagementStudio\Microsoft.AnalysisServices.Deployment.exe
 
 .Parameter cubeName
-Optional. The name to deploy the cube as. Can only be omitted if only one cube (model) is included in the asdatabase package.
+Optional. The name to deploy the cube as. Can only be omitted if only one cube (model) is included in the .asdatabase model.
 
 .Parameter connections
-Optional. Hash of values that match the parameters of the Set-SSASConnection cmdlet.
+A set of nested sets for each connection to update. Connections require the following parameters:
+
+connectionName - The name of the connection to change.
+connectionString - The value to set the connection string to.
 
 .Example
-Publish-SSAS -computer "MyServer" -tabularServer "MyServer\INSTANCE" -asDatabase "MyProject\bin\Debug\MyModel.asdatabase"
+Publish-SSAS -computer "MyServer" -asDatabase "Cubes\MyCube\MyModel.asdatabase"
 #>
 function Publish-SSAS {
     [CmdletBinding()]
