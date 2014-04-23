@@ -936,31 +936,70 @@ Invoke-SSIS -package MyPackage.dtsx -server MyServer -dtExecPath $dtExecPath{% e
 		
 		<a name="publish_ssas_cmdlet"><hr></a>
 		<h3>Publish-SSAS</h3>
-		<p>The Publish-SSAS cmdlet will deploy a <a href="http://msdn.microsoft.com/en-us/library/ms175609(v=sql.90).aspx" target="_blank">Microsoft SQL Server Analysis Services</a> (SSAS) .asdatabase file to a server.</p>
-		<p>Before you call the cmdlet, the build server must have the <a href="http://msdn.microsoft.com/en-us/library/ms162758.aspx" target="_blank">SQL Server Analysis Services Deployment Utility</a> installed.</p>
+		<p>The Publish-SSAS cmdlet will deploy a <a href="http://msdn.microsoft.com/en-us/library/ms175609(v=sql.90).aspx" target="_blank">Microsoft SQL Server Analysis Services</a> (SSAS) cube to a server.
+		Use the Invoke-MSBuild cmdlet to compile a Visual Studio project with a SSAS Tabular project in it. 
+		It replaces any data source connections you specify here with updated values before copying it to 
+		a remote UNC share on the target SSAS server(s). After execution, a log file is available in the target directory.</p>
+		<p>Before you call the cmdlet, the build server must have the <a href="http://msdn.microsoft.com/en-us/library/ms162758.aspx" target="_blank">SQL Server Analysis Services Deployment Utility</a> installed. 
+			This can be accomplished by installing an Analysis Services Server and the Visual Studio BI Data Tools on the build server. 
+			The Analysis Services database is not used by anything, it includes the SSAS Deployment Utility however.</p>
+		<p>The computer(s) you publish to must add the TFS Build Agent service account to the Administrators group in SQL Analysis Services, and the local Administrators group.</p>
 		<h4>Example</h4>
-		{% highlight powershell %}Publish-SSAS -computer MyServer -tabularServer "MyServer\INSTANCE" -asDatabase "Cubes\MyModel.asdatabase"{% endhighlight %}
+		{% highlight yaml %}#myConfigFile.yml
+
+Project:
+  ProjectFile: Cubes\MyCube.smproj
+
+# Anything here gets copied after compile to the TFS drop folder
+Assets: 
+  MyCube:
+    Source: Cubes\MyCube\bin\Release\*.*
+    Destination: Cubes\MyCube
+
+Cubes:
+  MyCube:
+    Computer: Node1, Node2
+    AsDatabase: Cubes\MyCube\MyCube.asdatabase
+    CubeName: MyCube
+    # Data Sources created with the Visual Studio designer 
+    # can be updated at deploy time here to use appropriate 
+    # environment-specific sources.
+    Connections:
+      MyDataSource:
+        ConnectionName: CubeDataSource
+        ConnectionString: Server=MY_SOURCE_SYSTEM;Initial Catalog=CubeSourceData{% endhighlight %}
+		{% highlight powershell %}#MyPipelineScript.ps1
+
+Init {
+	$script:Project = Get-BuildSetting Project
+	$script:Cubes = Get-BuildSetting Cubes
+}
+
+Compile {
+	Invoke-BuildConfigSection $Project Invoke-MSBuild
+}
+
+Deploy {
+	Invoke-BuildConfigSections $Cubes Publish-SSAS
+}{% endhighlight %}
 		<h4>Parameters</h4>
-		<h5>computer</h5>
-		<p>string - The computer to run the SSAS deployment utility on.</p>
 		<h5>asDatabase</h5>
 		<p>string - The .asdatabase file to deploy. This is a path local to the computer specified by the <b>computer</b> parameter.</p>
-		<h5>tabularServer</h5>
-		<p>string - The server name of the SSAS instance. In a SQL cluster this will be the cluster name.</p>
-		<h5>cubeName</h5>
-		<p>string - Optional. The name to deploy the cube as. Can only be omitted if only one cube (model) is included in the asdatabase package.</p>
+		<h5>computer</h5>
+		<p>string - The computer(s) to deploy to.</p>
 		<h5>sqlVersion</h5>
 		<p>string - Optional. The version of SQL to use. Default is "11.0"</p>
 		<h5>deploymentUtilityPath</h5>
-		<p>string - Optional. The full path to the Microsoft.AnalysisServices.DeploymentUtility.exe command-line tool on the computer specified by the <b>computer</b> parameter. Defaults to C:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn\ManagementStudio\Microsoft.AnalysisServices.Deployment.exe</p>
+		<p>string - Optional. The full path to the Microsoft.AnalysisServices.DeploymentUtility.exe command-line tool on the TFS build agent computer. 
+			Defaults to C:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn\ManagementStudio\Microsoft.AnalysisServices.Deployment.exe.</p>
+		<h5>cubeName</h5>
+		<p>string - Optional. The name to deploy the cube as. Can only be omitted if only one cube (model) is included in the .asdatabase model.</p>
         <h5>properties</h5>
         <p>hash - Optional. A set of nested sets for each connection to update. Connections require the following parameters.</p>
-        <blockquote>
-           	<h5>connectionName</h5>
-			<p>The name of the connection to change.</p>
-			<h5>connectionString</h5>
-			<p>The value to change the connection to.</p>
-        </blockquote>
+        <ul>
+        	<li><b>connectionName</b> - The name of the connection to change.</li>
+        	<li><b>connectionString</b> - The value to change the connection to.</li>
+        </ul>
 		
 		<a name="publish_webdeploy_cmdlet"></hr></a>
 		<h3>Publish-WebDeploy</h3>
