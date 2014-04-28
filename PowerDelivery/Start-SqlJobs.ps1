@@ -73,4 +73,8 @@ function Start-SqlJobs {
         }
         while ($jobRunning)
     }
+
+    if ($dataMartJobs -eq $null -or $dataMartJobs.length -eq 0) {
+        throw "$logPrefix Unable to find SQL Jobs to start matching pattern '$jobs'."
+    }
 }

@@ -47,6 +47,18 @@ function Get-ComputerRemoteDeployPath {
             gci -Directory $deployPath | where-object -Property Name -Like $buildMatches | Sort-Object -Property LastWriteTime | select -first $numberToDelete | Remove-Item -Force -Recurse | Out-Null
         }
 
+        $localDeployPath = $deployPath -replace "\\\\$computerName", "$($driveLetter):"
+        $localAliasPath = [System.IO.Path]::Combine($localDeployPath, "$($powerdelivery.scriptName) - $($buildEnvironment)")
+        $localBuildPath = [System.IO.Path]::Combine($localDeployPath, $buildName)
+
+        Invoke-Command -ComputerName $computerName -ScriptBlock {
+            if ((Test-Path -Path $using:localAliasPath)) {
+                & cmd /c "rmdir ""$using:localAliasPath"""
+            }
+
+            & cmd /c "mklink /J ""$using:localAliasPath"" ""$using:localBuildPath""" | Out-Null
+        }
+
         $powerdelivery.deployShares.Add($computerName, $buildPath)
     }
     $powerdelivery.deployShares[$computerName]

@@ -44,7 +44,7 @@
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Style.Triggers>
             <DataTrigger Binding="{Binding LastStatus.Description}" Value="In Progress">
-                <Setter Property="Background" Value="LightGreen" />
+                <Setter Property="Background" Value="CornflowerBlue" />
             </DataTrigger>
             <DataTrigger Binding="{Binding LastStatus.Description}" Value="Succeeded">
                 <Setter Property="Background" Value="Green" />
@@ -70,7 +70,7 @@
     <Style TargetType="TextBlock" x:Key="EnvironmentBlockButtonText">
         <Style.Triggers>
             <DataTrigger Binding="{Binding LastStatus.Description}" Value="In Progress">
-                <Setter Property="Foreground" Value="Black" />
+                <Setter Property="Foreground" Value="White" />
             </DataTrigger>
             <DataTrigger Binding="{Binding LastStatus.Description}" Value="Succeeded">
                 <Setter Property="Foreground" Value="White" />
@@ -104,7 +104,7 @@
     <Style TargetType="TextBlock" x:Key="EnvironmentBlockText">
         <Style.Triggers>
             <DataTrigger Binding="{Binding LastStatus.Description}" Value="In Progress">
-                <Setter Property="Foreground" Value="Black" />
+                <Setter Property="Foreground" Value="White" />
             </DataTrigger>
             <DataTrigger Binding="{Binding LastStatus.Description}" Value="Succeeded">
                 <Setter Property="Foreground" Value="White" />

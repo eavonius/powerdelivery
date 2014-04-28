@@ -17,20 +17,16 @@ The computer(s) to deploy to.
 Optional. The version of SQL to use. Default is "11.0"
 
 .Parameter deploymentUtilityPath
-Optional. The full path to the Microsoft.AnalysisServices.DeploymentUtility.exe command-line tool on the TFS build agent computer. 
-Defaults to C:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn\ManagementStudio\Microsoft.AnalysisServices.Deployment.exe
+Optional. The full path to the Microsoft.AnalysisServices.DeploymentUtility.exe command-line tool.
 
 .Parameter cubeName
-Optional. The name to deploy the cube as. Can only be omitted if only one cube (model) is included in the .asdatabase model.
+Optional. The name to deploy the cube as. Can only be omitted if only one cube (model) is included in the asdatabase package.
 
 .Parameter connections
-A set of nested sets for each connection to update. Connections require the following parameters:
-
-connectionName - The name of the connection to change.
-connectionString - The value to set the connection string to.
+Optional. Hash of values that match the parameters of the Set-SSASConnection cmdlet.
 
 .Example
-Publish-SSAS -computer "MyServer" -asDatabase "Cubes\MyCube\MyModel.asdatabase"
+Publish-SSAS -computer "MyServer" -tabularServer "MyServer\INSTANCE" -asDatabase "MyProject\bin\Debug\MyModel.asdatabase"
 #>
 function Publish-SSAS {
     [CmdletBinding()]
@@ -63,6 +59,15 @@ function Publish-SSAS {
 
     $xmlaFullPath = Join-Path -Path (Get-Location) -ChildPath $xmlaPath
 
+    [xml]$xmlaDoc = Get-Content $xmlaFullPath
+
+    $ns = new-object Xml.XmlNamespaceManager $xmlaDoc.NameTable
+    $ns.AddNamespace('xmla', 'http://schemas.microsoft.com/analysisservices/2003/engine')
+
+    $batchNode = $xmlaDoc.SelectSingleNode("//xmla:Batch", $ns)
+    $parallelNode = $batchNode.SelectSingleNode("xmla:Parallel", $ns)
+    $batchNode.RemoveChild($parallelNode)
+
     $computerNames = $computer -split "," | % { $_.Trim() }
 
     foreach ($curComputerName in $computerNames) {
@@ -72,10 +77,6 @@ function Publish-SSAS {
         if (![String]::IsNullOrWhiteSpace($cubeName)) {
 
             $newModelName = $cubeName
-            [xml]$xmlaDoc = Get-Content $xmlaFullPath
-
-            $ns = new-object Xml.XmlNamespaceManager $xmlaDoc.NameTable
-            $ns.AddNamespace('xmla', 'http://schemas.microsoft.com/analysisservices/2003/engine')
 
             $objectNode = $xmlaDoc.SelectSingleNode("//xmla:Batch/xmla:Alter/xmla:Object", $ns)
             $objectNode.DatabaseID = $cubeName
@@ -83,9 +84,6 @@ function Publish-SSAS {
             $databaseNode = $xmlaDoc.SelectSingleNode("//xmla:Batch/xmla:Alter/xmla:ObjectDefinition/xmla:Database", $ns)
             $databaseNode.ID = $cubeName
             $databaseNode.Name = $cubeName
-            
-            $objectToProcessNode = $xmlaDoc.SelectSingleNode("//xmla:Batch/xmla:Parallel/xmla:Process/xmla:Object", $ns)
-            $objectToProcessNode.DatabaseID = $cubeName
 
             if ($connections -ne $null) {
         

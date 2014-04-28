@@ -220,15 +220,14 @@ namespace PowerDelivery.Controls.Model
                 {
                     return;
                 }
+                else
+                {
+                    LastBuildNumber = "0";
+                    LastBuildUri = null;
+                    LastStatus = new PipelineEnvironmentBuildStatus(BuildStatus.None);
+                    LastBuildFinishTime = DateTime.MinValue;
+                }
             }
-            else
-            {
-                LastStatus = new PipelineEnvironmentBuildStatus(BuildStatus.None);
-            }
-
-            LastBuildUri = null;
-            LastBuildFinishTime = DateTime.MinValue;
-            LastBuildNumber = "0";
         }
 
         public void Promote(int buildNumber)
@@ -320,7 +319,7 @@ namespace PowerDelivery.Controls.Model
                 }
                 else if (LastBuildFinishTime == DateTime.MinValue)
                 {
-                    return "Not yet built.";
+                    return "No releases found.";
                 }
                 else
                 {

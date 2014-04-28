@@ -43,7 +43,6 @@ Cubes:
     Connections:
       ProductStore:
         ConnectionName: ProductStore
-        DataSourceID: 55651370-2d73-4440-9068-326266c88038
         ConnectionString: <<ProductStoreDataMartConnection>>
 
 #AcceptanceTests:
