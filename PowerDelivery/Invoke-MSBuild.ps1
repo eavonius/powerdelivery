@@ -60,17 +60,17 @@ function Invoke-MSBuild {
     $logPrefix = "Invoke-MSBuild:"
 
 	if ([String]::IsNullOrWhiteSpace($buildConfiguration)) {
-	
+
 		if ((Get-BuildEnvironment) -eq 'Local') {
 			$buildConfiguration = 'Debug'
 		}
 		else {
 			$buildConfiguration = 'Release'
-		}
+		}	
+	}
 
-		if (!$properties.ContainsKey('Configuration')) {
-			$properties.Add('Configuration', $buildConfiguration)
-		}
+	if (!$properties.ContainsKey('Configuration')) {
+		$properties.Add('Configuration', $buildConfiguration)
 	}
 	
 	$dropLocation = Get-BuildDropLocation
