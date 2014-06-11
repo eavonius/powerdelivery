@@ -25,7 +25,7 @@ Optional. The name to deploy the cube as. Can only be omitted if only one cube (
 .Parameter connections
 Optional. Hash of values that match the parameters of the Set-SSASConnection cmdlet.
 
-.Parameter DriveLetter
+.Parameter driveLetter
 Optional. The drive letter on the target computer to deploy to.
 
 .Example
@@ -40,7 +40,7 @@ function Publish-SSAS {
         [Parameter(Mandatory=0)][string] $deploymentUtilityPath = "C:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn\ManagementStudio\Microsoft.AnalysisServices.Deployment.exe",
         [Parameter(Mandatory=0)][string] $cubeName,
         [Parameter(Mandatory=0)] $connections,
-        [Parameter(Mandatory=0)][string] $DriveLetter = $powerdelivery.deployDriveLetter
+        [Parameter(Mandatory=0)][string] $driveLetter = $powerdelivery.deployDriveLetter
     )
     
     Set-Location $powerdelivery.deployDir
@@ -107,10 +107,10 @@ function Publish-SSAS {
             $xmlaDoc.Save($xmlaFullPath)
         }
 
-        Deploy-BuildAssets -computerName $curComputerName -path $asFilesDir -destination $asFilesDir
+        Deploy-BuildAssets -computerName $curComputerName -path $asFilesDir -destination $asFilesDir -DriveLetter $driveLetter
 
-        $localDeployPath = Get-ComputerLocalDeployPath $curComputerName -DriveLetter $DriveLetter
-        $remoteDeployPath = Get-ComputerRemoteDeployPath $curComputerName -DriveLetter $DriveLetter
+        $localDeployPath = Get-ComputerLocalDeployPath $curComputerName -DriveLetter $driveLetter
+        $remoteDeployPath = Get-ComputerRemoteDeployPath $curComputerName -DriveLetter $driveLetter
 
         $xmlaLocalDeployPath = [System.IO.Path]::Combine($localDeployPath, $xmlaPath)
         $outLocalDeployPath = $xmlaLocalDeployPath -replace ".xmla", "ExecutionLog.xml"

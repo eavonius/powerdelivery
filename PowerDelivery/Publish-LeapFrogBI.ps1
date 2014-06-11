@@ -36,6 +36,9 @@ Optional. The prefix of SQL jobs for this data mart. By default this will be set
 Optional. The number of minutes to wait for processing to complete before failing the 
 build. By default this will be set to 15 minutes.
 
+.Parameter driveLetter
+Optional. The drive into which assets should be deployed.
+
 .Example
 Publish-LeapFrogBI "MyDataMart" "MyDataMartPackages" "Server=myserver;Initial Catalog=mydatamart"
 #>
@@ -48,7 +51,8 @@ function Publish-LeapFrogBI {
         [Parameter(Position=2,Mandatory=0)] [string] $lifecycle = (Get-BuildEnvironment),
         [Parameter(Position=3,Mandatory=0)] [string] $environmentVariable = "LFBICONSOLE$(Get-BuildEnvironment)",
         [Parameter(Position=4,Mandatory=0)] [string] $jobPrefix = "LFBI$(Get-BuildEnvironment)_",
-        [Parmaeter(Position=5,Mandatory=0)] [string] $timeoutMinutes = 15
+        [Parameter(Position=5,Mandatory=0)] [string] $timeoutMinutes = 15,
+        [Parameter(Position=6,Mandatory=0)] [string] $driveLetter = $powerdelivery.deployDriveLetter
     )
 
     $dropLocation = Get-BuildDropLocation
@@ -61,8 +65,8 @@ function Publish-LeapFrogBI {
 
             # Copy LeapFrogBI SSIS packages to network share on SSAS server
             #
-            Deploy-BuildAssets $packagesPath "LeapFrogBI\$($name)"
-            Deploy-BuildAssets "$packagesPath\$($lifecycle)" "LeapFrogBI\$($name)"
+            Deploy-BuildAssets $packagesPath "LeapFrogBI\$($name)" -DriveLetter $driveLetter
+            Deploy-BuildAssets "$packagesPath\$($lifecycle)" "LeapFrogBI\$($name)" -DriveLetter $driveLetter
         }
         
         # Set the LeapFrogBI environment variable on database server
