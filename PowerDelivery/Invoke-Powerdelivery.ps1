@@ -821,8 +821,14 @@ function Pipeline {
 	$buildAppVersion = "$appVersion"
 	
     if ($environment -ne 'local') {
-	    $changeSetNumber = $powerdelivery.changeSet.Substring(1)
-	    $buildAppVersion = "$version." + $changeSetNumber
+    	if ($onServer) {
+	    	$changeSetNumber = $powerdelivery.changeSet.Substring(1)
+	    	$buildAppVersion = "$($version).$($changeSetNumber)"
+		}
+		else {
+			$changeSetNumber = "0"
+			$buildAppVersion = "$($version).0"
+		}
     }
 	else {
 		$buildAppVersion = $version
