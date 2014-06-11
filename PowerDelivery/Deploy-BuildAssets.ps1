@@ -5,7 +5,8 @@
 		[Parameter(Position=1,Mandatory=1)][string] $path,
 		[Parameter(Position=2,Mandatory=1)][string] $destination,
 		[Parameter(Position=3,Mandatory=0)][string] $filter	= "*.*",
-		[Parameter(Position=4,Mandatory=0)][switch] $recurse = $false
+		[Parameter(Position=4,Mandatory=0)][switch] $recurse = $false,
+		[Parameter(Position=5,Mandatory=0)][string] $driveLetter = $powerdelivery.deployDriveLetter
 	)
 	
 	$logPrefix = "Deploy-BuildAssets:"
@@ -17,7 +18,7 @@
 	
 	foreach ($curComputerName in $computerNames) {
 	
-		$remoteDeployPath = Get-ComputerRemoteDeployPath $curComputerName
+		$remoteDeployPath = Get-ComputerRemoteDeployPath $curComputerName $driveLetter
         $remoteDestinationPath = Join-Path $remoteDeployPath $destination
 		
 		mkdir -Force $remoteDestinationPath | Out-Null

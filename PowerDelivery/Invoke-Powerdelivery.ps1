@@ -60,16 +60,6 @@ function Invoke-Powerdelivery {
             }
 			
 			try {
-				if ($blockName -eq "Init") {
-					$chocolateyPackages = "packages.config"
-					if (Test-Path $chocolateyPackages) {
-						Exec -errorMessage "Error installing chocolatey packages" {
-							"Installing chocolatey packages in packages.config on the TFS build agent..."
-							cinst $chocolateyPackages
-
-						}
-					}
-				}
 				InvokePowerDeliveryModuleHook $blockName 'Pre'
 				if ($powerdelivery.hookResult) {
 					$actionPerformed = $true

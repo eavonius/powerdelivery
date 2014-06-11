@@ -31,6 +31,9 @@ exist on the computer specified by the ComputerName parameter.
 .Parameter AccountPassword
 The password under which the service will be configured to run.
 
+.Parameter DriveLetter
+Optional. The drive letter on the target computer to deploy to.
+
 .Example
 Install-NServiceBusService `
 	-ComputerName MyComputer `
@@ -54,7 +57,8 @@ function Install-NServiceBusService {
         [Parameter(Position=7,Mandatory=0)] $IsMaster = $false,
         [Parameter(Position=8,Mandatory=0)] $IsDistributor = $false,
         [Parameter(Position=9,Mandatory=0)][string] $DistributorAddress,
-        [Parameter(Position=10,Mandatory=0)][string] $EndpointConfigurationType
+        [Parameter(Position=10,Mandatory=0)][string] $EndpointConfigurationType,
+        [Parameter(Position=11,Mandatory=0)][string] $DriveLetter = $powerdelivery.deployDriveLetter
 	)
 
 	Set-Location $powerdelivery.deployDir
@@ -77,10 +81,10 @@ function Install-NServiceBusService {
 
         $dropServicePath = Join-Path $powerdelivery.deployDir $Directory
         
-        $remoteDeployPath = Get-ComputerRemoteDeployPath $curComputerName
+        $remoteDeployPath = Get-ComputerRemoteDeployPath $curComputerName -DriveLetter $DriveLetter
         $remoteServicePath = Join-Path $remoteDeployPath $Directory
 
-        $localDeployPath = Get-ComputerLocalDeployPath $curComputerName
+        $localDeployPath = Get-ComputerLocalDeployPath $curComputerName -DriveLetter $DriveLetter
         $localServicePath = Join-Path $localDeployPath $Directory
 
         "$logPrefix Creating $remoteServicePath"

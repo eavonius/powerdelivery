@@ -44,7 +44,8 @@ function Update-XmlFile {
         [Parameter(Position=0,Mandatory=0)] $ComputerName,
         [Parameter(Position=1,Mandatory=1)][string] $FileName, 
         [Parameter(Position=2,Mandatory=1)] $Replacements,
-        [Parameter(Position=3,Mandatory=0)] $Namespaces
+        [Parameter(Position=3,Mandatory=0)] $Namespaces,
+        [Parameter(Position=4,Mandatory=0)] $DriveLetter = $powerdelivery.deployDriveLetter
     )
 	
 	$originalLocation = Get-Location
@@ -60,7 +61,7 @@ function Update-XmlFile {
 	    foreach ($computer in $computerNames) {
 
             if (![System.IO.Path]::IsPathRooted($FileName)) {
-                $FileName = Join-Path (Get-ComputerLocalDeployPath $computer) $FileName
+                $FileName = Join-Path (Get-ComputerLocalDeployPath $computer $DriveLetter) $FileName
             }
 
             Invoke-Command -ComputerName $computer {

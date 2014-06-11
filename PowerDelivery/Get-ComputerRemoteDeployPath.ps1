@@ -10,19 +10,21 @@ directory named after the build.
 .Parameter computerName
 The computer to retrieve the deploy path for.
 
+.Parameter driveLetter
+Optional. The drive letter upon which to deploy files. Defaults to "C"
+
 .Example
 $deployPath = Get-ComputerRemoteDeployPath
 #>
 function Get-ComputerRemoteDeployPath {
     param(
-        [Parameter(Position=0,Mandatory=1)][string] $computerName
+        [Parameter(Position=0,Mandatory=1)][string] $computerName,
+        [Parameter(Position=1,Mandatory=0)][string] $driveLetter = $powerdelivery.deployDriveLetter
     )
 
     $buildEnvironment = Get-BuildEnvironment
 
     if (!$powerdelivery.deployShares.ContainsKey($computerName)) {
-
-        $driveLetter = $powerdelivery.deployDriveLetter
 
         New-RemoteShare -computerName $computerName -shareName "PowerDelivery" -shareDirectory "$($driveLetter):\PowerDelivery" | Out-Host
 
