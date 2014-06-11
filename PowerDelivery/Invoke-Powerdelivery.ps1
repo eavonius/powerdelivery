@@ -574,7 +574,7 @@ function Invoke-Powerdelivery {
 		}
 
 		InvokePowerDeliveryBuildAction -condition $true -stage $powerdelivery.init -description "Initialization" -status "Initializing" -blockName "Init"
-	    InvokePowerDeliveryBuildAction -condition ($powerdelivery.environment -eq 'Commit' -or $powerdelivery.environment -eq 'Local') -stage $powerdelivery.compile -description "Compilations" -status "Compiling" -blockName "Compile"
+	    InvokePowerDeliveryBuildAction -condition ((($powerdelivery.environment -eq 'Commit') -and $onServer) -or $powerdelivery.environment -eq 'Local') -stage $powerdelivery.compile -description "Compilations" -status "Compiling" -blockName "Compile"
 	    
         $destDropLocation = $powerdelivery.dropLocation.TrimEnd('\')
         $destCurrentLocation = $powerdelivery.currentLocation.Path.TrimEnd('\')
@@ -586,8 +586,11 @@ function Invoke-Powerdelivery {
             Copy-Robust $priorBuildDrop $destDropLocation -recurse
 	    }
         
-        "$logPrefix Retrieving assets from $destDropLocation into deploy directory"
-        Copy-Robust $destDropLocation $($powerdelivery.deployDir) -recurse
+        if ($onServer) 
+        {
+        	"$logPrefix Retrieving assets from $destDropLocation into deploy directory"
+        	Copy-Robust $destDropLocation $($powerdelivery.deployDir) -recurse
+        }
 
 		"$logPrefix Setting location to $($powerdelivery.deployDir)"
 		Set-Location $powerdelivery.deployDir
