@@ -297,7 +297,7 @@ function Invoke-Powerdelivery {
 	$powerdelivery.priorBuild = $priorBuild
 	$powerdelivery.deployDir = Join-Path (Get-Location) "PowerDeliveryDeploy"
 
-	if ((Test-Path $powerdelivery.deployDir) -and ($onServer -eq $false -or $environment -eq "Local")) {
+	if ((Test-Path $powerdelivery.deployDir) -and ($onServer -eq $true -or $environment -eq "Local")) {
 		Remove-Item -Path $powerdelivery.deployDir -Force -Recurse | Out-Null
 	}
 	
