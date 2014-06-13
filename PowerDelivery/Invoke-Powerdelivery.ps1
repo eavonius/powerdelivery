@@ -442,6 +442,16 @@ function Invoke-Powerdelivery {
 
             Write-BuildSummaryMessage -name "Application" -header "Release" -message "Version: $($powerdelivery.buildAppVersion)`nEnvironment: $($powerdelivery.environment)`nBuild: $($powerdelivery.buildNumber)"
 	    }
+	    else {
+
+	      $now = Get-Date -Format "yyyyMMdd_hhmmss"
+
+	      $buildNameSegments = $powerdelivery.dropLocation.split('\') | where {$_}
+	         $buildNameIndex = $buildNameSegments.length - 1
+	         $buildName = $buildNameSegments[$buildNameIndex]
+	         $powerdelivery.buildName = "$($powerdelivery.scriptName) - $($powerdelivery.environment)_$($now)"
+	         $scriptParams["Build Name"] = $powerdelivery.buildName
+	     }
 
         ReplaceReferencedConfigSettings($powerdelivery.config)
 		
