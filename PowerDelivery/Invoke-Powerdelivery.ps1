@@ -310,6 +310,9 @@ function Invoke-Powerdelivery {
 	$appScript = [System.IO.Path]::GetFileNameWithoutExtension($buildScript)
     $powerdelivery.scriptName = $appScript
 
+    $TranscriptFile = Join-Path $powerdelivery.currentLocation "$($powerdelivery.scriptName).log"
+    Start-Transcript -Path $TranscriptFile
+
     try {
 		if ($onServer -eq $true) {
 
@@ -586,11 +589,8 @@ function Invoke-Powerdelivery {
             Copy-Robust $priorBuildDrop $destDropLocation -recurse
 	    }
         
-        if ($onServer) 
-        {
-        	"$logPrefix Retrieving assets from $destDropLocation into deploy directory"
-        	Copy-Robust $destDropLocation $($powerdelivery.deployDir) -recurse
-        }
+    	"$logPrefix Retrieving assets from $destDropLocation into deploy directory"
+    	Copy-Robust $destDropLocation $($powerdelivery.deployDir) -recurse
 
 		"$logPrefix Setting location to $($powerdelivery.deployDir)"
 		Set-Location $powerdelivery.deployDir
@@ -650,6 +650,8 @@ function Invoke-Powerdelivery {
 		throw
     }
 	finally {
+		Stop-Transcript
+		Copy-Item -Force $TranscriptFile $powerdelivery.dropLocation | Out-Null
 		Set-Location $powerdelivery.currentLocation
 	}
 }
