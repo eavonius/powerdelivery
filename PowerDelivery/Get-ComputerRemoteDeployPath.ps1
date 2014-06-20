@@ -26,12 +26,26 @@ function Get-ComputerRemoteDeployPath {
 
     if (!$powerdelivery.deployShares.ContainsKey($computerName)) {
 
-        New-RemoteShare -computerName $computerName -shareName "PowerDelivery" -shareDirectory "$($driveLetter):\PowerDelivery" | Out-Host
+        if (!$computerName.StartsWith("localhost"))
+        {
+            New-RemoteShare -computerName $computerName -shareName "PowerDelivery" -shareDirectory "$($driveLetter):\PowerDelivery" | Out-Host
+        }
 
         $buildName = Get-BuildName
         $buildNumber = Get-BuildNumber
 
         $deployPath = "\\$computerName\PowerDelivery"
+
+        if ($computerName.StartsWith("localhost"))
+        {
+            $deployPath = "$($driveLetter):\PowerDelivery"
+
+            if (!(Test-Path $deployPath))
+            {
+                mkdir -Force $deployPath | Out-Null
+            }
+        }
+
         $buildPath = "$deployPath\$buildName"
 
         mkdir $buildPath -Force | Out-Null
@@ -49,17 +63,33 @@ function Get-ComputerRemoteDeployPath {
             gci -Directory $deployPath | where-object -Property Name -Like $buildMatches | Sort-Object -Property LastWriteTime | select -first $numberToDelete | Remove-Item -Force -Recurse | Out-Null
         }
 
-        $localDeployPath = $deployPath -replace "\\\\$computerName", "$($driveLetter):"
+        $localDeployPath = $deployPath
+
+        if (!$computerName.StartsWith("localhost"))
+        {
+            $localDeployPath = $deployPath -replace "\\\\$computerName", "$($driveLetter):"
+        }
+
         $localAliasPath = [System.IO.Path]::Combine($localDeployPath, "$($powerdelivery.scriptName) - $($buildEnvironment)")
         $localBuildPath = [System.IO.Path]::Combine($localDeployPath, $buildName)
 
-        Invoke-Command -ComputerName $computerName -ScriptBlock {
-            if ((Test-Path -Path $using:localAliasPath)) {
-                & cmd /c "rmdir ""$using:localAliasPath"""
-            }
+        $invokeArgs = @{
+            "ArgumentList" = @($localAliasPath, $localBuildPath);
+            "ScriptBlock" = {
+                param($aliasPath, $buildPath)
+                if ((Test-Path -Path $localAliasPath)) {
+                    & cmd /c "rmdir ""$aliasPath"""
+                }
 
-            & cmd /c "mklink /J ""$using:localAliasPath"" ""$using:localBuildPath""" | Out-Null
+                & cmd /c "mklink /J ""$aliasPath"" ""$buildPath""" | Out-Null
+            }
         }
+
+        if (!$computerName.StartsWith("localhost")) {
+            $invokeArgs.Add("ComputerName", $computerName)
+        }
+
+        Invoke-Command @invokeArgs
 
         $powerdelivery.deployShares.Add($computerName, $buildPath)
     }
