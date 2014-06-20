@@ -77,7 +77,7 @@ function Get-ComputerRemoteDeployPath {
             "ArgumentList" = @($localAliasPath, $localBuildPath);
             "ScriptBlock" = {
                 param($aliasPath, $buildPath)
-                if ((Test-Path -Path $localAliasPath)) {
+                if ((Test-Path -Path $aliasPath)) {
                     & cmd /c "rmdir ""$aliasPath"""
                 }
 
