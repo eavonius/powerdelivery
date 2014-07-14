@@ -34,7 +34,21 @@ $originalDirectory = Get-Location
 
 del *.nupkg
 
-$latestVersion = $(clist powerdelivery).split(' ')[1].split('.')
+$listCommand = $(clist powerdelivery)
+
+$latestVersion = ""
+
+if ($listCommand.GetType().Name -eq "Object[]") {
+	$listCommand | ForEach-Object {
+		if ($_.StartsWith("PowerDelivery ")) {
+			$latestVersion = $_.split(' ')[1].split('.')
+		}
+	}
+}
+else {
+	$latestVersion = $listCommand.split(' ')[1].split('.')	
+}
+
 $oldVersion = $latestVersion -join '.'
 $latestVersion[$latestVersion.Length-1] = $(([int]$latestVersion[$latestVersion.Length-1]) + 1)
 $script:newVersion = $latestVersion -join '.'
