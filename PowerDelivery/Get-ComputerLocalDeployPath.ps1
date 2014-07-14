@@ -3,9 +3,7 @@
 Retrieves the local path on a remote computer to deploy files into.
 
 .Description
-Retrieves the local path on a remote computer to deploy files into. This path 
-will be a subdirectory named after the build number, nested within another 
-directory named after the build.
+Retrieves the local path on a remote computer to deploy files into.
 
 .Parameter computerName
 The computer to retrieve the deploy path for.

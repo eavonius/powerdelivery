@@ -4,8 +4,7 @@ Retrieves the UNC path on a remote computer to deploy files into.
 
 .Description
 Retrieves the UNC path on a remote computer to deploy files into. This path 
-will be a subdirectory named after the build number, nested within another 
-directory named after the build.
+will be a subdirectory named after the build.
 
 .Parameter computerName
 The computer to retrieve the deploy path for.
@@ -47,6 +46,7 @@ function Get-ComputerRemoteDeployPath {
         }
 
         $buildPath = "$deployPath\$buildName"
+        $buildPathAlias = "$deployPath\$($powerdelivery.scriptName) - $($buildEnvironment)"
 
         mkdir $buildPath -Force | Out-Null
 
@@ -91,7 +91,7 @@ function Get-ComputerRemoteDeployPath {
 
         Invoke-Command @invokeArgs
 
-        $powerdelivery.deployShares.Add($computerName, $buildPath)
+        $powerdelivery.deployShares.Add($computerName, $buildPathAlias)
     }
     $powerdelivery.deployShares[$computerName]
 }
