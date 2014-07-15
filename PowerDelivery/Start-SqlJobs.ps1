@@ -11,6 +11,9 @@ The SQL server instance on which the jobs will be started.
 .Parameter jobs
 The jobs to start. Can be a single job name, or a name with wildcards.
 
+.Parameter noWait
+Whether to skip waiting for the job to finish. Defaults to false.
+
 .Example
 Start-SqlJobs -serverName localhost -jobs MyJobs*
 #>
@@ -18,7 +21,8 @@ function Start-SqlJobs {
     [CmdletBinding()]
     param(
         [Parameter(Position=0,Mandatory=1)][string] $serverName, 
-        [Parameter(Position=1,Mandatory=1)][string] $jobs
+        [Parameter(Position=1,Mandatory=1)][string] $jobs,
+        [Parameter(Position=2,Mandatory=0)][switch] $noWait
     )
 
     $logPrefix = "Start-SqlJobs:"
@@ -66,9 +70,13 @@ function Start-SqlJobs {
                 $jobRunning = $false
                 "$logPrefix SQL Job '$jobName' completed successfully."
             }
-            else {
+            elseif ($noWait -eq $false) {
                 "$logPrefix Waiting for SQL job $jobName to finish..."
                 sleep 15
+            }
+            else {
+                "$logPrefix SQL Job '$jobName' started, not waiting for it to complete."
+                $jobRunning = $false
             }
         }
         while ($jobRunning)
