@@ -310,7 +310,7 @@ function Invoke-Powerdelivery {
 	$appScript = [System.IO.Path]::GetFileNameWithoutExtension($buildScript)
     $powerdelivery.scriptName = $appScript
 
-    $TranscriptFile = Join-Path $powerdelivery.currentLocation "$($powerdelivery.scriptName).log"
+    $TranscriptFile = Join-Path $powerdelivery.currentLocation "$($powerdelivery.scriptName)Build.log"
     Start-Transcript -Path $TranscriptFile
 
     try {
