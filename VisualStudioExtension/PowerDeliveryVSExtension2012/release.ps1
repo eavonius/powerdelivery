@@ -97,7 +97,19 @@ if ($latestVersionMessage.Trim() -eq "No packages found.") {
     $script:newVersion = "1.0.0"
 }
 else {
-    $latestVersion = $latestVersionMessage.split(' ')[1].split('.')
+
+    $latestVersion = ""
+
+    if ($latestVersionMessage.GetType().Name -eq "Object[]") {
+        $latestVersionMessage | ForEach-Object {
+            if ($_.StartsWith("PowerDelivery ")) {
+                $latestVersion = $_.split(' ')[1].split('.')
+            }
+        }
+    }
+    else {
+        $latestVersion = $latestVersionMessage.split(' ')[1].split('.')  
+    }
 
     $oldVersion = $latestVersion -join '.'
     $latestVersion[$latestVersion.Length-1] = $(([int]$latestVersion[$latestVersion.Length-1]) + 1)
