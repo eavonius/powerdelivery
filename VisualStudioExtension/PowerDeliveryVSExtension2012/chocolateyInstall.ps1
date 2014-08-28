@@ -11,6 +11,10 @@ try {
 
     $version = (Get-ChildItem HKLM:SOFTWARE\Wow6432Node\Microsoft\VisualStudio -ErrorAction SilentlyContinue | ? { ($_.PSChildName.EndsWith("$($vsVersion).0")) } | ? {$_.property -contains "InstallDir"})
 
+    if ($version -eq $null) {
+        $version = (Get-ChildItem HKLM:SOFTWARE\Microsoft\VisualStudio -ErrorAction SilentlyContinue | ? { ($_.PSChildName.EndsWith("$($vsVersion).0")) } | ? {$_.property -contains "InstallDir"})
+    }
+
     if ($version) {
         $dir = (Get-ItemProperty $version.PSPath "InstallDir").InstallDir 
         $installer = Join-Path $dir "VsixInstaller.exe"
