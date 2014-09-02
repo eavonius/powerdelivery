@@ -1,4 +1,4 @@
-. installExtension.ps1
+. .\installExtension.ps1
 
 # Installs the Visual Studio 2010 Extension for PowerDelivery
 #

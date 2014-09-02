@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>PowerDelivery-VSExtension-2012</id>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
     <title>PowerDelivery for Visual Studio 2012</title>
     <authors>Jayme Edwards</authors>
     <owners />

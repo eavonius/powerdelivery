@@ -1,4 +1,4 @@
-. uninstallExtension.ps1
+. .\uninstallExtension.ps1
 
 # Uninstalls the Visual Studio 2010 Extension for PowerDelivery
 #
