@@ -1,5 +1,5 @@
 ﻿$pkg = "powerdelivery-vsextension-2013"
-$vsix = "PowerDeliveryVSExtension2013.vsix"
+$vsix = "PowerDeliveryVSExtension.2013.vsix"
 $vsVersion = 12
 $vsProduct = 2013
 $vsixId = "9c6c2f23-b97a-4797-86c1-08f94e0e4300"
