@@ -12,6 +12,8 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.TeamFoundation;
 using Microsoft.VisualStudio.TeamFoundation.Build;
 
+using System.Windows;
+
 namespace JaymeEdwards.PowerDeliveryVSExtension
 {
     /// <summary>
@@ -56,26 +58,33 @@ namespace JaymeEdwards.PowerDeliveryVSExtension
         /// </summary>
         private void ShowToolWindow(object sender, EventArgs e)
         {
-            object o = GetService(typeof(IVsTeamFoundationBuild));
-            
-            IVsTeamFoundationBuild tfsBuild = o as IVsTeamFoundationBuild;
-
-            // Get the instance number 0 of this tool window. This window is single instance so this instance
-            // is actually the only one.
-            // The last flag is set to true so that if the tool window does not exists it will be created.
-            ToolWindowPane window = this.FindToolWindow(typeof(MyToolWindow), 0, true);
-            if ((null == window) || (null == window.Frame))
+            try 
             {
-                throw new NotSupportedException(Resources.CanNotCreateWindow);
+                object o = GetService(typeof(IVsTeamFoundationBuild));
+            
+                IVsTeamFoundationBuild tfsBuild = o as IVsTeamFoundationBuild;
+
+                // Get the instance number 0 of this tool window. This window is single instance so this instance
+                // is actually the only one.
+                // The last flag is set to true so that if the tool window does not exists it will be created.
+                ToolWindowPane window = this.FindToolWindow(typeof(MyToolWindow), 0, true);
+                if ((null == window) || (null == window.Frame))
+                {
+                    throw new NotSupportedException(Resources.CanNotCreateWindow);
+                }
+
+                MyToolWindow myWindow = (MyToolWindow)window;
+                MyControl myControl = (MyControl)myWindow.Content;
+                myControl.Package = this;
+                myControl.TfsBuild = tfsBuild;
+
+                IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
+                Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
             }
-
-            MyToolWindow myWindow = (MyToolWindow)window;
-            MyControl myControl = (MyControl)myWindow.Content;
-            myControl.Package = this;
-            myControl.TfsBuild = tfsBuild;
-
-            IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
-            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
+            catch (Exception ex)
+            {
+                ActivityLog.LogError("PowerDeliveryVSExtension2012", string.Format("Message: {0} Stack: {1}", ex.Message, ex.StackTrace));
+            }
         }
 
 
@@ -89,31 +98,37 @@ namespace JaymeEdwards.PowerDeliveryVSExtension
         /// </summary>
         protected override void Initialize()
         {
-            Trace.WriteLine (string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString()));
-            base.Initialize();
-
-            // Add our command handlers for menu (commands must exist in the .vsct file)
-            OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
-            if ( null != mcs )
+            try
             {
-                // Create the command for the tool window
-                CommandID toolwndCommandID = new CommandID(GuidList.guidPowerDeliveryVSExtensionCmdSet, (int)PkgCmdIDList.cmdidDeploymentPipelines);
-                MenuCommand menuToolWin = new MenuCommand(ShowToolWindow, toolwndCommandID);
-                mcs.AddCommand( menuToolWin );
+                Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString()));
+                base.Initialize();
+
+                // Add our command handlers for menu (commands must exist in the .vsct file)
+                OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
+                if (null != mcs)
+                {
+                    // Create the command for the tool window
+                    CommandID toolwndCommandID = new CommandID(GuidList.guidPowerDeliveryVSExtensionCmdSet, (int)PkgCmdIDList.cmdidDeploymentPipelines);
+                    MenuCommand menuToolWin = new MenuCommand(ShowToolWindow, toolwndCommandID);
+                    mcs.AddCommand(menuToolWin);
+                }
+
+                ToolWindowPane window = this.FindToolWindow(typeof(MyToolWindow), 0, true);
+
+                if (window != null)
+                {
+                    MyToolWindow myWindow = (MyToolWindow)window;
+                    IVsTeamFoundationBuild tfsBuild = (IVsTeamFoundationBuild)GetService(typeof(IVsTeamFoundationBuild));
+                    MyControl myControl = (MyControl)myWindow.Content;
+                    myControl.Package = this;
+                    myControl.TfsBuild = tfsBuild;
+                }
             }
-
-            ToolWindowPane window = this.FindToolWindow(typeof(MyToolWindow), 0, true);
-
-            if (window != null)
+            catch (Exception ex)
             {
-                MyToolWindow myWindow = (MyToolWindow)window;
-                IVsTeamFoundationBuild tfsBuild = (IVsTeamFoundationBuild)GetService(typeof(IVsTeamFoundationBuild));
-                MyControl myControl = (MyControl)myWindow.Content;
-                myControl.Package = this;
-                myControl.TfsBuild = tfsBuild;
+                ActivityLog.LogError("PowerDeliveryVSExtension2012", string.Format("Message: {0} Stack: {1}", ex.Message , ex.StackTrace));
             }
         }
         #endregion
-
     }
 }
