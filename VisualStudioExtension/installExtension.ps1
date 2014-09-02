@@ -2,14 +2,14 @@
 # of Visual Studio from chocolatey.org. This script is meant to be included 
 # and called from chocolateyInstall.ps1 of the chocolatey/nuget package.
 #
-function Install-Extension($extensionVersion, $vsVersion, $vsxId) {
+function Install-Extension($scriptPath, $extensionVersion, $vsVersion, $vsixId) {
 
     $pkg = "powerdelivery-vsextension-$($extensionVersion)"
     $vsix = "PowerDeliveryVSExtension.$($extensionVersion).vsix"
     $vsProduct = $extensionVersion
 
     try { 
-        $powerdeliveryDir = Split-Path -parent $MyInvocation.MyCommand.Definition
+        $powerdeliveryDir = $scriptPath
 
         $installFile = Join-Path $powerdeliveryDir $vsix
 

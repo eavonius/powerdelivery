@@ -2,14 +2,14 @@
 # of Visual Studio from chocolatey.org. This script is meant to be included 
 # and called from chocolateyUninstall.ps1 of the chocolatey/nuget package.
 #
-function Uninstall-Extension($extensionVersion, $vsVersion, $vsxId) {
+function Uninstall-Extension($scriptPath, $extensionVersion, $vsVersion, $vsixId) {
 
     $pkg = "powerdelivery-vsextension-$($extensionVersion)"
     $vsix = "PowerDeliveryVSExtension.$($extensionVersion).vsix"
     $vsProduct = $extensionVersion
 
     try { 
-        $powerdeliveryDir = Split-Path -parent $MyInvocation.MyCommand.Definition
+        $powerdeliveryDir = $scriptPath
 
         $installFile = Join-Path $powerdeliveryDir $vsix
 
