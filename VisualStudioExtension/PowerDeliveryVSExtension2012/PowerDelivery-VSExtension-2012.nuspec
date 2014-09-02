@@ -17,6 +17,8 @@
   </metadata>
   <files>
     <file src="bin\Release\PowerDeliveryVSExtension.2012.vsix" target="tools\PowerDeliveryVSExtension.2012.vsix" />
+    <file src="..\installExtension.ps1" target="tools\installExtension.ps1" />
+    <file src="..\uninstallExtension.ps1" target="tools\uninstallExtension.ps1" />
     <file src="chocolateyInstall.ps1" target="tools\chocolateyInstall.ps1" />
     <file src="chocolateyUninstall.ps1" target="tools\chocolateyUninstall.ps1" />
   </files>

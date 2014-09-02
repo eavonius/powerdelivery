@@ -1,4 +1,4 @@
-﻿. ..\..\releaseExtension.ps1
+﻿. ..\releaseExtension.ps1
 
 # Releases the Visual Studio 2012 Extension for PowerDelivery
 #
