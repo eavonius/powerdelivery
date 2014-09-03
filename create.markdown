@@ -1,10 +1,9 @@
 ---
 layout: page
 ---
-<div class="row-fluid">
-	<div class="span3 hidden-tablet">
-		<ul class="nav nav-list">
-			<h5>Article contents</h5>
+<div class="row">
+	<div class="col-sm-3 hidden-xs">
+		<ul class="nav nav-stacked">
 			<li class="nav-header">
 				<a href="#workstation_prep">Prepare your workstation</a>
 			</li>
@@ -100,7 +99,7 @@ layout: page
 			</li>
 		</ul>
 	</div>	
-	<div class="span9 span12-tablet">
+	<div class="col-sm-9 hidden-xs">
 		<h1>Creating deployment pipelines</h1>
 		<p>In <a href="https://en.wikipedia.org/wiki/Continuous_delivery" target="_new">continuous delivery</a>, the technology that deploys your software assets to a 
 		development, test, and eventually production environment is known as a <b>deployment pipeline</b>. 

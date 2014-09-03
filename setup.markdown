@@ -1,19 +1,18 @@
 ---
 layout: page
 ---
-<div class="row-fluid">
-	<div class="span3 hidden-tablet">
-		<ul class="nav nav-list">
-			<h5>Article contents</h5>
-			<li class="nav-header">
+<div class="row">
+	<div class="col-sm-3 hidden-xs">
+		<ul class="nav nav-stacked">
+			<li>
 				<a href="#tfs_setup">Setting up Team Foundation Server</a>
 			</li>
-			<li class="nav-header">
+			<li>
 				<a href="#enabling_deployment">Enabling deployment to an environment node</a>
 			</li>
 		</ul>
 	</div>
-	<div class="span9 span12-tablet">
+	<div class="col-sm-9 col-xs-12">
 		
 		<h1>Setting up your infrastructure</h1>
 		<p>To use powerdelivery, you will need at least 3 separate environments to run 

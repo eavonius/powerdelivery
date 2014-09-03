@@ -1,20 +1,21 @@
-.container-fluid .span3 .nav.nav-list {
+body {
+	font-size: 16px;
+	line-height: 26px;
+	background-color: #eee;
+}
+
+.container .col-sm-3 .nav.nav-stacked {
 	position: fixed;
-	left: 0;
+	left: 18%;
 	bottom: 0;
-	width: 23.404255319148934%;
+	width: 15%;
 	z-index: 1020;
 	top: 52px;
 	margin-bottom: 10px;
 	overflow-y: auto;
 }
 
-.container-fluid .span3 .nav.nav-list h5 {
-	margin-left: 15px;
-}
-
-.navbar-inner .container-fluid, .navbar-fixed-top .navbar-inner {
-	background-image: none;
+.navbar.navbar-inverse.navbar-fixed-top {
 	background-color: #c41230;
 }
 
@@ -22,9 +23,17 @@
 	background: #c41230;
 }
 
-.navbar-inverse .brand {
-	color: #ffffff;
+.navbar-inverse .navbar-brand {
+	color: #eee;
+	font-size: 22px;
+	padding-left: 0px;
 }
+
+.navbar-inverse ul.nav.navbar-nav li a, 
+.navbar-inverse ul.nav.navbar-nav li a:link, 
+.navbar-inverse ul.nav.navbar-nav li a:hover {
+	color: #eee;
+} 
 
 .navbar-inverse .nav .active > a, 
 .navbar-inverse .nav .active > a:hover,
@@ -46,27 +55,23 @@
 	background: #c41230;
 }
 
-.navbar-fixed-top .navbar-inner .container-fluid .nav-collapse .navbar-text {
+.navbar-fixed-top .navbar-inner .container .nav-collapse .navbar-text {
 	color: #ffffff;
 }
 
-.navbar-fixed-top .navbar-inner .container-fluid .nav-collapse a,
-.navbar-fixed-top .navbar-inner .container-fluid .nav-collapse a:link,
-.navbar-fixed-top .navbar-inner .container-fluid .nav-collapse a:visited {
+.navbar-fixed-top .navbar-inner .container .nav-collapse a,
+.navbar-fixed-top .navbar-inner .container .nav-collapse a:link,
+.navbar-fixed-top .navbar-inner .container .nav-collapse a:visited {
 	color: #ffffff;
 }
 
-.span3 .nav-list {
-	padding-left: 0px;
+.col-sm-3 .nav li a {
+	margin-left: 10px;
 }
 
-.span3 .nav-list li a {
-	margin-left: 4px;
-}
-
-.span3 .nav-list li.nav-header a {
+.col-sm-3 .nav li.nav-header a {
 	margin-left: 0px;
-	font-size: 12px;
+	font-weight: bold;
 }
 
 .feature-overview h2 {
@@ -94,7 +99,7 @@ code {
 	padding-bottom: 5px;
 }
 
-.span9 hr {
+.col-sm-9 hr {
 	margin-top: 30px;
 }
 
@@ -125,16 +130,6 @@ code {
 }
 
 @media (max-width: 979px) {
-
-  .container.navbar-wrapper {
-	margin-bottom: 0;
-	width: auto;
-  }
-  .navbar-inner {
-	border-radius: 0;
-	margin: -20px 0;
-  }
-
   .carousel .item {
 	height: 500px;
   }
@@ -142,7 +137,6 @@ code {
 	width: auto;
 	height: 500px;
   }
-
   .featurette {
 	height: auto;
 	padding: 0;
@@ -156,19 +150,12 @@ code {
   }
 }
 
-
 @media (max-width: 767px) {
-
-  .navbar-inner {
-	margin: -20px;
-  }
-
   .carousel {
 	margin-left: -20px;
 	margin-right: -20px;
   }
   .carousel .container {
-
   }
   .carousel .item {
 	height: 300px;
@@ -188,11 +175,9 @@ code {
   .carousel-caption .btn {
 	font-size: 18px;
   }
-
   .marketing .span4 + .span4 {
 	margin-top: 40px;
   }
-
   .featurette-heading {
 	font-size: 30px;
   }
@@ -200,5 +185,4 @@ code {
 	font-size: 18px;
 	line-height: 1.5;
   }
-
 }
