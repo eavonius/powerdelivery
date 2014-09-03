@@ -1,7 +1,7 @@
 body {
 	font-size: 16px;
 	line-height: 26px;
-	background-color: #efefef;
+	background-color: #ffffff;
 }
 
 .container .col-sm-3 .nav.nav-stacked {
@@ -17,6 +17,7 @@ body {
 
 .navbar.navbar-inverse.navbar-fixed-top {
 	background-color: #c41230;
+	border-bottom: 1px solid transparent;
 }
 
 .navbar-inverse .btn-navbar {
@@ -26,7 +27,10 @@ body {
 .navbar-inverse .navbar-brand {
 	color: #eee;
 	font-size: 22px;
-	padding-left: 0px;
+}
+
+.navbar-inverse .navbar-toggle {
+	border: 1px solid transparent;
 }
 
 .navbar-inverse ul.nav.navbar-nav li a, 
@@ -35,9 +39,16 @@ body {
 	color: #eee;
 } 
 
+.navbar-inverse ul.nav.navbar-nav li.active a, 
+.navbar-inverse ul.nav.navbar-nav li.active a:link, 
+.navbar-inverse ul.nav.navbar-nav li.active a:hover {
+	color: #fff;
+	font-weight: bold;
+} 
+
 .navbar-inverse .nav .active > a, 
 .navbar-inverse .nav .active > a:hover,
-.navbar-inverse .nav .active > a:focus {
+.navbar-inverse .nav .active > a:link {
 	background: #B62027;
 }
 
@@ -103,21 +114,8 @@ code {
 	margin-top: 30px;
 }
 
-.featurette-divider {
-  margin: 80px 0; /* Space out the Bootstrap <hr> more */
-}
-.featurette {
-  overflow: hidden; /* Vertically center images part 2: clear their floats. */
-}
 .featurette-image {
-}
-
-/* Give some space on the sides of the floated elements so text doesn't run right into it. */
-.featurette-image.pull-left {
-  margin-right: 40px;
-}
-.featurette-image.pull-right {
-  margin-left: 40px;
+	width: 80%;
 }
 
 /* Thin out the marketing headings */

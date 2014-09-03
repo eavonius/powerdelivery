@@ -11,9 +11,14 @@ function setCurrentPageLinksActive() {
 		curPage = curPage.substring(0, hashTag - 1);
 	}
 	
-	$(".nav > li > a[href='" + curPage + "']").each(function() {
-		$(this).parent().addClass('active');
-	});
+	if (curPage == '') {
+		$(".nav > li > a[href='index.html']").parent().addClass('active');
+	}
+	else {
+		$(".nav > li > a[href='" + curPage + "']").each(function() {
+			$(this).parent().addClass('active');
+		});
+	}
 }
 
 $(document).ready(function() {
