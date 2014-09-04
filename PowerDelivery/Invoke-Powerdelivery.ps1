@@ -373,15 +373,19 @@ function Invoke-Powerdelivery {
 		$sharedConfigFileName = "$($appScript)Shared.yml"
 		$yamlFile = "$($envConfigFileName).yml"
 
-	    if (Test-Path -Path $yamlFile) {
+	  if (Test-Path -Path $yamlFile) {
 			$yamlPath = (Resolve-Path ".\$($yamlFile)")
 			$powerdelivery.config = Get-Yaml -FromFile $yamlPath
-	    }
+	  }
 		else {
 			Write-Host (Get-Location)
-		
-		    throw "Build configuration file $yamlFile not found."
-	    }
+			throw "Build configuration file $yamlFile not found."
+	  }
+
+	  if ($onServer) {
+        Enable-PSRemoting -Force | Out-Null
+        Enable-WSManCredSSP -Role Server -Force | Out-Null
+    }
 		
 		if (Test-Path -Path $sharedConfigFileName) {
 			$yamlPath = (Resolve-Path ".\$($sharedConfigFileName)")

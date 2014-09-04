@@ -20,10 +20,12 @@ function Enable-SqlJobs {
         [Parameter(Mandatory=1)][string] $serverName, 
         [Parameter(Mandatory=1)][string] $jobs
     )
+
+    $logPrefix = "Enable-SqlJobs:"
 	
 	[Reflection.Assembly]::LoadWithPartialName('Microsoft.SqlServer.SMO') | Out-Null
 
-    "Enabling SQL jobs with pattern $jobs on $serverName"
+    Write-Host "$logPrefix Enabling SQL jobs with pattern $jobs on $serverName"
 
     $dataMartServer = New-Object Microsoft.SqlServer.Management.SMO.Server("$serverName")
     $dataMartJobs = $dataMartServer.jobserver.jobs | where-object {$_.name -like "$jobs"}
@@ -31,6 +33,6 @@ function Enable-SqlJobs {
         $jobName = $dataMartJob.Name
         $dataMartJob.IsEnabled = $true
         $dataMartJob.Alter()
-        "Job '$jobName' successfully enabled."
+        Write-Host "$logPrefix Job '$jobName' successfully enabled."
     }
 }

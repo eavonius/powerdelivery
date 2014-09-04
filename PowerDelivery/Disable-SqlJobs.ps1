@@ -28,7 +28,7 @@ function Disable-SqlJobs {
 
 	[Reflection.Assembly]::LoadWithPartialName('Microsoft.SqlServer.SMO') | Out-Null
 
-    "$logPrefix Disabling SQL jobs with pattern $jobs on $serverName"
+    Write-Host "$logPrefix Disabling SQL jobs with pattern $jobs on $serverName"
 
     $dataMartServer = New-Object Microsoft.SqlServer.Management.SMO.Server("$serverName")
     $dataMartJobs = $dataMartServer.jobserver.jobs | where-object {$_.Isenabled -eq $true -and  $_.name -like "$jobs"}
@@ -45,7 +45,7 @@ function Disable-SqlJobs {
         else {	
             $dataMartJob.IsEnabled = $false
             $dataMartJob.Alter()
-            "Job '$jobName' successfully disabled."
+            Write-Host "$logPrefix Job '$jobName' successfully disabled."
         }
     }
 
@@ -54,6 +54,6 @@ function Disable-SqlJobs {
             $dataMartJob.IsEnabled = $true
             $dataMartJob.Alter()
         }
-        throw "Job '$jobName' is still running, stopping build."
+        throw "$logPrefix Job '$jobName' is still running, stopping build."
     }
 }

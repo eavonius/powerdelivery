@@ -29,7 +29,7 @@ function Start-SqlJobs {
 	
 	[Reflection.Assembly]::LoadWithPartialName('Microsoft.SqlServer.SMO') | Out-Null
 
-    "$logPrefix Starting SQL jobs with pattern $jobs on $serverName"
+    Write-Host "$logPrefix Starting SQL jobs with pattern $jobs on $serverName"
 
     try {
         Import-Snapin SqlServerCmdletSnapin100 
@@ -51,7 +51,7 @@ function Start-SqlJobs {
     foreach ($dataMartJob in $dataMartJobs)	{	
         $jobName = $dataMartJob.Name
 		$dataMartJob.Start()
-        "$logPrefix SQL Job '$jobName' started"
+        Write-Host "$logPrefix SQL Job '$jobName' started"
 
         $jobRunning = $true
 
@@ -59,23 +59,23 @@ function Start-SqlJobs {
             $startResult = invoke-sqlcmd -ServerInstance $serverName -database msdb -query "sp_help_jobactivity @job_id = NULL, @job_name = '$jobName'"
 
             if ($startResult.run_status -eq 3) {
-                throw "SQL Job '$jobName' was canceled"
+                throw "$logPrefix SQL Job '$jobName' was canceled"
             }
 
             if ($startResult.run_status -eq 0) {
-                throw "SQL Job '$jobName' failed"
+                throw "$logPrefix SQL Job '$jobName' failed"
             }
 
             if ($startResult.run_status -eq 1) {
                 $jobRunning = $false
-                "$logPrefix SQL Job '$jobName' completed successfully."
+                Write-Host "$logPrefix SQL Job '$jobName' completed successfully."
             }
             elseif ($noWait -eq $false) {
-                "$logPrefix Waiting for SQL job $jobName to finish..."
+                WriteHost "$logPrefix Waiting for SQL job $jobName to finish..."
                 sleep 15
             }
             else {
-                "$logPrefix SQL Job '$jobName' started, not waiting for it to complete."
+                Write-Host "$logPrefix SQL Job '$jobName' started, not waiting for it to complete."
                 $jobRunning = $false
             }
         }

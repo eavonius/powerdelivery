@@ -20,6 +20,7 @@
     <file src="PowerDelivery\Add-CredSSPTrustedHost.ps1" target="tools\PowerDelivery\Add-CredSSPTrustedHost.ps1" />
     <file src="PowerDelivery\Add-Pipeline.ps1" target="tools\PowerDelivery\Add-Pipeline.ps1" />
     <file src="PowerDelivery\Add-WindowsUserToGroup.ps1" target="tools\PowerDelivery\Add-WindowsUserToGroup.ps1" />
+    <file src="PowerDelivery\Backup-MasterDataServices.ps1" target="tools\PowerDelivery\Backup-MasterDataServices.ps1" />
     <file src="PowerDelivery\Copy-Robust.ps1" target="tools\PowerDelivery\Copy-Robust.ps1" />
     <file src="PowerDelivery\Deploy-BuildAssets.ps1" target="tools\PowerDelivery\Deploy-BuildAssets.ps1" />
     <file src="PowerDelivery\Disable-SqlJobs.ps1" target="tools\PowerDelivery\Disable-SqlJobs.ps1" />
@@ -59,9 +60,9 @@
     <file src="PowerDelivery\Invoke-SSISPackage.ps1" target="tools\PowerDelivery\Invoke-SSISPackage.ps1" />
     <file src="PowerDelivery\New-RemoteShare.ps1" target="tools\PowerDelivery\New-RemoteShare.ps1" />
     <file src="PowerDelivery\New-WindowsUserAccount.ps1" target="tools\PowerDelivery\New-WindowsUserAccount.ps1" />
-    <file src="PowerDelivery\NewShareWithPermissions-0.0.1.ps1" target="tools\PowerDelivery\NewShareWithPermissions-0.0.1.ps1" />
     <file src="PowerDelivery\Process-SSAS.ps1" target="tools\PowerDelivery\Process-SSAS.ps1" />
     <file src="PowerDelivery\Publish-BuildAssets.ps1" target="tools\PowerDelivery\Publish-BuildAssets.ps1" />
+    <file src="PowerDelivery\Publish-MasterDataServices.ps1" target="tools\PowerDelivery\Publish-MasterDataServices.ps1" />
     <file src="PowerDelivery\Publish-SSAS.ps1" target="tools\PowerDelivery\Publish-SSAS.ps1" />
     <file src="PowerDelivery\Publish-WebDeploy.ps1" target="tools\PowerDelivery\Publish-WebDeploy.ps1" />
     <file src="PowerDelivery\Register-DeliveryModuleHook.ps1" target="tools\PowerDelivery\Register-DeliveryModuleHook.ps1" />
