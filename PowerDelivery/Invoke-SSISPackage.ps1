@@ -70,6 +70,6 @@ function Invoke-SSISPackage {
 
         Invoke-Command @invokeArgs
 
-        Write-BuildSummaryMessage -name "Packages" -header "Packages" -message "SSIS: $package -> $curComputerName"
+        Write-BuildSummaryMessage -name "Deploy" -header "Deployments" -message "SSIS: $package ($curComputerName)"
     }
 }

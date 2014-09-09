@@ -24,5 +24,7 @@
 		mkdir -Force $remoteDestinationPath | Out-Null
 		
 		Copy-Robust $dropSource $remoteDestinationPath -filter $filter -recurse:$recurse.IsPresent
+
+        Write-BuildSummaryMessage -name "Deploy" -header "Deployments" -message "Build Assets: $path -> $destination ($computerName)"
 	}
 }

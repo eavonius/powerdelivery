@@ -48,5 +48,7 @@
         }
 
         Invoke-Command @invokeArgs
+
+        Write-BuildSummaryMessage -name "Configuration" -header "Configurations" -message "Set Environment Variable: $name -> $value ($computerName)"
     }
 }

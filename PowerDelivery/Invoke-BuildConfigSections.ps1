@@ -23,7 +23,7 @@ function Invoke-BuildConfigSections {
 	[CmdletBinding()]
 	param(
 		[Parameter(Position=0,Mandatory=1)] $sections,
-		[Parameter(Position=1,Mandatory=1)] $cmdlet
+		[Parameter(Position=1,Mandatory=1)][string] $cmdlet
 	)
 	
 	$sections.Keys | % {

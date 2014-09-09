@@ -26,8 +26,8 @@ function Start-SqlJobs {
     )
 
     $logPrefix = "Start-SqlJobs:"
-	
-	[Reflection.Assembly]::LoadWithPartialName('Microsoft.SqlServer.SMO') | Out-Null
+    
+    [Reflection.Assembly]::LoadWithPartialName('Microsoft.SqlServer.SMO') | Out-Null
 
     Write-Host "$logPrefix Starting SQL jobs with pattern $jobs on $serverName"
 
@@ -47,10 +47,10 @@ function Start-SqlJobs {
 
     $dataMartServer = New-Object Microsoft.SqlServer.Management.SMO.Server("$serverName")
     $dataMartJobs = $dataMartServer.jobserver.jobs | where-object {$_.name -like "$jobs"}
-	
-    foreach ($dataMartJob in $dataMartJobs)	{	
+    
+    foreach ($dataMartJob in $dataMartJobs) {   
         $jobName = $dataMartJob.Name
-		$dataMartJob.Start()
+        $dataMartJob.Start()
         Write-Host "$logPrefix SQL Job '$jobName' started"
 
         $jobRunning = $true
@@ -85,4 +85,6 @@ function Start-SqlJobs {
     if ($dataMartJobs -eq $null -or $dataMartJobs.length -eq 0) {
         throw "$logPrefix Unable to find SQL Jobs to start matching pattern '$jobs'."
     }
+
+    Write-BuildSummaryMessage -name "Service" -header "Services" -message "Microsoft SQL Job: $jobs ($serverName)"
 }

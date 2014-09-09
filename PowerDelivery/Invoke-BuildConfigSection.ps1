@@ -22,7 +22,7 @@ function Invoke-BuildConfigSection {
 	[CmdletBinding()]
 	param(
 		[Parameter(Position=0,Mandatory=1)] $section,
-		[Parameter(Position=1,Mandatory=1)] $cmdlet
+		[Parameter(Position=1,Mandatory=1)][string] $cmdlet
 	)
 	
 	$invokeArgs = @{}
@@ -41,9 +41,6 @@ function Invoke-BuildConfigSection {
 			}
 		}
 	}
-	
-	$outArgs = $invokeArgs | Out-String
-	#Write-Host "$cmdlet $outArgs"
 
 	Invoke-Expression "& $cmdlet @invokeArgs"
 }

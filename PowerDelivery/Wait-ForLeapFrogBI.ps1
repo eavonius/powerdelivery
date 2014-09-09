@@ -59,4 +59,6 @@
 	if ($timedOut) {
 		throw "Timed out polling for LeapFrogBI packages to complete. Increase the value of the timeoutMinutes parameter."
 	}
+
+    Write-BuildSummaryMessage -name "Deploy" -header "Deployments" -message "LeapFrog BI: $dataMartConnectionString"
 }
