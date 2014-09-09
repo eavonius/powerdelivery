@@ -42,7 +42,16 @@ layout: page
 			<p>Deploying cubes and data marts, and running SSIS packages.</p>
 			<ul class="nav nav-stacked">
 				<li>
+					Backup-MasterDataServices
+				</li>
+				<li>
 					<a href="#invoke_ssispackage_cmdlet">Invoke-SSISPackage</a>
+				</li>
+				<li>
+					Publish-MasterDataServices
+				</li>
+				<li>
+					Process-SSAS
 				</li>
 				<li>
 					<a href="#publish_ssas_cmdlet">Publish-SSAS</a>
@@ -78,6 +87,9 @@ layout: page
 			<ul class="nav nav-stacked">
 				<li>
 					<a href="create.html#add_pipeline">Add-Pipeline</a>
+				</li>
+				<li>
+					Add-ExamplePipeline
 				</li>
 				<li>
 					<a href="create.html#remove_pipeline">Remove-Pipeline</a>
@@ -193,6 +205,15 @@ layout: page
 			<h3>Security</h3>
 			<p>Obtaining and modifying user accounts, credentials, and permissions necessary for deployment.</p>
 			<ul class="nav nav-stacked">
+				<li>
+					Add-CommandCredSSP
+				</li>
+				<li>
+					Add-CredSSPTrustedHost
+				</li>
+				<li>
+					Add-RemoteCredSSPTrustedHost
+				</li>
 				<li>
 					<a href="#add_windowsusertogroup_cmdlet">Add-WindowsUserToGroup</a>
 				</li>
