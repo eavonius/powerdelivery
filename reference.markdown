@@ -42,16 +42,16 @@ layout: page
 			<p>Deploying cubes and data marts, and running SSIS packages.</p>
 			<ul class="nav nav-stacked">
 				<li>
-					Backup-MasterDataServices
+					<a href="#backup_masterdataservices_cmdlet">Backup-MasterDataServices</a>
 				</li>
 				<li>
 					<a href="#invoke_ssispackage_cmdlet">Invoke-SSISPackage</a>
 				</li>
 				<li>
-					Publish-MasterDataServices
+					<a href="#publish_masterdataservices_cmdlet">Publish-MasterDataServices</a>
 				</li>
 				<li>
-					Process-SSAS
+					<a href="#process_ssas_cmdlet">Process-SSAS</a>
 				</li>
 				<li>
 					<a href="#publish_ssas_cmdlet">Publish-SSAS</a>
@@ -89,7 +89,7 @@ layout: page
 					<a href="create.html#add_pipeline">Add-Pipeline</a>
 				</li>
 				<li>
-					Add-ExamplePipeline
+					<a href="add_examplepipeline_cmdlet">Add-ExamplePipeline</a>
 				</li>
 				<li>
 					<a href="create.html#remove_pipeline">Remove-Pipeline</a>
@@ -206,13 +206,13 @@ layout: page
 			<p>Obtaining and modifying user accounts, credentials, and permissions necessary for deployment.</p>
 			<ul class="nav nav-stacked">
 				<li>
-					Add-CommandCredSSP
+					<a href="#add_commandcredssp_cmdlet">Add-CommandCredSSP</a>
 				</li>
 				<li>
-					Add-CredSSPTrustedHost
+					<a href="#add_credssptrustedhost_cmdlet">Add-CredSSPTrustedHost</a>
 				</li>
 				<li>
-					Add-RemoteCredSSPTrustedHost
+					<a href="#add_remotecredssptrustedhost_cmdlet">Add-RemoteCredSSPTrustedHost</a>
 				</li>
 				<li>
 					<a href="#add_windowsusertogroup_cmdlet">Add-WindowsUserToGroup</a>
