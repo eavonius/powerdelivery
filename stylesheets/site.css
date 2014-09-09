@@ -4,24 +4,9 @@ body {
 	background-color: #ffffff;
 }
 
-.container .col-sm-3 .nav.nav-stacked {
-	position: fixed;
-	left: 18%;
-	bottom: 0;
-	width: 15%;
-	z-index: 1020;
-	top: 52px;
-	margin-bottom: 10px;
-	overflow-y: auto;
-}
-
 .navbar.navbar-inverse.navbar-fixed-top {
-	background-color: #c41230;
-	border-bottom: 1px solid transparent;
-}
-
-.navbar-inverse .btn-navbar {
-	background: #c41230;
+	background-color: #5592CA;
+	border: 0px;
 }
 
 .navbar-inverse .navbar-brand {
@@ -39,40 +24,21 @@ body {
 	color: #eee;
 } 
 
-.navbar-inverse ul.nav.navbar-nav li.active a, 
-.navbar-inverse ul.nav.navbar-nav li.active a:link, 
-.navbar-inverse ul.nav.navbar-nav li.active a:hover {
-	color: #fff;
-	font-weight: bold;
-} 
-
-.navbar-inverse .nav .active > a, 
-.navbar-inverse .nav .active > a:hover,
-.navbar-inverse .nav .active > a:link {
-	background: #B62027;
-}
-
-.narvbar-fixed-top .nav li a {
-	background: transparent;
-	color: #fefefe;
-}
-
-.narvbar-fixed-top .nav li a:hover {
-	background: #c41230;
-	color: #fefefe;
-}
-
-.narvbar-fixed-top .nav li.active a {
-	background: #c41230;
-}
-
-.navbar-fixed-top .navbar-inner .container .nav-collapse .navbar-text {
-	color: #ffffff;
-}
-
 .navbar-fixed-top .navbar-inner .container .nav-collapse a,
 .navbar-fixed-top .navbar-inner .container .nav-collapse a:link,
 .navbar-fixed-top .navbar-inner .container .nav-collapse a:visited {
+	color: #ffffff;
+}
+
+.navbar-inverse ul.nav.navbar-nav li.active > a, 
+.navbar-inverse ul.nav.navbar-nav li.active > a:hover,
+.navbar-inverse ul.nav.navbar-nav li.active > a:link {
+	background-color: #428bca;
+	padding-bottom: 10px;
+	border-bottom: 7px solid #eee;
+}
+
+.navbar-fixed-top .navbar-inner .container .nav-collapse .navbar-text {
 	color: #ffffff;
 }
 

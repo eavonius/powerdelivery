@@ -540,25 +540,25 @@ layout: page
 					<th><a href="use.html#production_build">Production</a></th>
 				</tr>
 				<tr>
-					<td style="text-align: right"><a href="#init_block">Init</a></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"><i class="icon-ok"></i></td>  
+					<td style="text-align: right"><a href="#init_block">Init</a></td><td style="text-align: center"><i class="fa fa-check"></i></td><td style="text-align: center"><i class="fa fa-check"></i></td><td style="text-align: center"><i class="fa fa-check"></i></td><td style="text-align: center"><i class="fa fa-check"></i></td><td style="text-align: center"><i class="fa fa-check"></i></td>  
 				</tr>
 				<tr>
-					<td style="text-align: right"><a href="#compile_block">Compile</a></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td>  
+					<td style="text-align: right"><a href="#compile_block">Compile</a></td><td style="text-align: center"><i class="fa fa-check"></i></td><td style="text-align: center"><i class="fa fa-check"></i></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td>  
 				</tr>
 				<tr>
-					<td style="text-align: right"><a href="#test_units_block">TestUnits</a></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td>
+					<td style="text-align: right"><a href="#test_units_block">TestUnits</a></td><td style="text-align: center"><i class="fa fa-check"></i></td><td style="text-align: center"><i class="fa fa-check"></i></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td>
 				</tr>
 				<tr>
-					<td style="text-align: right"><a href="#deploy_block">Deploy</a></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"><i class="icon-ok"></i></td>
+					<td style="text-align: right"><a href="#deploy_block">Deploy</a></td><td style="text-align: center"><i class="fa fa-check"></i></td><td style="text-align: center"><i class="fa fa-check"></i></td><td style="text-align: center"><i class="fa fa-check"></i></td><td style="text-align: center"><i class="fa fa-check"></i></td><td style="text-align: center"><i class="fa fa-check"></i></td>
 				</tr>
 				<tr>
-					<td style="text-align: right"><a href="#test_environment_block">TestEnvironment</a></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"><i class="icon-ok"></i></td>
+					<td style="text-align: right"><a href="#test_environment_block">TestEnvironment</a></td><td style="text-align: center"><i class="fa fa-check"></i></td><td style="text-align: center"><i class="fa fa-check"></i></td><td style="text-align: center"><i class="fa fa-check"></i></td><td style="text-align: center"><i class="fa fa-check"></i></td><td style="text-align: center"><i class="fa fa-check"></i></td>
 				</tr>
 				<tr>
-					<td style="text-align: right"><a href="#test_acceptance_block">TestAcceptance</a></td><td style="text-align: center"></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"></td><td style="text-align: center"></td>
+					<td style="text-align: right"><a href="#test_acceptance_block">TestAcceptance</a></td><td style="text-align: center"></td><td style="text-align: center"><i class="fa fa-check"></i></td><td style="text-align: center"><i class="fa fa-check"></i></td><td style="text-align: center"></td><td style="text-align: center"></td>
 				</tr>
 				<tr>
-					<td style="text-align: right"><a href="#test_capacity_block">TestCapacity</a></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"><i class="icon-ok"></i></td><td style="text-align: center"></td>
+					<td style="text-align: right"><a href="#test_capacity_block">TestCapacity</a></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"><i class="fa fa-check"></i></td><td style="text-align: center"></td>
 				</tr>
 			</table>
 			<p>All blocks are optional and you may choose which to include in your pipeline script depending on 
