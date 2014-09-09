@@ -17,8 +17,11 @@
   <files>
     <file src="PowerDelivery\PowerDelivery.psm1" target="tools\PowerDelivery\PowerDelivery.psm1" />
     <file src="PowerDelivery\PowerDelivery.psd1" target="tools\PowerDelivery\PowerDelivery.psd1" />
+    <file src="PowerDelivery\Add-CommandCredSSP.ps1" target="tools\PowerDelivery\Add-CommandCredSSP.ps1" />
     <file src="PowerDelivery\Add-CredSSPTrustedHost.ps1" target="tools\PowerDelivery\Add-CredSSPTrustedHost.ps1" />
     <file src="PowerDelivery\Add-Pipeline.ps1" target="tools\PowerDelivery\Add-Pipeline.ps1" />
+    <file src="PowerDelivery\Add-ExamplePipeline.ps1" target="tools\PowerDelivery\Add-ExamplePipeline.ps1" />
+    <file src="PowerDelivery\Add-RemoteCredSSPTrustedHost.ps1" target="tools\PowerDelivery\Add-RemoteCredSSPTrustedHost.ps1" />
     <file src="PowerDelivery\Add-WindowsUserToGroup.ps1" target="tools\PowerDelivery\Add-WindowsUserToGroup.ps1" />
     <file src="PowerDelivery\Backup-MasterDataServices.ps1" target="tools\PowerDelivery\Backup-MasterDataServices.ps1" />
     <file src="PowerDelivery\Copy-Robust.ps1" target="tools\PowerDelivery\Copy-Robust.ps1" />
