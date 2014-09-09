@@ -6,11 +6,6 @@ function setCurrentPageLinksActive() {
 		curPage = curPage.substring(lastSeparator + 1);
 	}
 	
-	var hashTag = curPage.indexOf("#");
-	if (hashTag != -1) {
-		curPage = curPage.substring(0, hashTag - 1);
-	}
-	
 	if (curPage == '') {
 		$(".nav > li > a[href$='index.html']").parent().addClass('active');
 	}
