@@ -12,10 +12,10 @@ function setCurrentPageLinksActive() {
 	}
 	
 	if (curPage == '') {
-		$(".nav > li > a[href='index.html']").parent().addClass('active');
+		$(".nav > li > a[href$='index.html']").parent().addClass('active');
 	}
 	else {
-		$(".nav > li > a[href='" + curPage + "']").each(function() {
+		$(".nav > li > a[href$='" + curPage + "']").each(function() {
 			$(this).parent().addClass('active');
 		});
 	}
