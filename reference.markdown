@@ -224,6 +224,7 @@ layout: page
 					<a href="#new_windowsuseraccount_cmdlet">New-WindowsUserAccount</a>
 				</li>
 			</ul>
+			<!--
 			<h3>Extensibility</h3>
 			<p>Extending the deployment pipeline script using other powershell snapins or 
 				modules, and extending PowerDelivery with your own custom delivery modules.</p>
@@ -238,6 +239,7 @@ layout: page
 					<a href="#register_deliverymodulehook_cmdlet">Register-DeliveryModuleHook</a>
 				</li>
 			</ul>
+			-->
 		</div>
 	</div>
 
@@ -492,6 +494,7 @@ layout: page
 	<h5>computerName</h5>
 	<p>string - The computer to get the remote deployment path for.</p>
 
+	<!--
 	<a name="import_deliverymodule_cmdlet"><hr></a>
 	<h3>Import-DeliveryModule</h3>
 	<p>Imports a <a href="#modules">delivery module</a> for use by a delivery pipeline.</p>
@@ -510,6 +513,7 @@ layout: page
 	<h4>Parameters</h4>
 	<h5>moduleName</h5>
 	<p>string - The name of the powershell module or snapin to load.</p>
+	-->
 
 	<a name="install_nservicebusservice_cmdlet"><hr></a>
 	<h3>Install-NServiceBusService</h3>
@@ -897,6 +901,7 @@ layout: page
 	<h5>RuntimeVersion</h5>
 	<p>string - Optional. The runtime version of .NET to set on the app pool. Defaults to "v4.0".</p>
 
+	<!--
 	<a name="register_deliverymodulehook_cmdlet"><hr></a>
 	<h3>Register-DeliveryModuleHook</h3>
 	<p>Use this cmdlet in a powerdelivery <a href="#modules">delivery module</a> to register a function 
@@ -935,6 +940,7 @@ layout: page
 		<li>PreTestCapacity</li>
 		<li>PostTestCapacity</li>
 	</ul>
+	-->
 
 	<a name="remove_pipeline_cmdlet"><hr></a>
 	<h3>Remove-Pipeline</h3>

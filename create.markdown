@@ -86,6 +86,7 @@ layout: page
 				<li>
 					<a href="#invoking_sections">Invoking configuration sections</a>
 				</li>
+				<!--
 				<li class="nav-header">
 					<a href="#modules">Using delivery modules</a>
 				</li>
@@ -98,6 +99,7 @@ layout: page
 				<li>
 					<a href="#modules_developing">Developing modules</a>
 				</li>
+				-->
 			</ul>
 		</div>	
 		<div class="col-sm-9">
@@ -718,6 +720,7 @@ layout: page
 			from the configuration file. You can also use <a href="reference.html#invoke_buildconfigsection_cmdlet">Invoke-BuildConfigSections</a> 
 			to do the same for a list of multiple sections that match the cmdlet's parameters.</p>
 
+			<!--
 			<a name="modules"><hr></a>
 			<br />
 			<h2>Using delivery modules</h2>
@@ -773,6 +776,7 @@ layout: page
 			that were configured. Refer to the <a href="reference.html#modules">delivery module reference</a> 
 			for each module to find out during which script blocks in the delivery pipeline's execution lifecycle
 			that your settings will actually do work if you need to coordinate this with other work you do in your script.</p>
+			-->
 		</div>
 	</div>
 </div>
