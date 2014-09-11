@@ -2,9 +2,10 @@ function Publish-MasterDataServices {
     param(
         [Parameter(Position=0,Mandatory=1)][string] $computerName,
         [Parameter(Position=1,Mandatory=1)][string] $package,
-        [Parameter(Position=2,Mandatory=0)][string] $version,
-        [Parameter(Position=3,Mandatory=0)][string] $credentialUserName,
-        [Parameter(Position=4,Mandatory=0)][string] $mdsDeployPath = "C:\Program Files\Microsoft SQL Server\110\Master Data Services\Configuration\"
+        [Parameter(Position=2,Mandatory=1)][string] $connectionString,
+        [Parameter(Position=3,Mandatory=0)][string] $version,
+        [Parameter(Position=4,Mandatory=0)][string] $credentialUserName,
+        [Parameter(Position=5,Mandatory=0)][string] $mdsDeployPath = "C:\Program Files\Microsoft SQL Server\110\Master Data Services\Configuration\"
     )
 
     $logPrefix = "Publish-MasterDataServices:"
@@ -31,9 +32,9 @@ function Publish-MasterDataServices {
         }
 
         $invokeArgs = @{
-            "ArgumentList" = @($package, $version, $mdsDeployPath, $dropLocation, $logPrefix);
+            "ArgumentList" = @($package, $version, $connectionString, $mdsDeployPath, $dropLocation, $logPrefix);
             "ScriptBlock" = {
-                param($varPackage, $varVersion, $varMdsDeployPath, $varDropLocation, $varLogPrefix)
+                param($varPackage, $varVersion, $varConnectionString, $varMdsDeployPath, $varDropLocation, $varLogPrefix)
 
                 $tempOutputDirectory = Join-Path $env:TEMP "PowerDelivery"
                 
@@ -76,6 +77,44 @@ function Publish-MasterDataServices {
                 if ($LASTEXITCODE -ne $null -and $LASTEXITCODE -ne 0) {
                     throw "Error publishing Master Data Services, exit code was $LASTEXITCODE"
                 }
+
+                # Update MDS to validate any new data
+                #
+                $sqlConnection = New-Object System.Data.OleDb.OleDbConnection
+                $sqlConnection.ConnectionString = $varConnectionString
+                $sqlConnection.Open()
+
+                $currentUserName = whoami
+                
+                $validateNewDataQuery = @"
+DECLARE @UserId int
+DECLARE @ModelId int
+DECLARE @VersionId int
+DECLARE @ModelName nvarchar(50)
+DECLARE @ModelNames TABLE(RowID INT NOT NULL IDENTITY(1,1) primary key, ModelName nvarchar(50))
+DECLARE @LastRowID int
+DECLARE @RowID int
+
+SELECT @UserId = ID FROM mdm.tblUser WHERE UserName = '$currentUserName'
+
+INSERT INTO @ModelNames
+SELECT Name FROM mdm.tblModel WHERE Name <> 'Metadata'
+SELECT @RowID = MIN(RowID) FROM @ModelNames
+SELECT @LastRowID = MAX(RowID) FROM @ModelNames
+
+WHILE @RowID <= @LastRowID
+BEGIN
+    SELECT @ModelName = ModelName FROM @ModelNames WHERE RowID = @RowID
+    SET @ModelId = (SELECT TOP 1 Model_ID FROM mdm.viw_SYSTEM_SCHEMA_MODELS WHERE Model_Name = @ModelName)
+    SET @VersionId = (SELECT MAX(ID) FROM mdm.viw_SYSTEM_SCHEMA_VERSION WHERE Model_ID = @ModelId)
+    EXEC mdm.udpValidateModel @UserId, @ModelId, @VersionId, 1
+    SET @RowID = @RowID + 1
+END
+"@
+                $validateNewDataCmd = New-Object System.Data.OleDb.OleDbCommand($validateNewDataQuery, $sqlConnection)
+                $validateNewDataCmd.ExecuteNonQuery()
+                
+                $sqlConnection.Close()
             };
             "ErrorAction" = "Stop"
         }

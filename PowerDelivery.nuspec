@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>PowerDelivery</id>
-    <version>2.2.73</version>
+    <version>2.2.74</version>
     <title>PowerDelivery</title>
     <authors>Jayme Edwards</authors>
     <tags>admin</tags>
@@ -62,6 +62,7 @@
     <file src="PowerDelivery\Invoke-Roundhouse.ps1" target="tools\PowerDelivery\Invoke-Roundhouse.ps1" />
     <file src="PowerDelivery\Invoke-SSISPackage.ps1" target="tools\PowerDelivery\Invoke-SSISPackage.ps1" />
     <file src="PowerDelivery\New-RemoteShare.ps1" target="tools\PowerDelivery\New-RemoteShare.ps1" />
+    <file src="PowerDelivery\New-RemoteTempPath.ps1" target="tools\PowerDelivery\New-RemoteTempPath.ps1" />
     <file src="PowerDelivery\New-WindowsUserAccount.ps1" target="tools\PowerDelivery\New-WindowsUserAccount.ps1" />
     <file src="PowerDelivery\Process-SSAS.ps1" target="tools\PowerDelivery\Process-SSAS.ps1" />
     <file src="PowerDelivery\Publish-BuildAssets.ps1" target="tools\PowerDelivery\Publish-BuildAssets.ps1" />
