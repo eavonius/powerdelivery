@@ -74,20 +74,21 @@ function Backup-MasterDataServices {
 
                 # Copy the Master Data Services deployment package from the temporary directory to the build drop location.
                 #
-                if ($packagePath) {
-
-                    $dropPath = Join-Path "$varDropLocation" "$packagePath"
-
-                    if (!(Test-Path -Path "$dropPath")) {
-                        New-Item -ItemType Directory -Path "$dropPath" | Out-Null
+                if (Test-Path $tempPackageFile) {
+                    $destPackagePath = $varDropLocation
+                    if ($packagePath) {
+                        $dropPath = Join-Path "$varDropLocation" "$packagePath"
+                        if (!(Test-Path -Path "$dropPath")) {
+                            New-Item -ItemType Directory -Path "$dropPath" | Out-Null
+                        }
+                        $destPackagePath = $dropPath
                     }
-
-                    Write-Host "$varLogPrefix $tempPackageFile -> $dropPath"
-
-                    Copy-Item "$tempPackageFile" "$dropPath"
+                    Write-Host "$varLogPrefix $tempPackageFile -> $destPackagePath"
+                    Copy-Item "$tempPackageFile" "$destPackagePath"
                 }
-                else {
-                    Copy-Item $"tempPackageFile" "$varDropLocation"
+
+                if ($LASTEXITCODE -ne $null -and $LASTEXITCODE -ne 0) {
+                    throw "Error backing up Master Data Services, exit code was $LASTEXITCODE"
                 }
             };
             "ErrorAction" = "Stop"

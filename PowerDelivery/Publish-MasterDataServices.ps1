@@ -72,6 +72,10 @@ function Publish-MasterDataServices {
 
                 Write-Host "$varLogPrefix $mdsDeployCommand"
                 Invoke-Expression "& $mdsDeployCommand"
+
+                if ($LASTEXITCODE -ne $null -and $LASTEXITCODE -ne 0) {
+                    throw "Error publishing Master Data Services, exit code was $LASTEXITCODE"
+                }
             };
             "ErrorAction" = "Stop"
         }

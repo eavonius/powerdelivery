@@ -21,8 +21,10 @@ function Update-AssemblyInfoFiles {
     [CmdletBinding()]
     param([Parameter(Position=0,Mandatory=1)][string] $path)
 
+    $logPrefix = "Update-AssemblyInfoFiles:"
+
     $buildAppVersion = Get-BuildAppVersion
-	$buildAssemblyVersion = Get-BuildAssemblyVersion
+    $buildAssemblyVersion = Get-BuildAssemblyVersion
     $assemblyVersionPattern = 'AssemblyVersion\("[0-9]+(\.([0-9]+|\*)){1,3}"\)'
     $fileVersionPattern = 'AssemblyFileVersion\("[0-9]+(\.([0-9]+|\*)){1,3}"\)'
     $assemblyVersion = "AssemblyVersion(""$buildAssemblyVersion"")"
@@ -30,16 +32,18 @@ function Update-AssemblyInfoFiles {
     
     Get-ChildItem -r -Path $path -filter AssemblyInfo.cs | % {
         $filename = $_.Directory.ToString() + '\' + $_.Name
-		$powerdelivery.assemblyInfoFiles += ,$filename
+        $powerdelivery.assemblyInfoFiles += ,$filename
         Exec -errorMessage "Unable to update file attributes on $filename" { 
             attrib -r "$filename"
-		}
+        }
 
-		Write-Host "Updating $filename to AssemblyVersion: $assemblyVersion FileVersion: $fileVersion" 
+        Write-Host "$varPrefix $assemblyVersion, $fileVersion -> $filename" 
 
         (Get-Content $filename) | % {
             % {$_ -replace $assemblyVersionPattern, $assemblyVersion } |
             % {$_ -replace $fileVersionPattern, $fileVersion }
         } | Set-Content $filename
+
+        Write-BuildSummaryMessage -name "Configuration" -header "Configurations" -message "AssemblyInfo: $assemblyVersion, $fileVersion -> $filename"
     }
 }

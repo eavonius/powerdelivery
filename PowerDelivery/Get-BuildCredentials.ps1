@@ -1,9 +1,15 @@
 ﻿function Get-BuildCredentials {
     param(
-        [Parameter(Position=0,Mandatory=1)] $userName
+        [Parameter(Position=0,Mandatory=0)] $userName
     )
 
-    if (!$powerdelivery.buildCredentials.ContainsKey($userName)) {
+    $credentialUserName = $userName
+
+    if ([String]::IsNullOrWhiteSpace("$credentialUserName")) {
+        $credentialUserName = whoami
+    }
+
+    if (!$powerdelivery.buildCredentials.ContainsKey($credentialUserName)) {
 
         $credentials = $null
 
@@ -23,10 +29,22 @@
                 throw "Credentials keyfile is missing."
             }
             else {
-                try {                    [System.IO.Stream]$stream = [System.IO.File]::OpenRead($credentialsKeyPath)                    try {                        $keyBytes = New-Object byte[] $stream.length                        [void] $stream.Read($keyBytes, 0, $stream.Length)                    }                    finally {                        $stream.Close() | Out-Null                    }                }                 catch {                    throw "Error reading file $credentialsKeyPath - $_"                }
+                try {
+                    [System.IO.Stream]$stream = [System.IO.File]::OpenRead($credentialsKeyPath)
+                    try {
+                        $keyBytes = New-Object byte[] $stream.length
+                        [void] $stream.Read($keyBytes, 0, $stream.Length)
+                    }
+                    finally {
+                        $stream.Close() | Out-Null
+                    }
+                } 
+                catch {
+                    throw "Error reading file $credentialsKeyPath - $_"
+                }
             }
 
-            $userNameFile = $userName -replace "\\", "#"
+            $userNameFile = $credentialUserName -replace "\\", "#"
             $userNamePath = Join-Path $credentialsPath "$($userNameFile).txt"
 
             if (!(Test-Path $userNamePath)) {
@@ -35,16 +53,16 @@
 
             $password = Get-Content $userNamePath | ConvertTo-SecureString -Key $keyBytes
 
-            $credentials = new-object -typename System.Management.Automation.PSCredential -argumentlist $userName, $password
+            $credentials = new-object -typename System.Management.Automation.PSCredential -argumentlist $credentialUserName, $password
         }
         else {
-            $credentials = Get-Credential -UserName $userName
+            $credentials = Get-Credential -UserName $credentialUserName
         }
 
-        $powerdelivery.buildCredentials.Add($userName, $credentials)
+        $powerdelivery.buildCredentials.Add($credentialUserName, $credentials)
         $credentials
     }
     else {
-        $powerdelivery.buildCredentials[$userName]
+        $powerdelivery.buildCredentials[$credentialUserName]
     }
 }
