@@ -5,6 +5,7 @@ layout: page
 	<div class="row">
 		<div class="col-sm-3 hidden-xs">
 			<ul class="nav nav-stacked">
+				<!--
 				<li class="nav-header">
 					<a href="#continuous_delivery_sprints">Sprints with Continuous Delivery</a>
 				</li>
@@ -26,6 +27,7 @@ layout: page
 				<li>
 					<a href="#retrospective">Retrospective</a>
 				</li>
+				-->
 				<li class="nav-header">
 					<a href="#environment_use">How builds promote through environments</a>
 				</li>
@@ -60,6 +62,7 @@ layout: page
 		</div>
 		<div class="col-sm-9 col-xs-12">
 			<h1>Using powerdelivery on your team</h1>
+			<!--
 			<p>Before diving into all of its features, become familiar with the information in this article 
 			to understand how to use powerdelivery in the context of 
 			your team or organization's delivery (release) process. While there will be specific things you'll 
@@ -304,7 +307,7 @@ layout: page
 			<p>Get the same people together that met for the <a href="#review">sprint review</a>, excluding the customer, and discuss how the sprint went. 
 			Record a list of what went well, and what didn't. Make an action list for things to improve in the next sprint. This step should never be 
 			excluded as it is where honesty exposes the truth about your process and allows for continuous improvement.</p>
-			
+			-->
 			<a name="environment_use"><hr></a>
 			<br />
 			<h2>How builds promote through environments</h2>
