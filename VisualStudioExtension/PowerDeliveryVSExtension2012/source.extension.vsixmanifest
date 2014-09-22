@@ -3,7 +3,7 @@
   <Identifier Id="8d0861c8-1688-40be-bdcd-cffa25e18d40">
     <Name>PowerDelivery for Visual Studio 2012</Name>
     <Author>Jayme Edwards</Author>
-    <Version>1.0.7</Version>
+    <Version>1.0.8</Version>
     <Description xml:space="preserve">Continuous delivery of software to your customers using Windows PowerShell and Microsoft Team Foundation Server.</Description>
     <Locale>1033</Locale>
     <InstalledByMsi>false</InstalledByMsi>
