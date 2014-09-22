@@ -38,7 +38,17 @@
                     <ControlTemplate x:Key="EnvironmentBlock">
                         <Border Style="{StaticResource EnvironmentBlockStyle}" Loaded="brdEnvironmentBlock_Loaded">
                             <StackPanel Orientation="Vertical">
-                                <TextBlock Text="{Binding EnvironmentName}" FontSize="16" Style="{StaticResource EnvironmentBlockText}" MouseDown="EnvironmentBlockTitle_MouseDown" />
+                                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="{Binding EnvironmentName}" Grid.Row="0" Grid.Column="0" FontSize="16" Style="{StaticResource EnvironmentBlockText}" MouseDown="EnvironmentBlockTitle_MouseDown" />
+                                    <Path Fill="Green" Data="M 0 20 L 12 10 L 0 0 Z" Grid.Row="0" Grid.Column="1" Margin="3 0 3 0" MouseDown="CommitImage_MouseDown" Visibility="{Binding IsCommitBuildVisibility}" />
+                                </Grid>
                                 <TextBlock Text="{Binding LastStatus.Description}" FontSize="14" Style="{StaticResource EnvironmentBlockText}" />
                                 <TextBlock Text="{Binding LastBuildFinishString}" FontSize="12" Style="{StaticResource EnvironmentBlockText}" Margin="0 3 0 3" />
                                 <StackPanel Orientation="Horizontal" Margin="0 4 0 0" HorizontalAlignment="Center">

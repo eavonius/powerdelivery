@@ -18,6 +18,7 @@ using System.ComponentModel;
 using PowerDelivery.Controls.Commands;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.Server;
+using Microsoft.TeamFoundation.Build.Client;
 using System.Web;
 using System.Text.RegularExpressions;
 
@@ -278,7 +279,7 @@ namespace PowerDelivery.Controls.Pages
                 PipelineEnvironment commitEnvironment = environment.Pipeline.Environments.FirstOrDefault(env => env.EnvironmentName == "Commit");
                 PipelineEnvironment productionEnvironment = environment.Pipeline.Environments.FirstOrDefault(env => env.EnvironmentName == "Production");
 
-                Canvas.SetTop(parentElement, pipelineIndex * ENV_BLOCK_HEIGHT);
+                Canvas.SetTop(parentElement, pipelineIndex == 0 ? 0 : (pipelineIndex - 1) * ENV_BLOCK_HEIGHT);
 
                 Line commitToMidLine = new Line();
                 commitToMidLine.StrokeThickness = 3;
@@ -464,6 +465,15 @@ namespace PowerDelivery.Controls.Pages
 
             NavigationService.Navigate(new ShowPipelineEnvironment(environment));
             */
+        }
+
+        private void CommitImage_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            FrameworkElement commitImage = (FrameworkElement)sender;
+
+            PipelineEnvironment environment = (PipelineEnvironment)commitImage.DataContext;
+
+            environment.QueueCommitBuild();
         }
     }
 }

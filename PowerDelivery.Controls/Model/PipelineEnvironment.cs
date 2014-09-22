@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.Framework.Common;
@@ -29,6 +30,7 @@ namespace PowerDelivery.Controls.Model
         public IBuildDefinition BuildDefinition { get; set; }
         public bool IsPolling { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;
+        public Visibility IsCommitBuildVisibility { get; set; }
 
         /*
         public List<Build> Builds
@@ -106,7 +108,7 @@ namespace PowerDelivery.Controls.Model
             EnvironmentName = environmentName;
             BuildDefinition = buildDefinition;
 
-            //Builds = new List<Build>();
+            IsCommitBuildVisibility = EnvironmentName.Equals("Commit", StringComparison.InvariantCultureIgnoreCase) ? Visibility.Visible : Visibility.Collapsed;
 
             LastStatus = new PipelineEnvironmentBuildStatus(null);
             LastBuildFinishTime = DateTime.MaxValue;
@@ -239,6 +241,13 @@ namespace PowerDelivery.Controls.Model
             processParams["PriorBuild"] = buildNumber.ToString();
 
             request.ProcessParameters = WorkflowHelpers.SerializeProcessParameters(processParams);
+
+            IQueuedBuild queuedBuild = BuildDefinition.BuildServer.QueueBuild(request);
+        }
+
+        public void QueueCommitBuild()
+        {
+            IBuildRequest request = BuildDefinition.CreateBuildRequest();
 
             IQueuedBuild queuedBuild = BuildDefinition.BuildServer.QueueBuild(request);
         }
