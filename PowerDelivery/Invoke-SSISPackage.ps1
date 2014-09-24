@@ -16,9 +16,6 @@ The computer name(s) onto which to execute the package. If not "localhost", this
 .Parameter dtExecPath
 The path to dtexec.exe on the server to run the command.
 
-.Parameter credentialUserName
-The username of the credentials to use for running dtexec. These credentials should have already been added to the build using the Export-BuildCredentials cmdlet. If you don't pass this the credentials of the currently logged in user will be loaded.
-
 .Parameter packageArgs
 Optional. A PowerShell hash containing name/value pairs to set as package arguments to dtexec.
 
@@ -31,7 +28,6 @@ function Invoke-SSISPackage {
         [Parameter(Position=0,Mandatory=1)][string] $package, 
         [Parameter(Position=1,Mandatory=1)][string] $computerName, 
         [Parameter(Position=2,Mandatory=1)][string] $dtExecPath, 
-        [Parameter(Position=3,Mandatory=0)][string] $credentialUserName,
         [Parameter(Position=4,Mandatory=0)][string] $packageArgs
     )
     
@@ -52,15 +48,6 @@ function Invoke-SSISPackage {
 
     foreach ($curComputerName in $computerNames) {
 
-        # Allow credentials to travel from remote computer to TFS server
-        #
-        $dropUri = New-Object -TypeName System.Uri -ArgumentList $dropLocation
-        if ($dropUri.IsUnc) {
-            $dropHost = $dropUri.Host            
-            $remoteComputer = [System.Net.Dns]::GetHostByName("$dropHost").HostName
-            Add-RemoteCredSSPTrustedHost $curComputerName $remoteComputer
-        }
-        
         $remoteLogFile = Join-Path (New-RemoteTempPath $curComputerName $package) $logFileName
 
         $invokeArgs = @{
@@ -100,8 +87,6 @@ function Invoke-SSISPackage {
             };
             "ErrorAction" = "Stop"
         }
-
-        Add-CommandCredSSP $curComputerName $invokeArgs $credentialUserName
 
         Invoke-Command @invokeArgs
 
