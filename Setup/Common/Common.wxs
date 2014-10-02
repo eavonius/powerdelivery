@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir" />
+	</Fragment>
+  <Fragment>
+    <DirectoryRef Id="TARGETDIR">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLFOLDER" Name="Powerdelivery" />
+      </Directory>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="INSTALLFOLDER">
+      <Directory Id="PowerShellFolder" Name="PowerShell">
+        <Directory Id="PowerShellModuleFolder" Name="Powerdelivery">
+          <Directory Id="BuildProcessTemplatesFolder" Name="BuildProcessTemplates" />
+          <Directory Id="TemplatesFolder" Name="Templates">
+            <Directory Id="BlankTmplFolder" Name="Blank" />
+            <Directory Id="WebWithDBTmplFolder" Name="Website with Database" />
+          </Directory>
+        </Directory>
+        <Directory Id="PowerYamlFolder" Name="PowerYaml">
+          <Directory Id="PowerYamlFunctionsFolder" Name="Functions" />
+          <Directory Id="PowerYamlLibsFolder" Name="Libs" />
+        </Directory>
+      </Directory>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <ComponentGroup Id="ProductComponentGroup" Directory="INSTALLFOLDER">
+      <Component Id="ProductComponent" Guid="0A54913F-9863-48A5-A5EE-85ED6B2801DB">
+        <RemoveFolder Id="INSTALLFOLDER" On="uninstall" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>
