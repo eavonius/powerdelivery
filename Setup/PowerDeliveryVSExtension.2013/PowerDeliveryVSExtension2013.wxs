@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:VSExtension="http://schemas.microsoft.com/wix/VSExtension">
+	<Product Id="698D09F1-E4FB-4FC5-AA56-EB207FFA305D" Name="PowerDelivery extension for Visual Studio 2013" Language="1033" Version="1.0.0.0" Manufacturer="Jayme C Edwards" UpgradeCode="df01b83a-0590-4f61-8438-2401ad9723a4">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" Description="PowerDelivery Deployment Pipelines with Visual Studio 2013" Comments="PowerDelivery is released under the MIT license." Manufacturer="Jayme C Edwards" />
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <Condition Message="You need to be an administrator to install this product.">Privileged</Condition>
+    <MediaTemplate EmbedCab="yes" />
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLLOCATION" />
+    <UIRef Id="WixUI_Mondo" />
+    <UIRef Id="WixUI_ErrorProgressText" />
+    <WixVariable Id="WixUILicenseRtf" Value="..\..\License.rtf" />
+    <PropertyRef Id="VS2013DEVENV"/>
+    <Condition Message="Visual Studio 2013 with Team Explorer needs to be intalled for this installation to continue.">
+      <![CDATA[Installed OR VS2013DEVENV]]>
+    </Condition>
+    <Property Id="VSINSTALLDIR">
+      <RegistrySearch Id="VSInstallRegistry" Root="HKLM" Key="SOFTWARE\Microsoft\VisualStudio\12.0" Name="InstallDir" Type="directory" />
+    </Property>
+		<Feature Id="ProductFeature" Title="PowerDelivery extension for Visual Studio 2013" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+		</Feature>
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLFOLDER" Name="PowerDelivery for Visual Studio 2013">
+        </Directory>
+			</Directory>
+		</Directory>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+			<Component Id="ProductComponent">
+        <File Id="PDVSExtension2013.vsix" Source="..\..\VisualStudioExtension\PowerDeliveryVSExtension2013\bin\Release\PowerDeliveryVSExtension2013.vsix" Name="PowerDeliveryVSExtension2013.vsix" KeyPath="yes" />
+        <VSExtension:VsixPackage File="PDVSExtension2013.vsix" PackageId="9c6c2f23-b97a-4797-86c1-08f94e0e4300" Target="premium" TargetVersion="12.0" Vital="yes" Permanent="yes" />
+			</Component>
+		</ComponentGroup>
+	</Fragment>
+
+  <Fragment>
+    <CustomAction Id="SetVSIXInstaller" Return="check" Execute="immediate" Property="VSIXInstaller" Value="C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\VSIXInstaller.exe" />
+    <CustomAction Id="DeployVSIX" Property="VSIXInstaller" Execute="deferred" Impersonate="no" ExeCommand="/quiet" Return="asyncWait"/>
+    <InstallExecuteSequence>
+      <Custom Action="DeployVSIX" After="MsiPublishAssemblies" />
+    </InstallExecuteSequence>
+  </Fragment>
+
+</Wix>

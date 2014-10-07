@@ -5,7 +5,7 @@
     <DisplayName>PowerDelivery for Visual Studio 2013</DisplayName>
     <Description>Continuous delivery of software to your customers using Windows PowerShell and Microsoft Team Foundation Server.</Description>
   </Metadata>
-  <Installation InstalledByMsi="false">
+  <Installation InstalledByMsi="true">
     <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="12.0" />
     <InstallationTarget Id="Microsoft.VisualStudio.Premium" Version="12.0" />
     <InstallationTarget Id="Microsoft.VisualStudio.Ultimate" Version="12.0" />

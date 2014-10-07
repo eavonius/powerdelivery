@@ -67,6 +67,7 @@
       <File Id="Update_XmlFile.ps1" Source="..\..\PowerDelivery\Update-XmlFile.ps1" Name="Update-XmlFile.ps1" />
       <File Id="Wait_ForLeapFrogBI.ps1" Source="..\..\PowerDelivery\Wait-ForLeapFrogBI.ps1" Name="Wait-ForLeapFrogBI.ps1" />
       <File Id="Write_BuildSummaryMessage.ps1" Source="..\..\PowerDelivery\Write-BuildSummaryMessage.ps1" Name="Write-BuildSummaryMessage.ps1" />
+      <Environment Id="PowerShellModuleEnvPath" Action="set" Part="last" Name="PSMODULEPATH" Permanent="no" System="yes" Value="[PowerShellFolder]" />
     </Component>
 
     <Component Id="BuildProcessTemplatesComponent" Guid="7097FD47-072E-442F-B11E-35260E3AEB47" Directory="BuildProcessTemplatesFolder">
@@ -133,8 +134,13 @@
     <Feature Id="PowerShellModuleFeature" Title="Windows PowerShell Module" Level="1" Description="Windows PowerShell Module for Powerdelivery." InstallDefault="followParent">
       <ComponentGroupRef Id="PowerShellModuleComponentGroup" />
       <ComponentGroupRef Id="PowerYamlComponentGroup" />
-    <ComponentGroupRef Id="TemplatesComponentGroup" />
+      <ComponentGroupRef Id="TemplatesComponentGroup" />
     </Feature>
+
+    <InstallExecuteSequence>
+      <RemoveEnvironmentStrings Sequence="3550" />
+      <WriteEnvironmentStrings Sequence="4050" />
+    </InstallExecuteSequence>
     
 	</Fragment>
 </Wix>
