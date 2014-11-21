@@ -37,23 +37,20 @@ function Invoke-SSISPackage {
 
     $computerNames = $computerName -split "," | % { $_.Trim() }
 
-    $dropLocation = Get-BuildDropLocation
-
     $logFileName = [System.IO.Path]::GetFileNameWithoutExtension("$package") + ".log"
-
     $dropLogPath = [System.IO.Path]::GetDirectoryName("$package")
-    if (!(Test-Path "$dropLogPath")) {
-        New-Item -ItemType Directory -Path $dropLogPath | Out-Null
-    }
 
     foreach ($curComputerName in $computerNames) {
 
-        $remoteLogFile = Join-Path (New-RemoteTempPath $curComputerName $package) $logFileName
+        $remoteTempPath = New-RemoteTempPath $curComputerName $package
 
         $invokeArgs = @{
-            "ArgumentList" = @($logPrefix, $package, $dtExecPath, $packageArgs, $dropLogPath, $remoteLogFile);
+            "ComputerName" = $curComputerName;
+            "ArgumentList" = @($logPrefix, $package, $dtExecPath, $packageArgs, $dropLogPath, $remoteTempPath, $logFileName);
             "ScriptBlock" = {
-                param($logPrefix, $package, $dtExecPath, $packageArgs, $dropLogPath, $remoteLogFile)
+                param($logPrefix, $package, $dtExecPath, $packageArgs, $dropLogPath, $remoteTempPath, $logFileName)
+
+                $remoteLogFile = Join-Path "$remoteTempPath" "$logFileName"
 
                 # Delete the prior temporary log file if one exists
                 #
@@ -76,10 +73,13 @@ function Invoke-SSISPackage {
                 Write-Host "$varLogPrefix $packageExecStatement"
                 Invoke-Expression "& $packageExecStatement"
 
-                # Copy the SSIS log file from the temporary directory to the build drop location.
+                # Copy the SSIS log file from the temporary directory to the directory it was executed from.
                 #
                 if (Test-Path $remoteLogFile) {
                     if ([System.IO.Path]::GetDirectoryName("$remoteLogFile") -ne $dropLogPath) {
+                        if (!(Test-Path "$dropLogPath")) {
+                            New-Item -ItemType Directory -Path $dropLogPath | Out-Null
+                        }
                         Write-Host "$varLogPrefix $remoteLogFile -> $dropLogPath"
                         Copy-Item "$remoteLogFile" "$dropLogPath"
                     }
