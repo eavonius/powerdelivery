@@ -79,6 +79,9 @@ Optional. Default is false. Whether deployment should occur within a transaction
 
 .Parameter recoveryMode
 Optional. Default is 'NoChange'. The mode of recovery used if deployment fails.
+
+.Parameter createDatabaseScript
+Optional. Path to a file to create the database, useful if you want to explicitly set up filegroups etc.
 #>
 function Invoke-Roundhouse {
     [CmdletBinding()]
@@ -95,7 +98,8 @@ function Invoke-Roundhouse {
       [Parameter(Position=10,Mandatory=0)][switch] $doNotCreateDatabase = $false,
       [Parameter(Position=11,Mandatory=0)][switch] $disableOutput = $false,
       [Parameter(Position=10,Mandatory=0)][switch] $withTransaction = $false,
-      [Parameter(Position=10,Mandatory=0)][string] $recoveryMode = 'NoChange'
+      [Parameter(Position=10,Mandatory=0)][string] $recoveryMode = 'NoChange',
+      [Parameter(Position=11,Mandatory=0)][string] $createDatabaseScript
     )
 
     Set-Location $powerdelivery.deployDir
@@ -109,6 +113,14 @@ function Invoke-Roundhouse {
     $localScriptsDir = Join-Path (gl) $scriptsDir
     $localOutDir = Join-Path $localScriptsDir output
     $dropOutDir = Join-Path $dropScriptsDir output
+
+    if ($server -eq 'localhost') {
+      $server = $env:computername
+    }
+
+    if ($connectionString -contains 'localhost') {
+      $connectionString = $connectionString -replace 'localhost', $env:computername
+    }
 
     $command = "rh --silent --commandtimeout=$commandTimeout --databasetype=`"$databaseType`" --versionfile=`"$versionFile`" --recoverymode=`"$recoveryMode`""
     
@@ -136,6 +148,10 @@ function Invoke-Roundhouse {
     }
     else {
         throw "You must specify the server and database, or connectionString parameter."
+    }
+
+    if (![String]::IsNullOrWhitespace($createDatabaseScript)) {
+        $command += " --createdatabasescript=`"$createDatabaseScript`""
     }
     
     $command += " /f=""$localScriptsDir"" /env=$environment /o=""$localScriptsDir\output"""

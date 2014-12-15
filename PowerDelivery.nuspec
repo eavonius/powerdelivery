@@ -26,6 +26,7 @@
     <file src="PowerDelivery\Backup-MasterDataServices.ps1" target="tools\PowerDelivery\Backup-MasterDataServices.ps1" />
     <file src="PowerDelivery\Copy-Robust.ps1" target="tools\PowerDelivery\Copy-Robust.ps1" />
     <file src="PowerDelivery\Deploy-BuildAssets.ps1" target="tools\PowerDelivery\Deploy-BuildAssets.ps1" />
+    <file src="PowerDelivery\Deploy-SSISProject.ps1" target="tools\PowerDelivery\Deploy-SSISProject.ps1" />
     <file src="PowerDelivery\Disable-SqlJobs.ps1" target="tools\PowerDelivery\Disable-SqlJobs.ps1" />
     <file src="PowerDelivery\Enable-SqlJobs.ps1" target="tools\PowerDelivery\Enable-SqlJobs.ps1" />
     <file src="PowerDelivery\Enable-WebDeploy.ps1" target="tools\PowerDelivery\Enable-WebDeploy.ps1" />

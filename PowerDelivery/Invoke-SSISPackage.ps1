@@ -42,7 +42,14 @@ function Invoke-SSISPackage {
 
     foreach ($curComputerName in $computerNames) {
 
-        $remoteTempPath = New-RemoteTempPath $curComputerName $package
+        if ($curComputerName -ne 'localhost') {
+          $remoteTempPath = New-RemoteTempPath $curComputerName $package
+        }
+        else {
+          $packageWithDir = Join-Path (Get-Location) $package
+          $remoteTempPath = [System.IO.Path]::GetDirectoryName($packageWithDir)
+          $dropLogPath = $remoteTempPath
+        }
 
         $invokeArgs = @{
             "ComputerName" = $curComputerName;
@@ -73,6 +80,12 @@ function Invoke-SSISPackage {
                 Write-Host "$varLogPrefix $packageExecStatement"
                 Invoke-Expression "& $packageExecStatement"
 
+                $ssisFailed = $false
+
+                if ($lastexitcode -ne 0) {
+                    $ssisFailed = $true
+                }
+
                 # Copy the SSIS log file from the temporary directory to the directory it was executed from.
                 #
                 if (Test-Path $remoteLogFile) {
@@ -84,8 +97,16 @@ function Invoke-SSISPackage {
                         Copy-Item "$remoteLogFile" "$dropLogPath"
                     }
                 }
+
+                if ($ssisFailed) {
+                    throw ("SSIS Package $package failed. See the log file at $remoteLogFile.")
+                }
             };
             "ErrorAction" = "Stop"
+        }
+
+        if ($curComputerName -eq 'localhost') {
+          $invokeArgs.Remove("ComputerName")
         }
 
         Invoke-Command @invokeArgs

@@ -71,7 +71,7 @@ function Start-SqlJobs {
                 Write-Host "$logPrefix SQL Job '$jobName' completed successfully."
             }
             elseif ($noWait -eq $false) {
-                WriteHost "$logPrefix Waiting for SQL job $jobName to finish..."
+                Write-Host "$logPrefix Waiting for SQL job $jobName to finish..."
                 sleep 15
             }
             else {

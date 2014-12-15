@@ -169,28 +169,30 @@ function Invoke-Powerdelivery {
 	                        $replacedValue = Get-BuildCredentials $userName
 	                    }
 	                    else {
-							try {
-								$envSettingValue = Get-BuildSetting $envSettingName
-							}
-							catch {
-							    if ($envSettingName -eq "BuildAppVersion") {
-    					    	    $envSettingValue = $powerdelivery.buildAppVersion
-    					    	}
-						    	elseif ($envSettingName -eq "BuildEnvironment") {
-						    	    $envSettingValue = $powerdelivery.environment
-    					    	}
-						    	elseif ($envSettingName -eq "BuildNumber") {
-							    	$envSettingValue = $powerdelivery.buildNumber
-						    	}
-						    	elseif ($envSettingName -eq "BuildDropLocation") {
-							    	$envSettingValue = $powerdelivery.dropLocation
-						    	}
-						    	else {
-						    		$errorMessage = $_.Exception.Message
-								    throw "Error replacing setting in module configuration file: $errorMessage"
-						    	}
-							}
-
+          							try {
+          								$envSettingValue = Get-BuildSetting $envSettingName
+          							}
+          							catch {
+          							    if ($envSettingName -eq "BuildAppVersion") {
+              					    	    $envSettingValue = $powerdelivery.buildAppVersion
+              					    	}
+          						    	elseif ($envSettingName -eq "BuildEnvironment") {
+          						    	    $envSettingValue = $powerdelivery.environment
+              					    	}
+          						    	elseif ($envSettingName -eq "BuildNumber") {
+          							    	$envSettingValue = $powerdelivery.buildNumber
+          						    	}
+          						    	elseif ($envSettingName -eq "BuildDropLocation") {
+          							    	$envSettingValue = $powerdelivery.dropLocation
+          						    	}
+                            elseif ($envSettingName -eq "CurrentLocation") {
+                              $envSettingValue = $powerdelivery.currentLocation
+                            }
+          						    	else {
+          						    		$errorMessage = $_.Exception.Message
+          								    throw "Error replacing setting in module configuration file: $errorMessage"
+          						    	}
+          							}
 	                        if ($envSettingValue.GetType().Name -eq 'Hashtable') {
 	                                
 	                            $subReplacements = $replaceFor | % { $_ }
