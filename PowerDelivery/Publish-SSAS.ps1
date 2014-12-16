@@ -10,7 +10,7 @@ SSAS server. After execution, a log file is available in the same directory.
 .Parameter asDatabase
 The .asdatabase file to deploy. Is a path local to machine specified by the computer parameter.
 
-.Parameter computer
+.Parameter computername
 The computer(s) to deploy to.
 
 .Parameter sqlVersion
@@ -32,96 +32,109 @@ Optional. The drive letter on the target computer to deploy to.
 Publish-SSAS -computer "MyServer" -tabularServer "MyServer\INSTANCE" -asDatabase "MyProject\bin\Debug\MyModel.asdatabase"
 #>
 function Publish-SSAS {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory=1)][string] $asDatabase, 
-        [Parameter(Mandatory=1)][string] $computer, 
-        [Parameter(Mandatory=0)][string] $sqlVersion = '11.0',
-        [Parameter(Mandatory=0)][string] $deploymentUtilityPath = "C:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn\ManagementStudio\Microsoft.AnalysisServices.Deployment.exe",
-        [Parameter(Mandatory=0)][string] $cubeName,
-        [Parameter(Mandatory=0)] $connections,
-        [Parameter(Mandatory=0)][string] $driveLetter = $powerdelivery.deployDriveLetter
-    )
+  [CmdletBinding()]
+  param(
+    [Parameter(Mandatory=1)][string] $asDatabase, 
+    [Parameter(Mandatory=1)][string] $computerName, 
+    [Parameter(Mandatory=0)][string] $sqlVersion = '11.0',
+    [Parameter(Mandatory=0)][string] $deploymentUtilityPath,
+    [Parameter(Mandatory=0)][string] $cubeName,
+    [Parameter(Mandatory=0)] $connections,
+    [Parameter(Mandatory=0)][string] $driveLetter = $powerdelivery.deployDriveLetter
+  )
     
-    Set-Location $powerdelivery.deployDir
+  Set-Location $powerdelivery.deployDir
 
-    $logPrefix = "Publish-SSAS:"
+  $sqlVersion = $sqlVersion -replace '\.', ''
 
-    $asModelName = [System.IO.Path]::GetFileNameWithoutExtension($asDatabase)
-    $asFilesDir = [System.IO.Path]::GetDirectoryName($asDatabase)
-    $xmlaPath = Join-Path -Path $asFilesDir -ChildPath "$($asModelName).xmla"
+  $logPrefix = "Publish-SSAS:"
 
-    $asDatabase = Join-Path -Path (Get-Location) -ChildPath $asDatabase
+  if ([String]::IsNullOrWhiteSpace($deploymentUtilityPath)) {
+    $deploymentUtilityPath = "C:\Program Files (x86)\Microsoft SQL Server\$($sqlVersion)\Tools\Binn\ManagementStudio\Microsoft.AnalysisServices.Deployment.exe"
+  }
 
-    $deployCommand = "& ""$deploymentUtilityPath"" ""$asDatabase"" ""/d"" ""/o:$xmlaPath"""
+  $asModelName = [System.IO.Path]::GetFileNameWithoutExtension($asDatabase)
+  $asFilesDir = [System.IO.Path]::GetDirectoryName($asDatabase)
+  $xmlaPath = Join-Path -Path $asFilesDir -ChildPath "$($asModelName).xmla"
 
-    "$logPrefix $deployCommand"
+  $asDatabase = Join-Path -Path (Get-Location) -ChildPath $asDatabase
 
-    Invoke-Expression $deployCommand
+  $deployCommand = "& ""$deploymentUtilityPath"" ""$asDatabase"" ""/d"" ""/o:$xmlaPath"""
 
-    Start-Sleep -Seconds 15
+  "$logPrefix $deployCommand"
 
-    $xmlaFullPath = Join-Path -Path (Get-Location) -ChildPath $xmlaPath
+  Invoke-Expression $deployCommand
 
-    [xml]$xmlaDoc = Get-Content $xmlaFullPath
+  Start-Sleep -Seconds 15
 
-    $ns = new-object Xml.XmlNamespaceManager $xmlaDoc.NameTable
-    $ns.AddNamespace('xmla', 'http://schemas.microsoft.com/analysisservices/2003/engine')
+  $xmlaFullPath = Join-Path -Path (Get-Location) -ChildPath $xmlaPath
 
-    $batchNode = $xmlaDoc.SelectSingleNode("//xmla:Batch", $ns)
-    $parallelNode = $batchNode.SelectSingleNode("xmla:Parallel", $ns)
-    $batchNode.RemoveChild($parallelNode)
+  [xml]$xmlaDoc = Get-Content $xmlaFullPath
 
-    $computerNames = $computer -split "," | % { $_.Trim() }
+  $ns = new-object Xml.XmlNamespaceManager $xmlaDoc.NameTable
+  $ns.AddNamespace('xmla', 'http://schemas.microsoft.com/analysisservices/2003/engine')
 
-    foreach ($curComputerName in $computerNames) {
-        
-        $newModelName = $asModelName
+  $batchNode = $xmlaDoc.SelectSingleNode("//xmla:Batch", $ns)
+  $parallelNode = $batchNode.SelectSingleNode("xmla:Parallel", $ns)
+  $batchNode.RemoveChild($parallelNode)
 
-        if (![String]::IsNullOrWhiteSpace($cubeName)) {
+  $computerNames = $computerName -split "," | % { $_.Trim() }
 
-            $newModelName = $cubeName
+  foreach ($curComputerName in $computerNames) {
 
-            $objectNode = $xmlaDoc.SelectSingleNode("//xmla:Batch/xmla:Alter/xmla:Object", $ns)
-            $objectNode.DatabaseID = $cubeName
+    $newModelName = $asModelName
 
-            $databaseNode = $xmlaDoc.SelectSingleNode("//xmla:Batch/xmla:Alter/xmla:ObjectDefinition/xmla:Database", $ns)
-            $databaseNode.ID = $cubeName
-            $databaseNode.Name = $cubeName
+    if (![String]::IsNullOrWhiteSpace($cubeName)) {
 
-            if ($connections -ne $null) {
-        
-                $connections.Keys | % {
-                    $connection = $connections[$_]
+      $newModelName = $cubeName
 
-                    $connectionStringNode = $databaseNode.SelectSingleNode("xmla:DataSources/xmla:DataSource[xmla:Name='$($connection.ConnectionName)']/xmla:ConnectionString", $ns)
+      $objectNode = $xmlaDoc.SelectSingleNode("//xmla:Batch/xmla:Alter/xmla:Object", $ns)
+      $objectNode.DatabaseID = $cubeName
 
-                    if ($connectionStringNode -eq $null) {
-                        throw "Unable to find connection named '$($connection.ConnectionName)' connection to update."
-                    }
+      $databaseNode = $xmlaDoc.SelectSingleNode("//xmla:Batch/xmla:Alter/xmla:ObjectDefinition/xmla:Database", $ns)
+      $databaseNode.ID = $cubeName
+      $databaseNode.Name = $cubeName
 
-                    $connectionStringNode.'#text' = $connection.ConnectionString
-                }
+      if ($connections -ne $null) {
+        $connections.Keys | % {
+          $connection = $connections[$_]
+          $connectionStringNode = $databaseNode.SelectSingleNode("xmla:DataSources/xmla:DataSource[xmla:Name='$($connection.ConnectionName)']/xmla:ConnectionString", $ns)
+
+            if ($connectionStringNode -eq $null) {
+                throw "Unable to find connection named '$($connection.ConnectionName)' connection to update."
             }
-
-            $xmlaDoc.Save($xmlaFullPath)
+            $connectionStringNode.'#text' = $connection.ConnectionString
         }
+      }
 
-        Deploy-BuildAssets -computerName $curComputerName -path $asFilesDir -destination $asFilesDir -DriveLetter $driveLetter
+      $xmlaDoc.Save($xmlaFullPath)
+    }
 
-        $localDeployPath = Get-ComputerLocalDeployPath $curComputerName -DriveLetter $driveLetter
-        $remoteDeployPath = Get-ComputerRemoteDeployPath $curComputerName -DriveLetter $driveLetter
+      Deploy-BuildAssets -computerName $curComputerName -path $asFilesDir -destination $asFilesDir -DriveLetter $driveLetter
 
-        $xmlaLocalDeployPath = [System.IO.Path]::Combine($localDeployPath, $xmlaPath)
-        $outLocalDeployPath = $xmlaLocalDeployPath -replace ".xmla", "ExecutionLog.xml"
+      $localDeployPath = Get-ComputerLocalDeployPath $curComputerName -DriveLetter $driveLetter
+      $remoteDeployPath = Get-ComputerRemoteDeployPath $curComputerName -DriveLetter $driveLetter
 
-        $remoteCommand = "Invoke-ASCMD -server ""$curComputerName"" -inputFile ""$xmlaLocalDeployPath"" | Out-File ""$outLocalDeployPath"""
+      $xmlaLocalDeployPath = [System.IO.Path]::Combine($localDeployPath, $xmlaPath)
+      $outLocalDeployPath = $xmlaLocalDeployPath -replace ".xmla", "ExecutionLog.xml"
 
-        "$logPrefix $remoteCommand"
+      $invokeArgs = @{
+          "ComputerName" = $curComputerName;
+          "ArgumentList" = @($curComputerName, $xmlaLocalDeployPath, $outLocalDeployPath);
+          "ScriptBlock" = {
+            param($curComputerName, $xmlaLocalDeployPath, $outLocalDeployPath)
+            Invoke-ASCMD -server "$curComputerName" -inputFile "$xmlaLocalDeployPath" | Out-File "$outLocalDeployPath"
+          };
+          ErrorAction = "Stop"
+      }
 
-        Invoke-Expression "Invoke-Command -ComputerName ""$curComputerName"" -ScriptBlock { $remoteCommand }"
+      if ($curComputerName -eq 'localhost') {
+        $invokeArgs.Remove("ComputerName")
+      }
 
-        $outRemoteDeployPath = Join-Path $remoteDeployPath ($xmlaPath -replace ".xmla", "ExecutionLog.xml")
+      Invoke-Command @invokeArgs
+
+      $outRemoteDeployPath = Join-Path $remoteDeployPath ($xmlaPath -replace ".xmla", "ExecutionLog.xml")
 
         [xml]$outDoc = Get-Content $outRemoteDeployPath
 
