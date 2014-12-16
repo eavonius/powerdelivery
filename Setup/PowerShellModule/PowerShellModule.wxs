@@ -12,6 +12,7 @@
       <File Id="Backup_MasterDataServices.ps1" Source="..\..\PowerDelivery\Backup-MasterDataServices.ps1" Name="Backup-MasterDataServices.ps1" />
       <File Id="Copy_Robust.ps1" Source="..\..\PowerDelivery\Copy-Robust.ps1" Name="Copy-Robust.ps1" />
       <File Id="Deploy_BuildAssets.ps1" Source="..\..\PowerDelivery\Deploy-BuildAssets.ps1" Name="Deploy-BuildAssets.ps1" />
+      <File Id="Deploy_SSISProject.ps1" Source="..\..\PowerDelivery\Deploy-SSISProject.ps1" Name="Deploy-SSISProject.ps1" />
       <File Id="Disable_SqlJobs.ps1" Source="..\..\PowerDelivery\Disable-SqlJobs.ps1" Name="Disable-SqlJobs.ps1" />
       <File Id="Enable_SqlJobs.ps1" Source="..\..\PowerDelivery\Enable-SqlJobs.ps1" Name="Enable-SqlJobs.ps1" />
       <File Id="Enable_WebDeploy.ps1" Source="..\..\PowerDelivery\Enable-WebDeploy.ps1" Name="Enable-WebDeploy.ps1" />

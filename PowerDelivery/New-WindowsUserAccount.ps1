@@ -29,43 +29,61 @@ function New-WindowsUserAccount {
 	
 	Set-Location $powerdelivery.deployDir
 
-    $logPrefix = "New-WindowsUserAccount:"
+  $logPrefix = "New-WindowsUserAccount:"
 
-    $computerNames = $computerName -split "," | % { $_.Trim() }
+  $computerNames = $computerName -split "," | % { $_.Trim() }
 
-    foreach ($curComputerName in $computerNames) {
+  foreach ($curComputerName in $computerNames) {
 
-        Invoke-Command -ComputerName $curComputerName {
+      $invokeArgs = @{
+        "ComputerName" = $curComputerName;
+        "ArgumentList" = @($curComputerName, $userName, $password, $logPrefix);
+        "ScriptBlock" = {
+          param($curComputerName, $userName, $password, $logPrefix)
 
-		    $localUsersSet = [ADSI]"WinNT://$using:curComputerName/Users"
-		    $localUsers = @($localUsersSet.psbase.Invoke("Members")) 
+          if ($curComputerName -eq 'localhost' -or ([String]::IsNullOrWhitespace($curComputerName))) {
+            $curComputerName = $env:computername
+          }
 
-		    $foundAccount = $false
+          $localUsersSet = [ADSI]"WinNT://$curComputerName/Users"
+          $localUsers = @($localUsersSet.psbase.Invoke("Members")) 
 
-		    $localUsers | foreach {
-			    if ($_.GetType().InvokeMember("Name", 'GetProperty', $null, $_, $null) -eq $using:userName) {
-				    $foundAccount = $true
-			    }
-		    }
+          $foundAccount = $false
 
-		    if (!$foundAccount) {
-			    Write-Host "$using:logPrefix Adding $using:userName user to $($using:curComputerName)..."
+          $localUsers | foreach {
+            if ($_.GetType().InvokeMember("Name", 'GetProperty', $null, $_, $null) -eq $userName) {
+              $foundAccount = $true
+            }
+          }
 
-			    $addUserArgs = @(
-				    "user",
-				    $using:userName,
-				    $using:password,
-				    "/add",
-				    "/active:YES",
-				    "/expires:NEVER",
-				    "/FullName:`"$using:userName`""
-			    )
+          if (!$foundAccount) {
+            Write-Host "$logPrefix Adding $userName user to $($curComputerName)..."
 
-			    $addUserProcess = Start-Process -FilePath "C:\Windows\System32\net.exe" -ArgumentList $addUserArgs -PassThru -Wait
-			    $addUserProcess.WaitForExit()
+            $addUserArgs = @(
+              "user",
+              $userName,
+              $password,
+              "/add",
+              "/active:YES",
+              "/expires:NEVER",
+              "/FullName:`"$userName`""
+            )
 
-			    "$using:logPrefix User $using:userName created on $using:curComputerName successfully."
-		    }
-	    }
+            $addUserProcess = Start-Process -FilePath "C:\Windows\System32\net.exe" -ArgumentList $addUserArgs -PassThru -Wait
+            $addUserProcess.WaitForExit()
+
+            "$logPrefix User $userName created on $curComputerName successfully."
+          }    
+        }; 
+        "ErrorAction" = "Stop"
+      }
+
+      if ([String]::IsNullOrWhitespace($curComputerName) -or ($curComputerName -eq 'localhost')) {
+        $invokeArgs.Remove("ComputerName")
+      }
+
+      Invoke-Command @invokeArgs
+
+      Write-BuildSummaryMessage -name "Deploy" -header "Deployments" -message "Windows User: $userName ($curComputerName)"
     }
 }

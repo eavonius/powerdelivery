@@ -14,7 +14,7 @@ function Publish-MasterDataServices {
 
     foreach ($curComputerName in $computerNames) {
 
-        "$logPrefix Publishing $package to up Master Data Services on $computerName"
+        "$logPrefix Publishing $package to up Master Data Services on $curComputerName"
 
         $dropLocation = Get-BuildDropLocation
 

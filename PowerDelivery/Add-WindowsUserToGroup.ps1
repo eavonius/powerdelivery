@@ -35,27 +35,39 @@ function Add-WindowsUserToGroup {
 
     foreach ($curComputerName in $computerNames) {
 
-	    Invoke-Command $curComputerName {
+      $invokeArgs = @{
+        "ComputerName" = $curComputerName;
+        "ArgumentList" = @($curComputerName, $groupName, $userName, $logPrefix);
+        "ScriptBlock" = {
+          param($curComputerName, $groupName, $userName, $logPrefix)
 
-		    $group = [ADSI]"WinNT://$using:curComputerName/$using:groupName,group"
-		    $usersSet = [ADSI]"WinNT://$using:curComputerName/$using:groupName"
+		    $group = [ADSI]"WinNT://$curComputerName/$groupName,group"
+		    $usersSet = [ADSI]"WinNT://$curComputerName/$groupName"
 		    $users = @($usersSet.psbase.Invoke("Members")) 
 
 		    $foundAccount = $false
 
 		    $users | foreach {
-			    if ($_.GetType().InvokeMember("Name", 'GetProperty', $null, $_, $null) -eq $using:userName) {
+			    if ($_.GetType().InvokeMember("Name", 'GetProperty', $null, $_, $null) -eq $userName) {
 				    $foundAccount = $true
 			    }
 		    }
 
 		    if (!$foundAccount) {
-			    "$using:logPrefix Adding $using:userName user to $using:groupName group on $($using:curComputerName)..."
+			    "$logPrefix Adding $userName user to $groupName group on $($curComputerName)..."
 
-			    $group.psbase.Invoke("Add", ([ADSI]"WinNT://$using:userName").path)
+			    $group.psbase.Invoke("Add", ([ADSI]"WinNT://$userName").path)
 
-			    "$using:logPrefix User $using:userName added to $using:groupName group on $($using:curComputerName) successfully."
+			    "$logPrefix User $userName added to $groupName group on $($curComputerName) successfully."
 		    }
-	    }
+	    };
+      "ErrorAction" = "Stop"
     }
+
+    if ([String]::IsNullOrWhitespace($curComputerName) -or ($curComputerName -eq 'localhost')) {
+        $invokeArgs.Remove("ComputerName")
+    }
+
+    Invoke-Command @invokeArgs
+  }
 }
