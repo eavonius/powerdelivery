@@ -12,6 +12,7 @@
         <Edition>Pro</Edition>
         <Edition>Premium</Edition>
         <Edition>Ultimate</Edition>
+        <Edition>IntegratedShell</Edition>
       </VisualStudio>
     </SupportedProducts>
     <SupportedFrameworkRuntimeEdition MinVersion="4.0" MaxVersion="4.5" />
