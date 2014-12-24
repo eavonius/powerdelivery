@@ -12,7 +12,6 @@
       <File Id="Backup_MasterDataServices.ps1" Source="..\..\PowerDelivery\Backup-MasterDataServices.ps1" Name="Backup-MasterDataServices.ps1" />
       <File Id="Copy_Robust.ps1" Source="..\..\PowerDelivery\Copy-Robust.ps1" Name="Copy-Robust.ps1" />
       <File Id="Deploy_BuildAssets.ps1" Source="..\..\PowerDelivery\Deploy-BuildAssets.ps1" Name="Deploy-BuildAssets.ps1" />
-      <File Id="Deploy_SSISProject.ps1" Source="..\..\PowerDelivery\Deploy-SSISProject.ps1" Name="Deploy-SSISProject.ps1" />
       <File Id="Disable_SqlJobs.ps1" Source="..\..\PowerDelivery\Disable-SqlJobs.ps1" Name="Disable-SqlJobs.ps1" />
       <File Id="Enable_SqlJobs.ps1" Source="..\..\PowerDelivery\Enable-SqlJobs.ps1" Name="Enable-SqlJobs.ps1" />
       <File Id="Enable_WebDeploy.ps1" Source="..\..\PowerDelivery\Enable-WebDeploy.ps1" Name="Enable-WebDeploy.ps1" />
@@ -38,7 +37,6 @@
       <File Id="Get_BuildWorkspaceName.ps1" Source="..\..\PowerDelivery\Get-BuildWorkspaceName.ps1" Name="Get-BuildWorkspaceName.ps1" />
       <File Id="Get_ComputerLocalDeployPath.ps1" Source="..\..\PowerDelivery\Get-ComputerLocalDeployPath.ps1" Name="Get-ComputerLocalDeployPath.ps1" />
       <File Id="Get_ComputerRemoteDeployPath.ps1" Source="..\..\PowerDelivery\Get-ComputerRemoteDeployPath.ps1" Name="Get-ComputerRemoteDeployPath.ps1" />
-      <File Id="Import_DeliveryModule.ps1" Source="..\..\PowerDelivery\Import-DeliveryModule.ps1" Name="Import-DeliveryModule.ps1" />
       <File Id="Import_Snapin.ps1" Source="..\..\PowerDelivery\Import-Snapin.ps1" Name="Import-Snapin.ps1" />
       <File Id="Install_NServiceBusService.ps1" Source="..\..\PowerDelivery\Install-NServiceBusService.ps1" Name="Install-NServiceBusService.ps1" />
       <File Id="Invoke_BuildConfigSection.ps1" Source="..\..\PowerDelivery\Invoke-BuildConfigSection.ps1" Name="Invoke-BuildConfigSection.ps1" />
@@ -57,8 +55,8 @@
       <File Id="Publish_LeapFrogBI.ps1" Source="..\..\PowerDelivery\Publish-LeapFrogBI.ps1" Name="Publish-LeapFrogBI.ps1" />
       <File Id="Publish_MasterDataServices.ps1" Source="..\..\PowerDelivery\Publish-MasterDataServices.ps1" Name="Publish-MasterDataServices.ps1" />
       <File Id="Publish_SSAS.ps1" Source="..\..\PowerDelivery\Publish-SSAS.ps1" Name="Publish-SSAS.ps1" />
+      <File Id="Publish_SSISProject.ps1" Source="..\..\PowerDelivery\Publish-SSISProject.ps1" Name="Publish-SSISProject.ps1" />
       <File Id="Publish_WebDeploy.ps1" Source="..\..\PowerDelivery\Publish-WebDeploy.ps1" Name="Publish-WebDeploy.ps1" />
-      <File Id="Register_DeliveryModuleHook.ps1" Source="..\..\PowerDelivery\Register-DeliveryModuleHook.ps1" Name="Register-DeliveryModuleHook.ps1" />
       <File Id="Remove_Pipeline.ps1" Source="..\..\PowerDelivery\Remove-Pipeline.ps1" Name="Remove-Pipeline.ps1" />
       <File Id="Set_AppPoolIdentity.ps1" Source="..\..\PowerDelivery\Set-AppPoolIdentity.ps1" Name="Set-AppPoolIdentity.ps1" />
       <File Id="Set_EnvironmentVariable.ps1" Source="..\..\PowerDelivery\Set-EnvironmentVariable.ps1" Name="Set-EnvironmentVariable.ps1" />

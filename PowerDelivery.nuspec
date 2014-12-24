@@ -26,7 +26,6 @@
     <file src="PowerDelivery\Backup-MasterDataServices.ps1" target="tools\PowerDelivery\Backup-MasterDataServices.ps1" />
     <file src="PowerDelivery\Copy-Robust.ps1" target="tools\PowerDelivery\Copy-Robust.ps1" />
     <file src="PowerDelivery\Deploy-BuildAssets.ps1" target="tools\PowerDelivery\Deploy-BuildAssets.ps1" />
-    <file src="PowerDelivery\Deploy-SSISProject.ps1" target="tools\PowerDelivery\Deploy-SSISProject.ps1" />
     <file src="PowerDelivery\Disable-SqlJobs.ps1" target="tools\PowerDelivery\Disable-SqlJobs.ps1" />
     <file src="PowerDelivery\Enable-SqlJobs.ps1" target="tools\PowerDelivery\Enable-SqlJobs.ps1" />
     <file src="PowerDelivery\Enable-WebDeploy.ps1" target="tools\PowerDelivery\Enable-WebDeploy.ps1" />
@@ -54,7 +53,6 @@
     <file src="PowerDelivery\Get-ComputerRemoteDeployPath.ps1" target="tools\PowerDelivery\Get-ComputerRemoteDeployPath.ps1" />
     <file src="PowerDelivery\Invoke-BuildConfigSection.ps1" target="tools\PowerDelivery\Invoke-BuildConfigSection.ps1" />
     <file src="PowerDelivery\Invoke-BuildConfigSections.ps1" target="tools\PowerDelivery\Invoke-BuildConfigSections.ps1" />
-    <file src="PowerDelivery\Import-DeliveryModule.ps1" target="tools\PowerDelivery\Import-DeliveryModule.ps1" />
     <file src="PowerDelivery\Import-Snapin.ps1" target="tools\PowerDelivery\Import-Snapin.ps1" />
     <file src="PowerDelivery\Install-NServiceBusService.ps1" target="tools\PowerDelivery\Install-NServiceBusService.ps1" />
     <file src="PowerDelivery\Invoke-MSBuild.ps1" target="tools\PowerDelivery\Invoke-MSBuild.ps1" />
@@ -69,8 +67,8 @@
     <file src="PowerDelivery\Publish-BuildAssets.ps1" target="tools\PowerDelivery\Publish-BuildAssets.ps1" />
     <file src="PowerDelivery\Publish-MasterDataServices.ps1" target="tools\PowerDelivery\Publish-MasterDataServices.ps1" />
     <file src="PowerDelivery\Publish-SSAS.ps1" target="tools\PowerDelivery\Publish-SSAS.ps1" />
+    <file src="PowerDelivery\Publish-SSISProject.ps1" target="tools\PowerDelivery\Publish-SSISProject.ps1" />
     <file src="PowerDelivery\Publish-WebDeploy.ps1" target="tools\PowerDelivery\Publish-WebDeploy.ps1" />
-    <file src="PowerDelivery\Register-DeliveryModuleHook.ps1" target="tools\PowerDelivery\Register-DeliveryModuleHook.ps1" />
     <file src="PowerDelivery\Remove-Pipeline.ps1" target="tools\PowerDelivery\Remove-Pipeline.ps1" />
     <file src="PowerDelivery\Set-AppPoolIdentity.ps1" target="tools\PowerDelivery\Set-AppPoolIdentity.ps1" />
     <file src="PowerDelivery\Set-EnvironmentVariable.ps1" target="tools\PowerDelivery\Set-EnvironmentVariable.ps1" />
@@ -111,19 +109,5 @@
     <file src="chocolateyInstall.ps1" target="tools\chocolateyInstall.ps1" />
     <file src="init.ps1" target="tools\init.ps1" />
     <file src="enable-buildDeployment.ps1" target="tools\enable-buildDeployment.ps1" />
-    <file src="HyperVDeliveryModule\HyperVDeliveryModule.psd1" target="tools\HyperVDeliveryModule\HyperVDeliveryModule.psd1" />
-    <file src="HyperVDeliveryModule\HyperVDeliveryModule.psm1" target="tools\HyperVDeliveryModule\HyperVDeliveryModule.psm1" />
-    <file src="MSBuildDeliveryModule\MSBuildDeliveryModule.psd1" target="tools\MSBuildDeliveryModule\MSBuildDeliveryModule.psd1" />
-    <file src="MSBuildDeliveryModule\MSBuildDeliveryModule.psm1" target="tools\MSBuildDeliveryModule\MSBuildDeliveryModule.psm1" />
-    <file src="MSTestDeliveryModule\MSTestDeliveryModule.psd1" target="tools\MSTestDeliveryModule\MSTestDeliveryModule.psd1" />
-    <file src="MSTestDeliveryModule\MSTestDeliveryModule.psm1" target="tools\MSTestDeliveryModule\MSTestDeliveryModule.psm1" />
-    <file src="RemoteSharesDeliveryModule\RemoteSharesDeliveryModule.psm1" target="tools\RemoteSharesDeliveryModule\RemoteSharesDeliveryModule.psm1" />
-    <file src="RemoteSharesDeliveryModule\RemoteSharesDeliveryModule.psd1" target="tools\RemoteSharesDeliveryModule\RemoteSharesDeliveryModule.psd1" />
-    <file src="SSISPackagesDeliveryModule\SSISPackagesDeliveryModule.psm1" target="tools\SSISPackagesDeliveryModule\SSISPackagesDeliveryModule.psm1" />
-    <file src="SSISPackagesDeliveryModule\SSISPackagesDeliveryModule.psd1" target="tools\SSISPackagesDeliveryModule\SSISPackagesDeliveryModule.psd1" />
-    <file src="RoundhouseDeliveryModule\RoundhouseDeliveryModule.psd1" target="tools\RoundhouseDeliveryModule\RoundhouseDeliveryModule.psd1" />
-    <file src="RoundhouseDeliveryModule\RoundhouseDeliveryModule.psm1" target="tools\RoundhouseDeliveryModule\RoundhouseDeliveryModule.psm1" />
-    <file src="WebDeployDeliveryModule\WebDeployDeliveryModule.psd1" target="tools\WebDeployDeliveryModule\WebDeployDeliveryModule.psd1" />
-    <file src="WebDeployDeliveryModule\WebDeployDeliveryModule.psm1" target="tools\WebDeployDeliveryModule\WebDeployDeliveryModule.psm1" />
   </files>
 </package>

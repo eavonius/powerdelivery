@@ -185,3 +185,6 @@ gh-pages/
 _site
 
 /Examples/PowerDeliveryASPNETMVC4/packages
+
+/Test/TestPipelines/**/*BuildDrop
+/Test/TestPipelines/**/PowerDeliveryDeploy

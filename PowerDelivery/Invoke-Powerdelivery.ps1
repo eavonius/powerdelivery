@@ -14,36 +14,26 @@ Invoke-PowerDelivery .\MyProduct.ps1
 The relative path to to a local powerdelivery build script to run.
 #>
 function Invoke-Powerdelivery {
-    [CmdletBinding()]
-    param(
-        [Parameter(Position=0,Mandatory=1)][string] $buildScript,
-        [Parameter(Position=1,Mandatory=0)][switch] $onServer = $false,
-	    [Parameter(Position=2,Mandatory=0)][string] $dropLocation,
-	    [Parameter(Position=3,Mandatory=0)][string] $changeSet,
-	    [Parameter(Position=4,Mandatory=0)][string] $requestedBy,
-	    [Parameter(Position=5,Mandatory=0)][string] $teamProject,
-	    [Parameter(Position=6,Mandatory=0)][string] $workspaceName,
-	    [Parameter(Position=7,Mandatory=0)][string] $environment = 'Local',
-        [Parameter(Position=8,Mandatory=0)][string] $buildUri,
-        [Parameter(Position=9,Mandatory=0)][string] $collectionUri,
-	    [Parameter(Position=10,Mandatory=0)][string] $priorBuild
-    )
+  [CmdletBinding()]
+	param(
+    [Parameter(Position=0,Mandatory=0)][string] $buildScript,
+    [Parameter(Position=1,Mandatory=0)][switch] $onServer = $false,
+	  [Parameter(Position=2,Mandatory=0)][string] $dropLocation,
+	  [Parameter(Position=3,Mandatory=0)][string] $changeSet,
+	  [Parameter(Position=4,Mandatory=0)][string] $requestedBy,
+	  [Parameter(Position=5,Mandatory=0)][string] $teamProject,
+	  [Parameter(Position=6,Mandatory=0)][string] $workspaceName,
+	  [Parameter(Position=7,Mandatory=0)][string] $environment = 'Local',
+    [Parameter(Position=8,Mandatory=0)][string] $buildUri,
+    [Parameter(Position=9,Mandatory=0)][string] $collectionUri,
+	  [Parameter(Position=10,Mandatory=0)][string] $priorBuild
+  )
 	
 	$logPrefix = "Powerdelivery:"
 	
 	$ErrorActionPreference = 'Stop'
 
-	function InvokePowerDeliveryModuleHook($blockName, $stage) {
-		$actionPerformed = $false
-
-		$powerdelivery.blockName = $blockName
-
-		$powerdelivery.moduleHooks["$stage$blockName"] | % { 
-			& $_ 
-			$actionPerformed = $true
-		}
-		$powerdelivery.hookResult = $actionPerformed
-	}
+  $isVerbose = [System.Management.Automation.ActionPreference]::SilentlyContinue -ne $VerbosePreference
 
 	function InvokePowerDeliveryBuildAction($condition, $stage, $description, $status, $blockName) {
 		if ($condition) {
@@ -51,21 +41,17 @@ function Invoke-Powerdelivery {
 
 			$powerdelivery.blockName = $blockName
 			
-            if ($blockName -ne "Init") {
-			    Write-Host
-			    Write-ConsoleSpacer
-			    "= $logPrefix $status..."
-	    	    Write-ConsoleSpacer
-	            Write-Host
-            }
+      if ($blockName -ne "Init") {
+		    Write-Host
+		    Write-ConsoleSpacer
+		    "= $logPrefix $status..."
+	 	    Write-ConsoleSpacer
+	      Write-Host
+      }
 			
 			try {
-				InvokePowerDeliveryModuleHook $blockName 'Pre'
-				if ($powerdelivery.hookResult) {
-					$actionPerformed = $true
-				}
-			    if ($stage) {
-		        	& $stage
+			  if ($stage) {
+		    	& $stage
 					$actionPerformed = $true
 				}			
 				if ($blockName -eq "Compile") {
@@ -94,19 +80,14 @@ function Invoke-Powerdelivery {
 						}
 					}
 				}
-				InvokePowerDeliveryModuleHook $blockName 'Post'
-				if ($powerdelivery.hookResult) {
-					$actionPerformed = $true
-				}
-				
 				$message = "No actions performed."
-				
+			
 				if ($actionPerformed) {
 					$message = "Successful."
 				}
 			}
 			finally {
-			   	Set-Location $powerdelivery.currentLocation
+			  Set-Location $powerdelivery.currentLocation
 			}
 		}
 	}
@@ -129,7 +110,7 @@ function Invoke-Powerdelivery {
 			}
 		}
 		$subHash.Keys | % {
-            if ($baseHash -eq $null -or !$baseHash.ContainsKey($_)) {
+			if ($baseHash -eq $null -or !$baseHash.ContainsKey($_)) {
 				$mergedHash.Add($_, $subHash[$_])
 			}
 		}
@@ -138,15 +119,13 @@ function Invoke-Powerdelivery {
 	
 	function ReplaceReferencedConfigSettings($yamlNodes, $replaceFor = @()) {
 		
-        if ($yamlNodes.Keys) {
+		if ($yamlNodes.Keys) {
 			$replacedValues = @{}
 			$yamlNodes.Keys | % {
 				$yamlNode = $yamlNodes[$_]			
 				if ($yamlNode.GetType().Name -eq 'Hashtable') {
-
-                    $subReplacements = $replaceFor | % { $_ }
-                    $subReplacements += $_
-
+          $subReplacements = $replaceFor | % { $_ }
+          $subReplacements += $_
 					ReplaceReferencedConfigSettings -yamlNodes $yamlNode -replaceFor $subReplacements
 				}
 				else {
@@ -158,60 +137,59 @@ function Invoke-Powerdelivery {
 						$envSettingName = $_.Value.Substring(2, $_.Length - 4)
 						$envSettingValue = [String]::Empty
     
-	                    foreach ($replacement in $replaceFor) {
-	                        if ($envSettingName.Equals($replacement, [System.StringComparison]::InvariantCultureIgnoreCase)) {
-	                            throw "Configuration setting $envSettingName and $replacement refer to each other causing a circular dependency"
-	                        }
-	                    }
+            foreach ($replacement in $replaceFor) {
+              if ($envSettingName.Equals($replacement, [System.StringComparison]::InvariantCultureIgnoreCase)) {
+                throw "Configuration setting $envSettingName and $replacement refer to each other causing a circular dependency"
+              }
+            }
 
-	                    if ($envSettingName -like "Credentials:*") {
-	                        $userName = $envSettingName.Substring(12)
-	                        $replacedValue = Get-BuildCredentials $userName
-	                    }
-	                    else {
-          							try {
-          								$envSettingValue = Get-BuildSetting $envSettingName
-          							}
-          							catch {
-          							    if ($envSettingName -eq "BuildAppVersion") {
-              					    	    $envSettingValue = $powerdelivery.buildAppVersion
-              					    	}
-          						    	elseif ($envSettingName -eq "BuildEnvironment") {
-          						    	    $envSettingValue = $powerdelivery.environment
-              					    	}
-          						    	elseif ($envSettingName -eq "BuildNumber") {
-          							    	$envSettingValue = $powerdelivery.buildNumber
-          						    	}
-          						    	elseif ($envSettingName -eq "BuildDropLocation") {
-          							    	$envSettingValue = $powerdelivery.dropLocation
-          						    	}
-                            elseif ($envSettingName -eq "CurrentLocation") {
-                              $envSettingValue = $powerdelivery.currentLocation
-                            }
-          						    	else {
-          						    		$errorMessage = $_.Exception.Message
-          								    throw "Error replacing setting in module configuration file: $errorMessage"
-          						    	}
-          							}
-	                        if ($envSettingValue.GetType().Name -eq 'Hashtable') {
-	                                
-	                            $subReplacements = $replaceFor | % { $_ }
-	                            $subReplacements += $envSettingName
-	                                
-	                            $replacedValue = ReplaceReferencedConfigSettings -yamlNodes $envSettingValue -replaceFor $subReplacements
-	                        }
-	                        else {
-	                            $subReplacements = $replaceFor | % { $_ }
-	                            $subReplacements += $envSettingName
+            if ($envSettingName -like "Credentials:*") {
+              $userName = $envSettingName.Substring(12)
+              $replacedValue = Get-BuildCredentials $userName
+            }
+            else {
+							try {
+								$envSettingValue = Get-BuildSetting $envSettingName
+							}
+							catch {
+							  if ($envSettingName -eq "BuildAppVersion") {
+    					    $envSettingValue = $powerdelivery.buildAppVersion
+    					 	}
+						   	elseif ($envSettingName -eq "BuildEnvironment") {
+						      $envSettingValue = $powerdelivery.environment
+    					 	}
+						   	elseif ($envSettingName -eq "BuildNumber") {
+							   	$envSettingValue = $powerdelivery.buildNumber
+						   	}
+						   	elseif ($envSettingName -eq "BuildDropLocation") {
+							   	$envSettingValue = $powerdelivery.dropLocation
+						   	}
+                elseif ($envSettingName -eq "CurrentLocation") {
+                  $envSettingValue = $powerdelivery.currentLocation
+                }
+						   	else {
+						   		$errorMessage = $_.Exception.Message
+							    throw "Error replacing setting in module configuration file: $errorMessage"
+						   	}
+							}
+              
+              if ($envSettingValue.GetType().Name -eq 'Hashtable') {        
+                $subReplacements = $replaceFor | % { $_ }
+                $subReplacements += $envSettingName
+                    
+                $replacedValue = ReplaceReferencedConfigSettings -yamlNodes $envSettingValue -replaceFor $subReplacements
+              }
+              else {
+                $subReplacements = $replaceFor | % { $_ }
+                $subReplacements += $envSettingName
 
-	                            $forwardNodes = New-Object System.Collections.Hashtable
-	                            $forwardNodes.Add($envSettingName, $envSettingValue)
+                $forwardNodes = New-Object System.Collections.Hashtable
+                $forwardNodes.Add($envSettingName, $envSettingValue)
 
-	                            ReplaceReferencedConfigSettings -yamlNodes $forwardNodes -replaceFor $subReplacements
-
-							    $replacedValue = $replacedValue -replace $_, $forwardNodes[$envSettingName]
-	                        }
-	                    }
+                ReplaceReferencedConfigSettings -yamlNodes $forwardNodes -replaceFor $subReplacements
+						    $replacedValue = $replacedValue -replace $_, $forwardNodes[$envSettingName]
+              }
+            }
 					}
 					$replacedValues.Add($_, $replacedValue)
 				}
@@ -226,12 +204,12 @@ function Invoke-Powerdelivery {
 		$val = ""
 		$spaceIndex = 0
 		while ($spaceIndex -lt $numSpaces) {
-            if (!$forYaml -and $spaceIndex -eq 0) {
-                $val += ".."
-            }
-            else {
-			    $val += ".."
-            }
+			if (!$forYaml -and $spaceIndex -eq 0) {
+      	$val += ".."
+      }
+      else {
+				$val += ".."
+      }
 			$spaceIndex++
 		}
 		$val
@@ -253,8 +231,8 @@ function Invoke-Powerdelivery {
 			}
 			else {		
 				if ($configSetting.Key.EndsWith("Password")) {
-	                $envValue = '********'
-	            }
+		      $envValue = '********'
+	      }
 				$envValWithSpaces = PrintSpaces -numSpaces $depth -forYaml $forYaml
 				$envMessage += "{0}{1}: {2}`r`n" -f $envValWithSpaces, $configSetting.Key, $envValue
 			}
@@ -263,24 +241,15 @@ function Invoke-Powerdelivery {
 		$envMessage
 	}
 
-    if (!$dropLocation.EndsWith('\')) {
-	    $dropLocation = "$($dropLocation)\"
-    }
-	
-	$powerdelivery.moduleHooks = @{
-		"PreInit" = @(); "PostInit" = @();
-		"PreCompile" = @(); "PostCompile" = @();
-		"PreTestEnvironment" = @(); "PostTestEnvironment" = @();
-		"PreDeploy" = @(); "PostDeploy" = @();
-		"PreTestAcceptance" = @(); "PostTestAcceptance" = @();
-		"PreTestUnits" = @(); "PostTestUnits" = @();
-		"PreTestCapacity" = @(); "PostTestCapacity" = @()
-	}
+  try {
 
+    if (!$dropLocation.EndsWith('\')) {
+      $dropLocation = "$($dropLocation)\"
+    }
+    
     $powerdelivery.deployDriveLetter = "C"
     $powerdelivery.deployShares = @{}
     $powerdelivery.buildCredentials = @{}
-	$powerdelivery.deliveryModules = @()
     $powerdelivery.assemblyInfoFiles = @()
     $powerdelivery.currentLocation = gl
     $powerdelivery.noReleases = $true
@@ -296,44 +265,52 @@ function Invoke-Powerdelivery {
     $powerdelivery.onServer = $onServer
     $powerdelivery.buildNumber = $null
     $powerdelivery.buildName = $null
-	$powerdelivery.priorBuild = $priorBuild
-	$powerdelivery.deployDir = Join-Path (Get-Location) "PowerDeliveryDeploy"
+    $powerdelivery.priorBuild = $priorBuild
+    $powerdelivery.deployDir = Join-Path (Get-Location) "PowerDeliveryDeploy"
+    $powerdelivery.isVerbose = $isVerbose
 
-	if ((Test-Path $powerdelivery.deployDir) -and ($onServer -eq $true -or $environment -eq "Local")) {
-		Remove-Item -Path $powerdelivery.deployDir -Force -Recurse | Out-Null
-	}
-	
-	mkdir -Force $($powerdelivery.deployDir) | Out-Null
+    if ((Test-Path $powerdelivery.deployDir) -and ($onServer -eq $true -or $environment -eq "Local")) {
+      Remove-Item -Path $powerdelivery.deployDir -Force -Recurse | Out-Null
+    }
+    
+    mkdir -Force $($powerdelivery.deployDir) | Out-Null
 
     Write-Host
-	$powerdelivery.version = Get-Module powerdelivery | select version | ForEach-Object { $_.Version.ToString() }
-    "powerdelivery $($powerdelivery.version) - https://github.com/eavonius/powerdelivery"
-	Write-Host
-	$appScript = [System.IO.Path]::GetFileNameWithoutExtension($buildScript)
+    $powerdelivery.version = Get-Module powerdelivery | select version | ForEach-Object { $_.Version.ToString() }
+    Write-Host "powerdelivery $($powerdelivery.version) - https://github.com/eavonius/powerdelivery"
+    
+    if ([String]::IsNullOrWhiteSpace($buildScript)) {
+      throw "The -buildScript parameter is required."
+    }
+
+    if (!(Test-Path $buildScript)) {
+      throw "The build script $buildScript does not exist."
+    }
+
+    $appScript = [System.IO.Path]::GetFileNameWithoutExtension($buildScript)
     $powerdelivery.scriptName = $appScript
 
     $TranscriptFile = Join-Path $powerdelivery.currentLocation "$($powerdelivery.scriptName)Build.log"
     Start-Transcript -Path $TranscriptFile
 
-    try {
 		if ($onServer -eq $true) {
 
-		    Require-NonNullField -variable $changeSet -errorMsg "-changeSet parameter is required when running on TFS"
-		    Require-NonNullField -variable $requestedBy -errorMsg "-requestedBy parameter is required when running on TFS"
-		    Require-NonNullField -variable $teamProject -errorMsg "-teamProject parameter is required when running on TFS"
-		    Require-NonNullField -variable $workspaceName -errorMsg "-workspaceName parameter is required when running on TFS"
-		    Require-NonNullField -variable $environment -errorMsg "-environment parameter is required when running on TFS"
-            Require-NonNullField -variable $collectionUri -errorMsg "-collectionUri parameter is required when running on TFS"
-            Require-NonNullField -variable $buildUri -errorMsg "-buildUri parameter is required when running on TFS"
-            Require-NonNullField -variable $dropLocation -errorMsg "-dropLocation parameter is required when running on TFS"
+		  Require-NonNullField -variable $changeSet -errorMsg "-changeSet parameter is required when running on TFS"
+		  Require-NonNullField -variable $requestedBy -errorMsg "-requestedBy parameter is required when running on TFS"
+		  Require-NonNullField -variable $teamProject -errorMsg "-teamProject parameter is required when running on TFS"
+		  Require-NonNullField -variable $workspaceName -errorMsg "-workspaceName parameter is required when running on TFS"
+		  Require-NonNullField -variable $environment -errorMsg "-environment parameter is required when running on TFS"
+      Require-NonNullField -variable $collectionUri -errorMsg "-collectionUri parameter is required when running on TFS"
+      Require-NonNullField -variable $buildUri -errorMsg "-buildUri parameter is required when running on TFS"
+      Require-NonNullField -variable $dropLocation -errorMsg "-dropLocation parameter is required when running on TFS"
 			
 			if ($powerdelivery.environment -ne "Local") {
 			
 				LoadTFS
 				
 				$powerdelivery.collection = [Microsoft.TeamFoundation.Client.TfsTeamProjectCollectionFactory]::GetTeamProjectCollection($collectionUri)
-		        $powerdelivery.buildServer = $powerdelivery.collection.GetService([Microsoft.TeamFoundation.Build.Client.IBuildServer])
-		        $powerdelivery.structure = $powerdelivery.collection.GetService([Microsoft.TeamFoundation.Server.ICommonStructureService])
+		    $powerdelivery.buildServer = $powerdelivery.collection.GetService([Microsoft.TeamFoundation.Build.Client.IBuildServer])
+		    $powerdelivery.structure = $powerdelivery.collection.GetService([Microsoft.TeamFoundation.Server.ICommonStructureService])
 				
 				$buildServerVersion = $powerdelivery.buildServer.BuildServerVersion
 				
@@ -347,17 +324,17 @@ function Invoke-Powerdelivery {
 					throw "TFS server must be version 2010 or 2012, a different version was detected."
 				}
 
-		        $powerdelivery.projectInfo = $powerdelivery.structure.GetProjectFromName($teamProject)
-		        if (!$powerdelivery.projectInfo) {
-		            throw "Project '$teamProject' not found in TFS collection '$collectionUri'"
-		        }
+		    $powerdelivery.projectInfo = $powerdelivery.structure.GetProjectFromName($teamProject)
+		    if (!$powerdelivery.projectInfo) {
+		      throw "Project '$teamProject' not found in TFS collection '$collectionUri'"
+		    }
 				
 				$powerdelivery.groupSecurity = $powerdelivery.collection.GetService([Microsoft.TeamFoundation.Server.IGroupSecurityService])
-		        $powerdelivery.appGroups = $powerdelivery.groupSecurity.ListApplicationGroups($powerdelivery.projectInfo.Uri)
+		    $powerdelivery.appGroups = $powerdelivery.groupSecurity.ListApplicationGroups($powerdelivery.projectInfo.Uri)
 			}
-	    }
-	    else {
-		    $powerdelivery.requestedBy = whoami
+	  }
+	  else {
+		  $powerdelivery.requestedBy = whoami
 			$currentDirectory = Get-Location
 			$powerdelivery.dropLocation = [System.IO.Path]::Combine($currentDirectory, "$($appScript)BuildDrop")
 			
@@ -369,7 +346,7 @@ function Invoke-Powerdelivery {
 
 			mkdir $powerdelivery.dropLocation -Force | Out-Null
 			$dropLocation = $powerdelivery.dropLocation
-	    }
+	  }
 		
 		$envConfigFileName = "$($appScript)$($environment)"
 		$sharedConfigFileName = "$($appScript)Shared.yml"
@@ -377,163 +354,131 @@ function Invoke-Powerdelivery {
 
 	  if (Test-Path -Path $yamlFile) {
 			$yamlPath = (Resolve-Path ".\$($yamlFile)")
-			$powerdelivery.config = Get-Yaml -FromFile $yamlPath
+      try {
+        $powerdelivery.config = Get-Yaml -FromFile $yamlPath
+      }
+      catch { # File was empty
+        $powerdelivery.config = @()
+      }
 	  }
 		else {
-			Write-Host (Get-Location)
 			throw "Build configuration file $yamlFile not found."
 	  }
 
 	  if ($onServer) {
-        Enable-PSRemoting -Force | Out-Null
-        Enable-WSManCredSSP -Role Server -Force | Out-Null
-    }
-		
+      Enable-PSRemoting -Force | Out-Null
+      Enable-WSManCredSSP -Role Server -Force | Out-Null
+	  }
+
+    $sharedConfig = @()
+
 		if (Test-Path -Path $sharedConfigFileName) {
-			$yamlPath = (Resolve-Path ".\$($sharedConfigFileName)")
-			$loadedSharedConfig = $false
-			if (Test-Path $yamlPath) {
-                try {
-				    $sharedConfig = Get-Yaml -FromFile $yamlPath -ErrorAction SilentlyContinue
-				    $loadedSharedConfig = $true
-                }
-                catch {
-                    "WARNING: Tried to load $sharedConfigFileName but was empty."
-                }
-			}
-			else {
-				Write-Host "WARNING: File $yamlPath not found, not loading shared environment configuration."
-			}
-			if ($loadedSharedConfig) {
-				$powerdelivery.config = MergeHashNested -baseHash $sharedConfig -subHash $powerdelivery.config			
-			}
+      try {
+		    $sharedConfig = Get-Yaml -FromFile $yamlPath -ErrorAction SilentlyContinue
+      }
+      catch { # File was empty
+        $sharedConfig = @()
+      }
+			$powerdelivery.config = MergeHashNested -baseHash $sharedConfig -subHash $powerdelivery.config
 		}
+    else {
+      throw "Build configuration file $sharedConfigFileName not found."
+    }
 		
 		Invoke-Expression -Command ".\$appScript"
 
-		Write-Host
-		Write-ConsoleSpacer
-	    "= Deployment Pipeline"
-		Write-ConsoleSpacer
-		"`nName: $appScript"
-		"Version: $($powerdelivery.buildAppVersion)`n"
-	    
-		Write-ConsoleSpacer
-	    "= PowerShell Script Parameters"
-	    Write-ConsoleSpacer
+	  Write-Host "`n= Pipeline`n"
+		Write-Host "Name: $appScript"
+		Write-Host "Version: $($powerdelivery.buildAppVersion)"
+	  
+	  $scriptParams = @{}
 
-	    $scriptParams = @{}
-
-	    $scriptParams["Requested By"] = $powerdelivery.requestedBy
-	    $scriptParams["Environment"] = $powerdelivery.environment
+	  $scriptParams["Requested By"] = $powerdelivery.requestedBy
+	  $scriptParams["Environment"] = $powerdelivery.environment
 		
 		if ($onServer) {
-	        $scriptParams["Team Collection"] = $powerdelivery.collectionUri
-	        $scriptParams["Team Project"] = $powerdelivery.teamProject
-	        $scriptParams["Change Set"] = $powerdelivery.changeSet
-	    
-	        $buildNameSegments = $powerdelivery.dropLocation.split('\') | where {$_}
-	        $buildNameIndex = $buildNameSegments.length - 1
-	        $buildName = $buildNameSegments[$buildNameIndex]
-	        $powerdelivery.buildName = $buildName
-	        $scriptParams["Build Name"] = $powerdelivery.buildName
+	    $scriptParams["Team Collection"] = $powerdelivery.collectionUri
+      $scriptParams["Team Project"] = $powerdelivery.teamProject
+      $scriptParams["Change Set"] = $powerdelivery.changeSet
+  
+      $buildNameSegments = $powerdelivery.dropLocation.split('\') | where {$_}
+      $buildNameIndex = $buildNameSegments.length - 1
+      $buildName = $buildNameSegments[$buildNameIndex]
+      $powerdelivery.buildName = $buildName
+      $scriptParams["Build Name"] = $powerdelivery.buildName
 
-	        $buildNumber = $powerdelivery.buildUri.Substring($buildUri.LastIndexOf("/") + 1)
-	        $powerdelivery.buildNumber = $buildNumber
-	        $scriptParams["Build Number"] = $buildNumber
-	    
-	        if ($powerdelivery.environment -ne "Local" -and $powerdelivery.environment -ne "Commit") {
-	            $scriptParams["Prior Build"] = $powerdelivery.priorBuild
-	        }
+      $buildNumber = $powerdelivery.buildUri.Substring($buildUri.LastIndexOf("/") + 1)
+      $powerdelivery.buildNumber = $buildNumber
+      $scriptParams["Build Number"] = $buildNumber
+  
+      if ($powerdelivery.environment -ne "Local" -and $powerdelivery.environment -ne "Commit") {
+        $scriptParams["Prior Build"] = $powerdelivery.priorBuild
+      }
 
-            Write-BuildSummaryMessage -name "Application" -header "Release" -message "Version: $($powerdelivery.buildAppVersion)`nEnvironment: $($powerdelivery.environment)`nBuild: $($powerdelivery.buildNumber)"
-	    }
-	    else {
+      Write-BuildSummaryMessage -name "Application" -header "Release" -message "Version: $($powerdelivery.buildAppVersion)`nEnvironment: $($powerdelivery.environment)`nBuild: $($powerdelivery.buildNumber)"
+		}
+    else {
 
-	      $now = Get-Date -Format "yyyyMMdd_hhmmss"
+	    $now = Get-Date -Format "yyyyMMdd_hhmmss"
 
-	      $buildNameSegments = $powerdelivery.dropLocation.split('\') | where {$_}
-	         $buildNameIndex = $buildNameSegments.length - 1
-	         $buildName = $buildNameSegments[$buildNameIndex]
-	         $powerdelivery.buildName = "$($powerdelivery.scriptName) - $($powerdelivery.environment)_$($now)"
-	         $scriptParams["Build Name"] = $powerdelivery.buildName
-	     }
+	    $buildNameSegments = $powerdelivery.dropLocation.split('\') | where {$_}
+	    $buildNameIndex = $buildNameSegments.length - 1
+	    $buildName = $buildNameSegments[$buildNameIndex]
+	    $powerdelivery.buildName = "$($powerdelivery.scriptName) - $($powerdelivery.environment)_$($now)"
+	    $scriptParams["Build Name"] = $powerdelivery.buildName
+	  }
 
-        ReplaceReferencedConfigSettings($powerdelivery.config)
+    ReplaceReferencedConfigSettings($powerdelivery.config)
 		
 		$scriptParams["Drop Location"] = $powerdelivery.dropLocation
 		
-        Write-Host
-        $scriptParams.Keys | % {
-            "{0}: {1}" -f $_, $scriptParams[$_]
-        }
-        Write-Host
+    if ($scriptParams.Keys.Count -gt 0) {
+      Write-ConsoleSpacer
+      Write-Host "`n= Script Parameters`n"
+      Write-ConsoleSpacer
+
+      $scriptParams.Keys | % {
+        Write-Host "$($_): $($scriptParams[$_])"
+      }
+    }
 
 		Write-ConsoleSpacer
-	    "= Environment"
-	    Write-ConsoleSpacer
-		Write-Host
+	  Write-Host "`n= Environment`n"
+	  Write-ConsoleSpacer
         
-        $configMessage = ""
+    $configMessage = ""
 
-        $powerdelivery.config.Keys | % {
-			$configKey = $_
-			$configVal = $powerdelivery.config[$_]
-			
-			$configMessage += "`n$($configKey): "
-			
-			if ($configVal.GetType().Name -eq 'Hashtable') {
-				$configMessage += "{"
-				$configSectionNames = @()
-				$configVal.Keys | % { $configSectionNames += $_	}
-				$configMessage += $configSectionNames -join ", "
-				$configMessage += "}"
-			}
-			else {
-				if ($_ -contains "password") {
-					$configMessage += "*******"
-				}
-				else {
-					$configMessage += $configVal
-				}
-			}
-		}
+    if ($powerdelivery.config.Keys.Count -gt 0) {
+      $powerdelivery.config.Keys | % {
+  			$configKey = $_
+  			$configVal = $powerdelivery.config[$_]
+  			
+  			$configMessage += "`n$($configKey): "
+  			
+  			if ($configVal.GetType().Name -eq 'Hashtable') {
+  				$configMessage += "{"
+  				$configSectionNames = @()
+  				$configVal.Keys | % { $configSectionNames += $_	}
+  				$configMessage += $configSectionNames -join ", "
+  				$configMessage += "}"
+  			}
+  			else {
+  				if ($_ -contains "password") {
+  					$configMessage += "*******"
+  				}
+  				else {
+  					$configMessage += $configVal
+  				}
+  			}
+  		}
+    }
 
 		$yamlContents = PrintConfiguration -configNodes $powerdelivery.config -depth 0 -forYaml $true
 		$yamlContents | Out-File -FilePath (Join-Path $dropLocation "$($appScript).yml") -Encoding ASCII
 
-        PrintConfiguration -configNodes $powerdelivery.config -depth 0 -forYaml $false
+    PrintConfiguration -configNodes $powerdelivery.config -depth 0 -forYaml $false
 
-        Write-BuildSummaryMessage -name "Environment" -header "Environment Configuration" -message $configMessage
-
-        $noModules = $true
-
-		if ($powerdelivery.deliveryModules) {
-			$deliveryModules = @()
-			$powerdelivery.deliveryModules | ForEach-Object {
-
-				if ($noModules) {								
-					Write-ConsoleSpacer
-					"= Delivery Modules"
-					Write-ConsoleSpacer
-					Write-Host
-					$noModules = $false
-				}
-
-				$moduleVersion = $null
-				try {
-					$moduleVersion = Get-Module "$($_)DeliveryModule" | select version | ForEach-Object { $_.Version.ToString() }
-				}
-				catch { }
-				$moduleString = $_
-				if ($moduleVersion) {
-					$moduleString = "$($_) ($moduleVersion)"
-				}
-				$deliveryModules += $moduleString
-				Write-BuildSummaryMessage -name "DeliveryModules" -header "Delivery Modules"  -message $moduleString
-			}
-			$deliveryModules -join ", "
-		}
+    Write-BuildSummaryMessage -name "Environment" -header "Environment Configuration" -message $configMessage
 
 		if ($powerdelivery.environment -ne "Commit" -and $powerdelivery.onServer -eq $true) {
 
@@ -549,7 +494,7 @@ function Invoke-Powerdelivery {
 			$requestingIdentity = $powerdelivery.groupSecurity.ReadIdentity($accountNameSearchFactor, $powerdelivery.requestedBy, $expandedQueryMembership)
 			
 			$powerdelivery.appGroups | % {
-                if (($_.AccountName.ToLower() -eq $groupName.ToLower()) -and $buildGroup -eq $null) {
+				if (($_.AccountName.ToLower() -eq $groupName.ToLower()) -and $buildGroup -eq $null) {
 					$buildGroup = $_
 					$groupMembers = $powerdelivery.groupSecurity.ReadIdentities($sidSearchFactor, $buildGroup.Sid, $expandedQueryMembership)					
 					foreach ($member in $groupMembers) {
@@ -559,18 +504,18 @@ function Invoke-Powerdelivery {
 							}
 						}
 					}
-                }
-            }
+        }
+      }
 			
 			if (!$buildGroup) {
-                throw "TFS Security group '$groupName' not found for project '$teamProject'. This group must exist to verify the user requesting the build is a member."
-            }
+        throw "TFS Security group '$groupName' not found for project '$teamProject'. This group must exist to verify the user requesting the build is a member."
+      }
 			
 			if (!$permitted) {
 				throw "User '$($powerdelivery.requestedBy)' who queued build must be a member of TFS Security group '$groupName' to build targeting the '$environment' environment."
 			}
 			
-	        $powerdelivery.priorBuild = $powerdelivery.buildServer.GetBuild("vstfs:///Build/Build/$priorBuild")
+	    $powerdelivery.priorBuild = $powerdelivery.buildServer.GetBuild("vstfs:///Build/Build/$priorBuild")
 			
 			if ($powerdelivery.priorBuild -eq $null) {
 				throw "Build to promote '$priorBuild' could not be found. Are you sure you specified the build number of a prior build?"
@@ -593,81 +538,81 @@ function Invoke-Powerdelivery {
 		}
 
 		InvokePowerDeliveryBuildAction -condition $true -stage $powerdelivery.init -description "Initialization" -status "Initializing" -blockName "Init"
-	    InvokePowerDeliveryBuildAction -condition ((($powerdelivery.environment -eq 'Commit') -and $onServer) -or $powerdelivery.environment -eq 'Local') -stage $powerdelivery.compile -description "Compilations" -status "Compiling" -blockName "Compile"
+    InvokePowerDeliveryBuildAction -condition ((($powerdelivery.environment -eq 'Commit') -and $onServer) -or $powerdelivery.environment -eq 'Local') -stage $powerdelivery.compile -description "Compilations" -status "Compiling" -blockName "Compile"
 	    
-        $destDropLocation = $powerdelivery.dropLocation.TrimEnd('\')
-        $destCurrentLocation = $powerdelivery.currentLocation.Path.TrimEnd('\')
+    $destDropLocation = $powerdelivery.dropLocation.TrimEnd('\')
+    $destCurrentLocation = $powerdelivery.currentLocation.Path.TrimEnd('\')
 
 		if ($powerdelivery.environment -ne "Local" -and $powerdelivery.environment -ne "Commit" -and $powerdelivery.onServer) {
-	        $priorBuildDrop = $powerdelivery.priorBuild.DropLocation
+      $priorBuildDrop = $powerdelivery.priorBuild.DropLocation
 
-            "$logPrefix Cloning deployed assets from $priorBuildDrop to $destDropLocation"
-            Copy-Robust $priorBuildDrop $destDropLocation -recurse
-	    }
+      Write-Host "$logPrefix Cloning deployed assets from $priorBuildDrop to $destDropLocation"
+      Copy-Robust $priorBuildDrop $destDropLocation -recurse
+		}
         
-    	"$logPrefix Retrieving assets from $destDropLocation into deploy directory"
-    	Copy-Robust $destDropLocation $($powerdelivery.deployDir) -recurse
+    Write-Host "$logPrefix Retrieving assets from $destDropLocation into deploy directory"
+    Copy-Robust $destDropLocation $($powerdelivery.deployDir) -recurse
 
-		"$logPrefix Setting location to $($powerdelivery.deployDir)"
+		Write-Host "$logPrefix Setting location to $($powerdelivery.deployDir)"
 		Set-Location $powerdelivery.deployDir
 
 		InvokePowerDeliveryBuildAction -condition ($powerdelivery.environment -eq 'Commit' -or $powerdelivery.environment -eq 'Local') -stage $powerdelivery.testUnits -description "Unit Tests" -status "Testing Units" -blockName "TestUnits"
-	    InvokePowerDeliveryBuildAction -condition $true -stage $powerdelivery.deploy -description "Deployments" -status "Deploying" -blockName "Deploy"
-	    InvokePowerDeliveryBuildAction -condition $true -stage $powerdelivery.testEnvironment -description "Environment Tests" -status "Testing Environment" -blockName "TestEnvironment"
-	    InvokePowerDeliveryBuildAction -condition ($environment -eq 'Commit' -or $environment -eq 'Local' -or $environment -eq 'Test') -stage $powerdelivery.testAcceptance -description "Acceptance Tests" -status "Testing Acceptance" -blockName "TestAcceptance"
-	    InvokePowerDeliveryBuildAction -condition ($environment -eq 'CapacityTest') -stage $powerdelivery.testCapacity -description "Capacity Tests" -status "Testing Capacity" -blockName "TestCapacity"
+	  InvokePowerDeliveryBuildAction -condition $true -stage $powerdelivery.deploy -description "Deployments" -status "Deploying" -blockName "Deploy"
+	  InvokePowerDeliveryBuildAction -condition $true -stage $powerdelivery.testEnvironment -description "Environment Tests" -status "Testing Environment" -blockName "TestEnvironment"
+	  InvokePowerDeliveryBuildAction -condition ($environment -eq 'Commit' -or $environment -eq 'Local' -or $environment -eq 'Test') -stage $powerdelivery.testAcceptance -description "Acceptance Tests" -status "Testing Acceptance" -blockName "TestAcceptance"
+	  InvokePowerDeliveryBuildAction -condition ($environment -eq 'CapacityTest') -stage $powerdelivery.testCapacity -description "Capacity Tests" -status "Testing Capacity" -blockName "TestCapacity"
         
-	    Write-Host "`nPowerdelivery: Build succeeded!`n" -ForegroundColor DarkGreen
-    }
-    catch {
-	    Set-Location $powerdelivery.currentLocation
+	  Write-Host "`n$logPrefix Build succeeded!`n" -ForegroundColor DarkGreen
+  }
+  catch {
+	  Set-Location $powerdelivery.currentLocation
+
+    Write-Host "`n$logPrefix Build Failed!`n" -ForegroundColor Red
 
 		$ErrorRecord = $_[0]
-
- 		Write-ConsoleSpacer
- 		"= $logPrefix Build failure details"
- 		Write-ConsoleSpacer
-
-        $Exception = $ErrorRecord.Exception
+    $Exception = $ErrorRecord.Exception
 
  		if ($Exception -ne $null)
 		{
- 			"`nException(s) details:"
  			for ($i = 0; $Exception; $i++, ($Exception = $Exception.InnerException))
 			{
-                Write-Host
+        #if (![String]::IsNullOrWhiteSpace($Exception.Message)) {
+		    	#Write-Host $Exception.Message
+      	#}
 
-                if (![String]::IsNullOrWhiteSpace($Exception.Message)) {
- 				    $Exception.Message
-                }
-
- 				$Exception.GetType().FullName
-
-                if (![String]::IsNullOrWhiteSpace($Exception.StackTrace)) {
- 				    $Exception.StackTrace
-                }
+        if ($powerdelivery.isVerbose) {
+          Write-Host $Exception.GetType().FullName
+          if (![String]::IsNullOrWhiteSpace($Exception.StackTrace)) {
+            Write-Host $Exception.StackTrace
+          }
+        }
 			}
-            Write-Host
 		}
 
-
-        if (![String]::IsNullOrWhiteSpace($ErrorRecord.PSMessageDetails)) {
-            $ErrorRecord.PSMessageDetails
-        }
-
-        if (![String]::IsNullOrWhiteSpace($ErrorRecord.FullyQualifiedErrorId)) {
-            $ErrorRecord.FullyQualifiedErrorId
-        }
-
- 		$ErrorRecord.InvocationInfo.PositionMessage
- 		$ErrorRecord.ScriptStackTrace
-
-	    Write-Host "`nPowerdelivery: Build Failed!`n" -ForegroundColor Red
-		throw
+  	if (![String]::IsNullOrWhiteSpace($ErrorRecord.PSMessageDetails) -and $powerdelivery.isVerbose) {
+  		Write-Host $ErrorRecord.PSMessageDetails
     }
+
+    if (![String]::IsNullOrWhiteSpace($ErrorRecord.FullyQualifiedErrorId)) {
+    	Write-Host "ERROR: $($ErrorRecord.FullyQualifiedErrorId)" -ForegroundColor Red
+    }
+
+    if ($powerdelivery.isVerbose) {
+      Write-Host $ErrorRecord.InvocationInfo.PositionMessage
+      Write-Host $ErrorRecord.ScriptStackTrace
+    }
+
+    Write-Host
+
+		throw
+  }
 	finally {
-		Stop-Transcript
-		Copy-Item -Force $TranscriptFile $powerdelivery.dropLocation | Out-Null
+		#Stop-Transcript
+    if (![String]::IsNullOrWhiteSpace($TranscriptFile)) {
+      if (Test-Path $TranscriptFile) {
+		    Copy-Item -Force $TranscriptFile $powerdelivery.dropLocation | Out-Null
+      }
+    }
 		Set-Location $powerdelivery.currentLocation
 	}
 }
@@ -857,3 +802,6 @@ function Pipeline {
 
     $powerdelivery.buildAppVersion = $buildAppVersion
 }
+
+Set-Alias Pow Invoke-Powerdelivery
+Export-ModuleMember -Function * -Alias *

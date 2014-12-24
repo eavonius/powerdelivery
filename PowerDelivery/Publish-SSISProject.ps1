@@ -1,4 +1,4 @@
-function Deploy-SSISProject {
+function Publish-SSISProject {
     param(
         [Parameter(Position=0,Mandatory=1)][string] $computerName,
         [Parameter(Position=1,Mandatory=1)][string] $connectionString,
@@ -8,7 +8,7 @@ function Deploy-SSISProject {
         [Parameter(Position=5,Mandatory=0)] $variables = @{}
     )
 
-    $logPrefix = "Deploy-SSISProject:"
+    $logPrefix = "Publish-SSISProject:"
 
     $computerNames = $computerName -split "," | % { $_.Trim() }
 
