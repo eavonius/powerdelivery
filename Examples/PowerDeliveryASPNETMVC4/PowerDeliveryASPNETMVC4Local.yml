@@ -1,7 +1,0 @@
-BuildConfiguration: Debug
-DatabaseServer: localhost
-DatabaseName: PowerDeliveryASPNETMVC4_Local
-WebServer: localhost
-WebPort: 8081
-WebSite: PowerDeliveryASPNETMVC4_Local
-WebURL: http://localhost:8081

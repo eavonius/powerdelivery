@@ -1,7 +1,0 @@
-BuildConfiguration: Release
-DatabaseServer: localhost
-DatabaseName: PowerDeliveryASPNETMVC4_Commit
-WebServer: localhost
-WebPort: 8084
-WebSite: PowerDeliveryASPNETMVC4_Commit
-WebURL: http://localhost:8084
