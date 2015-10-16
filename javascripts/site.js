@@ -5,14 +5,9 @@ function setCurrentPageLinksActive() {
 	if (lastSeparator != -1) {
 		curPage = curPage.substring(lastSeparator + 1);
 	}
-	
-	if (curPage == '') {
-		$(".nav > li > a[href$='index.html']").parent().addClass('active');
-	}
-	else {
-		$(".nav > li > a[href$='" + curPage + "']").each(function() {
-			$(this).parent().addClass('active');
-		});
+
+	if (curPage != '' && curPage != 'index.html') {
+		$('#main').toc();
 	}
 }
 
