@@ -12,11 +12,11 @@ I built powerdelivery 1.0 and released it on github in late 2012 after reading t
 
 ### What about Microsoft Release Management?
 
-Microsoft acquired Incycle Inc. a couple of years ago to bolster on top of Team Foundation Server, their product with automated build capabilities. After using TFS for many clients and evaluating Release Manager, I have yet to find a client who finds Windows Workflow Foundation, its core technology, easy enough to work with and rapid enough to change. The continuous delivery methodology encourages using a scripting language for automating IT releases, and Powershell is the premier technology on Windows.
+Microsoft acquired Incycle a couple of years ago to bolt their product with automated release capabilities on top of Team Foundation Server. After using TFS for many clients and evaluating Release Manager, I have yet to find a client who finds Windows Workflow Foundation, its core technology, easy enough to work with and rapid enough to change. The continuous delivery methodology encourages using a scripting language for automating IT releases, and Powershell is the premier technology on Windows.
 
 ### What about Powershell Desired State Configuration (DSC)?
 
-There is some overlap between what's possible with DSC and powerdelivery. I believe DSC is a promising technology that is great if you want an agent watching over nodes and ensuring their configuration is in the same state such as is possible with [chef](https://www.chef.io). Unfortunately, it doesn't provide enough structure and conventions for managing a complex release management pipeline and leaves it up to you to figure out how to break apart your scripts, and manage separate environments and credentials. Powerdelivery can elegantly forward its credentials and configuration settings in [roles](roles.html) where you may apply DSC to nodes.
+There is some overlap between what's possible with DSC and powerdelivery. I believe DSC is a promising technology that is great if you want an agent watching over nodes and ensuring their configuration is in the same state such as is possible with [chef](https://www.chef.io). Unfortunately, it doesn't provide enough structure and conventions for managing a complex release management pipeline and leaves it up to you to figure out how to break apart your scripts, and manage separate environments and credentials. Powerdelivery can manage credentials and configuration settings in [roles](roles.html) where you may apply DSC to nodes.
 
 ### Why doesn't powerdelivery include all the stuff in ansible?
 

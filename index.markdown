@@ -10,7 +10,7 @@ layout: page
 <div class="row" style="margin-top: 80px">
 	<div class="col-sm-12">
 		<h1 align="center" style="border-bottom: 0px; font-size: 60px"><span style="color: firebrick">goodbye</span>, manual releases.</h1>
-		<p style="font-size: 20px; line-height: 1.7">Inspired by tools like <a href="http://www.ansible.com" target="_blank">ansible</a>, <a href="https://www.chef.io" target="_blank">chef</a>, and <a href="https://www.puppetlabs.com" target="_blank">puppet</a> - powerdelivery is a simple framework for continuous deployment. It orchestrates everything Windows Powershell does within a secure, convention-based framework so you can stop being jealous of your linux friends when you deploy to Windows.</p>
+		<p style="font-size: 20px; line-height: 1.7">Inspired by tools like <a href="http://www.ansible.com" target="_blank">ansible</a>, <a href="https://www.chef.io" target="_blank">chef</a>, and <a href="https://www.puppetlabs.com" target="_blank">puppet</a>; powerdelivery is a simple framework for continuous deployment. It organizes everything Windows Powershell can do into a secure, convention-based framework so you can stop being jealous of your linux friends when you deploy to Windows.</p>
 	</div>
 </div>
 
@@ -52,7 +52,6 @@ layout: page
 <p class="small" align="right">MyAppDelivery\Configuration\_Shared.ps1</p>
 {% highlight powershell %}
 @{
-  SourceCodeRoot = '..\';
   ReleasesPath = '\\x.x.x.6\MyProduct\Releases'
 }
 {% endhighlight %}
@@ -78,7 +77,8 @@ layout: page
 pow:Role {
   param($Target, $Config, $Node)
 
-  Invoke-MSBuild -ProjectFile "$($Config.SourceCodeRoot)MyApp.sln"
+  # Compile a Visual Studio solution
+  Invoke-MSBuild -ProjectFile MyApp.sln
 }
 {% endhighlight %}
 <p class="small" align="right">MyAppDelivery\Roles\Package\Tasks.ps1</p>
@@ -86,14 +86,11 @@ pow:Role {
 pow:Role {
   param($Target, $Config, $Node)
 
-  $StartedAt = $Target.StartedAt
-  $ReleasesPath = $Config.ReleasesPath
-
   # Push compiled assets to a network drive
   # that the database and webservers can access
-  Copy-Item -Path $Config.SourceCodeRoot `
+  Copy-Item -Path . `
             -Filter "*.dll;*.pdb;*.xml;*.config;*.sql" `
-            -Destination "$ReleasesPath\MyApp\$StartedAt" `
+            -Destination "$($Config.ReleasesPath)\MyApp\$($Target.StartedAt)" `
             -Recurse
 }
 {% endhighlight %}
@@ -102,18 +99,16 @@ pow:Role {
 pow:Role {
   param($Target, $Config, $Node)
 
-  $StartedAt = $Target.StartedAt
-  $ReleasesPath = $Config.ReleasesPath
   $AppDataDir = [Environment]::GetFolderPath("ApplicationData")
-  $RemoteScriptsPath = "$AppDataDir\MyApp\Scripts\$StartedAt"
+  $RemoteScriptsPath = "$AppDataDir\MyApp\Scripts\$($Target.StartedAt)"
 
   # Copy sql scripts to a sub-directory of the 
   # current user's ApplicationData directory
-  Copy-Item -Path "$ReleasesPath\MyApp\$StartedAt\MyAppDatabase\bin\Release\" `
+  Copy-Item -Path "$($Config.ReleasesPath)\MyApp\$StartedAt\MyAppDatabase\bin\Release\" `
             -Destination $RemoteScriptsPath
 
-  # Run pending SQL migration scripts
-  osql -E $Config.DatabaseName -I $RemoteScriptsPath
+  # Run some SQL scripts
+  gci | % { iex "sqlcmd -E -d $($Config.DatabaseName) -i $_" }
 }
 {% endhighlight %}
 <p class="small" align="right">MyAppDelivery\Roles\Website\Tasks.ps1</p>
@@ -121,15 +116,13 @@ pow:Role {
 pow:Role {
   param($Target, $Config, $Node)
 
-  $StartedAt = $Target.StartedAt
-  $ReleasesPath = $Config.ReleasesPath
   $AppDataDir = [Environment]::GetFolderPath("ApplicationData")
-  $RemoteSitePath = "$AppDataDir\MyApp\Site\$StartedAt"
+  $LocalPath = "$($Config.ReleasesPath)\MyApp\$($Target.StartedAt)\MyApp\bin\Release\"
+  $RemotePath = "$AppDataDir\MyApp\Site\$($Target.StartedAt)"
 
   # Copy web content to a sub-directory of the 
   # current user's ApplicationData directory
-  Copy-Item -Path "$ReleasesPath\MyApp\$StartedAt\MyApp\bin\Release\" `
-            -Destination $RemoteSitePath
+  Copy-Item $LocalPath $RemotePath
 
   Add-PSSnapin WebAdministration
 
@@ -141,9 +134,9 @@ pow:Role {
   }
 
   # Create the web application
-  New-WebApplication -Site 'MyApp' `
+  New-WebApplication -Site $Config.Website `
                      -Name 'MyApp' `
-                     -PhysicalPath $RemoteSitePath `
+                     -PhysicalPath $RemotePath `
                      -Force
 }
 {% endhighlight %}
@@ -170,15 +163,15 @@ pow:Role {
 <div class="row">
   <div class="col-sm-6">
     <h2>Release locally</h2>
-    <div class="console">{% highlight powershell %}pow Release Local{% endhighlight %}</div>
+    <div class="console">{% highlight powershell %}pow MyApp Release Local{% endhighlight %}</div>
   </div>
   <div class="col-sm-6">
     <h2>Release to production</h2>
-    <div class="console">{% highlight powershell %}pow Release Production `
+    <div class="console">{% highlight powershell %}pow MyApp Release Production `
     -As MYDOMAIN\opsuser{% endhighlight %}</div>
   </div>
 </div>
 
 <br />
 
-## Now [get started](getting-started.html) with your own release!
+## Now [get started](getting-started.html) automating your own release!

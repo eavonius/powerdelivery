@@ -28,6 +28,17 @@ a, a:visited {
 	z-index: 1
 }
 
+#footer-logo {
+	text-align: right; 
+	padding-top: 15px; 
+	padding-bottom: 20px;
+	font-size: 24px
+}
+
+#footer-logo img {
+	margin-right: 5px;
+}
+
 h1, h2, h3, h4, h5 {
 	font-family: 'Roboto', sans-serif;
 }
@@ -162,4 +173,20 @@ h1 {
 
 #toc ul {
 	background-color: #f3f3f3;
+}
+
+dl dd {
+	margin-left: 20px;
+}
+
+.ref-item {
+	font-size: 26px;
+	font-weight: bold;
+}
+
+.ref-upper {
+	margin-top: 20px;
+	font-size: 20px;
+	text-transform: uppercase;
+	font-weight: bold
 }

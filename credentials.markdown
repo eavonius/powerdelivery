@@ -88,3 +88,7 @@ To run powerdelivery using this set of credentials without prompting, once this 
 </div>
 
 **NOTE**: If you have set an environment variable with a key and a build server is failing to authenticate with stored credentials, remember you may need to restart the build server (typically a console application or Windows service if using TeamCity or Team Foundation Server build) to pick up the new environment variable.
+
+<br />
+
+### Next read about [configuration](configuration.html).
