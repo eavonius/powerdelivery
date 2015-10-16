@@ -1,10 +1,9 @@
 powerdelivery
 =============
 
-A deployment framework helping you to [continuously deliver software](http://continuousdelivery.com/) to your customers using [Microsoft Team Foundation Server](http://msdn.microsoft.com/en-us/vstudio/ff637362.aspx) and [Windows PowerShell](http://technet.microsoft.com/en-us/library/bb978526.aspx).
+Inspired by tools like ansible, chef, and puppet; powerdelivery is a simple framework for continuous deployment. It organizes everything Windows Powershell can do into a secure, convention-based framework so you can stop being jealous of your linux friends when you deploy to Windows.
 
-### [Read the documentation](http://eavonius.github.io/powerdelivery/index.html)
-
+### [Full docs on the website](http://powerdelivery.io)
 
 ## License
 

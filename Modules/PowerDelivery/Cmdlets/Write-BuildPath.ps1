@@ -1,4 +1,4 @@
-function Print-BuildPath {
+function Write-BuildPath {
   [CmdletBinding()]
   param (
     [Parameter(Position=0,Mandatory=0)][string] $path
@@ -35,4 +35,4 @@ function Print-BuildPath {
   }
 }
 
-Export-ModuleMember -Function Print-BuildPath
+Export-ModuleMember -Function Write-BuildPath

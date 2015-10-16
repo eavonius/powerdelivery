@@ -2,8 +2,8 @@ function Invoke-PowerDelivery {
   [CmdletBinding()]
   param (
     [Parameter(Position=0,Mandatory=1)][Alias('t')][string] $Target,
-    [Parameter(Position=0,Mandatory=1)][Alias('e')][string] $Environment,
-    [Parameter(Position=1,Mandatory=0)][Alias('r')][string] $Revision
+    [Parameter(Position=1,Mandatory=1)][Alias('e')][string] $Environment,
+    [Parameter(Position=2,Mandatory=0)][Alias('r')][string] $Revision
   )
 
   $pow.target = @{
@@ -20,6 +20,19 @@ function Invoke-PowerDelivery {
   $pow.lastAction = ''
   $pow.inBuild = $true
   $pow.buildFailed = $false
+
+  # Get roles from prior run
+  $rolesToRemove = [System.Collections.ArrayList]@()
+  foreach ($item in $pow.GetEnumerator()) {
+    if ($item.Key.EndsWith('Role')) {
+      $rolesToRemove.Add($item.Key)
+    }
+  }
+
+  # Remove roles from prior run
+  foreach ($roleToRemove in $rolesToRemove) {
+    $pow.Remove($roleToRemove)
+  }
 
   Write-Host "$($pow.product) v$($pow.version) started by $($pow.target.RequestedBy)" -ForegroundColor $pow.colors['SuccessForeground']
 
@@ -155,8 +168,8 @@ function Invoke-PowerDelivery {
   }
   catch {
     $pow.buildFailed = $true
-    Write-Host (Format-Error $_) -ForegroundColor $pow.colors['FailureForeground']
-    exit -1
+    #Write-Host (Format-Error $_) -ForegroundColor $pow.colors['FailureForeground']
+    throw
   }
   finally {
     $build_time = New-Timespan -Start ($pow.target.StartDate) -End (Get-Date)
@@ -212,4 +225,5 @@ function Invoke-PowerDelivery {
   }
 }
 
-Export-ModuleMember -Function Invoke-PowerDelivery
+Set-Alias pow Invoke-PowerDelivery
+Export-ModuleMember -Function Invoke-PowerDelivery -Alias pow
