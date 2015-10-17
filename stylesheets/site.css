@@ -28,6 +28,12 @@ a, a:visited {
 	z-index: 1
 }
 
+@media(max-width: 768px) {
+	#corner-cloud, #corner-cloud-text {
+		display: none;
+	}
+}
+
 #footer-logo {
 	text-align: right; 
 	padding-top: 15px; 
@@ -44,7 +50,6 @@ h1, h2, h3, h4, h5 {
 }
 
 h1 {
-	font-size: 46px;
 	border-bottom: 1px solid #F2C811;
 	padding-bottom: 10px;
 	margin-bottom: 20px;
@@ -64,6 +69,12 @@ h1 {
 	color: #eee;
 	font-size: 17px;
 	padding: 15px;
+}
+
+@media(max-width: 768px) {
+	.highlight pre {
+		font-size: 10px;
+	}
 }
 
 .highlight .err {
@@ -94,12 +105,32 @@ h1 {
 	position: fixed;
 	top: 0px;
 	left: 0px;
-	width: 350px;
+	width: 300px;
 	bottom: 0px;
 	background-color: #3a3a3a;
 	padding-left: 20px;
 	padding-right: 20px;
 	padding-top: 20px;
+}
+
+@media(max-width: 900px) {
+	#sidebar {
+		width: 240px;
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+}
+
+@media(max-width: 768px) {
+	#sidebar {
+		position: static;
+		left: auto;
+		top: auto;
+		right: auto;
+		bottom: auto;
+		width: auto;
+		padding-bottom: 10px;
+	}
 }
 
 #sidebar a {
@@ -118,14 +149,40 @@ h1 {
 	padding-left: 0px;
 }
 
+.sidebar-sep {
+	border-top: 1px solid #444;
+}
+
+#site-title {
+	text-align: center;
+	border-bottom: 0px; 
+	font-size: 55px
+}
+
 #main {
 	background-color: #fff;
 	padding: 25px;
 	position: absolute;
 	top: 0px;
-	left: 350px;
+	left: 300px;
 	right: 0px;
 	height: auto;
+}
+
+@media(max-width: 900px) {
+	#main {
+		left: 240px;
+	}
+}
+
+@media(max-width: 768px) {
+	#main {
+		position: static;
+		left: auto;
+		top: auto;
+		right: auto;
+		bottom: auto;
+	}
 }
 
 #main h2 {
@@ -157,6 +214,12 @@ h1 {
 
 #toc tbody tr td {
 	background-color: transparent;
+}
+
+@media(max-width: 768px) {
+	#toc {
+		margin-bottom: 20px;
+	}
 }
 
 #toc ul li.toclevel-1.tocsection-1 {
