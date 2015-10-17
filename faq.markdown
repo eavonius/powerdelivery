@@ -6,6 +6,8 @@ layout: page
 
 # Frequently Asked Questions
 
+## Why powerdelivery?
+
 ### Why another IT automation tool?
 
 I built powerdelivery 1.0 and released it on github in late 2012 after reading the book on [continuous delivery](https://www.thoughtworks.com/continuous-delivery) and finding no practical continuous deployment technology for Windows. In the years that followed I changed it quite a bit in version 2.0. With version 2.0, I and other colleagues deployed business intelligence, ESB, and cloud solutions with it. I also use linux stack tools like rails and wordpress for side ventures so I've had quite a bit of time with ansible, puppet and vagrant. 
@@ -24,6 +26,8 @@ There is some overlap between what's possible with DSC and powerdelivery. I beli
 
 Ansible is improving their support for managing Windows, but it is still triggered from a linux box. Because it uses python, there's less code out there for Windows so ansible is slowly adding some to cover common cases. Since powerdelivery is written in Powershell, the multitude of freely available Powershell scripts and modules on the web are already available to you. Powerdelivery also includes a few [cmdlets](reference.html#cmdlets) to do common things that I got sick of scripting the same in every release.
 
+## Common concerns
+
 ### Help! My product runs partially on premise, and partially in the cloud!
 
 Powerdelivery can handle this with no problems whatsoever. Because it separates environments and logic in a simple way, you can target the cloud for some roles and on-premise resources for others and still release in an atomic process through a single [target](targets.html) if needed.
@@ -31,6 +35,10 @@ Powerdelivery can handle this with no problems whatsoever. Because it separates 
 ### Can I spin up nodes on the fly?
 
 Powerdelivery employs [environment](environments.html) scripts to configure the names or IP addresses of nodes to deploy to. Since this is just a Powershell script but it must return available nodes at the end, you can script provisioning before this to get the names or IP addresses of nodes to return. If you want to get a list of nodes with a tag, tear down, or clone existing nodes before you return the list for the environment - go for it!
+
+### I don't want my developers to deploy to test or production!
+
+This is a common concern to achieve SOX compliance and easy with powerdelivery. You can either keep your powerdelivery project's code in a separate source control repository from the main code and have it pull down the product's code (or pre-built packages by the dev team) before deploying, or just use [credentials](credentials.html) to control which accounts can deploy to which environments.
 
 ### Can I modify powerdelivery?
 

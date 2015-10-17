@@ -44,8 +44,9 @@ a, a:visited {
 .filename {
 	font-size: 15px;
 	text-align: center;
-	margin-bottom: -10px;
-	padding-bottom: 0px;
+	margin-top: -14px;
+	padding-top: 0px;
+	margin-bottom: 20px;
 }
 
 #footer-logo img {
@@ -67,7 +68,7 @@ h1 {
 }
 
 .highlight {
-	margin-top: 20px;
+	margin-top: 0px;
 	margin-bottom: 20px;
 }
 
@@ -122,11 +123,11 @@ h1 {
 }
 
 .console {
-	margin-top: -20px;
 	border-left: 1px solid darkorange;
 	border-right: 1px solid darkorange;
 	border-bottom: 1px solid darkorange;
 	padding-bottom: 0px;
+	margin-bottom: 20px;
 }
 
 .console .highlight {
@@ -207,6 +208,11 @@ h1 {
 	text-align: center;
 	border-bottom: 0px; 
 	font-size: 55px
+}
+
+#site-summary {
+	font-size: 20px; 
+	line-height: 1.8
 }
 
 #main {
