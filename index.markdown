@@ -17,22 +17,18 @@ title: Devops-friendly Windows releases on-premise or in the cloud.
 
 Before you read the docs, see some code.
 
-## Install
-<div class="row">
-  <div class="col-sm-8">
-    <div class="console">{% highlight powershell %}choco install powerdelivery{% endhighlight %}</div>
-  </div>
-</div>
-	
 ## Create a project
 <div class="row">
   <div class="col-sm-8">
-    <div class="console">{% highlight powershell %}pow:new 'MyApp' @('Local', 'Production'){% endhighlight %}</div>
+    {% include console_title.html %}
+    <div class="console">{% highlight powershell %}PS> New-DeliveryProject 'MyApp' @('Local', 'Production'){% endhighlight %}</div>
   </div>
 </div>
 
-## Configure environments
-<p class="small" align="right">MyAppDelivery\Environments\Local.ps1</p>
+## Configure [environments](environments.html)
+<div class="row">
+  <div class="col-sm-8">
+  <div class="filename">MyAppDelivery\Environments\Local.ps1</div>
 {% highlight powershell %}
 @{
   Build = ('localhost');
@@ -40,7 +36,11 @@ Before you read the docs, see some code.
   Website = ('localhost')
 }
 {% endhighlight %}
-<p class="small" align="right">MyAppDelivery\Environments\Production.ps1</p>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-8">
+  <div class="filename">MyAppDelivery\Environments\Production.ps1</div>
 {% highlight powershell %}
 @{
   Build = ('localhost');
@@ -48,15 +48,17 @@ Before you read the docs, see some code.
   Website = ('x.x.x.3','x.x.x.4')
 }
 {% endhighlight %}
+  </div>
+</div>
 
-## Configure variables
-<p class="small" align="right">MyAppDelivery\Configuration\_Shared.ps1</p>
+## Configure [variables](configuration.html)
+<div class="filename">MyAppDelivery\Configuration\_Shared.ps1</div>
 {% highlight powershell %}
 @{
   ReleasesPath = '\\x.x.x.6\MyProduct\Releases'
 }
 {% endhighlight %}
-<p class="small" align="right">MyAppDelivery\Configuration\Local.ps1</p>
+<div class="filename">MyAppDelivery\Configuration\Local.ps1</div>
 {% highlight powershell %}
 param($shared)
 @{
@@ -65,7 +67,7 @@ param($shared)
   ReleasesPath = 'Releases'
 }
 {% endhighlight %}
-<p class="small" align="right">MyAppDelivery\Configuration\Production.ps1</p>
+<div class="filename">MyAppDelivery\Configuration\Production.ps1</div>
 {% highlight powershell %}
 param($shared)
 @{
@@ -74,59 +76,59 @@ param($shared)
 }
 {% endhighlight %}
 
-## Create roles
-<p class="small" align="right">MyAppDelivery\Roles\Compile\Build.ps1</p>
+## Create [roles](roles.html)
+<div class="filename">MyAppDelivery\Roles\Compile\Build.ps1</div>
 {% highlight powershell %}
-pow:role {
+Delivery:Role {
   param($target, $config, $node)
 
   # Compile a Visual Studio solution
-  invoke-msbuild myapp.sln
+  Invoke-MSBuild MyApp.sln
 
-  # Copy compiled assets to a network drive
-  # that the remote nodes can access
-  copy . $releasePath -filter "*.dll;*.pdb;*.xml;*.config;*.sql" -recurse
+  # Copy compiled assets to a network drive, 
+  # S3 bucket, or wherever the remote nodes can access
+  Copy-Item . $releasePath -Filter "*.dll;*.pdb;*.xml;*.config;*.sql" -Recurse
 }
 {% endhighlight %}
-<p class="small" align="right">MyAppDelivery\Roles\Database\Role.ps1</p>
+<div class="filename">MyAppDelivery\Roles\Database\Role.ps1</div>
 {% highlight powershell %}
-pow:role {
+Delivery:Role {
   param($target, $config, $node)
 
-  $appDataDir = [environment]::getfolderpath("ApplicationData") 
+  $appDataDir = [Environment]::GetFolderPath("ApplicationData") 
   $releasePath = "$($config.ReleasesPath)\MyApp\$($target.StartedAt)\MyAppDatabase\bin\Release\"
   $localPath = "$AppDataDir\MyApp\Scripts\$($target.StartedAt)"
 
-  # Copy sql scripts to a sub-directory of the 
-  # current user's ApplicationData directory
-  copy $releasePath $localPath -filter *.* -recurse
+  # Copy sql scripts from the network drive to the database node
+  Copy-Item $releasePath $localPath -Filter *.* -Recurse
 
   # Run some SQL scripts
-  gci $localPath | % { iex "sqlcmd -E -d $($config.DatabaseName) -i $_" }
+  foreach ($script in (Get-ChildItem $localPath)) {
+    Invoke-Expression "sqlcmd -E -d $($config.DatabaseName) -i $script"
+  }
 }
 {% endhighlight %}
-<p class="small" align="right">MyAppDelivery\Roles\Website\Role.ps1</p>
+<div class="filename">MyAppDelivery\Roles\Website\Role.ps1</div>
 {% highlight powershell %}
-pow:role {
+Delivery:Role {
   param($target, $config, $node)
 
-  $appDataDir = [environment]::getfolderpath("ApplicationData")
+  $appDataDir = [environment]::GetFolderPath("ApplicationData")
   $releasePath = "$($config.ReleasesPath)\MyApp\$($target.StartedAt)\MyApp\publish\"
   $localPath = "$AppDataDir\MyApp\Site\$($target.StartedAt)"
 
-  # Copy web content to a sub-directory of the 
-  # current user's ApplicationData directory
-  copy $releasePath $localPath -filter *.* -recurse
+  # Copy web content from the network drive to the database node
+  Copy-Item $releasePath $localPath -Filter *.* -Recurse
 
-  add-pssnapin webadministration
+  Add-PSSnapin WebAdministration
 
   # Create the web application
-  new-webapplication $config.Website MyApp $localPath -force
+  New-WebApplication $config.Website MyApp $localPath -Force
 }
 {% endhighlight %}
 
-## Configure target
-<p class="small" align="right">MyAppDelivery\Targets\Release.ps1</p>
+## Configure a [target](targets.html)
+<div class="filename">MyAppDelivery\Targets\Release.ps1</div>
 {% highlight powershell %}
 [ordered]@{
   "Building the product" = @{
@@ -137,7 +139,7 @@ pow:role {
     Roles = ('Database');
     Nodes = ('Database')
   };
-  "Deploy the website" = @{
+  "Deploying the website" = @{
     Roles = ('Website');
     Nodes = ('Website')
   }
@@ -145,14 +147,15 @@ pow:role {
 {% endhighlight %}
 
 <div class="row">
-  <div class="col-sm-6">
+  <div class="col-sm-8">
     <h2>Release locally</h2>
     <div class="console">
 {% highlight powershell %}
-pow myapp release local
+Start-Delivery MyApp Release Local
 
-powerdelivery v3.0.1 started by MYDOMAIN\me
-Running target "release" in "local" environment...
+PowerDelivery v3.0.1
+Target "Release" started by MYDOMAIN\me
+Delivering "MyApp" to "Local" environment...
 
 [----- Building the product
 [--------- Build -> (localhost)
@@ -161,17 +164,22 @@ Running target "release" in "local" environment...
 [----- Deploying the website
 [--------- Website -> (localhost)
 
-powerdelivery build succeeded in 18 sec 453 ms
-{% endhighlight %}</div>
+Target "Release" succeeded in 18 sec 453 ms.
+{% endhighlight %}
+    </div>
   </div>
-  <div class="col-sm-6">
+</div>
+
+<div class="row">
+  <div class="col-sm-8">
     <h2>Release to production</h2>
     <div class="console">
 {% highlight powershell %}
-pow myapp release production -as 'MYDOMAIN\opsuser'
+Start-Delivery MyApp Release Production -As 'MYDOMAIN\opsuser'
 
-powerdelivery v3.0.1 started by MYDOMAIN\opsuser
-Running target "release" in "production" environment...
+PowerDelivery v3.0.1
+Target "Release" started by MYDOMAIN\opsuser
+Delivering "MyApp" to "Production" environment...
 
 [----- Building the product
 [--------- Build -> (localhost)
@@ -181,9 +189,9 @@ Running target "release" in "production" environment...
 [--------- Website -> (x.x.x.3)
 [--------- Website -> (x.x.x.4)
 
-powerdelivery build succeeded in 1m 43 sec 56 ms
+Target "Release" succeeded in 1m 43 sec 56 ms.
 {% endhighlight %}
-</div>
+    </div>
   </div>
 </div>
 

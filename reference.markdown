@@ -6,23 +6,23 @@ layout: page
 	
 This page contains reference for the commands, DSL, and cmdlets included with powerdelivery.
 
-<a name="generators"></a>
+<a name="Cmdlets"></a>
 
-## Generators
+## Cmdlets
 
-Generators are used to create files for building your powerdelivery release. Run these in an Administrator Powershell console.
+Cmdlets are Powershell functions included with powerdelivery generate files and run commands within [roles](roles.html).
 
 <hr />
 
-<a name="pow_new_command"></a>
+<a name="new_deliveryproject_cmdlet"></a>
 
-<p class="ref-item">pow:new</p>
-Generates a powerdelivery project. Run within a directory of your source code (typically the root).
+<p class="ref-item">New-DeliveryProject</p>
+Generates a new powerdelivery project. Typicall run at the root of a folder with source code (git, TFS, whatever).
 
 <p class="ref-upper">Parameters</p>
 <dl>
 	<dt>-ProjectName</dt>
-	<dd>The required name of the project. Use the name of a product and avoid spaces to make your life easier.</dd>
+	<dd>The required name of the project. A folder with this name suffixed with "Delivery" will be created containing the project.</dd>
 	<dt>-Environments</dt>
 	<dd>An optional array of strings with the names of the environments.</dd>
 </dl>
@@ -30,6 +30,6 @@ Generates a powerdelivery project. Run within a directory of your source code (t
 
 <div class="console">
 	{% highlight powershell %}
-pow:new MyApp @('Local', 'Test', 'Production')
+New-DeliveryProject MyApp @('Local', 'Test', 'Production')
 {% endhighlight %}
 </div>
