@@ -8,12 +8,12 @@ title: Devops-friendly Windows releases on-premise or in the cloud.
 
 <div class="row" style="margin-top: 80px">
 	<div class="col-sm-12">
-		<h1 id="site-title"><span style="color: firebrick">goodbye</span>, manual releases.</h1>
+		<h1 id="site-title"><span style="color: firebrick">Goodbye</span>, manual releases.</h1>
 		<p style="font-size: 20px; line-height: 1.7">Inspired by tools like <a href="http://www.ansible.com" target="_blank">ansible</a>, <a href="https://www.chef.io" target="_blank">chef</a>, and <a href="https://www.puppetlabs.com" target="_blank">puppet</a>; powerdelivery is a simple framework for continuous deployment. It organizes everything Windows Powershell can do into a secure, convention-based framework so you can stop being jealous of your linux friends when you deploy to Windows.</p>
 	</div>
 </div>
 
-<h1 style="font-weight: normal">a birds-eye view</h1>
+<h1 style="font-weight: normal">A birds-eye view</h1>
 
 Before you read the docs, see some code.
 
