@@ -61,7 +61,7 @@ If you are not permitted to install chocolatey but you can execute Powershell sc
 
 Once you have the code in a local directory, modify the PSMODULEPATH environment variable from the Windows "System" control panel application. Append the "Modules" subdirectory of the source to the end of your path.
 
-For example, if you cloned the github repo into *C:\Powerdelivery* and the current value of this variable is set to *C:\Somepath;C:\Someotherpath* the updated variable should look like this:
+For example, if you cloned the github repo into *C:\Powerdelivery* and the current value of PSMODULEPATH is *C:\Somepath;C:\Someotherpath* you should update it to this:
 
 *C:\Somepath;C:\Someotherpath;C:\Powerdelivery\Modules*
 
@@ -69,8 +69,8 @@ Once you've set this variable, close any open consoles and re-open an Administra
 
 ## Create a project
 
-Powerdelivery includes the [pow:New](reference.html#pow_command) command that can be run from your console to [generate most of the files you'll 
-need](reference.html#generators) to start quickly putting together automated releases. You'll want to store the files it generates in source control 
+Powerdelivery includes the [pow:new](reference.html#pow_command) command that can be run from your console to [generate most of the files you'll 
+need](reference.html#generators). You'll want to store the files it generates in source control 
 so first pull down a copy of your product's source code into a directory. 
 
 In the example below, we'll pretend our product's source code has been pulled into the directory *C:\Projects\MyApp* and the name of the product is *MyApp*. We'll also assume we want developers to be able to test the deployment on their local computers; as well as to deploy to a test environment for user acceptance testing, and eventually to production.
@@ -158,7 +158,9 @@ With these decisions made, we fill out [environment scripts](environments.html) 
 	</div>
 </div>
 
-A couple of notes about the scripts above. You'll note each script file is named after the environment. Also, the IP addresses could be computer names if resolvable through DNS or NetBIOS. Lastly, the "Build" group of nodes always specifies localhost - this ensures that any actions performed on this set of nodes are run on the developer's computer (or the build server) and not a test or production node.
+A couple of notes about the scripts above. You'll note each script file is named after the environment. Also, the IP addresses could be computer names if resolvable through DNS or NetBIOS. The "Build" group of nodes always specifies localhost - this ensures that any actions performed on this set of nodes are run on the developer's computer (or the build server) and not a test or production node. 
+
+This example assumes the nodes are already running. If you need to provision nodes on the fly (for A/B deployments) see the [environments](environments.html) topic.
 
 <a name="roles"></a>
 
