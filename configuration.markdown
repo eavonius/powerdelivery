@@ -37,13 +37,13 @@ Below is an example shared configuration file. The *SourceCodeRoot* variable is 
 
 For every environment in your powerdelivery project, you must also have a script named the same as the environment but in the Configuration directory. If you define variables with the same name as those that exist in *Shared.ps1*, these will be **overridden** by the environment definition.
 
-Environment scripts also must declare a **$Config variable** as a parameter at the top of the script. Powerdelivery will pass the shared configuration to this script, so you may reference any variables defined in the shared script. Below is an example of the configuration variable script for an environment named *Staging*.
+Environment scripts also must declare the [$shared parameter](reference.html#shared_parameter) at the top of the script. Powerdelivery will pass the shared configuration as this parameter, so you may reference any configuration defined in the shared script. Below is an example of the configuration variable script for an environment named *Staging*.
 
 <p class="small" align="center">MyAppDelivery\Configuration\Staging.ps1</p>
 <div class="row">
 	<div class="col-sm-8">
 {% highlight powershell %}
-param($Shared)
+param($shared)
 
 @{
   # Uses a shared configuration variable

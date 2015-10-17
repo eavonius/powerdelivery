@@ -1,7 +1,6 @@
 ---
-
 layout: page
-
+title: Devops-friendly Windows releases on-premise or in the cloud.
 ---
 
 <div id="corner-cloud-text">Devops-friendly<br/>Windows releases<br/>on-premise or<br/>in the cloud.</div>
@@ -14,7 +13,9 @@ layout: page
 	</div>
 </div>
 
-<h1 style="font-weight: normal">on-premise website at a glance</h1>
+<h1 style="font-weight: normal">a birds-eye view</h1>
+
+Before you read the docs, see some code.
 
 ## Install
 <div class="row">
@@ -26,7 +27,7 @@ layout: page
 ## Create a project
 <div class="row">
   <div class="col-sm-8">
-    <div class="console">{% highlight powershell %}pow:New 'MyApp' @('Local', 'Production'){% endhighlight %}</div>
+    <div class="console">{% highlight powershell %}pow:new 'MyApp' @('Local', 'Production'){% endhighlight %}</div>
   </div>
 </div>
 
@@ -44,7 +45,7 @@ layout: page
 @{
   Build = ('localhost');
   Database = ('x.x.x.2');
-  Website = ('x.x.x.3','x.x.x.4','x.x.x.5')
+  Website = ('x.x.x.3','x.x.x.4')
 }
 {% endhighlight %}
 
@@ -57,6 +58,7 @@ layout: page
 {% endhighlight %}
 <p class="small" align="right">MyAppDelivery\Configuration\Local.ps1</p>
 {% highlight powershell %}
+param($shared)
 @{
   DatabaseName = "MyApp_Development";
   SiteURL = "http://myapp.cloudapp.net";
@@ -65,6 +67,7 @@ layout: page
 {% endhighlight %}
 <p class="small" align="right">MyAppDelivery\Configuration\Production.ps1</p>
 {% highlight powershell %}
+param($shared)
 @{
   DatabaseName = "MyApp";
   SiteURL = "http://www.myapp.com"
@@ -72,72 +75,53 @@ layout: page
 {% endhighlight %}
 
 ## Create roles
-<p class="small" align="right">MyAppDelivery\Roles\Compile\Tasks.ps1</p>
+<p class="small" align="right">MyAppDelivery\Roles\Compile\Build.ps1</p>
 {% highlight powershell %}
-pow:Role {
-  param($Target, $Config, $Node)
+pow:role {
+  param($target, $config, $node)
 
   # Compile a Visual Studio solution
-  Invoke-MSBuild -ProjectFile MyApp.sln
+  invoke-msbuild myapp.sln
+
+  # Copy compiled assets to a network drive
+  # that the remote nodes can access
+  copy . $releasePath -filter "*.dll;*.pdb;*.xml;*.config;*.sql" -recurse
 }
 {% endhighlight %}
-<p class="small" align="right">MyAppDelivery\Roles\Package\Tasks.ps1</p>
+<p class="small" align="right">MyAppDelivery\Roles\Database\Role.ps1</p>
 {% highlight powershell %}
-pow:Role {
-  param($Target, $Config, $Node)
+pow:role {
+  param($target, $config, $node)
 
-  # Push compiled assets to a network drive
-  # that the database and webservers can access
-  Copy-Item -Path . `
-            -Filter "*.dll;*.pdb;*.xml;*.config;*.sql" `
-            -Destination "$($Config.ReleasesPath)\MyApp\$($Target.StartedAt)" `
-            -Recurse
-}
-{% endhighlight %}
-<p class="small" align="right">MyAppDelivery\Roles\Database\Tasks.ps1</p>
-{% highlight powershell %}
-pow:Role {
-  param($Target, $Config, $Node)
-
-  $AppDataDir = [Environment]::GetFolderPath("ApplicationData")
-  $RemoteScriptsPath = "$AppDataDir\MyApp\Scripts\$($Target.StartedAt)"
+  $appDataDir = [environment]::getfolderpath("ApplicationData") 
+  $releasePath = "$($config.ReleasesPath)\MyApp\$($target.StartedAt)\MyAppDatabase\bin\Release\"
+  $localPath = "$AppDataDir\MyApp\Scripts\$($target.StartedAt)"
 
   # Copy sql scripts to a sub-directory of the 
   # current user's ApplicationData directory
-  Copy-Item -Path "$($Config.ReleasesPath)\MyApp\$StartedAt\MyAppDatabase\bin\Release\" `
-            -Destination $RemoteScriptsPath
+  copy $releasePath $localPath -filter *.* -recurse
 
   # Run some SQL scripts
-  gci | % { iex "sqlcmd -E -d $($Config.DatabaseName) -i $_" }
+  gci $localPath | % { iex "sqlcmd -E -d $($config.DatabaseName) -i $_" }
 }
 {% endhighlight %}
-<p class="small" align="right">MyAppDelivery\Roles\Website\Tasks.ps1</p>
+<p class="small" align="right">MyAppDelivery\Roles\Website\Role.ps1</p>
 {% highlight powershell %}
-pow:Role {
-  param($Target, $Config, $Node)
+pow:role {
+  param($target, $config, $node)
 
-  $AppDataDir = [Environment]::GetFolderPath("ApplicationData")
-  $LocalPath = "$($Config.ReleasesPath)\MyApp\$($Target.StartedAt)\MyApp\bin\Release\"
-  $RemotePath = "$AppDataDir\MyApp\Site\$($Target.StartedAt)"
+  $appDataDir = [environment]::getfolderpath("ApplicationData")
+  $releasePath = "$($config.ReleasesPath)\MyApp\$($target.StartedAt)\MyApp\publish\"
+  $localPath = "$AppDataDir\MyApp\Site\$($target.StartedAt)"
 
   # Copy web content to a sub-directory of the 
   # current user's ApplicationData directory
-  Copy-Item $LocalPath $RemotePath
+  copy $releasePath $localPath -filter *.* -recurse
 
-  Add-PSSnapin WebAdministration
-
-  $ExistingSite = Get-Website -Name 'MyApp'
-
-  # Remove the existing site if it exists
-  if ($ExistingSite) {
-    Remove-WebApplication -Name 'MyApp' -Site 'MyApp'
-  }
+  add-pssnapin webadministration
 
   # Create the web application
-  New-WebApplication -Site $Config.Website `
-                     -Name 'MyApp' `
-                     -PhysicalPath $RemotePath `
-                     -Force
+  new-webapplication $config.Website MyApp $localPath -force
 }
 {% endhighlight %}
 
@@ -145,15 +129,15 @@ pow:Role {
 <p class="small" align="right">MyAppDelivery\Targets\Release.ps1</p>
 {% highlight powershell %}
 [ordered]@{
-  BuildProduct = @{
-    Roles = ('Compile','Package');
+  "Building the product" = @{
+    Roles = ('Build');
     Nodes = ('Build')
   };
-  DeployDatabase = @{
+  "Deploying databases" = @{
     Roles = ('Database');
     Nodes = ('Database')
   };
-  DeployWebsite = @{
+  "Deploy the website" = @{
     Roles = ('Website');
     Nodes = ('Website')
   }
@@ -163,15 +147,46 @@ pow:Role {
 <div class="row">
   <div class="col-sm-6">
     <h2>Release locally</h2>
-    <div class="console">{% highlight powershell %}pow MyApp Release Local{% endhighlight %}</div>
+    <div class="console">
+{% highlight powershell %}
+pow myapp release local
+
+powerdelivery v3.0.1 started by MYDOMAIN\me
+Running target "release" in "local" environment...
+
+[----- Building the product
+[--------- Build -> (localhost)
+[----- Deploying databases
+[--------- Database -> (localhost)
+[----- Deploying the website
+[--------- Website -> (localhost)
+
+powerdelivery build succeeded in 18 sec 453 ms
+{% endhighlight %}</div>
   </div>
   <div class="col-sm-6">
     <h2>Release to production</h2>
-    <div class="console">{% highlight powershell %}pow MyApp Release Production `
-    -As MYDOMAIN\opsuser{% endhighlight %}</div>
+    <div class="console">
+{% highlight powershell %}
+pow myapp release production -as 'MYDOMAIN\opsuser'
+
+powerdelivery v3.0.1 started by MYDOMAIN\opsuser
+Running target "release" in "production" environment...
+
+[----- Building the product
+[--------- Build -> (localhost)
+[----- Deploying databases
+[--------- Database -> (x.x.x.2)
+[----- Deploying the website
+[--------- Website -> (x.x.x.3)
+[--------- Website -> (x.x.x.4)
+
+powerdelivery build succeeded in 1m 43 sec 56 ms
+{% endhighlight %}
+</div>
   </div>
 </div>
 
 <br />
 
-## Now [get started](getting-started.html) automating your own release!
+## Now [get started](getting-started.html) automating your own releases!

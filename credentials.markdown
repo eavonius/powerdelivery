@@ -6,19 +6,19 @@ layout: page
 
 # Credentials
 
-When you run powerdelivery without specifying alternate credentials, [roles](roles.html) that run on nodes will execute as the currently logged in user. However, if any of the Powershell commands in the roles you execute on a remote node in turn access another node (this is known as a *"double-hop"* scenario), your credentials will fail to make it to that "second hop".
+When you run powerdelivery without specifying alternate credentials, [roles](roles.html) that run on nodes will execute as whoever is logged in that ran powerdelivery with the [pow](reference.html#pow_command) command. However, if any of the Powershell commands in the roles you execute on a remote node in turn access another node (this is known as a *"double-hop"* scenario), your credentials will fail to make it to that "second hop".
 
 Additionally, if you wish to run powerdelivery against a different environment (for example, production) using a different set of credentials than the currently logged in user, you will need a way to pass those credentials.
 
-There are two easy ways to overcome both of these problems.
+You can overcome both of these problems with either of the following two solutions.
 
-## Providing credentials with a prompt
+## Providing credentials at startup
 
-To have powerdelivery execute activities on remote nodes using alternate credentials, pass the -As parameter. Powerdelivery will prompt for the password of the username you specify with this parameter and execute any roles on remote nodes using these credentials. Below is an example:
+To have powerdelivery execute activities on remote nodes using alternate credentials, pass the *-as* parameter. Powerdelivery will prompt for the password of the username you specify with this parameter and execute any roles on remote nodes using these credentials. Below is an example:
 
 <div class="row">
 	<div class="col-sm-8">
-		<div class="console">{% highlight powershell %}pow Release Production -As MYDOMAIN\opsuser{% endhighlight %}</div>
+		<div class="console">{% highlight powershell %}pow release production -as 'MYDOMAIN\opsuser'{% endhighlight %}</div>
 	</div>
 </div>
 
@@ -37,7 +37,7 @@ The Powershell session below demonstrates generating a key:
 
 <div class="row">
 	<div class="col-sm-8">
-		<div class="console">{% highlight powershell %}pow:CredentialKey
+		<div class="console">{% highlight powershell %}pow:credentials:key
 dP1tXKWC1u6dLOf/PsYrwqNzXVPuRy+/qkbjHYZoS9o=
 {% endhighlight %}
 		</div>
@@ -56,7 +56,7 @@ The Powershell session below demonstrates storing credentials with a key:
 <div class="row">
 	<div class="col-sm-12">
 		<div class="console">{% highlight powershell %}
-pow:StoreCredentials 'dP1tXKWC1u6dLOf/PsYrwqNzXVPuRy+/qkbjHYZoS9o=' 'MYDOMAIN\opsuser'
+pow:credentials:save 'dP1tXKWC1u6dLOf/PsYrwqNzXVPuRy+/qkbjHYZoS9o=' 'MYDOMAIN\opsuser'
 Enter the password for MYDOMAIN\opsuser and press ENTER:
 **********
 Credentials exported to ".\Credentials\MYDOMAIN#opsuser.credentials"
@@ -84,10 +84,14 @@ To enable your build server or any other person to run powerdelivery under this 
 To run powerdelivery using this set of credentials without prompting, once this environment variable has been set *and a Powershell Administrator console has been re-opened* the following command can be run by your build server or another person who has the environment variable set without prompting:
 
 <div class="console">
-  {% highlight powershell %}pow Release Production -Credential MYDOMAIN\opsuser{% endhighlight %}
+  {% highlight powershell %}pow release production -credential 'MYDOMAIN\opsuser'{% endhighlight %}
 </div>
 
 **NOTE**: If you have set an environment variable with a key and a build server is failing to authenticate with stored credentials, remember you may need to restart the build server (typically a console application or Windows service if using TeamCity or Team Foundation Server build) to pick up the new environment variable.
+
+## Using credentials in roles
+
+TODO
 
 <br />
 
