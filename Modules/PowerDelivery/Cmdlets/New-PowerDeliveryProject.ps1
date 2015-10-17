@@ -46,5 +46,5 @@ function New-PowerDeliveryProject {
   Write-Host "Powerdelivery project created!" -ForegroundColor Green
 }
 
-Set-Alias pow:New New-PowerDeliveryProject
-Export-ModuleMember -Function New-PowerDeliveryProject -Alias pow:New
+Set-Alias pow:new New-PowerDeliveryProject
+Export-ModuleMember -Function New-PowerDeliveryProject -Alias pow:new

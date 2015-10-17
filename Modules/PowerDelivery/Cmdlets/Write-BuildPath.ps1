@@ -20,17 +20,20 @@ function Write-BuildPath {
 
     $fullPath = [System.IO.Path]::GetFullPath($path)
 
-    if ($pow.EnvironmentName -eq 'Local') {
-      $pathBldr = New-Object -TypeName System.Text.StringBuilder 260
-      $startDir = $pow.Target.StartDir
-      
-      $result = [win32.Shell]::PathRelativePathTo($pathBldr, $startDir, [System.IO.FileAttributes]::Normal, $fullPath, [System.IO.FileAttributes]::Normal)
-      if ($result) {
-        $pathBldr.ToString()
-      }
-      else {
-        "NOTFOUND"
-      }
+    $pathBldr = New-Object -TypeName System.Text.StringBuilder 260
+
+    $startDir = Get-Location
+
+    if ($powerdelivery.inBuild) {
+      $startDir = $pow.target.StartDir
+    }
+    
+    $result = [win32.Shell]::PathRelativePathTo($pathBldr, $startDir, [System.IO.FileAttributes]::Normal, $fullPath, [System.IO.FileAttributes]::Normal)
+    if ($result) {
+      $pathBldr.ToString()
+    }
+    else {
+      "NOTFOUND"
     }
   }
 }

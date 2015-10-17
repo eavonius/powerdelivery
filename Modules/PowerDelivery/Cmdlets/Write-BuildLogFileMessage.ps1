@@ -48,7 +48,7 @@ function Write-BuildLogFileMessage
       Write-Host "[$actionText] " -ForegroundColor $pow.colors['RoleForeground']
   }
 
-  Write-Host "Logfile: $logFilePath" -ForegroundColor $pow.colors['LogFileForeground']
+  Write-Host "Logfile: $(Write-BuildPath $logFilePath)" -ForegroundColor $pow.colors['LogFileForeground']
 
   $pow.lastAction = $action
 }

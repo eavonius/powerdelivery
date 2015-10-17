@@ -1,4 +1,4 @@
-param($Shared)
+param($shared)
 
 @{
 }

@@ -8,5 +8,5 @@ function New-PowerDeliveryRole {
   $pow["$($roleName)Role"] = $block
 }
 
-Set-Alias pow:Role New-PowerDeliveryRole
-Export-ModuleMember -Function New-PowerDeliveryRole -Alias pow:Role
+Set-Alias pow:role New-PowerDeliveryRole
+Export-ModuleMember -Function New-PowerDeliveryRole -Alias pow:role

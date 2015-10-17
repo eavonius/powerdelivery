@@ -10,7 +10,7 @@ principles and deploy product assets into multiple environments.
 $env:TERM = "msys"
 
 $script:pow = @{}
-$pow.product = "PowerDelivery"
+$pow.product = "powerdelivery"
 $pow.scriptDir = Split-Path $MyInvocation.MyCommand.Path
 
 # Load internal scripts

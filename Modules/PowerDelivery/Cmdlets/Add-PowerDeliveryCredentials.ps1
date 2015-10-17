@@ -21,5 +21,5 @@ function Add-PowerDeliveryCredentials {
   Write-Host "Credentials exported to "".\Credentials\$userNameFile"""
 }
 
-Set-Alias pow:StoreCredential Add-PowerDeliveryCredentials
-Export-ModuleMember -Function Add-PowerDeliveryCredentials -Alias pow:StoreCredential
+Set-Alias pow:credentials:save Add-PowerDeliveryCredentials
+Export-ModuleMember -Function Add-PowerDeliveryCredentials -Alias pow:credentials:save

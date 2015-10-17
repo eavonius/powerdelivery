@@ -1,16 +1,20 @@
 function Invoke-PowerDelivery {
   [CmdletBinding()]
   param (
-    [Parameter(Position=0,Mandatory=1)][Alias('t')][string] $Target,
-    [Parameter(Position=1,Mandatory=1)][Alias('e')][string] $Environment,
-    [Parameter(Position=2,Mandatory=0)][Alias('r')][string] $Revision
+    [Parameter(Position=0,Mandatory=1)][Alias('p')][string] $Project,
+    [Parameter(Position=1,Mandatory=1)][Alias('t')][string] $Target,
+    [Parameter(Position=2,Mandatory=1)][Alias('e')][string] $Environment,
+    [Parameter(Position=3,Mandatory=0)][Alias('r')][string] $Revision,
+    [Parameter(Position=4,Mandatory=0)][Alias('a')][string] $As,
+    [Parameter(Position=5,Mandatory=0)][Alias('c')][string] $Credential
   )
 
   $pow.target = @{
-    EnvironmentName = $Environment;
+    ProjectName = $Project;
     TargetName = $Target;
-    RequestedBy = (whoami).ToUpper();
+    EnvironmentName = $Environment;
     Revision = $Revision;
+    RequestedBy = (whoami).ToUpper();
     StartDate = Get-Date;
     StartDir = Get-Location;
     StartedAt = Get-Date -Format "yyyyMMdd_hhmmss";
@@ -34,13 +38,15 @@ function Invoke-PowerDelivery {
     $pow.Remove($roleToRemove)
   }
 
+  Write-Host
   Write-Host "$($pow.product) v$($pow.version) started by $($pow.target.RequestedBy)" -ForegroundColor $pow.colors['SuccessForeground']
 
   try {
-    Write-Host "Started Target ""$Target"" in ""$Environment"" Environment..."
+    Write-Host "Running target ""$Target"" in ""$Environment"" environment..."
+    Write-Host
 
     # Test for environment
-    $envPath = "Environments\$Environment.ps1"
+    $envPath = "$($Project)Delivery\Environments\$Environment.ps1"
     $envScript = (Join-Path $pow.target.StartDir $envPath)
     if (!(Test-Path $envScript)) {
       Write-Host "Environment script $envPath could not be found." -ForegroundColor Red
@@ -57,7 +63,7 @@ function Invoke-PowerDelivery {
     }
 
     # Test for target
-    $targetPath = "Targets\$Target.ps1"
+    $targetPath = "$($Project)Delivery\Targets\$Target.ps1"
     $targetScript = (Join-Path $pow.target.StartDir $targetPath)
     if (!(Test-Path $targetScript)) {
       Write-Host "Target script $targetPath could not be found." -ForegroundColor Red
@@ -74,7 +80,7 @@ function Invoke-PowerDelivery {
     }
 
     # Test for shared configuration
-    $sharedConfigPath = "Configuration\_Shared.ps1"
+    $sharedConfigPath = "$($Project)Delivery\Configuration\_Shared.ps1"
     $sharedConfigScript = (Join-Path $pow.target.StartDir $sharedConfigPath)
     if (!(Test-Path $sharedConfigScript)) {
       Write-Host "Shared configuration script $sharedConfigPath could not be found." -ForegroundColor Red
@@ -91,7 +97,7 @@ function Invoke-PowerDelivery {
     }
 
     # Test for environment configuration
-    $envConfigPath = "Configuration\$Environment.ps1"
+    $envConfigPath = "$($Project)Delivery\Configuration\$Environment.ps1"
     $envConfigScript = (Join-Path $pow.target.StartDir $envConfigPath)
     if (!(Test-Path $envConfigScript)) {
       Write-Host "Environment configuration script $envConfigPath could not be found." -ForegroundColor Red
@@ -123,14 +129,14 @@ function Invoke-PowerDelivery {
 
     # Iterate steps of the target
     foreach ($targetStep in $pow.targetScript.GetEnumerator()) {
-        Write-Host "[------------ Target Step: ""$($targetStep.Key)""" -ForegroundColor $pow.colors['StepForeground']
+        Write-Host "[----- $($targetStep.Key)" -ForegroundColor $pow.colors['StepForeground']
 
         # Iterate sets of nodes in the step
         foreach ($node in $targetStep.Value.Nodes) {
 
           # Make sure the environment contains the nodes
           if (!($pow.target.Environment.ContainsKey($node))) {
-            Write-Host "Step $($targetStep.Key) of Target $Target refers to NodeSet $node not found in $Environment environment." -ForegroundColor Red
+            Write-Host "Step $($targetStep.Key) of target $Target refers to nodeset $node not found in $Environment environment." -ForegroundColor Red
             throw
           }
 
@@ -144,7 +150,7 @@ function Invoke-PowerDelivery {
 
               # Make sure the role script exists
               if (!($pow.ContainsKey("$($role)Role"))) {
-                $rolePath = "Roles\$role\Tasks.ps1"
+                $rolePath = "$($Project)Delivery\Roles\$role\Role.ps1"
                 $roleScript = (Join-Path $pow.target.StartDir $rolePath)
                 if (!(Test-Path $roleScript)) {
                   Write-Host "Role script $rolePath could not be found." -ForegroundColor Red
@@ -155,7 +161,7 @@ function Invoke-PowerDelivery {
                 Invoke-Expression -Command ".\$rolePath"
               }
 
-              Write-Host "[------------ Role ""$role"" -> ($nodeName)" -ForegroundColor $pow.colors['RoleForeground']
+              Write-Host "[--------- $role -> ($nodeName)" -ForegroundColor $pow.colors['RoleForeground']
 
               # Run the script block
               Invoke-Command -ScriptBlock $pow["$($role)Role"] -ArgumentList @($pow.target, $config, $nodeName)
@@ -183,34 +189,36 @@ function Invoke-PowerDelivery {
     $build_time_hours = $build_time.Hours
     if ($build_time_hours -gt 0) {
       if ($build_time_string.Length -gt 0) {
-        $build_time_string += ' and '
+        $build_time_string += ' '
       }
-      $build_time_string += "$build_time_hours hours"
+      $build_time_string += "$build_time_hours hrs"
     }
 
     $build_time_minutes = $build_time.Minutes
     if ($build_time_minutes -gt 0) {
       if ($build_time_string.Length -gt 0) {
-        $build_time_string += ' and '
+        $build_time_string += ' '
       }
-      $build_time_string += "$build_time_minutes minutes"
+      $build_time_string += "$build_time_minutes min"
     }
 
     $build_time_seconds = $build_time.Seconds
     if ($build_time_seconds -gt 0) {
       if ($build_time_string.Length -gt 0) {
-        $build_time_string += ' and '
+        $build_time_string += ' '
       }
-      $build_time_string += "$build_time_seconds seconds"
+      $build_time_string += "$build_time_seconds sec"
     }
 
     $build_time_ms = $build_time.Milliseconds
     if ($build_time_ms -gt 0) {
       if ($build_time_string.Length -gt 0) {
-        $build_time_string += ' and '
+        $build_time_string += ' '
       }
       $build_time_string += "$build_time_ms ms"
     }
+
+    Write-Host
 
     if ($pow.buildFailed) {
       Write-Host "$($pow.product) build failed in $build_time_string" -ForegroundColor $pow.colors['FailureForeground']
