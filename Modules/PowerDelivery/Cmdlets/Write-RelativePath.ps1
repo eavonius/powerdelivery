@@ -1,4 +1,4 @@
-function Write-BuildPath {
+function Write-RelativePath {
   [CmdletBinding()]
   param (
     [Parameter(Position=0,Mandatory=0)][string] $path
@@ -38,4 +38,4 @@ function Write-BuildPath {
   }
 }
 
-Export-ModuleMember -Function Write-BuildPath
+Export-ModuleMember -Function Write-RelativePath

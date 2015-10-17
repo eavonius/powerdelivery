@@ -1,4 +1,4 @@
-function New-PowerDeliveryRole {
+function New-DeliveryRole {
   [CmdletBinding()]
   param(
     [Parameter(Position=0, Mandatory=1)][scriptblock] $block
@@ -8,5 +8,5 @@ function New-PowerDeliveryRole {
   $pow["$($roleName)Role"] = $block
 }
 
-Set-Alias pow:role New-PowerDeliveryRole
-Export-ModuleMember -Function New-PowerDeliveryRole -Alias pow:role
+Set-Alias Delivery:Role New-DeliveryRole
+Export-ModuleMember -Function New-DeliveryRole -Alias Delivery:Role

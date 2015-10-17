@@ -1,4 +1,4 @@
-function Invoke-BuildProcess
+function Invoke-DeliveryCommand
 {
   param(
     [Parameter(Position=0,Mandatory=1)][string] $commandName,
@@ -38,5 +38,4 @@ function Invoke-BuildProcess
   }
 }
 
-Set-Alias pow:Invoke Invoke-BuildProcess
-Export-ModuleMember -Function Invoke-BuildProcess -Alias pow:Invoke
+Export-ModuleMember -Function Invoke-DeliveryCommand

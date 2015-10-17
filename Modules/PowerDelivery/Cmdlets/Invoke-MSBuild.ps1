@@ -141,7 +141,7 @@ function Invoke-MSBuild
 
   Set-Location $fullPathNormalized
 
-  pow:Invoke msbuild "$projectFile ($flavor - $buildConfiguration)" $logFile $msBuildCommand Invoke-MSBuild
+  Invoke-DeliveryCommand msbuild "$projectFile ($flavor - $buildConfiguration)" $logFile $msBuildCommand Invoke-MSBuild
 }
 
 Export-ModuleMember -Function Invoke-MSBuild

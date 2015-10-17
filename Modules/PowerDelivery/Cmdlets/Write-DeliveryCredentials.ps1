@@ -1,4 +1,4 @@
-function Add-PowerDeliveryCredentials {
+function Write-DeliveryCredentials {
   [CmdletBinding()]
   param (
     [Parameter(Position=0,Mandatory=1)][string] $key,
@@ -21,5 +21,4 @@ function Add-PowerDeliveryCredentials {
   Write-Host "Credentials exported to "".\Credentials\$userNameFile"""
 }
 
-Set-Alias pow:credentials:save Add-PowerDeliveryCredentials
-Export-ModuleMember -Function Add-PowerDeliveryCredentials -Alias pow:credentials:save
+Export-ModuleMember -Function Write-DeliveryCredentials

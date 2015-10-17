@@ -1,4 +1,4 @@
-function Invoke-PowerDelivery {
+function Start-Delivery {
   [CmdletBinding()]
   param (
     [Parameter(Position=0,Mandatory=1)][Alias('p')][string] $Project,
@@ -8,6 +8,21 @@ function Invoke-PowerDelivery {
     [Parameter(Position=4,Mandatory=0)][Alias('a')][string] $As,
     [Parameter(Position=5,Mandatory=0)][Alias('c')][string] $Credential
   )
+
+  # Verify running as Administrator
+  $user = [Security.Principal.WindowsIdentity]::GetCurrent();
+  if (!(New-Object Security.Principal.WindowsPrincipal $user).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)) {
+    throw "Please run PowerDelivery using an elevated (Administrative) command prompt."
+  }
+
+  $pow.colors = @{
+    SuccessForeground = 'Green'; 
+    FailureForeground = 'Red'; 
+    StepForeground = 'Magenta'; 
+    RoleForeground = 'Yellow';
+    CommandForeground = 'White'; 
+    LogFileForeground = 'White' 
+  }
 
   $pow.target = @{
     ProjectName = $Project;
@@ -25,6 +40,15 @@ function Invoke-PowerDelivery {
   $pow.inBuild = $true
   $pow.buildFailed = $false
 
+  if (Get-Module powerdelivery)
+  {
+      $pow.version = Get-Module powerdelivery | select version | ForEach-Object { $_.Version.ToString() }
+  }
+  else
+  {
+      $pow.version = "SOURCE"
+  }
+
   # Get roles from prior run
   $rolesToRemove = [System.Collections.ArrayList]@()
   foreach ($item in $pow.GetEnumerator()) {
@@ -39,10 +63,11 @@ function Invoke-PowerDelivery {
   }
 
   Write-Host
-  Write-Host "$($pow.product) v$($pow.version) started by $($pow.target.RequestedBy)" -ForegroundColor $pow.colors['SuccessForeground']
+  Write-Host "PowerDelivery v$($pow.version)" -ForegroundColor $pow.colors['SuccessForeground']
+  Write-Host "Target ""$Target"" started by ""$($pow.target.RequestedBy)"""
 
   try {
-    Write-Host "Running target ""$Target"" in ""$Environment"" environment..."
+    Write-Host "Delivering ""$Project"" to ""$Environment"" environment..."
     Write-Host
 
     # Test for environment
@@ -221,10 +246,10 @@ function Invoke-PowerDelivery {
     Write-Host
 
     if ($pow.buildFailed) {
-      Write-Host "$($pow.product) build failed in $build_time_string" -ForegroundColor $pow.colors['FailureForeground']
+      Write-Host "Target ""$Target"" failed in $build_time_string." -ForegroundColor $pow.colors['FailureForeground']
     }
     else {
-      Write-Host "$($pow.product) build succeeded in $build_time_string" -ForegroundColor $pow.colors['SuccessForeground']
+      Write-Host "Target ""$Target"" succeeded in $build_time_string." -ForegroundColor $pow.colors['SuccessForeground']
     }
 
     Set-Location $pow.target.StartDir | Out-Null
@@ -233,5 +258,4 @@ function Invoke-PowerDelivery {
   }
 }
 
-Set-Alias pow Invoke-PowerDelivery
-Export-ModuleMember -Function Invoke-PowerDelivery -Alias pow
+Export-ModuleMember -Function Start-Delivery

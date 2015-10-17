@@ -1,5 +1,8 @@
 function Test-CommandExists {
-  param($command)
+  [CmdletBinding()]
+  param(
+    [Parameter(Position=0,Mandatory=1)][string] $command
+  )
 
   $oldPreference = $ErrorActionPreference
   $ErrorActionPreference = 'stop'

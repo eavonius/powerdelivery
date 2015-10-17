@@ -1,5 +1,21 @@
-function New-PowerDeliveryProject {
-	[CmdletBinding()]
+<#
+.Synopsis
+Creates a new powerdelivery project.
+
+.Description
+The New-DeliveryProject cmdlet generates the files needed to work with powerdelivery.
+
+.Example
+New-DeliveryProject MyApp @('Local', 'Test', 'Production')
+
+.Parameter ProjectName
+Required. The name of the project to create.
+
+.Parameter Environments
+Optional. An array of the names of environments to create configuration variable and environment scripts for.
+#>
+function New-DeliveryProject {
+  [CmdletBinding()]
   param (
     [Parameter(Position=0,Mandatory=1)][Alias('p')][string] $ProjectName,
     [Parameter(Position=1,Mandatory=0)][Alias('e')] $Environments
@@ -46,5 +62,4 @@ function New-PowerDeliveryProject {
   Write-Host "Powerdelivery project created!" -ForegroundColor Green
 }
 
-Set-Alias pow:new New-PowerDeliveryProject
-Export-ModuleMember -Function New-PowerDeliveryProject -Alias pow:new
+Export-ModuleMember -Function New-DeliveryProject
