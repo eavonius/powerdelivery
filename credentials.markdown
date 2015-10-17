@@ -106,8 +106,6 @@ To run powerdelivery using this set of credentials without prompting, once this 
 
 ## Using credentials in roles
 
-TODO
-
 <br />
 
 ### Next read about [configuration](configuration.html).
