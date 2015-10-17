@@ -155,7 +155,7 @@ h1 {
 
 #sidebar ul li {
 	list-style-type: none;
-	text-transform: uppercase;
+	text-transform: lowercase;
 	margin-left: 0px;
 	padding-left: 0px;
 }
