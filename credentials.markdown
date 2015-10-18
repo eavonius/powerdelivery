@@ -60,18 +60,18 @@ Upon running this command, copy the key from the PowerShell console and save it 
 <br />
 <h3>Step 2. Encrypt credentials with the key</h3>
 
-Now that you have a key, you pass the key to another powerdelivery command that will once again prompt for credentials, writing them to an encrypted file under the *Credentials* directory. This file *should* be stored in source control.
+Now that you have a key, pass it to the [Write-DeliveryCredentials](reference.html#write_delivery_credentials_cmdlet) cmdlet with a name for the key, and the name of the account. The cmdlet will prompt for the password and write it to an encrypted file under the *Credentials* directory. This file *should* be stored in source control.
 
-The PowerShell session below demonstrates using the [Write-DeliveryCredentials](reference.html#write_delivery_credentials_cmdlet) to write credentials to a file using a key:
+The PowerShell session below demonstrates writing credentials to a file using a key:
 
 <div class="row">
 	<div class="col-sm-12">
 		{% include console_title.html %}
 		<div class="console">{% highlight powershell %}
-Write-DeliveryCredentials 'dP1tXKWC1u6dLOf/PsYrwqNzXVPuRy+/qkbjHYZoS9o=' 'MYDOMAIN\opsuser'
+Write-DeliveryCredentials 'dP1tXKWC1u6dLOf/PsYrwqNzXVPuRy+/qkbjHYZoS9o=' 'MyKeyName' 'MYDOMAIN\opsuser'
 Enter the password for MYDOMAIN\opsuser and press ENTER:
 **********
-Credentials written to ".\Credentials\MYDOMAIN#opsuser.credentials"
+Credentials written to ".\Credentials\MyKeyName\MYDOMAIN#opsuser.credentials"
 {% endhighlight %}
 		</div>
 	</div>
@@ -80,29 +80,36 @@ Credentials written to ".\Credentials\MYDOMAIN#opsuser.credentials"
 You should now commit this new file to your source control. 
 
 <br />
-<h3>Step 3. Set environment variable with key</h3>
 
-To enable your build server or any other person to run powerdelivery under this set of credentials, you need to provide them with the key you generated in step 1. Create on these computers an environment variable named MYDOMAIN_MYUSER_KEY with the value of the variable set to the key. This should be a *User* and not *System* environment variable to reduce the chance of someone gaining access to the key that might have shared access to their computer.
+<h3>Step 3. Create a keyfile</h3>
 
-Below is an example of setting the key using the Windows System control panel dialog for setting an envrionment variable using our example credential:
-
-<br />
-![](img/set_credential_envvar.png)
-
-*Figure: Setting a credential environment variable*
+To enable your build server or any other person to run powerdelivery with these credentials, you need to provide them with the key you generated in step 1. You should only do this for computers you are permitting to decrypt the key for deployment, which is why we didn't store it in source control. Create a text file named after the second parameter passed to the Write-DeliveryCredentials cmdlet in step 2.
 
 <br />
+
+This must go in the directory:
+
+C:\Users\YourAccount\Documents\PowerDelivery\Keys
+
+<br />
+
+In the example in step 2, we named the key *MyKey* so the text file with the key generated in step 1 goes here:
+
+C:\Users\YourAccount\Documents\PowerDelivery\Keys\MyKeyName.key
+
+<br />
+
 <h3>Step 4. Run using the credentials</h3>
 
 
-To run powerdelivery using this set of credentials without prompting, once this environment variable has been set (and the PowerShell Administrator console has been re-opened) *Start-Delivery* can be run by your build server or another person who has the environment variable set passing the -Credential parameter to not be prompted:
+To run powerdelivery using this set of credentials without prompting, once the keyfile is present *Start-Delivery* can be run by your build server or another person who has the environment variable set passing the *-Credential* parameter:
+
+<br />
 
 {% include console_title.html %}
 <div class="console">
   {% highlight powershell %}StartDelivery MyApp Release Production -credential 'MYDOMAIN\opsuser'{% endhighlight %}
 </div>
-
-**Troubleshooting**: If you have set an environment variable this way and your build server is failing to authenticate with its credentials, remember you may need to restart the build server (typically a console application or Windows service if using TeamCity or Team Foundation Server build) to pick up the new environment variable.
 
 ## Using credentials in roles
 
