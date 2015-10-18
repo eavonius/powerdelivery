@@ -6,17 +6,19 @@ layout: page
 
 # Credentials
 
-Often you will want to deploy with powerdelivery using a different set of credentials than the currently logged in user (for example into a production environment), so you need a way to pass those credentials.
+Often you may want to deploy using a different set of credentials than the currently logged in user (for example to a production environment by specific accounts or groups). 
 
-Also, if any of the PowerShell commands in the roles you execute on a remote node in turn access another node (this is known as a *"double-hop"* scenario), your credentials will fail to make it to that "second hop".
+In addition, if any of the PowerShell commands in the [roles](roles.html) you execute on a remote node in turn access another node (this is known as a *"double-hop"* scenario), your credentials will fail to make it to that "second hop".
 
-You can overcome both of these problems with either of the following two solutions.
+You can overcome both of these issues using either of the solutions that follow.
 
 ## Providing credentials at startup
 
-To have powerdelivery apply roles to remote nodes using alternate credentials, pass the *-As* parameter. Powerdelivery will prompt for the password of the username you specify as it starts. 
+To have powerdelivery apply roles to remote nodes using alternate credentials, pass the *-As* parameter to the [Start-Delivery](reference.html#start_delivery_cmdlet) cmdlet. Powerdelivery will prompt for the password of the username you specify. 
 
-Below is an example:
+<p>
+For example:
+</p>
 
 <div class="row">
 	<div class="col-sm-8">
@@ -39,7 +41,7 @@ The second method of passing credentials is useful for running powerdelivery via
 
 <h3>Step 1. Generate a credential key</h3>
 
-Powerdelivery can write credentials provided to it into an encrypted file so the user is not prompted when deployment starts. The encryption uses a key you must generate. *Whoever has access to this key will be able to decrypt the credentials stored with your source code*, so record the key somewhere safe, don't put it under source control, and only hand it out to those who you trust!
+Powerdelivery can save credentials in an encrypted file so users are not prompted when deployment starts. The file is encrypted using a key that you must generate. *Whoever has access to this key will be able to decrypt the credentials stored with your source code*, so record the key somewhere safe, don't put it under source control, and only hand it out to those who you trust!
 
 The PowerShell session below demonstrates this using the [New-DeliveryCredentialKey](reference.html#new_deliverycredentialkey_cmdlet) cmdlet:
 
@@ -68,10 +70,10 @@ The PowerShell session below demonstrates writing credentials to a file using a 
 	<div class="col-sm-12">
 		{% include console_title.html %}
 		<div class="console">{% highlight powershell %}
-Write-DeliveryCredentials 'dP1tXKWC1u6dLOf/PsYrwqNzXVPuRy+/qkbjHYZoS9o=' 'MyKeyName' 'MYDOMAIN\opsuser'
+PS> Write-DeliveryCredentials 'dP1tXKWC1u6dLOf/PsYrwqNzXVPuRy+/qkbjHYZoS9o=' 'MyKey' 'MYDOMAIN\opsuser'
 Enter the password for MYDOMAIN\opsuser and press ENTER:
 **********
-Credentials written to ".\Credentials\MyKeyName\MYDOMAIN#opsuser.credentials"
+Credentials written to ".\Credentials\MyKey\MYDOMAIN#opsuser.credentials"
 {% endhighlight %}
 		</div>
 	</div>
@@ -95,20 +97,17 @@ C:\Users\YourAccount\Documents\PowerDelivery\Keys
 
 In the example in step 2, we named the key *MyKey* so the text file with the key generated in step 1 goes here:
 
-C:\Users\YourAccount\Documents\PowerDelivery\Keys\MyKeyName.key
+C:\Users\YourAccount\Documents\PowerDelivery\Keys\MyKey.key
 
 <br />
 
-<h3>Step 4. Run using the credentials</h3>
+<h3>Step 4. Deploy using the credentials</h3>
 
-
-To run powerdelivery using this set of credentials without prompting, once the keyfile is present *Start-Delivery* can be run by your build server or another person who has the environment variable set passing the *-Credential* parameter:
-
-<br />
+Once the keyfile is present, *Start-Delivery* can run without prompting by passing it the *-Credential* parameter:
 
 {% include console_title.html %}
 <div class="console">
-  {% highlight powershell %}StartDelivery MyApp Release Production -credential 'MYDOMAIN\opsuser'{% endhighlight %}
+  {% highlight powershell %}PS> Start-Delivery MyApp Release Production -Credential 'MYDOMAIN\opsuser'{% endhighlight %}
 </div>
 
 ## Using credentials in roles
