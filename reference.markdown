@@ -43,7 +43,7 @@ References the current run of the [target](targets.html). The target parameter i
 
 <p>Example of a role script using the $target parameter.</p>
 {% highlight powershell %}
-Delivery:Role -Up {
+Delivery:Role {
   param($target, $config, $node)
 
   # Access run properties using $target and print them to the console
@@ -75,8 +75,8 @@ param($target, $config)
 
 <p>Example of a role script using the $config parameter to reference the configuration above.</p>
 {% highlight powershell %}
-param($target, $config, $node)
 Delivery:Role {
+  param($target, $config, $node)
 
   # Prints "Hello World" to the console
   Write-Host "$($config.Hello) $($config.World)"
@@ -130,7 +130,7 @@ param($target, $config)
 
 <p>Example of a role script printing the current node to the console.</p>
 {% highlight powershell %}
-Delivery:Role -Up {
+Delivery:Role {
   param($target, $config, $node)
 
   # Displays "x.x.x.1" or "x.x.x.2" depending on 

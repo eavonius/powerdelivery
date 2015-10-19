@@ -72,6 +72,8 @@ Powerdelivery has been permitted to deploy to this computer.
 
 <br />
 
+<a name="provisioning_nodes_at_deploy_time"></a>
+
 ### Provisioning nodes at deploy-time
 
 In IT environments where computing resources are scarce (resources are on-premise or in boot-strapping startups), the cost of running multiple nodes is a factor. In this case, it is probably desirable to procure hardware or processing space and leave it dedicated as "the dev server", or "the test database server" throughout the release cycle of a product. [Physical and VM deployment](#physical_and_vm_deployment) (above) is perfect in this case.
