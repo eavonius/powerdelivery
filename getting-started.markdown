@@ -6,7 +6,9 @@ layout: page
 
 # Getting Started
 
-If you want to enable developers to deploy a product on their own computers and test it, then they or others may deploy it to other environments and eventually on to production, this is what powerdelivery does. It adheres to the tenets of [continuous delivery](http://www.continuousdelivery.org) enabling you to lock down VMs and cloud resources so they only get changed through scripts. If your IT assets are a mess because too many hands are on them - this is for you.
+You want developers to build, test, and deploy a product on their own computers. As often as possible, they or others may deploy it to other environments and eventually on to production without manual changes. If this sounds like you, this is what powerdelivery will help you accomplish. 
+
+Powerdelivery adheres to the tenets of <a href="https://www.thoughtworks.com/continuous-delivery" target="_blank">continuous delivery</a> enabling you to lock down VMs and cloud resources so they only get changed through scripts. If your IT assets are a mess because too many hands are on them - this is for you.
 
 This page provides a walkthrough of getting setup and building a simple automated build to demonstrate some of the core features of powerdelivery. We'll just scratch the surface - to automate the release of your product, you'll want to read the rest of the topics when you're done here.
 

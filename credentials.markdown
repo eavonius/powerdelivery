@@ -6,7 +6,7 @@ layout: page
 
 # Credentials
 
-Credentials in powerdelivery are sets of username and password pairs used to impersonate another user account than you are logged in as when running a [target](targets.html). They can also be used in [role scripts](roles.html) to access credentials needed for secure cloud resources such as Windows Azure accounts.
+Credentials in powerdelivery are sets of username and password pairs used to impersonate a different user account than you are logged in as when running a [target](targets.html). They can also be used in [role scripts](roles.html) to access credentials needed for secure cloud resources such as Windows Azure accounts.
 
 ## Using credentials on remote nodes
 
@@ -42,7 +42,7 @@ Keep in mind that any roles set to run on localhost for your target [environment
 
 ### Storing credentials for silent execution
 
-The second method of passing credentials is useful for running powerdelivery via a build server that is unable to throw up a prompt at runtime, or sharing a set of credentials with a limited set of people without giving them the password directly. This requires two steps.
+The second method of passing credentials is useful for running powerdelivery via a build server that is unable to throw up a prompt at runtime, or sharing a set of credentials with a limited set of people without giving them the password directly. This requires four steps.
 
 <br />
 
@@ -125,7 +125,7 @@ In your role script, use the *Credentials* property of the [$target parameter](r
 
 <br />
 
-The example below assumes credentials for *me@somewhere.com* were encrypted with the *ExampleKey* key:
+The example below assumes credentials for *me@somewhere.com* were encrypted with powerdelivery:
 
 {% highlight powershell %}
 Delivery:Role -Up {

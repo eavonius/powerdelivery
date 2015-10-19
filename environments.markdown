@@ -6,7 +6,7 @@ layout: page
 
 # Environments
 
-To smoothly deploy products through the various environments in a typical release process (development, test, production etc.), it makes sense to figure out what computing resources are necessary to host the product as early as possible. Waiting until the end of an engineering effort to provision test and production infrastructure is one of the best ways to blow release schedules out of the water.
+To smoothly deploy products through the various environments in a typical release process (development, test, production etc.), it makes sense to figure out what computing resources are necessary to host the product as early as possible. Waiting until the end of an engineering effort to provision test and production infrastructure is one of the best ways to miss your release goals.
 
 Whether a physical computer or a virtual machine (on-premise or in the cloud), powerdelivery refers to each computing unit as a node. 
 
@@ -32,7 +32,7 @@ param($target, $config)
   </div>
 </div>
 
-Each set of nodes can contain multiple names or IP addresses in the PowerShell array as the *Website* set demonstrates above. When powerdelivery deploys to this environment, it will apply any roles applied to Website nodes in a [target](targets.html) to all the listed nodes in this array.
+Each set of nodes can contain multiple names or IP addresses separated by commas as the *Website* set demonstrates above. When powerdelivery deploys to this environment, it will apply any roles applied to Website nodes in a [target](targets.html) to all the listed nodes.
 
 <a name="physical_and_vm_deployment"></a>
 
@@ -58,7 +58,7 @@ The PowerShell console session below demonstrates permitting the user MYDOMAIN\s
     <div class="console">
 {% highlight powershell %}
 PS> .\GrantDeliveryTo.ps1 "MYDOMAIN\someuser"
-"MYDOMAIN\someuser" has been permitted to run PowerShell remotely on this computer.
+"MYDOMAIN\someuser" has been permitted to deploy to this computer with powerdelivery.
 {% endhighlight %}
     </div>
   </div>
