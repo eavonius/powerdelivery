@@ -9,7 +9,7 @@ title: Devops-friendly Windows releases on-premise or in the cloud.
 <div class="row" style="margin-top: 80px">
 	<div class="col-sm-12">
 		<h1 id="site-title"><span style="color: firebrick">Goodbye,</span> manual releases.</h1>
-		<p id="site-summary">Inspired by tools like <a href="http://www.ansible.com" target="_blank">ansible</a> and <a href="https://www.puppetlabs.com" target="_blank">puppet</a>, powerdelivery organizes everything Windows PowerShell can do into a secure, convention-based framework so you can stop being jealous of your linux friends when you deploy to Windows.</p>
+		<p id="site-summary">Inspired by tools like <a href="http://www.ansible.com" target="_blank">ansible</a> and <a href="https://www.puppetlabs.com" target="_blank">puppet</a>, powerdelivery organizes everything Windows PowerShell can do within a secure, convention-based framework so you can stop being jealous of your linux friends when you deploy to Windows.</p>
 	</div>
 </div>
 
@@ -22,32 +22,6 @@ Before you read the docs, see some code.
   <div class="col-lg-8 col-md-10 col-sm-12">
     {% include console_title.html %}
     <div class="console">{% highlight powershell %}PS> New-DeliveryProject MyApp @('Local', 'Production'){% endhighlight %}</div>
-  </div>
-</div>
-
-## Configuring [environments](environments.html)
-<div class="row">
-  <div class="col-lg-8 col-md-10 col-sm-12">
-{% highlight powershell %}
-@{
-  Build = ('localhost');
-  Database = ('localhost');
-  Website = ('localhost')
-}
-{% endhighlight %}
-  <div class="filename">MyAppDelivery\Environments\Local.ps1</div>
-  </div>
-</div>
-<div class="row">
-  <div class="col-lg-8 col-md-10 col-sm-12">
-{% highlight powershell %}
-@{
-  Build = ('localhost');
-  Database = ('x.x.x.2');
-  Website = ('x.x.x.3','x.x.x.4')
-}
-{% endhighlight %}
-  <div class="filename">MyAppDelivery\Environments\Production.ps1</div>
   </div>
 </div>
 
@@ -75,6 +49,34 @@ param($shared)
 }
 {% endhighlight %}
 <div class="filename">MyAppDelivery\Configuration\Production.ps1</div>
+
+## Configuring [environments](environments.html)
+<div class="row">
+  <div class="col-lg-8 col-md-10 col-sm-12">
+{% highlight powershell %}
+param($target, $config)
+@{
+  Build = ('localhost');
+  Database = ('localhost');
+  Website = ('localhost')
+}
+{% endhighlight %}
+  <div class="filename">MyAppDelivery\Environments\Local.ps1</div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-8 col-md-10 col-sm-12">
+{% highlight powershell %}
+param($target, $config)
+@{
+  Build = ('localhost');
+  Database = ('x.x.x.2');
+  Website = ('x.x.x.3','x.x.x.4')
+}
+{% endhighlight %}
+  <div class="filename">MyAppDelivery\Environments\Production.ps1</div>
+  </div>
+</div>
 
 ## Creating [roles](roles.html)
 {% highlight powershell %}

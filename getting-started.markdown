@@ -82,7 +82,7 @@ In the example below, imagine a product's source code has been pulled into the d
     {% include console_title.html %}
     <div class="console">
 {% highlight powershell %}
-PS> New-PowerDeliveryProject MyApp @('Local', 'Test', 'Production')
+PS> New-DeliveryProject MyApp @('Local', 'Test', 'Production')
 {% endhighlight %}
 		</div>
 	</div>
@@ -127,6 +127,7 @@ With these decisions made, we fill out [environment scripts](environments.html):
 <div class="row">
 	<div class="col-sm-8">
 {% highlight powershell %}
+param($target, $config)
 @{
   Build = ('localhost');
   Database = ('localhost');
@@ -140,6 +141,7 @@ With these decisions made, we fill out [environment scripts](environments.html):
 <div class="row">
 	<div class="col-sm-8">
 {% highlight powershell %}
+param($target, $config)
 @{
   Build = ('localhost');
   Database = ('x.x.x.1');
@@ -153,6 +155,7 @@ With these decisions made, we fill out [environment scripts](environments.html):
 <div class="row">
 	<div class="col-sm-8">
 {% highlight powershell %}
+param($target, $config)
 @{
   Build = ('localhost');
   Database = ('x.x.x.4','x.x.x.5');
@@ -165,7 +168,7 @@ With these decisions made, we fill out [environment scripts](environments.html):
 
 Notice each script file is named after the environment. Also, the IP addresses can instead be computer names if resolvable through DNS or NetBIOS. We've set the *Build* group of nodes to always specify localhost. This ensures that any actions performed on this set of nodes are run on the developer's computer (or the build server) and not a test or production node. 
 
-This example assumes the nodes are already running. If you need to provision nodes on the fly (for A/B deployments) see the [environments](environments.html) topic.
+This example assumes the nodes are already running. If you need to provision nodes on the fly (for A/B deployments) see the [environments](environments.html) topic. This is what the [$target](reference.html#target_parameter) and [$config](reference.html#config_parameter) parameters are for - you can ignore them for now.
 
 <a name="roles"></a>
 
@@ -190,7 +193,7 @@ Delivery:Role {
   </div>
 </div>
 
-The [Delivery:Role](reference.html#delivery_role_statement) statement contains all code that will execute when this role is applied to a node as part of a [target](targets.html). The second line declares the three special parameters that are passed to every role. These are the [$target parameter](reference.html#target_parameter) (which provides many properties you can use in your role), the [$config parameter](reference.html#config_parameter) to allow you to access [configuration variables](configuration.html), and the [$node parameter](reference.html#node_parameter) which contains the name or IP address of the node the role is currently executing on. We're not using them here so you can ignore them for now.
+The *Delivery:Role* statement contains all code that will execute when this role is applied to a node as part of a [target](targets.html). The second line declares the three special parameters that are passed to every role. These are the [$target parameter](reference.html#target_parameter) (which provides many properties you can use in your role), the [$config parameter](reference.html#config_parameter) to allow you to access [configuration variables](configuration.html), and the [$node parameter](reference.html#node_parameter) which contains the name or IP address of the node the role is currently executing on. We're not using them here so you can ignore them for now.
 
 <a name="targets"></a>
 
