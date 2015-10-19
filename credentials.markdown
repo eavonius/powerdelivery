@@ -16,26 +16,29 @@ Additionally, if any of the PowerShell commands in the roles you execute on a re
 
 You can overcome both of these issues using either of the solutions that follow.
 
+<br />
+
 ### Providing credentials at startup
 
 To have powerdelivery apply roles to remote nodes using alternate credentials, pass the *-As* parameter to the [Start-Delivery](reference.html#start_delivery_cmdlet) cmdlet. Powerdelivery will prompt for the password of the username you specify. 
 
-<p>
+<br />
 For example:
-</p>
 
 <div class="row">
 	<div class="col-sm-8">
 		{% include console_title.html %}
 		<div class="console">
 {% highlight powershell %}
-PS> Start-Delivery MyApp Release Production -As 'MYDOMAIN\opsuser'
+PS> Start-Delivery MyApp Release Production -As "MYDOMAIN\opsuser"
 {% endhighlight %}
 		</div>
 	</div>
 </div>
 
 Keep in mind that any roles set to run on localhost for your target [environment](environments.html) will still execute under the credentials you are logged into Windows with.
+
+<br />
 
 ### Storing credentials for silent execution
 
@@ -47,6 +50,8 @@ The second method of passing credentials is useful for running powerdelivery via
 
 Powerdelivery can save credentials in an encrypted file so users are not prompted when deployment starts. The file is encrypted using a key file that you must generate. *Whoever has access to the key file will be able to decrypt the credentials stored with your source code*, so record it somewhere safe, don't put it under source control, and only hand it out to those who you trust!
 
+<br />
+
 The PowerShell session below demonstrates this using the [New-DeliveryKey](reference.html#new_deliverykey_cmdlet) cmdlet:
 
 <div class="row">
@@ -55,7 +60,7 @@ The PowerShell session below demonstrates this using the [New-DeliveryKey](refer
 		<div class="console">
 {% highlight powershell %}
 PS> New-DeliveryKey ExampleKey
-Key written to 'C:\Users\Jayme\Documents\PowerDelivery\Test\ExampleKey.key'
+Key written to "C:\Users\Jayme\Documents\PowerDelivery\Test\ExampleKey.key"
 {% endhighlight %}
 		</div>
 	</div>
@@ -68,16 +73,18 @@ Upon running this command, copy the key file from where it was generated and sav
 
 Now that you have a key file, pass it to the [Write-DeliveryCredentials](reference.html#write_delivery_credentials_cmdlet) cmdlet with the username of an account. This must be run from the directory containing your project. The cmdlet will prompt for the password and write it to an encrypted file under the *Credentials* directory. This file *should* be stored in source control.
 
+<br />
+
 The PowerShell session below demonstrates writing credentials to a file using a key:
 
 <div class="row">
 	<div class="col-sm-12">
 		{% include console_title.html %}
 		<div class="console">{% highlight powershell %}
-PS> Write-DeliveryCredentials ExampleKey 'MYDOMAIN\opsuser'
+PS> Write-DeliveryCredentials ExampleKey "MYDOMAIN\opsuser"
 Enter the password for MYDOMAIN\opsuser and press ENTER:
 **********
-Credentials written to '.\Credentials\MyKey\MYDOMAIN#opsuser.credential'
+Credentials written to ".\Credentials\MyKey\MYDOMAIN#opsuser.credential"
 {% endhighlight %}
 		</div>
 	</div>
@@ -105,14 +112,18 @@ Once the key file is present, *Start-Delivery* can run without prompting by pass
 
 {% include console_title.html %}
 <div class="console">
-  {% highlight powershell %}PS> Start-Delivery MyApp Release Production -UseCredentials 'MYDOMAIN\opsuser'{% endhighlight %}
+  {% highlight powershell %}PS> Start-Delivery MyApp Release Production -UseCredentials "MYDOMAIN\opsuser"{% endhighlight %}
 </div>
+
+<a name="using_credentials_in_roles"></a>
 
 ## Using credentials in roles
 
 You may also find a need to use credentials in a role script, for instance to authenticate with Windows Azure to manipulate cloud resources. To do this create a key and encrypt credentials following the steps above.
 
 In your role script, use the *Credentials* property of the [$target parameter](reference.html#target_parameter) to retrieve your credentials by their username. You may then pass them to other PowerShell cmdlets that expect credentials. 
+
+<br />
 
 The example below assumes credentials for *me@somewhere.com* were encrypted with the *ExampleKey* key:
 

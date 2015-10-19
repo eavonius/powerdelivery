@@ -53,6 +53,7 @@ Delivery:Role {
   $opsCredentials = $target.Credentials['DOMAIN\opsuser']
 }
 {% endhighlight %}
+<div class="filename">MyAppDelivery\Roles\TargetExample\Role.ps1</div>
 
 <br />
 
@@ -70,6 +71,7 @@ param($target, $config)
   World = "World"
 }
 {% endhighlight %}
+<div class="filename">MyAppDelivery\Configuration\Production.ps1</div>
 
 <p>Example of a role script using the $config parameter to reference the configuration above.</p>
 {% highlight powershell %}
@@ -80,6 +82,35 @@ Delivery:Role {
   Write-Host "$($config.Hello) $($config.World)"
 }
 {% endhighlight %}
+<div class="filename">MyAppDelivery\Roles\ConfigExample\Role.ps1</div>
+
+<br />
+
+<a name="shared_parameter"></a>
+
+<p class="ref-item">$shared</p>
+A hash containing the [configuration](configuration.html) from the shared configuration file, allowing it to be referenced in an environment configuration file.
+
+<p class="ref-upper">Examples</p>
+<p>Example of a shared configuration script defining a variable.</p>
+{% highlight powershell %}
+param($target)
+@{
+  SomeDirectory = "C:\Parent"
+}
+{% endhighlight %}
+<div class="filename">MyAppDelivery\Configuration\_Shared.ps1</div>
+
+<p>Example of a production environment configuration script referencing the shared variable.</p>
+{% highlight powershell %}
+param($target, $shared)
+@{
+  # SomeDirectoryChild would be C:\Parent\Child 
+  # when targeting the Production environment
+  SomeDirectoryChild = "$($shared.SomeDirectory)\Child"
+}
+{% endhighlight %}
+<div class="filename">MyAppDelivery\Configuration\_Production.ps1</div>
 
 <br />
 
