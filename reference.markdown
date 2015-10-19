@@ -43,14 +43,14 @@ References the current run of the [target](targets.html). The target parameter i
 
 <p>Example of a role script using the $target parameter.</p>
 {% highlight powershell %}
-param($target, $config, $node)
-Delivery:Role {
+Delivery:Role -Up {
+  param($target, $config, $node)
 
   # Access run properties using $target and print them to the console
   Write-Host "I'm deploying $($target.ProjectName) started by $($target.RequestedBy)."
 
   # Lookup credentials using $target
-  $opsCredentials = $target.Credentials['DOMAIN\opsuser']
+  $opsCredentials = $target.Credentials["DOMAIN\opsuser"]
 }
 {% endhighlight %}
 <div class="filename">MyAppDelivery\Roles\TargetExample\Role.ps1</div>
@@ -124,14 +124,14 @@ The IP address or computer name of the node of the current [environment](environ
 {% highlight powershell %}
 param($target, $config)
 @{
-  Databases = @('x.x.x.1', 'x.x.x.2')
+  Databases ="x.x.x.1", "x.x.x.2"
 }
 {% endhighlight %}
 
 <p>Example of a role script printing the current node to the console.</p>
 {% highlight powershell %}
-param($target, $config, $node)
-Delivery:Role {
+Delivery:Role -Up {
+  param($target, $config, $node)
 
   # Displays "x.x.x.1" or "x.x.x.2" depending on 
   # which node the role is executing on
@@ -165,7 +165,7 @@ Generates a new powerdelivery project. Typicall run at the root of a folder with
 {% include console_title.html %}
 <div class="console">
 	{% highlight powershell %}
-PS> New-DeliveryProject MyApp @('Local', 'Test', 'Production')
+PS> New-DeliveryProject MyApp "Local", "Test", "Production"
 {% endhighlight %}
 </div>
 
@@ -195,6 +195,6 @@ Starts a run of a [target](targets.html) using powerdelivery. Must be run at the
 {% include console_title.html %}
 <div class="console">
 	{% highlight powershell %}
-PS> Start-Delivery MyApp Release Production -As 'DOMAIN\opsuser'
+PS> Start-Delivery MyApp Release Production -As "DOMAIN\opsuser"
 {% endhighlight %}
 </div>
