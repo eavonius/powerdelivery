@@ -46,25 +46,29 @@ The following sections help you use powerdelivery to deploy to nodes that are ph
 
 Powerdelivery uses WinRM to communicate from the computer running a [target](targets.html) to a remote node. When a fresh copy of Windows is installed on the node, default permissions usually prevent this from occurring. Without a way around this, you will be denied permission to apply roles to it.
 
-To enable deployment to a node, first login to that node and [download this script](#) as *GrantDeliveryTo.ps1*. Open an Administrator PowerShell console and change your working directory to wherever you downloaded it. 
+To enable deployment to a node, first login to that node and [download this script](#) as *AllowDelivery.ps1*. Open an Administrator PowerShell console and change your working directory to wherever you downloaded it. 
 
 <br />
 
-The PowerShell console session below demonstrates permitting the user MYDOMAIN\someuser to deploy to this node:
+The PowerShell console session below demonstrates permitting powerdelivery to deploy to this node:
 
 <div class="row">
   <div class="col-sm-8">
     {% include console_title.html %}
     <div class="console">
 {% highlight powershell %}
-PS> .\GrantDeliveryTo.ps1 "MYDOMAIN\someuser"
-"MYDOMAIN\someuser" has been permitted to deploy to this computer with powerdelivery.
+PS> .\AllowDelivery.ps1
+Powerdelivery has been permitted to deploy to this computer.
 {% endhighlight %}
     </div>
   </div>
 </div> 
 
 **TIP**: If you will be deploying to many nodes with powerdelivery, save yourself some trouble and create an image using sysprep or another imaging tool that has had this script already run on it. This will allow you to provision a new node quickly that is already ready to be deployed to with powerdelivery if you need to scale up your infrastructure.
+
+**Troubleshooting**: If you receive an error similar to below, chances are you have failed to run *AllowDelivery.ps1* on a node.
+
+<div style="color: firebrick">[x.x.x.x] Connecting to remote server [x.x.x.x] failed with the following error message : WinRM cannot complete the operation. Verify that the specified computer name is valid, that the computer is accessible over the network, and that a firewall exception for the WinRM service is enabled and allows access from this computer. By default, the WinRM firewall exception for public profiles limits access to remote computers within the same local subnet. For more information, see the about_Remote_Troubleshooting Help topic.</div>
 
 <br />
 
@@ -86,7 +90,7 @@ The example below uses encrypted Azure [credentials](credentials.html) managed b
 param($target, $config)
 
 # Look up Azure credentials that were encrypted with powerdelivery
-$azureCredentials = $target.Credentials['jdoe@somewhere.com']
+$azureCredentials = $target.Credentials["me@somewhere.com"]
 
 Import-Module Azure
 

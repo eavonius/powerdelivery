@@ -132,10 +132,10 @@ Delivery:Role -Up {
   param($target, $config, $role)
 
   # Don't do this when running on localhost
-  if ($target.EnvironmentName -ne 'Local') {
+  if ($target.EnvironmentName -ne "Local") {
 
     # Get Azure credentials encrypted by powerdelivery
-    $azureCredentials = $target.Credentials['me@somewhere.com']
+    $azureCredentials = $target.Credentials["me@somewhere.com"]
 
     Import-Module Azure
 
