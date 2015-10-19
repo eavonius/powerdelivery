@@ -141,7 +141,19 @@ function Invoke-MSBuild
 
   Set-Location $fullPathNormalized
 
-  Invoke-DeliveryCommand msbuild "$projectFile ($flavor - $buildConfiguration)" $logFile $msBuildCommand Invoke-MSBuild
+  Invoke-Expression "& $msBuildCommand" | Out-Null
+
+  if ($lastexitcode -ne 0)
+  {
+    $errorMessage = "Invoke-MSBuild failed. Check your parameters or try again with verbose output." 
+
+    if (![String]::IsNullOrWhitespace($logFile))
+    {
+      $errorMessage += " See $logFile for details."
+    }
+    
+    throw $errorMessage
+  }
 }
 
 Export-ModuleMember -Function Invoke-MSBuild
