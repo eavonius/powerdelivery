@@ -28,3 +28,19 @@ Role created at ".\MyAppDelivery\Roles\Chocolatey"
 	</div>
 </div>
 
+<br />
+
+After this cmdlet completes it will have added the following to your directory structure:
+
+<div class="row">
+  <div class="col-sm-8">
+    <pre class="directory-tree">
+.\MyAppDelivery\
+    |-- Roles\
+        |-- Compile\
+            |-- Always.ps1
+            |-- Migrations\</pre>
+  </div>
+</div>
+
+<br />

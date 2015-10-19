@@ -128,7 +128,7 @@ In your role script, use the *Credentials* property of the [$target parameter](r
 The example below assumes credentials for *me@somewhere.com* were encrypted with the *ExampleKey* key:
 
 {% highlight powershell %}
-Delivery:Role {
+Delivery:Role -Up {
   param($target, $config, $role)
 
   # Don't do this when running on localhost
@@ -148,7 +148,7 @@ Delivery:Role {
 
 **Tips**:
 
-* If you find that your credentials aren't availalbe, you may be missing the key file needed. Powerdelivery attempts to decrypt all credentials it finds in the *Credentials* subdirectory, but those for which keys are not present will be unavailable when the role executes.
+* If you find that your credentials aren't available, you may be missing the key file needed. Powerdelivery attempts to decrypt all credentials it finds in the *Credentials* subdirectory, but those for which keys are not present will be unavailable when the role executes.
 * If you need to use different credentials in the role depending on which [environment](environments.html) is being targeted, consider using a [configuration variable](configuration.html) for the username.
 
 <br />

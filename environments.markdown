@@ -23,9 +23,9 @@ An example environment script:
 {% highlight powershell %}
 param($target, $config)
 @{
-  Build = ('localhost');
-  Database = ('x.x.x.1');
-  Website = ('x.x.x.2', 'x.x.x.3')
+  Build = "localhost";
+  Database = "x.x.x.1";
+  Website = "x.x.x.2", "x.x.x.3"
 }
 {% endhighlight %}
   <div class="filename">MyAppDelivery\Environments\Test.ps1</div>
@@ -99,7 +99,7 @@ $nodes = @{}
 # Omitted: do whatever is necessary to provision the nodes, 
 # then add to the node list for example:
 # 
-# $nodes.Add('Website', @('x.x.x.5', 'x.x.x.6'))
+# $nodes.Add("Website", @("x.x.x.5", "x.x.x.6"))
 #
 
 # Return the list of nodes at the conclusion of the script
@@ -118,3 +118,7 @@ $nodes
 Deploying to cloud platform resources, such as Windows Azure's Cloud and Mobile services simplifies environment configuration. Because these platform services do not provide direct VM access, use localhost as the node for any [roles](roles.html) that will access cloud resources. These roles' scripts should then use cmdlets provided by the vendor to access cloud platform resources.
 
 Since most cmdlets from cloud platform vendors require [credentials](credentials.html), you can use the *Credentials* property of the [$target parameter](reference.html#target_parameter) in role scripts to retrieve any you've stored using [Write-DeliveryCredentials](reference.html#write_deliverycredentials_cmdlet). This will enable you to securely access cloud resources without storing credentials for provisioning and access in source control. See [using credentials in roles](credentials.html#using_credentials_in_roles) for an example.
+
+<br />
+
+### Next read about [credentials](credentials.html).

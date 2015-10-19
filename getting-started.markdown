@@ -86,7 +86,7 @@ In the example below, imagine a product's source code has been pulled into the d
     {% include console_title.html %}
     <div class="console">
 {% highlight powershell %}
-PS> New-DeliveryProject MyApp @('Local', 'Test', 'Production')
+PS> New-DeliveryProject MyApp "Local", "Test", "Production"
 Project successfully created at ".\MyAppDelivery"
 {% endhighlight %}
 		</div>
@@ -100,19 +100,19 @@ After this cmdlet completes you'll be left with the following directory structur
 <div class="row">
 	<div class="col-sm-8">
 		<pre class="directory-tree">
-C:\Projects\MyApp\MyAppDelivery
-  |-- Configuration
+C:\Projects\MyApp\MyAppDelivery\
+  |-- Configuration\
       |-- _Shared.ps1
       |-- Local.ps1
       |-- Test.ps1
       |-- Production.ps1
-  |-- Credentials
-  |-- Environments
+  |-- Credentials\
+  |-- Environments\
       |-- Local.ps1
       |-- Test.ps1
       |-- Production.ps1
-  |-- Roles
-  |-- Targets
+  |-- Roles\
+  |-- Targets\
       |-- Release.ps1</pre>
 	</div>
 </div>
@@ -136,9 +136,9 @@ With these decisions made, we fill out [environment scripts](environments.html):
 {% highlight powershell %}
 param($target, $config)
 @{
-  Build = ('localhost');
-  Database = ('localhost');
-  Website = ('localhost')
+  Build = "localhost";
+  Database = "localhost";
+  Website = "localhost"
 }
 {% endhighlight %}
     <div class="filename">MyAppDelivery\Environments\Local.ps1</div>
@@ -150,9 +150,9 @@ param($target, $config)
 {% highlight powershell %}
 param($target, $config)
 @{
-  Build = ('localhost');
-  Database = ('x.x.x.1');
-  Website = ('x.x.x.2', 'x.x.x.3')
+  Build = "localhost";
+  Database = "x.x.x.1";
+  Website = "x.x.x.2", "x.x.x.3"
 }
 {% endhighlight %}
     <div class="filename">MyAppDelivery\Environments\Test.ps1</div>
@@ -164,9 +164,9 @@ param($target, $config)
 {% highlight powershell %}
 param($target, $config)
 @{
-  Build = ('localhost');
-  Database = ('x.x.x.4','x.x.x.5');
-  Website = ('x.x.x.6','x.x.x.7','x.x.x.8','x.x.x.9')
+  Build = "localhost";
+  Database = "x.x.x.4", "x.x.x.5";
+  Website = "x.x.x.6", "x.x.x.7", "x.x.x.8", "x.x.x.9"
 }
 {% endhighlight %}
     <div class="filename">MyAppDelivery\Environments\Production.ps1</div>
@@ -202,6 +202,21 @@ Role created at ".\MyAppDelivery\Roles\Compile"
 
 <br />
 
+After this cmdlet completes it will have added the following to your directory structure:
+
+<div class="row">
+  <div class="col-sm-8">
+    <pre class="directory-tree">
+C:\Projects\MyApp\MyAppDelivery\
+  |-- Roles\
+      |-- Compile\
+          |-- Always.ps1
+          |-- Migrations\</pre>
+  </div>
+</div>
+
+<br />
+
 The most common thing needed before any deployment of a release can occur on most Windows projects is compiling of code. To do this, we'll use powerdelivery's included [Invoke-MSBuild](refresh.html#invoke_msbuild_cmdlet) cmdlet to compile a Visual Studio solution.
 
 <br />
@@ -211,19 +226,17 @@ Here's an example of scripting our role to compile a Visual Studio solution:
 <div class="row">
   <div class="col-sm-8">
 {% highlight powershell %}
-Delivery:Role {
-  -Up {
-    param($target, $config, $node)
+Delivery:Role -Up {
+  param($target, $config, $node)
 
-    Invoke-MSBuild -ProjectFile MyApp.sln
-  }
+  Invoke-MSBuild -ProjectFile MyApp.sln
 }
 {% endhighlight %}
     <div class="filename">MyAppDelivery\Roles\Compile\Always.ps1</div>
   </div>
 </div>
 
-The *Delivery:Role* statement contains all code that will execute when this role is applied to a node as part of a [target](targets.html). The *-Up* parameter indicates this is what we want to happen when the role is applied normally (conversely *-Down* is where you can author a rollback). The third line declares the three special parameters that are passed to every role. These are the [$target parameter](reference.html#target_parameter) (which provides many properties you can use in your role), the [$config parameter](reference.html#config_parameter) to allow you to access [configuration variables](configuration.html), and the [$node parameter](reference.html#node_parameter) which contains the name or IP address of the node the role is currently executing on. We're not using them here so you can ignore them for now.
+The *Delivery:Role* statement contains all code that will execute when this role is applied to a node as part of a [target](targets.html). The *-Up* parameter indicates this is what we want to happen when the role is applied normally (conversely *-Down* is where you can author a rollback). The second line declares the three special parameters that are passed to every role. These are the [$target parameter](reference.html#target_parameter) (which provides many properties you can use in your role), the [$config parameter](reference.html#config_parameter) to allow you to access [configuration variables](configuration.html), and the [$node parameter](reference.html#node_parameter) which contains the name or IP address of the node the role is currently executing on. We're not using them here so you can ignore them for now.
 
 <a name="targets"></a>
 
@@ -240,8 +253,8 @@ Let's use the default *Release.ps1* script generated by the [New-DeliveryProject
 {% highlight powershell %}
 [ordered]@{
   "Building the product" = @{
-    Roles = ('Compile');
-    Nodes = ('Build')
+    Roles = "Compile";
+    Nodes = "Build"
   }
 }
 {% endhighlight %}

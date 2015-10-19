@@ -23,14 +23,14 @@ Below is an example. The keys and values here are simply for demonstration purpo
 {% highlight powershell %}
 param($target)
 @{
-  DBScriptsDirectory = 'MyApp\Scripts';
-  GitRepo = 'https://myhost/somerepo.git';
-  ShareDirectory = '\\x.x.x.x\SomeFolder';
-  Departments = @('Marketing', 'Sales', 'IT', 'Support');
+  DBScriptsDirectory = "MyApp\Scripts";
+  GitRepo = "https://myhost/somerepo.git";
+  ShareDirectory = "\\x.x.x.x\SomeFolder";
+  Departments = "Marketing", "Sales", "IT", "Support";
   Approvers = @{
-    DaveSmith = 'jsmith@acme.com';
-    MaryJane = 'mjane@acme.com';
-    TomJones = 'tjones@acme.com'
+    DaveSmith = "dsmith@acme.com";
+    MaryJane = "mjane@acme.com";
+    TomJones = "tjones@acme.com"
   }
 }
 {% endhighlight %}
@@ -59,7 +59,7 @@ param($target, $shared)
   MySpecialScript = "$($shared.DBScriptsDirectory)\MySpecialScript.sql"
 
   # Overrides the shared "Departments" variable
-  Departments = @('Business Development', 'Product Management');
+  Departments = "Business Development", "Product Management";
 }
 {% endhighlight %}
   <div class="filename">MyAppDelivery\Configuration\Staging.ps1</div>

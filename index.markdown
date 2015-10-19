@@ -9,7 +9,7 @@ title: Devops-friendly Windows releases on-premise or in the cloud.
 <div class="row" style="margin-top: 80px">
 	<div class="col-sm-12">
 		<h1 id="site-title"><span style="color: firebrick">Goodbye,</span> manual releases.</h1>
-		<p id="site-summary">Inspired by tools like <a href="http://www.ansible.com" target="_blank">ansible</a> and <a href="https://www.puppetlabs.com" target="_blank">puppet</a>, powerdelivery organizes everything Windows PowerShell can do within a secure, convention-based framework so you can stop being jealous of your linux friends when you deploy to Windows.</p>
+		<p id="site-summary">Inspired by <a href="http://www.ansible.com" target="_blank">ansible</a> and <a href="http://rubyonrails.org" target="_blank">rails</a>, powerdelivery organizes everything Windows PowerShell can do within a secure, convention-based framework so you can stop being jealous of your linux friends when you deploy to Windows.</p>
 	</div>
 </div>
 
@@ -23,7 +23,7 @@ Before you read the docs, see some code.
     {% include console_title.html %}
     <div class="console">
 {% highlight powershell %}
-PS> New-DeliveryProject MyApp @('Local', 'Production')
+PS> New-DeliveryProject MyApp "Local", "Production"
 Project successfully created at ".\MyAppDelivery"
 {% endhighlight %}
 </div>
@@ -35,7 +35,7 @@ Project successfully created at ".\MyAppDelivery"
   <div class="col-lg-8 col-md-10 col-sm-12">
 {% highlight powershell %}
 @{
-  ReleasesPath = '\\x.x.x.6\MyProduct\Releases'
+  ReleasesPath = "\\MyShare\MyProduct\Releases"
 }
 {% endhighlight %}
     <div class="filename">MyAppDelivery\Configuration\_Shared.ps1</div>
@@ -48,7 +48,7 @@ param($shared)
 @{
   DatabaseName = "MyApp_Development";
   SiteURL = "http://myapp.cloudapp.net";
-  ReleasesPath = 'Releases'
+  ReleasesPath = "Releases"
 }
 {% endhighlight %}
     <div class="filename">MyAppDelivery\Configuration\Local.ps1</div>
@@ -73,9 +73,9 @@ param($shared)
 {% highlight powershell %}
 param($target, $config)
 @{
-  Build = ('localhost');
-  Database = ('localhost');
-  Website = ('localhost')
+  Build = "localhost";
+  Database = "localhost";
+  Website = "localhost"
 }
 {% endhighlight %}
   <div class="filename">MyAppDelivery\Environments\Local.ps1</div>
@@ -86,9 +86,9 @@ param($target, $config)
 {% highlight powershell %}
 param($target, $config)
 @{
-  Build = ('localhost');
-  Database = ('x.x.x.2');
-  Website = ('x.x.x.3','x.x.x.4')
+  Build = "localhost";
+  Database = "x.x.x.2";
+  Website = "x.x.x.3", "x.x.x.4"
 }
 {% endhighlight %}
   <div class="filename">MyAppDelivery\Environments\Production.ps1</div>
@@ -97,57 +97,51 @@ param($target, $config)
 
 ## Creating [roles](roles.html)
 {% highlight powershell %}
-Delivery:Role {
-  -Up {
-    param($target, $config, $node)
+Delivery:Role -Up {
+  param($target, $config, $node)
 
-    # Compile a Visual Studio solution
-    Invoke-MSBuild MyApp.sln
+  # Compile a Visual Studio solution
+  Invoke-MSBuild MyApp.sln
 
-    # Copy compiled assets to a network drive, 
-    # S3 bucket, or wherever the remote nodes can access
-    Copy-Item . $releasePath -Filter "*.dll;*.pdb;*.xml;*.config;*.sql" -Recurse
-  }
+  # Copy compiled assets to a network drive, 
+  # S3 bucket, or wherever the remote nodes can access
+  Copy-Item . $releasePath -Filter "*.dll;*.pdb;*.xml;*.config;*.sql" -Recurse
 }
 {% endhighlight %}
 <div class="filename">MyAppDelivery\Roles\Compile\Build.ps1</div>
 {% highlight powershell %}
-Delivery:Role {
-  -Up {
-    param($target, $config, $node)
+Delivery:Role -Up {
+  param($target, $config, $node)
 
-    $appDataDir = [Environment]::GetFolderPath("ApplicationData") 
-    $releasePath = "$($config.ReleasesPath)\MyApp\$($target.StartedAt)\MyAppDatabase\bin\Release\"
-    $localPath = "$AppDataDir\MyApp\Scripts\$($target.StartedAt)"
+  $appDataDir = [Environment]::GetFolderPath("ApplicationData") 
+  $releasePath = "$($config.ReleasesPath)\MyApp\$($target.StartedAt)\MyAppDatabase\bin\Release\"
+  $localPath = "$AppDataDir\MyApp\Scripts\$($target.StartedAt)"
 
-    # Copy sql scripts from the network drive to the database node
-    Copy-Item $releasePath $localPath -Filter *.* -Recurse
+  # Copy sql scripts from the network drive to the database node
+  Copy-Item $releasePath $localPath -Filter *.* -Recurse
 
-    # Run some SQL scripts
-    foreach ($script in (Get-ChildItem $localPath)) {
-      Invoke-Expression "sqlcmd -E -d $($config.DatabaseName) -i $script"
-    }
+  # Run some SQL scripts
+  foreach ($script in (Get-ChildItem $localPath)) {
+    Invoke-Expression "sqlcmd -E -d $($config.DatabaseName) -i $script"
   }
 }
 {% endhighlight %}
 <div class="filename">MyAppDelivery\Roles\Database\Role.ps1</div>
 {% highlight powershell %}
-Delivery:Role {
-  -Up {
-    param($target, $config, $node)
+Delivery:Role -Up {
+  param($target, $config, $node)
 
-    $appDataDir = [environment]::GetFolderPath("ApplicationData")
-    $releasePath = "$($config.ReleasesPath)\MyApp\$($target.StartedAt)\MyApp\publish\"
-    $localPath = "$AppDataDir\MyApp\Site\$($target.StartedAt)"
+  $appDataDir = [environment]::GetFolderPath("ApplicationData")
+  $releasePath = "$($config.ReleasesPath)\MyApp\$($target.StartedAt)\MyApp\publish\"
+  $localPath = "$AppDataDir\MyApp\Site\$($target.StartedAt)"
 
-    # Copy web content from the network drive to the database node
-    Copy-Item $releasePath $localPath -Filter *.* -Recurse
+  # Copy web content from the network drive to the database node
+  Copy-Item $releasePath $localPath -Filter *.* -Recurse
 
-    Add-PSSnapin WebAdministration
+  Add-PSSnapin WebAdministration
 
-    # Create the web application
-    New-WebApplication $config.Website MyApp $localPath -Force
-  }
+  # Create the web application
+  New-WebApplication $config.Website MyApp $localPath -Force
 }
 {% endhighlight %}
 <div class="filename">MyAppDelivery\Roles\Website\Role.ps1</div>
@@ -156,16 +150,16 @@ Delivery:Role {
 {% highlight powershell %}
 [ordered]@{
   "Building the product" = @{
-    Roles = ('Build');
-    Nodes = ('Build')
+    Roles = "Build";
+    Nodes = "Build"
   };
   "Deploying databases" = @{
-    Roles = ('Database');
-    Nodes = ('Database')
+    Roles = "Database";
+    Nodes = "Database"
   };
   "Deploying the website" = @{
-    Roles = ('Website');
-    Nodes = ('Website')
+    Roles = "Website";
+    Nodes = "Website"
   }
 }
 {% endhighlight %}
