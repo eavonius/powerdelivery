@@ -148,7 +148,7 @@ In IT environments where computing resources are scarce (resources are on-premis
 If you have more resources available, it can be better to create a new node each time. This lets you rollback by pointing load balancers to the old site if you have a problem, and utilize other recovery methods when the previous release is still untouched.
 
 To provision nodes on each run of powerdelivery, add PowerShell logic to the environment script above the statement 
-that returns the hash of nodes. You'll need to install additional Powershell modules (Windows Azure, Amaozon Web Services, VMWare, or Hyper-V cmdlets for example) and make sure these are able to be found when you run powerdelivery from the Administrator console. After you've provisioned the nodes, gather the name or IP address of them and add them to the hash to be returned.
+that returns the hash of nodes. You'll need to install additional PowerShell modules (Windows Azure, Amaozon Web Services, VMWare, or Hyper-V cmdlets for example) and make sure these are able to be found when you run powerdelivery from the Administrator console. After you've provisioned the nodes, gather the name or IP address of them and add them to the hash to be returned.
 
 <br />
 

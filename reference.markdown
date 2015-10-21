@@ -81,7 +81,7 @@ This page contains reference for the script parameters and cmdlets included with
 
 ## Cmdlets
 
-Cmdlets are Powershell functions included with powerdelivery generate files and run commands within [roles](roles.html).
+Cmdlets are PowerShell functions included with powerdelivery generate files and run commands within [roles](roles.html).
 
 <hr />
 
