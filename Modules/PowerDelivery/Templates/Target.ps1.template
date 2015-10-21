@@ -1,2 +1,5 @@
+# See http://www.powerdelivery.io/targets.html
+#
 [ordered]@{
+  # Define the steps in your target here
 }

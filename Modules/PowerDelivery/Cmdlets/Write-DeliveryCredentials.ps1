@@ -34,7 +34,7 @@ function Write-DeliveryCredentials {
 
   try {
     Read-Host -AsSecureString | ConvertFrom-SecureString -Key $keyBytes | Out-File $userNamePath -Force
-    Write-Host "Credentials written to .\Credentials\$keyName\$userNameFile"
+    Write-Host "Credentials written to "".\Credentials\$keyName\$userNameFile"""
   }
   catch {
     "$keyFilePath appears to be invalid - $_"

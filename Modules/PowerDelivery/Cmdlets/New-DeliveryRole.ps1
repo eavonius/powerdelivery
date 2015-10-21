@@ -1,12 +1,23 @@
 function New-DeliveryRole {
-  [CmdletBinding()]
   param(
-    [Parameter(Position=0, Mandatory=1)][scriptblock] $block
+    [Parameter(Position=0,Mandatory=1)][string] $ProjectName,
+    [Parameter(Position=1,Mandatory=1)][string] $RoleName
   )
-  $fullPath = [System.IO.Path]::GetDirectoryName($MyInvocation.PSCommandPath)
-  $roleName = [System.IO.Path]::GetFileName($fullPath)
-  $pow["$($roleName)Role"] = $block
+
+  $templatesPath = Join-Path $pow.scriptDir "Templates"
+
+  $roleDir = "$($ProjectName)Delivery\Roles\$RoleName"
+
+  if (Test-Path $roleDir) {
+    throw "Directory $roleDir already exists."
+  }
+
+  New-Item $roleDir -ItemType Directory | Out-Null
+
+  # Copy the role script
+  Copy-Item "$templatesPath\Role.ps1.template" "$roleDir\Always.ps1"
+
+  Write-Host "Role created at "".\$roleDir"""
 }
 
-Set-Alias Delivery:Role New-DeliveryRole
-Export-ModuleMember -Function New-DeliveryRole -Alias Delivery:Role
+Export-ModuleMember -Function New-DeliveryRole

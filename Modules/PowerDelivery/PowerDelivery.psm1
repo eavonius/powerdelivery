@@ -14,3 +14,4 @@ gci $cmdletsDir -Filter "*.ps1" | ForEach-Object { . (Join-Path $cmdletsDir $_.N
 $env:TERM = "msys"
 
 $script:pow = @{}
+$pow.scriptDir = Split-Path $MyInvocation.MyCommand.Path

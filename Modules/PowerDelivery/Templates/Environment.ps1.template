@@ -1,3 +1,6 @@
+# See http://www.powerdelivery.io/environments.html
+#
 param($target, $config)
 @{
+  # Define sets of nodes here
 }

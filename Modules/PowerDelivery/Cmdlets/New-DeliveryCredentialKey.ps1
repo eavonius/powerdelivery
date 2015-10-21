@@ -18,7 +18,7 @@ function New-DeliveryKey {
 
   $keyString | Out-File -FilePath $keyFilePath
 
-  Write-Host "Key written to $keyFilePath."
+  Write-Host "Key written to ""$keyFilePath"""
 }
 
 Export-ModuleMember -Function New-DeliveryKey

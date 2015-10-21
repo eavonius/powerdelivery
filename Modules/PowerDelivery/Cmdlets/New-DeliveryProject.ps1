@@ -59,7 +59,7 @@ function New-DeliveryProject {
     }
   }
 
-  Write-Host "Powerdelivery project created!" -ForegroundColor Green
+  Write-Host "Project successfully created at "".\$($ProjectName)Delivery"""
 }
 
 Export-ModuleMember -Function New-DeliveryProject

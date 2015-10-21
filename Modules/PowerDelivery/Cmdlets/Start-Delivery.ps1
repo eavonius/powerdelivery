@@ -6,8 +6,13 @@ function Start-Delivery {
     [Parameter(Position=2,Mandatory=1)][Alias('e')][string] $EnvironmentName,
     [Parameter(Position=3,Mandatory=0)][Alias('r')][string] $Revision,
     [Parameter(Position=4,Mandatory=0)][Alias('a')][string] $As,
-    [Parameter(Position=5,Mandatory=0)][Alias('c')][string] $UseCredential
+    [Parameter(Position=5,Mandatory=0)][Alias('c')][string] $UseCredentials
   )
+
+  $ErrorActionPreference = 'Stop'
+
+  winrm quickconfig -Force | Out-Null
+  Enable-PSRemoting -Force | Out-Null
 
   # Verify running as Administrator
   $user = [Security.Principal.WindowsIdentity]::GetCurrent();
@@ -41,6 +46,9 @@ function Start-Delivery {
   $pow.inBuild = $true
   $pow.buildFailed = $false
 
+  $pow.roles = @{}
+  $pow.variableBlocks = @{}
+
   if (Get-Module powerdelivery)
   {
       $pow.version = Get-Module powerdelivery | select version | ForEach-Object { $_.Version.ToString() }
@@ -48,19 +56,6 @@ function Start-Delivery {
   else
   {
       $pow.version = "SOURCE"
-  }
-
-  # Get roles from prior run
-  $rolesToRemove = [System.Collections.ArrayList]@()
-  foreach ($item in $pow.GetEnumerator()) {
-    if ($item.Key.EndsWith('Role')) {
-      $rolesToRemove.Add($item.Key)
-    }
-  }
-
-  # Remove roles from prior run
-  foreach ($roleToRemove in $rolesToRemove) {
-    $pow.Remove($roleToRemove) | Out-Null
   }
 
   Write-Host
@@ -114,9 +109,21 @@ function Start-Delivery {
             $userCredential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $userName, $password
 
             # Add credentials to hash in target
-            $pow.target.Credentials.Add($userName, [PSCredential]$userCredential)
+            $pow.target.Credentials.Add($userName.ToLower(), [PSCredential]$userCredential)
           }
         }
+      }
+    }
+
+    $defaultRemoteCredentials = $null
+
+    # Lookup remote credentials if specified
+    if (![String]::IsNullOrWhiteSpace($UseCredentials)) {
+      if (!$pow.target.Credentials.ContainsKey($UseCredentials.ToLower())) {
+        throw "Credentials $UseCredentials not found. Are you missing the key file?"
+      }
+      else {
+        $defaultRemoteCredentials = $pow.target.Credentials.Item($UseCredentials.ToLower())
       }
     }
 
@@ -210,24 +217,22 @@ function Start-Delivery {
       foreach ($node in $targetStep.Value.Nodes) {
 
         # Make sure the environment contains the nodes
-        if (!($pow.target.Environment.ContainsKey($node))) {
+        if (!$pow.target.Environment.ContainsKey($node)) {
           Write-Host "Step $($targetStep.Key) of target $TargetName refers to nodeset $node not found in $EnvironmentName environment." -ForegroundColor Red
           throw
         }
 
-        $nodeNames = $pow.target.Environment[$node]
+        $nodes = $pow.target.Environment.Item($node)
 
         # Iterate nodes in the set
-        foreach ($nodeName in $nodeNames) {
+        foreach ($nodeName in $nodes.Nodes) {
 
           # Iterate roles
           foreach ($role in $targetStep.Value.Roles) {
 
-            $rolePath = "$($ProjectName)Delivery\Roles\$role\Role.ps1"
-
             # Make sure the role script exists
-            if (!($pow.ContainsKey("$($role)Role"))) {
-              $rolePath = "$($ProjectName)Delivery\Roles\$role\Role.ps1"
+            if (!($pow.roles.ContainsKey($role))) {
+              $rolePath = "$($ProjectName)Delivery\Roles\$role\Always.ps1"
               $roleScript = (Join-Path $pow.target.StartDir $rolePath)
               if (!(Test-Path $roleScript)) {
                 Write-Host "Role script $rolePath could not be found." -ForegroundColor Red
@@ -238,27 +243,56 @@ function Start-Delivery {
               Invoke-Expression -Command ".\$rolePath"
             }
 
-            <#
-            if (!(Test-Path $rolePath)) {
-              Write-Host "Role script $rolePath could not be found." -ForegroundColor Red
-              throw 
-            }
-
             Write-Host "[--------- $role -> ($nodeName)" -ForegroundColor $pow.colors['RoleForeground']
 
-            if ($nodeName -eq 'localhost') {
-              Invoke-Command -EnableNetworkAccess -ComputerName $nodeName -FilePath $rolePath -ArgumentList @($pow.target, $config, $nodeName)
+            $commandArgs = @{
+              ScriptBlock = $pow.roles.Item($role)[0];
+              ArgumentList = @($pow.target, $config, $nodeName)
             }
-            else {
 
-              # Run the role script to get the script block              
-              Invoke-Command -EnableNetworkAccess -ComputerName $nodeName -FilePath $rolePath -ArgumentList @($pow.target, $config, $nodeName)
-            }#>
+            # Add the node name if not localhost
+            if ($nodeName.ToLower() -ne 'localhost') {
+              $commandArgs.Add('ComputerName', $nodeName)
+              $commandArgs.Add('EnableNetworkAccess', 1)
 
-            Write-Host "[--------- $role -> ($nodeName)" -ForegroundColor $pow.colors['RoleForeground']
+              # Add remote credentials if specified
+              if ($defaultRemoteCredentials -ne $null) {
+                $commandArgs.Add('Credential', $defaultRemoteCredentials)
 
-            # Run the script block
-            Invoke-Command -ScriptBlock $pow["$($role)Role"] -ArgumentList @($pow.target, $config, $nodeName)
+                $authentication = 'Default'
+
+                if ($nodes.ContainsKey('Authentication')) {
+                  $authentication = $nodes['Authentication']
+                }
+
+                $commandArgs.Add('Authentication', $authentication)
+
+                # Setup CredSSP if specified
+                if ($authentication.ToLower() -eq 'credssp') {
+                  $credSSP = Get-WSManCredSSP
+                  $nodeExists = $false
+
+                  # Check whether remote node exists in trusted hosts
+                  if ($credSSP -ne $null) {
+                    if ($credSSP.length -gt 0) {
+                      $trustedClients = $credSSP[0].Substring($credSSP[0].IndexOf(":") + 2)
+                      $trustedClientsList = $trustedClients -split "," | % { $_.Trim() }
+                      if ($trustedClientsList.Contains("wsman/$($nodeName.ToLower())")) {
+                        $nodeExists = $true
+                      }
+                    }
+                  }
+
+                  # Enable CredSSP to remote node if not found in trusted hosts
+                  if (!$nodeExists) {
+                    Enable-WSManCredSSP -Role Client -DelegateComputer $nodeName.ToLower() -Force | Out-Null
+                  }
+                }
+              }
+            }
+
+            # Run the role
+            Invoke-Command @commandArgs
 
             Set-Location $pow.target.StartDir
           }

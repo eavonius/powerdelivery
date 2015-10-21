@@ -1,3 +1,6 @@
+# See http://www.powerdelivery.io/variables.html
+#
 param($target)
 @{
+	# Define hash values with shared variables here
 }
