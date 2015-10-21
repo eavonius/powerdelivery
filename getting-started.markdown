@@ -218,7 +218,6 @@ PS> New-DeliveryRole MyApp Compile
 Role created at ".\MyAppDelivery\Roles\Compile"
 {% endhighlight %}
     </div>
-    <div class="filename">MyAppDelivery\Roles\Compile\Always.ps1</div>
   </div>
 </div>
 
