@@ -1,14 +1,14 @@
 # See http://www.powerdelivery.io/roles.html
 #
 Delivery:Role {
-	-Up {
-		param($target, $config, $node)
+  -Up {
+    param($target, $config, $node)
 
     # Write PowerShell deployment logic here
-	} 
-	-Down {
-		param($target, $config, $node)
+  } 
+  -Down {
+    param($target, $config, $node)
 
     # Write PowerShell rollback logic here (if necessary)
-	}
+  }
 }
