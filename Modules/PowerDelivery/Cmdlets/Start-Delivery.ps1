@@ -12,7 +12,7 @@ function Start-Delivery {
   $ErrorActionPreference = 'Stop'
 
   winrm quickconfig -Force | Out-Null
-  Enable-PSRemoting -Force | Out-Null
+  Enable-PSRemoting -Force -SkipNetworkProfileCheck | Out-Null
 
   # Verify running as Administrator
   $user = [Security.Principal.WindowsIdentity]::GetCurrent();
