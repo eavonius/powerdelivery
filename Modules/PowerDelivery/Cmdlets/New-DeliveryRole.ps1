@@ -1,12 +1,11 @@
 function New-DeliveryRole {
   param(
-    [Parameter(Position=0,Mandatory=1)][string] $ProjectName,
     [Parameter(Position=1,Mandatory=1)][string] $RoleName
   )
 
   $templatesPath = Join-Path $pow.scriptDir "Templates"
 
-  $roleDir = "$($ProjectName)Delivery\Roles\$RoleName"
+  $roleDir = ".\Roles\$RoleName"
 
   if (Test-Path $roleDir) {
     throw "Directory $roleDir already exists."
@@ -17,7 +16,7 @@ function New-DeliveryRole {
   # Copy the role script
   Copy-Item "$templatesPath\Role.ps1.template" "$roleDir\Always.ps1"
 
-  Write-Host "Role created at "".\$roleDir"""
+  Write-Host "Role created at ""$roleDir"""
 }
 
 Export-ModuleMember -Function New-DeliveryRole
