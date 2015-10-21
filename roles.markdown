@@ -21,8 +21,8 @@ Below is an example of creating a role for installing the <a href="http://www.ch
 		{% include console_title.html %}
 		<div class="console">
 {% highlight powershell %}
-PS> New-DeliveryRole MyApp Chocolatey
-Role created at ".\MyAppDelivery\Roles\Chocolatey"
+PS C:\MyApp\MyAppDelivery> New-DeliveryRole Chocolatey
+Role created at ".\Roles\Chocolatey"
 {% endhighlight %}
 		</div>
 	</div>
@@ -35,7 +35,7 @@ After this cmdlet completes it will have added the following to your directory s
 <div class="row">
   <div class="col-sm-8">
     <pre class="directory-tree">
-.\MyAppDelivery\
+C:\MyApp\MyAppDelivery\
     |-- Roles\
         |-- Compile\
             |-- Always.ps1
@@ -81,10 +81,13 @@ Delivery:Role {
   </div>
 </div>
 
+<br />
+
 ### Role script parameters
 
 Every block in a role, whether performing an up or down (rollback), must declare three parameters. These are the [$target](reference.html#target_parameter), [$config](reference.html#config_parameter), and [$node](reference.html#node_parameter) parameters. These parameters provide context to where your role is running and will be very useful depending on what you're trying to do.
 
+<br />
 
 ## Types of role scripts
 
@@ -119,14 +122,16 @@ Below is an example of adding a migration script to a role named *Database*:
     {% include console_title.html %}
     <div class="console">
 {% highlight powershell %}
-PS> New-DeliveryRoleMigration MyApp Database "Truncate Logfile"
+PS C:\MyApp\MyAppDelivery> New-DeliveryRoleMigration MyApp Database "Truncate Logfile"
 Role migration created at ".\MyAppDelivery\Roles\Database\Migrations\20151019_112811_Truncate_Logfile.ps1"
 {% endhighlight %}
     </div>
   </div>
 </div>
 
-**Tips**: 
+<br />
+
+**Tips:** 
 
 * The content of a role migration script is just like Always.ps1. You can specify just the up block, or both up and down.
 * Always.ps1 runs *before* any migration scripts if present during a normal deployment.
@@ -134,11 +139,15 @@ Role migration created at ".\MyAppDelivery\Roles\Database\Migrations\20151019_11
 
 <br />
 
-## Scripting roles
+## Common role tasks
+
+Below are some examples of common tasks you might want to accomplish in roles.
+
+<br />
 
 ### Installing dependencies
 
-There are a few important nuances to remember about roles. First, if a role is set to run on localhost, you may use any of the PowerShell cmdlets installed on a developer or build server computer. However, if a role runs on a remote computer, any PowerShell cmdlets you want to use need to be installed before you can use them. Many PowerShell cmdlets, including powerdelivery itself, are installed with the popular [chocolatey](http://www.chocolatey.org) package manager. 
+If a role is set to run on localhost, it may use any of the PowerShell cmdlets installed on a developer or build server computer. However, if a role runs on a remote computer, any PowerShell cmdlets you want to use need to be installed before you can use them. Many PowerShell cmdlets, including powerdelivery itself, are installed with the popular [chocolatey](http://www.chocolatey.org) package manager. 
 
 Lets modify our script we generated at the beginning of this topic by editing the file *Always.ps1* to install chocolatey:
 
@@ -152,7 +161,8 @@ Delivery:Role {
   param($target, $config, $node)
 
   if (!(Test-CommandExists choco)) {
-    Invoke-Expression ((New-Object Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+    $webClient = New-Object Net.WebClient
+    Invoke-Expression $webClient.DownloadString('https://chocolatey.org/install.ps1')
     $path = $env:PATH
     $allUsersProfile = $env:ALLUSERSPROFILE
     $env:PATH = "$path;$allUsersProfile\chocolatey\bin"
@@ -164,7 +174,11 @@ Delivery:Role {
 
 <br />
 
-Now if we want any remote node to have chocolatey installed, we can just include the "Chocolatey" role in the steps of a the [target](targets.html) script that make sense. We can also add calls to the *choco* command-line client to install packages in this role, or another that is set to run after it in our target.
+This role uses the [Test-CommandExists](reference.html#test_commandexists_cmdlet) cmdlet to only execute if chocolatey is not already available. Now if we want any remote node to have chocolatey installed, we can just apply the "Chocolatey" role to any nodes we want in a [target](targets.html) script. We can also add calls to the *choco* command-line client to install packages in this role, or another that is set to run after it in our target.
+
+<br />
+
+**Tip:** You may use the Web Platform Installer, OneGet, npm, rubygems, or whatever you need to install dependencies - chocolatey is just one example.
 
 <br />
 

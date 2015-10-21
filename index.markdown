@@ -23,7 +23,7 @@ Before you read the docs, see some code.
     {% include console_title.html %}
     <div class="console">
 {% highlight powershell %}
-PS> New-DeliveryProject MyApp "Local", "Production"
+PS C:\MyApp> New-DeliveryProject MyApp "Local", "Production"
 Project successfully created at ".\MyAppDelivery"
 {% endhighlight %}
 </div>
@@ -185,7 +185,7 @@ Delivery:Role {
     {% include console_title.html %}
     <div class="console">
 {% highlight powershell %}
-PS> Start-Delivery MyApp Release Local
+PS C:\MyApp> Start-Delivery MyApp Release Local
 
 PowerDelivery v3.0.1
 Target "Release" started by MYDOMAIN\me
@@ -210,7 +210,7 @@ Target "Release" succeeded in 10 sec 453 ms.
     {% include console_title.html %}
     <div class="console">
 {% highlight powershell %}
-PS> Start-Delivery MyApp Release Production -As "MYDOMAIN\opsuser"
+PS C:\MyApp> Start-Delivery MyApp Release Production -As "MYDOMAIN\opsuser"
 
 PowerDelivery v3.0.1
 Target "Release" started by MYDOMAIN\opsuser

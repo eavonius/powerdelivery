@@ -6,26 +6,28 @@ layout: page
 
 # Getting Started
 
-You want developers to build, test, and deploy a product on their own computers. As often as possible, they or others may deploy it to other environments and eventually on to production without manual changes. If this sounds like you, this is what powerdelivery will help you accomplish. 
+You want developers to build, test, and deploy a product on their own computers. As often as possible, you want staff with appropriate permissions to deploy it to other environments and eventually on to production without manual changes. You don't want to pay for a bunch of proprietary build tools and train people on IDEs and cloud management consoles just to automate infrastructure. 
 
-Powerdelivery adheres to the tenets of <a href="https://www.thoughtworks.com/continuous-delivery" target="_blank">continuous delivery</a> enabling you to lock down VMs and cloud resources so they only get changed through scripts. If your IT assets are a mess because too many hands are on them - this is for you.
+If this sounds like you, powerdelivery is what you need. Every good automated release is *custom* so changes to it need to be *fast*. Powerdelivery is designed specifically to allow PowerShell developers to use a standard directory structure, some cmdlets that generate files, and a mechanism for securely sharing credentials to put code they already know to use without learning new APIs.
 
-This page provides a walkthrough of getting setup and building a simple automated build to demonstrate some of the core features of powerdelivery. We'll just scratch the surface - to automate the release of your product, you'll want to read the rest of the topics when you're done here.
+This page provides a walkthrough of getting setup and building a simple automated build to demonstrate some of the core features of powerdelivery. We'll just scratch the surface - to automate the release of your product, you'll want to read the rest of the topics when you're done here. 
 
 <a name="setup"></a>
 
-## Set up your dev box or build server
+## Requirements
 
 Powerdelivery can be run directly from a developer's computer, or you can set it up to run automatically when developers check code into their source control repository. Either way, the computer that will run powerdelivery needs the following components:
 
 * Windows 7, 8.1, or 10; or Windows Server 2008 R2 or 2012
 * PowerShell 3.0 or greater
-* Tools for compiling assets into deliverables (Visual Studio, Java, Grunt, etc.)
+* Whatever you need for compiling assets into deliverables (Visual Studio, Java, Grunt, etc.)
 * Open ports in the firewall from the computer to any nodes it will deploy to
 
 ## Install powerdelivery
 
 Before you can use powerdelivery you'll need to install it onto your developer's computer, and your build server (if using one).
+
+<br />
 
 ### Method A: Installing with chocolatey
 
@@ -61,36 +63,63 @@ PS> choco install PowerDelivery
 	</div>
 </div>
 
+<br />
+
 After this completes, close and re-open an Administrator PowerShell console.
 
 <br />
 
 ### Method B: Installing from source
 
-If you are not permitted to run scripts from the Internet due to IT policies, you must install from source and digitally sign the module with your company's certificate. The source is available from github. Use your favorite git tool and clone the following repo:
+If you are not permitted to run scripts from the Internet due to IT policies, you must install from source and digitally sign the module with your company's certificate. The source is available from github. 
 
-https://github.com/eavonius/powerdelivery.git
+<br />
 
-Once you have the code in a local directory, modify the PSMODULEPATH environment variable by appending the *Modules* subdirectory of powerdelivery. You can do this with the Windows *System* control panel application. For example, if you cloned the github repo into *C:\Powerdelivery* append this to the end of your PSMODULEPATH:
+Use your favorite git tool and clone the following repo:
 
-*;C:\Powerdelivery\Modules*
+<div class="row">
+  <div class="col-sm-8">
+    <pre>https://github.com/eavonius/powerdelivery.git</pre>
+  </div>
+</div>
+
+<br />
+
+
+Once you have the code in a local directory, modify the PSMODULEPATH environment variable by appending the *Modules* subdirectory of powerdelivery. You can do this with the Windows *System* control panel application. 
+
+<br />
+
+For example, if the powerdelivery source is at *C:\Powerdelivery* append this to the end of PSMODULEPATH:
+
+<div class="row">
+  <div class="col-sm-8">
+    <pre>;C:\Powerdelivery\Modules</pre>
+  </div>
+</div>
+
+<br />
 
 Once you've set this variable, close any open consoles and re-open an Administrator PowerShell console.
+
+<br />
 
 ## Create a project
 
 Powerdelivery includes the [New-DeliveryProject](reference.html#new_deliveryproject_cmdlet) cmdlet that can be run from your console to generate an intial project. You'll want to store the files generated by this cmdlet in source control. If you want to store your powerdelivery project along with the product's source code, first pull your source into a local directory. 
 
+Imagine our product's source code has been pulled into the directory *C:\MyApp* and the name of the product is "MyApp". We decide to allow developers to deploy on their local computers; have another environment for user acceptance testing, and one for production.
+
 <br />
 
-In the example below, imagine a product's source code has been pulled into the directory *C:\Projects\MyApp* and the name of the product is *MyApp*. We decide to allow developers to deploy on their local computers; have another environment for user acceptance testing, and one for production.
+Below is an example of creating this project:
 
 <div class="row">
 	<div class="col-sm-8">
     {% include console_title.html %}
     <div class="console">
 {% highlight powershell %}
-PS> New-DeliveryProject MyApp "Local", "Test", "Production"
+PS C:\MyApp> New-DeliveryProject MyApp "Local", "Test", "Production"
 Project successfully created at ".\MyAppDelivery"
 {% endhighlight %}
 		</div>
@@ -104,7 +133,7 @@ After this cmdlet completes you'll be left with the following directory structur
 <div class="row">
 	<div class="col-sm-8">
 		<pre class="directory-tree">
-C:\Projects\MyApp\MyAppDelivery\
+C:\MyApp\MyAppDelivery\
   |-- Configuration\
       |-- _Shared.ps1
       |-- Local.ps1
@@ -120,8 +149,12 @@ C:\Projects\MyApp\MyAppDelivery\
       |-- Release.ps1</pre>
 	</div>
 </div>
+
 <br />
+
 Because we specified three environment names as the second parameter to the cmdlet, powerdelivery generated files specific to each environment as appropriate. You could name these whatever makes sense for your particular method of release. We'll disect each of the above directories and generated files in the sections that follow.
+
+<br />
 
 <a name="infrastructure"></a>
 
@@ -195,9 +228,13 @@ param($target, $config)
   </div>
 </div>
 
-Notice each script file is named after the environment. Each set of nodes has a name (Build, Database, and Website in this case) and a set of nodes separated by commas. The IP addresses can instead be computer names if resolvable through DNS or NetBIOS. We've set the *Build* group of nodes to always specify localhost. This ensures that any actions performed on this set of nodes are run on the developer's computer (or the build server) and not a test or production node. 
+<br />
+
+Note how each script file is named after the environment. Each set of nodes has a name (Build, Database, and Website in this case) and a set of nodes separated by commas. The IP addresses can instead be computer names if resolvable through DNS or NetBIOS. We've set the *Build* group of nodes to always specify localhost. This ensures that any actions performed on this set of nodes are run on the developer's computer (or the build server) and not a test or production node. 
 
 This example assumes the nodes are already running. If you need to provision nodes on the fly (for A/B deployments) see [provisioning nodes at deploy time](environments.html#provisioning_nodes_at_deploy_time). This is what the [$target](reference.html#target_parameter) and [$config](reference.html#config_parameter) parameters are for - you can ignore them for now.
+
+<br />
 
 <a name="roles"></a>
 
@@ -214,8 +251,8 @@ First generate a role with the [New-DeliveryRole](reference.html#new_deliveryrol
 {% include console_title.html %}
     <div class="console">
 {% highlight powershell %}
-PS> New-DeliveryRole MyApp Compile
-Role created at ".\MyAppDelivery\Roles\Compile"
+PS C:\MyApp\MyAppDelivery> New-DeliveryRole Compile
+Role created at ".\Roles\Compile"
 {% endhighlight %}
     </div>
   </div>
@@ -228,7 +265,7 @@ After this cmdlet completes it will have added the following to your directory s
 <div class="row">
   <div class="col-sm-8">
     <pre class="directory-tree">
-C:\Projects\MyApp\MyAppDelivery\
+C:\MyApp\MyAppDelivery\
   |-- Roles\
       |-- Compile\
           |-- Always.ps1
@@ -257,7 +294,11 @@ Delivery:Role {
   </div>
 </div>
 
-The *Delivery:Role* statement contains all code that will execute when this role is applied to a node as part of a [target](targets.html). The second line declares the three special parameters that are passed to every role. These are the [$target parameter](reference.html#target_parameter) (which provides many properties you can use in your role), the [$config parameter](reference.html#config_parameter) to allow you to access [configuration variables](variables.html), and the [$node parameter](reference.html#node_parameter) which contains the name or IP address of the node the role is currently executing on. We're not using them here so you can ignore them for now.
+<br />
+
+The *Delivery:Role* statement contains all code that will execute when this role is applied to a node. The second line declares the three special parameters that are passed to every role. We're not using them here so you can ignore them for now.
+
+<br />
 
 <a name="targets"></a>
 
@@ -283,13 +324,17 @@ Let's use the default *Release.ps1* script generated by the [New-DeliveryProject
 	</div>
 </div>
 
+<br />
+
 The *ordered* keyword tells powerdelivery to run these steps in sequence. The key of each step will be displayed as a status message. *Roles* is an list of any roles that should be applied when this step is reached. In this case we will apply the *Compile* role we implemented in the role script earlier. Lastly, *Nodes* is a list of sets of nodes from the environment script that specifies which sets will have the roles applied to them.
 
 Whew! That's a mouthful. In layman's terms, this code says "When *building the product*, apply the *compile* role to the *build* nodes in the environment".
 
+<br />
+
 ## Run a target
 
-To run a target, use the [Start-Delivery](reference.html#start_delivery_cmdlet) cmdlet. This cmdlet takes takes the name of the project as the first parameter, the target to run as the second, and the environment to apply the target to as the third. 
+To run a target, use the [Start-Delivery](reference.html#start_delivery_cmdlet) cmdlet. You should always run this from the directory *above* your powerdelivery project. This cmdlet takes the name of the project as the first parameter, the target to run as the second, and the environment to apply the target to as the third. 
 
 <br />
 
@@ -300,7 +345,7 @@ The console session below demonstrates a run of the *Release* target in the *Loc
     {% include console_title.html %}
     <div class="console">
 {% highlight powershell %}
-PS> Start-Delivery MyApp Release Local
+PS C:\MyApp> Start-Delivery MyApp Release Local
 
 PowerDelivery v3.0.1
 Target "Release" started by MYDOMAIN\me
@@ -314,6 +359,8 @@ Target "Release" succeeded in 1 sec 857 ms.
     </div>
   </div>
 </div>
+
+<br />
 
 Upon running the command you will see a build log in PowerShell similar to above that shows who ran the build, which targets and environment were selected, and the progress of the roles being applied to each node. If any errors occur you will need to resolve them and try your target again.
 

@@ -67,6 +67,10 @@ h1 {
 	font-size: 15px;
 }
 
+pre {
+	font-size: 17px;
+}
+
 .highlight {
 	margin-top: 0px;
 	margin-bottom: 20px;
@@ -315,4 +319,29 @@ dl dd {
 	font-size: 18px;
 	text-transform: uppercase;
 	font-weight: bold
+}
+
+.panel.panel-default .panel-heading {
+	background-color: #666;
+	color: #fff;
+	border-bottom: 1px solid #F2C811;
+}
+
+.panel.panel-default .panel-body {
+	background-color: #444;
+	color: #eee;
+}
+
+.panel.panel-default .panel-body b {
+	margin-bottom: 7px;
+	margin-top: 7px;
+}
+
+.panel.panel-default .panel-body ul li a {
+	color: #F2C811;
+}
+
+.panel.panel-default .panel-body ul li a:hover {
+	background-color: #333;
+	color: #F2C811;
 }

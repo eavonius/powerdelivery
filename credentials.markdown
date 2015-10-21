@@ -30,11 +30,13 @@ For example:
 		{% include console_title.html %}
 		<div class="console">
 {% highlight powershell %}
-PS> Start-Delivery MyApp Release Production -As "MYDOMAIN\opsuser"
+PS C:\MyApp> Start-Delivery MyApp Release Production -As "MYDOMAIN\opsuser"
 {% endhighlight %}
 		</div>
 	</div>
 </div>
+
+<br />
 
 Keep in mind that any roles set to run on localhost for your target [environment](environments.html) will still execute under the credentials you are logged into Windows with.
 
@@ -59,16 +61,19 @@ The PowerShell session below demonstrates this using the [New-DeliveryKey](refer
 		{% include console_title.html %}
 		<div class="console">
 {% highlight powershell %}
-PS> New-DeliveryKey ExampleKey
-Key written to "C:\Users\Jayme\Documents\PowerDelivery\Test\ExampleKey.key"
+PS C:\MyApp> New-DeliveryKey ExampleKey
+Key written to "C:\Users\Jayme\Documents\PowerDelivery\Keys\ExampleKey.key"
 {% endhighlight %}
 		</div>
 	</div>
 </div>
 
+<br />
+
 Upon running this command, copy the key file from where it was generated and save it somewhere safe. I can't stress this enough - *do not store the key file in source control*! You have been warned.
 
 <br />
+
 <b>Step 2. Encrypt credentials with the key</b>
 
 Now that you have a key file, pass it to the [Write-DeliveryCredentials](reference.html#write_delivery_credentials_cmdlet) cmdlet with the username of an account. This must be run from the directory containing your project. The cmdlet will prompt for the password and write it to an encrypted file under the *Credentials* directory. This file *should* be stored in source control.
@@ -81,7 +86,7 @@ The PowerShell session below demonstrates writing credentials to a file using a 
 	<div class="col-sm-12">
 		{% include console_title.html %}
 		<div class="console">{% highlight powershell %}
-PS> Write-DeliveryCredentials ExampleKey "MYDOMAIN\opsuser"
+PS C:\MyApp\MyAppDelivery> Write-DeliveryCredentials ExampleKey "MYDOMAIN\opsuser"
 Enter the password for MYDOMAIN\opsuser and press ENTER:
 **********
 Credentials written to ".\Credentials\MyKey\MYDOMAIN#opsuser.credential"
@@ -89,6 +94,8 @@ Credentials written to ".\Credentials\MyKey\MYDOMAIN#opsuser.credential"
 		</div>
 	</div>
 </div>
+
+<br />
 
 You should commit this new file to your source control. 
 
@@ -102,20 +109,50 @@ To enable your build server or any other person to run powerdelivery with these 
 
 Key files must go in the directory:
 
-C:\Users\YourAccount\Documents\PowerDelivery\Keys
+<div class="row">
+	<div class="col-sm-8">
+		<pre>C:\Users\[UserName]\Documents\PowerDelivery\Keys</pre>
+	</div>
+</div>
 
 <br />
 
-<b>Step 4. Deploy using the credentials</b>
+<b>Step 4. Add the credentials to environment nodes</b>
 
-Once the key file is present, *Start-Delivery* can run without prompting by passing it the *-UseCredentials* parameter:
+The last step is to add these credentials to any nodes in envrionments that will deploy using them. 
 
-{% include console_title.html %}
-<div class="console">
-  {% highlight powershell %}PS> Start-Delivery MyApp Release Production -UseCredentials "MYDOMAIN\opsuser"{% endhighlight %}
+<br />
+
+Below is an example Production environment script using credentials:
+
+<div class="row">
+	<div class="col-sm-8">
+{% highlight powershell %}
+param($target, $config)
+@{
+  Build = @{
+    Nodes = "localhost";
+  }
+  Database = @{
+    Nodes = "x.x.x.1", "x.x.x.2";
+    Credentials = "MYDOMAIN\opsuser";
+    Authentication = "Kerberos"
+  }
+}
+{% endhighlight %}
+	<div class="filename">MyAppDelivery\Environments\Production.ps1</div>
+	</div>
 </div>
 
-**TIP**: Depending on whether you are using DNS names, NetBIOS names, or IP addresses for hosts; you may need to specify [additional connection settings](environments.html#connection_settings) on your environment nodes if you encounter PowerShell remoting errors. 
+<br />
+
+In the example above, when roles are applied to nodes in the *Database* set, PowerShell will connect to them using the *MYDOMAIN\opsuser* credentials using the Kerberos authentication prototocol.
+
+<br />
+
+**Tip:** Depending on whether you are using DNS names, NetBIOS names, or IP addresses for hosts; you may need to specify [additional connection settings](environments.html#connection_settings) on your environment nodes if you encounter PowerShell remoting errors. 
+
+<br />
 
 <a name="using_credentials_in_roles"></a>
 
@@ -148,7 +185,9 @@ Delivery:Role {
 {% endhighlight %}
 <div class="filename">MyAppDelivery\Roles\AzureExample\Role.ps1</div>
 
-**Tips**:
+<br />
+
+**Tips**
 
 * If you find that your credentials aren't available, you may be missing the key file needed. Powerdelivery attempts to decrypt all credentials it finds in the *Credentials* subdirectory, but those for which keys are not present will be unavailable when the role executes.
 * If you need to use different credentials in the role depending on which [environment](environments.html) is being targeted, consider using a [configuration variable](variables.html) for the username.

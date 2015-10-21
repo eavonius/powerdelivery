@@ -16,7 +16,7 @@ PowerShell scripts in the *Environments* directory of your project are where you
 
 <br />
 
-An example environment script:
+An example "Test" environment script:
 
 <div class="row">
   <div class="col-lg-8 col-md-10 col-sm-12">
@@ -38,7 +38,9 @@ param($target, $config)
   </div>
 </div>
 
-Each *Nodes* key in a set can contain multiple names or IP addresses separated by commas as the *Website* set demonstrates above. When powerdelivery deploys to this environment, it will apply any roles in a [target](targets.html) that are set to *Website* to all the listed nodes.
+<br />
+
+Each *Nodes* key in a set can contain multiple names or IP addresses separated by commas as the *Website* set demonstrates above. When powerdelivery deploys to this environment, it will apply any roles in a [target](targets.html) that are set to *Website* to all the listed nodes. You can also use the [$target parameter](reference.html#target_parameter) and [$config parameter](reference.html#config_parameter) to dynamically construct your node names if necessary.
 
 <br />
 
@@ -48,12 +50,12 @@ Each *Nodes* key in a set can contain multiple names or IP addresses separated b
 
 Since powerdelivery uses PowerShell remoting to connect to remote nodes, you may need to specify additional settings depending on your environment.
 
-Each set can additionally supply an *Authentication* attribute which specifies how any [credentials](credentials.html) are passed to a remote node. Valid values are Default, Basic, Credssp, Digest, Kerberos,
+Each set of nodes may specify a *Credentials* attribute to refer to [credentials](credentials.html) that will be used to connect to the node with PowerShell remoting. You may also supply an *Authentication* attribute which specifies how these credentials are passed to a remote node. Valid values are Default, Basic, Credssp, Digest, Kerberos,
 Negotiate, and NegotiateWithImplicitCredential. If you don't specify an authentication method, the default value is *Default*. You can read more about these by referring to the the PowerShell documentation for [Invoke-Command](https://technet.microsoft.com/en-us/library/hh849719.aspx).
 
 <br />
 
-Below is an example of specifying to use Kerberos authentication with a node set:
+Below is an example of specifying to use credentials and basic authentication with a node set:
 
 <div class="row">
   <div class="col-lg-8 col-md-10 col-sm-12">
@@ -62,15 +64,17 @@ param($target, $config)
 @{
   Database = @{
     Nodes = "x.x.x.1";
-    Authentication = "Kerberos"
+    Credentials = "me@somewhere.com";
+    Authentication = "Basic"
   }
 }
 {% endhighlight %}
-  <div class="filename">MyAppDelivery\Environments\Test.ps1</div>
   </div>
 </div>
 
-Lastly, you may need to use SSL to establish the PowerShell remote connection. This is necessary when communicating with Windows Azure VMs for example. To do this, supply a UseSSL key in the set of nodes set to true.
+<br />
+
+You may wish to use SSL to establish the PowerShell remote connection. This is necessary when communicating with Windows Azure VMs for example. To do this, set the *UseSSL* key in the set of nodes set to true.
 
 <br />
 
@@ -87,14 +91,17 @@ param($target, $config)
   }
 }
 {% endhighlight %}
-  <div class="filename">MyAppDelivery\Environments\Test.ps1</div>
   </div>
 </div>
 
-**TIPS**: 
+<br />
+
+**Tips** 
 
 * This article titled [about remote troubleshooting](https://technet.microsoft.com/en-us/library/hh847850.aspx) is invaluable in working through any connection issues you may run into.
 * If deploying to Windows Azure virtual machines, [download this script from Microsoft](https://gallery.technet.microsoft.com/scriptcenter/Configures-Secure-Remote-b137f2fe) and use it to load an SSL certificate on developer computers or build servers targeting the VMs.
+
+<br />
 
 <a name="physical_and_vm_deployment"></a>
 
@@ -126,11 +133,9 @@ Powerdelivery has been permitted to deploy to this computer.
   </div>
 </div> 
 
-**TIP**: If you will be deploying to many nodes with powerdelivery, save yourself some trouble and create an image using sysprep or another imaging tool that has had this script already run on it. This will allow you to provision a new node quickly that is already ready to be deployed to with powerdelivery if you need to scale up your infrastructure.
+<br />
 
-**Special instructions for Windows Azure**
-
-If deploying to Windows Azure virtual machines, [download this script from Microsoft](https://gallery.technet.microsoft.com/scriptcenter/Configures-Secure-Remote-b137f2fe) and run it against any nodes you will be accessing.
+**Tip:** If you will be deploying to many nodes with powerdelivery, save yourself some trouble and create an image using sysprep or another imaging tool that has had this script already run on it. This will allow you to provision a new node quickly that is already ready to be deployed to with powerdelivery if you need to scale up your infrastructure.
 
 <br />
 
@@ -178,10 +183,14 @@ $nodes
   </div>
 </div>
 
-**TIPS**: 
+<br />
+
+**Tips**
 
 * Nodes provisioned during deployment must be created from an image that has had the *GrantToDelivery.ps1* script already applied to them as described above.
 * If provisioning Windows Azure nodes, [this article by Michael Washam](http://michaelwasham.com/windows-azure-powershell-reference-guide/introduction-remote-powershell-with-windows-azure/) will help you make sure you can connect.
+
+<br />
 
 <a name="cloud_platform_deployment"></a>
 
