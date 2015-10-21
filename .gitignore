@@ -1,0 +1,8 @@
+*.log
+*.nupkg
+~$*
+Thumbs.db
+Desktop.ini
+.DS_Store
+gh-pages/
+_site

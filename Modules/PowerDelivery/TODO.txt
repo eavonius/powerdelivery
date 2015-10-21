@@ -1,2 +1,3 @@
-* -As and -UseCredentials in Start-Delivery
-* Passing $target to environments (so they can get credentials)
+* -As in Start-Delivery
+* Credentials in environment files
+* Role migrations

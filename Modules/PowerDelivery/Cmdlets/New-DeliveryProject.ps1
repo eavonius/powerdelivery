@@ -6,7 +6,7 @@ Creates a new powerdelivery project.
 The New-DeliveryProject cmdlet generates the files needed to work with powerdelivery.
 
 .Example
-New-DeliveryProject MyApp @('Local', 'Test', 'Production')
+New-DeliveryProject MyApp 'Local', 'Test', 'Production'
 
 .Parameter ProjectName
 Required. The name of the project to create.
