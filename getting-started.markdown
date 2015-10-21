@@ -57,7 +57,7 @@ After allowing scipts to run from the Internet and installing chocolatey, open a
     {% include console_title.html %}
 		<div class="console">
 {% highlight powershell %}
-PS> choco install PowerDelivery
+PS> choco install PowerDelivery3
 {% endhighlight %}
 		</div>
 	</div>
