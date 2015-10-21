@@ -30,10 +30,11 @@ Project successfully created at ".\MyAppDelivery"
   </div>
 </div>
 
-## Configuring [variables](configuration.html)
+## Configuring [variables](variables.html)
 <div class="row">
   <div class="col-lg-8 col-md-10 col-sm-12">
 {% highlight powershell %}
+param($target) {
 @{
   ReleasesPath = "\\MyShare\MyProduct\Releases"
 }
@@ -44,7 +45,7 @@ Project successfully created at ".\MyAppDelivery"
 <div class="row">
   <div class="col-lg-8 col-md-10 col-sm-12">
 {% highlight powershell %}
-param($shared)
+param($target, $shared)
 @{
   DatabaseName = "MyApp_Development";
   SiteURL = "http://myapp.cloudapp.net";
@@ -57,7 +58,7 @@ param($shared)
 <div class="row">
   <div class="col-lg-8 col-md-10 col-sm-12">
 {% highlight powershell %}
-param($shared)
+param($target, $shared)
 @{
   DatabaseName = "MyApp";
   SiteURL = "http://www.myapp.com"
@@ -73,9 +74,15 @@ param($shared)
 {% highlight powershell %}
 param($target, $config)
 @{
-  Build = "localhost";
-  Database = "localhost";
-  Website = "localhost"
+  Build = @{
+    Nodes = "localhost"
+  };
+  Database = @{
+    Nodes = "localhost"
+  };
+  Website = @{
+    Nodes = "localhost"
+  }
 }
 {% endhighlight %}
   <div class="filename">MyAppDelivery\Environments\Local.ps1</div>
@@ -86,9 +93,15 @@ param($target, $config)
 {% highlight powershell %}
 param($target, $config)
 @{
-  Build = "localhost";
-  Database = "x.x.x.2";
-  Website = "x.x.x.3", "x.x.x.4"
+  Build = @{
+    Nodes = "localhost"
+  };
+  Database = @{
+    Nodes = "x.x.x.2"
+  };
+  Website = @{
+    Nodes = "x.x.x.3", "x.x.x.4"
+  }
 }
 {% endhighlight %}
   <div class="filename">MyAppDelivery\Environments\Production.ps1</div>
@@ -97,7 +110,7 @@ param($target, $config)
 
 ## Creating [roles](roles.html)
 {% highlight powershell %}
-Delivery:Role -Up {
+Delivery:Role {
   param($target, $config, $node)
 
   # Compile a Visual Studio solution
@@ -108,9 +121,9 @@ Delivery:Role -Up {
   Copy-Item . $releasePath -Filter "*.dll;*.pdb;*.xml;*.config;*.sql" -Recurse
 }
 {% endhighlight %}
-<div class="filename">MyAppDelivery\Roles\Compile\Build.ps1</div>
+<div class="filename">MyAppDelivery\Roles\Compile\Always.ps1</div>
 {% highlight powershell %}
-Delivery:Role -Up {
+Delivery:Role {
   param($target, $config, $node)
 
   $appDataDir = [Environment]::GetFolderPath("ApplicationData") 
@@ -126,9 +139,9 @@ Delivery:Role -Up {
   }
 }
 {% endhighlight %}
-<div class="filename">MyAppDelivery\Roles\Database\Role.ps1</div>
+<div class="filename">MyAppDelivery\Roles\Database\Always.ps1</div>
 {% highlight powershell %}
-Delivery:Role -Up {
+Delivery:Role {
   param($target, $config, $node)
 
   $appDataDir = [environment]::GetFolderPath("ApplicationData")
@@ -144,9 +157,10 @@ Delivery:Role -Up {
   New-WebApplication $config.Website MyApp $localPath -Force
 }
 {% endhighlight %}
-<div class="filename">MyAppDelivery\Roles\Website\Role.ps1</div>
+<div class="filename">MyAppDelivery\Roles\Website\Always.ps1</div>
 
 ## Configuring a [target](targets.html)
+
 {% highlight powershell %}
 [ordered]@{
   "Building the product" = @{

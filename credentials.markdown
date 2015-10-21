@@ -115,6 +115,8 @@ Once the key file is present, *Start-Delivery* can run without prompting by pass
   {% highlight powershell %}PS> Start-Delivery MyApp Release Production -UseCredentials "MYDOMAIN\opsuser"{% endhighlight %}
 </div>
 
+**TIP**: Depending on whether you are using DNS names, NetBIOS names, or IP addresses for hosts; you may need to specify [additional connection settings](environments.html#connection_settings) on your environment nodes if you encounter PowerShell remoting errors. 
+
 <a name="using_credentials_in_roles"></a>
 
 ## Using credentials in roles
@@ -128,7 +130,7 @@ In your role script, use the *Credentials* property of the [$target parameter](r
 The example below assumes credentials for *me@somewhere.com* were encrypted with powerdelivery:
 
 {% highlight powershell %}
-Delivery:Role -Up {
+Delivery:Role {
   param($target, $config, $role)
 
   # Don't do this when running on localhost
@@ -149,8 +151,8 @@ Delivery:Role -Up {
 **Tips**:
 
 * If you find that your credentials aren't available, you may be missing the key file needed. Powerdelivery attempts to decrypt all credentials it finds in the *Credentials* subdirectory, but those for which keys are not present will be unavailable when the role executes.
-* If you need to use different credentials in the role depending on which [environment](environments.html) is being targeted, consider using a [configuration variable](configuration.html) for the username.
+* If you need to use different credentials in the role depending on which [environment](environments.html) is being targeted, consider using a [configuration variable](variables.html) for the username.
 
 <br />
 
-### Next read about [configuration](configuration.html).
+### Next read about [variables](variables.html).

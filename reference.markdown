@@ -60,7 +60,7 @@ Delivery:Role {
 <a name="config_parameter"></a>
 
 <p class="ref-item">$config</p>
-A hash containing the [configuration](configuration.html) of the current run.
+A hash containing the [variables](variables.html) of the current run.
 
 <p class="ref-upper">Examples</p>
 <p>Example of a configuration script defining two variables.</p>
@@ -89,7 +89,7 @@ Delivery:Role {
 <a name="shared_parameter"></a>
 
 <p class="ref-item">$shared</p>
-A hash containing the [configuration](configuration.html) from the shared configuration file, allowing it to be referenced in an environment configuration file.
+A hash containing the [variables](variables.html) from the shared variables file, allowing it to be referenced in an environment variables file.
 
 <p class="ref-upper">Examples</p>
 <p>Example of a shared configuration script defining a variable.</p>

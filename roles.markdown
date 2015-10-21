@@ -62,7 +62,6 @@ Delivery:Role {
   </div>
 </div>
 
-<br />
 
 ## Anatomy of a role script
 
@@ -70,7 +69,7 @@ Every role script must contain the *Delivery:Role* statement. After this stateme
 
 <br />
 
-The example below shows a script with only the up (default) block:
+The example below shows a script with only the default (up) block:
 
 <div class="row">
   <div class="col-sm-8">
@@ -81,6 +80,11 @@ Delivery:Role {
 {% endhighlight %}
   </div>
 </div>
+
+### Role script parameters
+
+Every block in a role, whether performing an up or down (rollback), must declare three parameters. These are the [$target](reference.html#target_parameter), [$config](reference.html#config_parameter), and [$node](reference.html#node_parameter) parameters. These parameters provide context to where your role is running and will be very useful depending on what you're trying to do.
+
 
 ## Types of role scripts
 
@@ -161,10 +165,6 @@ Delivery:Role {
 <br />
 
 Now if we want any remote node to have chocolatey installed, we can just include the "Chocolatey" role in the steps of a the [target](targets.html) script that make sense. We can also add calls to the *choco* command-line client to install packages in this role, or another that is set to run after it in our target.
-
-### Role script parameters
-
-Every block in a role, whether performing an up or down (rollback), must declare three parameters. These are the [$target](reference.html#target_parameter), [$config](reference.html#config_parameter), and [$node](reference.html#node_parameter) parameters. These parameters provide context to where your role is running and will be very useful depending on what you're trying to do.
 
 <br />
 

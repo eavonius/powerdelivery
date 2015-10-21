@@ -127,22 +127,28 @@ Because we specified three environment names as the second parameter to the cmdl
 
 ## Configure environments
 
-Next you need to tell powerdelivery what nodes will host the product in each environment. This will be totally dependent on your application.
+Next you need to tell powerdelivery what nodes will host the product in each [environment](environments.html). This will be totally dependent on your application.
 
 Imagine our test environment will have two web server nodes and one database server node. In production, there will be four web servers and two database servers that have been setup for fault tolerance by being part of a Windows cluster.
 
 <br />
 
-With these decisions made, we fill out [environment scripts](environments.html):
+With these decisions made, we fill out environment scripts:
 
 <div class="row">
 	<div class="col-sm-8">
 {% highlight powershell %}
 param($target, $config)
 @{
-  Build = "localhost";
-  Database = "localhost";
-  Website = "localhost"
+  Build = @{
+    Nodes = "localhost"
+  };
+  Database = @{
+    Nodes = "localhost"
+  };
+  Website = @{
+    Nodes = "localhost"
+  }
 }
 {% endhighlight %}
     <div class="filename">MyAppDelivery\Environments\Local.ps1</div>
@@ -154,9 +160,15 @@ param($target, $config)
 {% highlight powershell %}
 param($target, $config)
 @{
-  Build = "localhost";
-  Database = "x.x.x.1";
-  Website = "x.x.x.2", "x.x.x.3"
+  Build = @{
+    Nodes = "localhost"
+  };
+  Database = @{
+    Nodes = "x.x.x.1"
+  };
+  Website = @{
+    Nodes = "x.x.x.2", "x.x.x.3"
+  }
 }
 {% endhighlight %}
     <div class="filename">MyAppDelivery\Environments\Test.ps1</div>
@@ -168,18 +180,24 @@ param($target, $config)
 {% highlight powershell %}
 param($target, $config)
 @{
-  Build = "localhost";
-  Database = "x.x.x.4", "x.x.x.5";
-  Website = "x.x.x.6", "x.x.x.7", "x.x.x.8", "x.x.x.9"
+  Build = @{
+    Nodes = "localhost"
+  };
+  Database = @{
+    Nodes = "x.x.x.4", "x.x.x.5"
+  };
+  Website = @{
+    Nodes = "x.x.x.6", "x.x.x.7", "x.x.x.8", "x.x.x.9"
+  }
 }
 {% endhighlight %}
     <div class="filename">MyAppDelivery\Environments\Production.ps1</div>
   </div>
 </div>
 
-Notice each script file is named after the environment. Also, the IP addresses can instead be computer names if resolvable through DNS or NetBIOS. We've set the *Build* group of nodes to always specify localhost. This ensures that any actions performed on this set of nodes are run on the developer's computer (or the build server) and not a test or production node. 
+Notice each script file is named after the environment. Each set of nodes has a name (Build, Database, and Website in this case) and a set of nodes separated by commas. The IP addresses can instead be computer names if resolvable through DNS or NetBIOS. We've set the *Build* group of nodes to always specify localhost. This ensures that any actions performed on this set of nodes are run on the developer's computer (or the build server) and not a test or production node. 
 
-This example assumes the nodes are already running. If you need to provision nodes on the fly (for A/B deployments) see the [environments](environments.html) topic. This is what the [$target](reference.html#target_parameter) and [$config](reference.html#config_parameter) parameters are for - you can ignore them for now.
+This example assumes the nodes are already running. If you need to provision nodes on the fly (for A/B deployments) see [provisioning nodes at deploy time](environments.html#provisioning_nodes_at_deploy_time). This is what the [$target](reference.html#target_parameter) and [$config](reference.html#config_parameter) parameters are for - you can ignore them for now.
 
 <a name="roles"></a>
 
@@ -221,7 +239,7 @@ C:\Projects\MyApp\MyAppDelivery\
 
 <br />
 
-The most common thing needed before any deployment of a release can occur on most Windows projects is compiling of code. To do this, we'll use powerdelivery's included [Invoke-MSBuild](refresh.html#invoke_msbuild_cmdlet) cmdlet to compile a Visual Studio solution.
+The default script is called *Always.ps1* because it runs every time. Migrations are discussed in the full roles topic, we'll skip those for now. The most common thing needed before any deployment of a release can occur on most Windows projects is compiling of code. To do this, we'll use powerdelivery's included [Invoke-MSBuild](refresh.html#invoke_msbuild_cmdlet) cmdlet to compile a Visual Studio solution.
 
 <br />
 
@@ -230,7 +248,7 @@ Here's an example of scripting our role to compile a Visual Studio solution:
 <div class="row">
   <div class="col-sm-8">
 {% highlight powershell %}
-Delivery:Role -Up {
+Delivery:Role {
   param($target, $config, $node)
 
   Invoke-MSBuild -ProjectFile MyApp.sln
@@ -240,13 +258,13 @@ Delivery:Role -Up {
   </div>
 </div>
 
-The *Delivery:Role* statement contains all code that will execute when this role is applied to a node as part of a [target](targets.html). The *-Up* parameter indicates this is what we want to happen when the role is applied normally (conversely *-Down* is where you can author a rollback). The second line declares the three special parameters that are passed to every role. These are the [$target parameter](reference.html#target_parameter) (which provides many properties you can use in your role), the [$config parameter](reference.html#config_parameter) to allow you to access [configuration variables](configuration.html), and the [$node parameter](reference.html#node_parameter) which contains the name or IP address of the node the role is currently executing on. We're not using them here so you can ignore them for now.
+The *Delivery:Role* statement contains all code that will execute when this role is applied to a node as part of a [target](targets.html). The second line declares the three special parameters that are passed to every role. These are the [$target parameter](reference.html#target_parameter) (which provides many properties you can use in your role), the [$config parameter](reference.html#config_parameter) to allow you to access [configuration variables](variables.html), and the [$node parameter](reference.html#node_parameter) which contains the name or IP address of the node the role is currently executing on. We're not using them here so you can ignore them for now.
 
 <a name="targets"></a>
 
 ## Create a target
 
-In powerdelivery, every sequential deployment process you want to complete during one run is represented by a target script. You can [read more about targets here](targets.html). 
+In powerdelivery, every sequential deployment process you want to complete during one run is represented by a [target](targets.html) script.
 
 <br />
 
@@ -266,7 +284,7 @@ Let's use the default *Release.ps1* script generated by the [New-DeliveryProject
 	</div>
 </div>
 
-The *ordered* keywords tells powerdelivery to run these steps in sequence. The key of each step will be displayed as a status message. *Roles* is an array of any roles that should be applied when this step is reached. In this case we will apply the *Compile* role we implemented in the role script earlier. Lastly, *Nodes* is a reference to the environment scripts that specifies what set of computing nodes will have the roles applied on them.
+The *ordered* keyword tells powerdelivery to run these steps in sequence. The key of each step will be displayed as a status message. *Roles* is an list of any roles that should be applied when this step is reached. In this case we will apply the *Compile* role we implemented in the role script earlier. Lastly, *Nodes* is a list of sets of nodes from the environment script that specifies which sets will have the roles applied to them.
 
 Whew! That's a mouthful. In layman's terms, this code says "When *building the product*, apply the *compile* role to the *build* nodes in the environment".
 
