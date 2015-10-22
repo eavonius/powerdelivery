@@ -18,3 +18,5 @@ if ($AllowPublicAnyAddress) {
   # they are on the same subnet.
   Set-NetFirewallRule -Name "WINRM-HTTP-In-TCP-PUBLIC" -RemoteAddress Any
 }
+
+Write-Host "Powerdelivery has been permitted to deploy to this computer."
