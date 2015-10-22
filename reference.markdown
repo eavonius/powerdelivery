@@ -100,8 +100,6 @@ Starts a run of a [target](targets.html) using powerdelivery. Must be run in the
 	<dd>The name of the environment to target during the run. Must match the name of a file in the <i>Environments</i> subdirectory of your powerdelivery project without the file extension.</dd>
 	<dt>-As</dt>
 	<dd>The username of a Windows account to run remote <a href="roles.html">roles</a> as. You will be prompted for the password.</dd>
-	<dt>-UseCredentials</dt>
-	<dd>The username of a Windows account to run remote <a href="roles.html">roles</a> as. Powerdelivery will look for encrypted <a href="credentials.html">credentials</a> in the *Credentials* subdirectory of your powerdelivery project, and a key file matching the subdirectory the credentials are in.</dd>
 </dl>
 <p class="ref-upper">Examples</p>
 
@@ -367,14 +365,16 @@ Delivery:Role {
 <a name="node_parameter"></a>
 
 <p class="ref-item">$node</p>
-The IP address or computer name of the node of the current [environment](environments.html) currently executing a [role](roles.html) script.
+The IP address, computer name, domain name, or connection URI of the node in the current [environment](environments.html) which is currently executing a [role](roles.html) script.
 
 <p class="ref-upper">Examples</p>
 <p>Example environment script.</p>
 {% highlight powershell %}
 param($target, $config)
 @{
-  Databases ="x.x.x.1", "x.x.x.2"
+  Databases = @{
+    Hosts = "x.x.x.1", "x.x.x.2"
+  }
 }
 {% endhighlight %}
 
@@ -384,7 +384,7 @@ Delivery:Role {
   param($target, $config, $node)
 
   # Displays "x.x.x.1" or "x.x.x.2" depending on 
-  # which node the role is executing on
+  # which host the role is executing on
   Write-Host $node
 }
 {% endhighlight %}

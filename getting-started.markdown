@@ -174,13 +174,13 @@ With these decisions made, we fill out environment scripts:
 param($target, $config)
 @{
   Build = @{
-    Nodes = "localhost"
+    Hosts = "localhost"
   };
   Database = @{
-    Nodes = "localhost"
+    Hosts = "localhost"
   };
   Website = @{
-    Nodes = "localhost"
+    Hosts = "localhost"
   }
 }
 {% endhighlight %}
@@ -194,13 +194,13 @@ param($target, $config)
 param($target, $config)
 @{
   Build = @{
-    Nodes = "localhost"
+    Hosts = "localhost"
   };
   Database = @{
-    Nodes = "x.x.x.1"
+    Hosts = "x.x.x.1"
   };
   Website = @{
-    Nodes = "x.x.x.2", "x.x.x.3"
+    Hosts = "x.x.x.2", "x.x.x.3"
   }
 }
 {% endhighlight %}
@@ -214,13 +214,13 @@ param($target, $config)
 param($target, $config)
 @{
   Build = @{
-    Nodes = "localhost"
+    Hosts = "localhost"
   };
   Database = @{
-    Nodes = "x.x.x.4", "x.x.x.5"
+    Hosts = "x.x.x.4", "x.x.x.5"
   };
   Website = @{
-    Nodes = "x.x.x.6", "x.x.x.7", "x.x.x.8", "x.x.x.9"
+    Hosts = "x.x.x.6", "x.x.x.7", "x.x.x.8", "x.x.x.9"
   }
 }
 {% endhighlight %}
@@ -230,7 +230,9 @@ param($target, $config)
 
 <br />
 
-Note how each script file is named after the environment. Each set of nodes has a name (Build, Database, and Website in this case) and a set of nodes separated by commas. The IP addresses can instead be computer names if resolvable through DNS or NetBIOS. We've set the *Build* group of nodes to always specify localhost. This ensures that any actions performed on this set of nodes are run on the developer's computer (or the build server) and not a test or production node. 
+Note how each script file is named after the environment. Each set of nodes has a name (Build, Database, and Website in this case) and a set of host names separated by commas. The IP addresses can instead be computer names if resolvable through DNS or NetBIOS. You can also use connection URIs here, see the full environments topic for details.
+
+We've set the *Build* group of nodes to always specify localhost. This ensures that any actions performed on this set of nodes are run on the developer's computer (or the build server) and not a test or production node. 
 
 This example assumes the nodes are already running. If you need to provision nodes on the fly (for A/B deployments) see [provisioning nodes at deploy time](environments.html#provisioning_nodes_at_deploy_time). This is what the [$target](reference.html#target_parameter) and [$config](reference.html#config_parameter) parameters are for - you can ignore them for now.
 

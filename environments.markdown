@@ -12,11 +12,17 @@ Whether a physical computer or a virtual machine (on-premise or in the cloud), p
 
 ## Environment scripts
 
-PowerShell scripts in the *Environments* directory of your project are where you tell powerdelivery which nodes will have [roles](roles.html) applied to them when deployment occurs. One script must exist for each environment that you will deploy to. These scripts must return a hash that contains a nested hash with sets of IP addresses, computer names, or domain names of the nodes to which the roles will be applied. 
+PowerShell scripts in the *Environments* directory of your project are where you tell powerdelivery which nodes will have [roles](roles.html) applied to them when deployment occurs. One script must exist for each environment that you will deploy to. These scripts must return a hash that contains a nested hash with sets of nodes that will be deployed to when the environment named after the script is targeted using the [Start-Delivery](reference.html#start_delivery_cmdlet) cmdlet.
 
 <br />
 
-An example "Test" environment script:
+### Hostname nodes
+
+One way PowerShell can connect to nodes is using a hostname (IP address, computer name, or domain name). When you want to connect to a node this way to deploy, use the *Hosts* key for each set of nodes. You may supply multiple hosts in the same set of nodes separated by commas.
+
+<br />
+
+An example "Test" environment script using hosts:
 
 <div class="row">
   <div class="col-lg-8 col-md-10 col-sm-12">
@@ -24,13 +30,13 @@ An example "Test" environment script:
 param($target, $config)
 @{
   Build = @{
-    Nodes = "localhost"
+    Hosts = "localhost"
   };
   Database = @{
-    Nodes = "x.x.x.1"
+    Hosts = "x.x.x.1"
   };
   Website = @{
-    Nodes = "x.x.x.2", "x.x.x.3"
+    Hosts = "x.x.x.2", "x.x.x.3"
   }
 }
 {% endhighlight %}
@@ -40,7 +46,42 @@ param($target, $config)
 
 <br />
 
-Each *Nodes* key in a set can contain multiple names or IP addresses separated by commas as the *Website* set demonstrates above. When powerdelivery deploys to this environment, it will apply any roles in a [target](targets.html) that are set to *Website* to all the listed nodes. You can also use the [$target parameter](reference.html#target_parameter) and [$config parameter](reference.html#config_parameter) to dynamically construct your node names if necessary.
+When powerdelivery deploys to this environment, it will apply any roles in a [target](targets.html) that are set to *Website* to all the listed hosts. You can also use the [$target parameter](reference.html#target_parameter) and [$config parameter](reference.html#config_parameter) to dynamically construct your node host names if necessary.
+
+<br />
+
+### Connection URI nodes
+
+PowerShell can also connect to nodes using a connection URI. When you want to connect to a node this way to deploy, use the *Connections* key for each set of nodes. Windows Azure VMs are typically connected to in this way. You may supply multiple connections in the same set of nodes separated by commas.
+
+<br />
+
+An example "Test" environment script using connection URIs:
+
+<div class="row">
+  <div class="col-lg-8 col-md-10 col-sm-12">
+{% highlight powershell %}
+param($target, $config)
+@{
+  Build = @{
+    Hosts = "localhost"
+  };
+  Database = @{
+    Connections = "http://mydatabasevm.cloudapp.net:5986/"
+  };
+  Website = @{
+    Connections = "http://mywebsvc.cloudapp.net:5986/", `
+                  "http://mywebsvc.cloudapp.net:5987/"
+  }
+}
+{% endhighlight %}
+  <div class="filename">MyAppDelivery\Environments\Test.ps1</div>
+  </div>
+</div>
+
+<br />
+
+When powerdelivery deploys to this environment, it will apply any roles in a [target](targets.html) that are set to *Website* using all the listed connection URIs. You can use the [$target parameter](reference.html#target_parameter) and [$config parameter](reference.html#config_parameter) to dynamically construct your node connection URIs if necessary.
 
 <br />
 
@@ -48,14 +89,12 @@ Each *Nodes* key in a set can contain multiple names or IP addresses separated b
 
 ## Connection settings
 
-Since powerdelivery uses PowerShell remoting to connect to remote nodes, you may need to specify additional settings depending on your environment.
-
-Each set of nodes may specify a *Credentials* attribute to refer to [credentials](credentials.html) that will be used to connect to the node with PowerShell remoting. You may also supply an *Authentication* attribute which specifies how these credentials are passed to a remote node. Valid values are Default, Basic, Credssp, Digest, Kerberos,
+Each set of nodes may optionally specify a *Credentials* attribute to refer to [credentials](credentials.html) that will be used to connect to the node remotely with PowerShell. You may also supply an *Authentication* attribute which specifies how these credentials are passed to a remote node. Valid values are Default, Basic, Credssp, Digest, Kerberos,
 Negotiate, and NegotiateWithImplicitCredential. If you don't specify an authentication method, the default value is *Default*. You can read more about these by referring to the the PowerShell documentation for [Invoke-Command](https://technet.microsoft.com/en-us/library/hh849719.aspx).
 
 <br />
 
-Below is an example of specifying to use credentials and basic authentication with a node set:
+Below is an example of specifying to use credentials and Kerberos authentication with a node set:
 
 <div class="row">
   <div class="col-lg-8 col-md-10 col-sm-12">
@@ -63,9 +102,9 @@ Below is an example of specifying to use credentials and basic authentication wi
 param($target, $config)
 @{
   Database = @{
-    Nodes = "x.x.x.1";
+    Hosts = "x.x.x.1";
     Credentials = "me@somewhere.com";
-    Authentication = "Basic"
+    Authentication = "Kerberos"
   }
 }
 {% endhighlight %}
@@ -74,7 +113,7 @@ param($target, $config)
 
 <br />
 
-You may wish to use SSL to establish the PowerShell remote connection. This is necessary when communicating with Windows Azure VMs for example. To do this, set the *UseSSL* key in the set of nodes set to true.
+You may also require clients to use SSL to establish the PowerShell remote connection. To do this, set the *UseSSL* key in the set of nodes set to true.
 
 <br />
 
@@ -86,7 +125,8 @@ Below is an example of specifying to use SSL with a node set:
 param($target, $config)
 @{
   Database = @{
-    Nodes = "x.x.x.1";
+    Hosts = "x.x.x.1";
+    Credentials = "me@somewhere.com";
     UseSSL = $true
   }
 }
@@ -110,6 +150,8 @@ param($target, $config)
 The following sections help you use powerdelivery to deploy to nodes that are physical computers or virtual machines. To use powerdelivery with "platform as a service" resources (such as Windows Azure's cloud and mobile services), see [Cloud platform deployment](#cloud_platform_deployment).
 
 <br />
+
+<a name="enabling_deployment_to_nodes"></a>
 
 ### Enabling deployment to nodes
 
@@ -152,29 +194,55 @@ that returns the hash of nodes. You'll need to install additional PowerShell mod
 
 <br />
 
-The example below uses encrypted Windows Azure [credentials](credentials.html) managed by powerdelivery:
+The example below provisions a node at runtime with Windows Azure:
 
 <div class="row">
   <div class="col-lg-8 col-md-10 col-sm-12">
 {% highlight powershell %}
 param($target, $config)
 
-# Look up Windows Azure credentials that were encrypted with powerdelivery
-$azureCredentials = $target.Credentials["me@somewhere.com"]
+# Declare the nodes we'll return at the end
+$nodes = @{}
+
+# Get credentials from an environment configuration variable that 
+# your new VM will allow logins from. You'll have to create this 
+# ahead of time in Azure AD or a domain controller.
+$newVMCredentials = $target.Credentials["powerdelivery@mydomain.com"]
 
 Import-Module Azure
 
-# "Sign-in" to Windows Azure's PowerShell cmdlets with the credentials
-Add-AzureAccount -Credential $azureCredentials
+# "Sign-in" to Windows Azure's PowerShell cmdlets with powerdelivery credentials
+Add-AzureAccount -Credential $target.Credentials["admin@mydomain.com"]
 
-$nodes = @{}
+# Set the Azure subscription from an environment configuration variable
+Select-AzureSubscription $config.AzureSubscriptionId
 
-#
-# Omitted: do whatever is necessary to provision the nodes, 
-# then add to the node list for example:
-# 
-# $nodes.Add("Website", @("x.x.x.5", "x.x.x.6"))
-#
+# This would use Windows Server 2012. If dynamically provisioning, 
+# don't really do this. You should instead use your own VHD that 
+# has had powerdelivery already configured on it as described in 
+# "Enabling deployment to nodes" above, otherwise powerdelivery 
+# won't be able to connect to it
+$image = "a699494373c04fc0bc8f2bb1389d6106__Windows-Server-2012-Datacenter-201305.01-en.us-127GB.vhd"
+
+# Create the VM using the image and an admin username and password
+New-AzureVMConfig -Name "TestVM" `
+                  -InstanceSize "Small" `
+                  -ImageName $image | 
+  Add-AzureProvisioningConfig -Windows `
+                              -AdminUsername "MYDOMAIN\admin" `
+                              -Password "s@m3p@@sw0rd" |
+    New-AzureVM -ServiceName "MyService" -Location "West US" -WaitForBoot 
+
+# Execute the script from microsoft that sets up a VM for PowerShell
+.\Scripts\InstallWinRMCertAzureVM.ps1 -SubscriptionName $config.AzureSubscriptionId `
+                                      -ServiceName "MyService" `
+                                      -Name "TestVM"
+
+# Get the connection URI from the new VM so we can connect to it via PowerShell
+$uri = Get-AzureWinRMUri -ServiceName "MyService" -Name "TestVM"
+
+# Add the provisioned VM to the list of nodes for the "Website" role
+$nodes.Add("Website", @{ Connections = $uri; Credentials = $newVMCredentials })
 
 # Return the list of nodes at the conclusion of the script
 $nodes
@@ -188,7 +256,7 @@ $nodes
 **Tips**
 
 * Nodes provisioned during deployment must be created from an image that has had the *GrantToDelivery.ps1* script already applied to them as described above.
-* If provisioning Windows Azure nodes, [this article by Michael Washam](http://michaelwasham.com/windows-azure-powershell-reference-guide/introduction-remote-powershell-with-windows-azure/) will help you make sure you can connect.
+* [This article by Michael Washam](http://michaelwasham.com/windows-azure-powershell-reference-guide/introduction-remote-powershell-with-windows-azure/) was crucial for writing the above example. Thanks Michael!
 
 <br />
 

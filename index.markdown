@@ -75,13 +75,13 @@ param($target, $shared)
 param($target, $config)
 @{
   Build = @{
-    Nodes = "localhost"
+    Hosts = "localhost"
   };
   Database = @{
-    Nodes = "localhost"
+    Hosts = "localhost"
   };
   Website = @{
-    Nodes = "localhost"
+    Hosts = "localhost"
   }
 }
 {% endhighlight %}
@@ -94,13 +94,13 @@ param($target, $config)
 param($target, $config)
 @{
   Build = @{
-    Nodes = "localhost"
+    Hosts = "localhost"
   };
   Database = @{
-    Nodes = "x.x.x.2"
+    Hosts = "x.x.x.2"
   };
   Website = @{
-    Nodes = "x.x.x.3", "x.x.x.4"
+    Hosts = "x.x.x.3", "x.x.x.4"
   }
 }
 {% endhighlight %}
