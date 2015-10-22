@@ -12,7 +12,7 @@
     <description>Inspired by ansible and rails, powerdelivery organizes everything Windows PowerShell can do within a secure, convention-based framework so you can stop being jealous of your linux friends when you deploy to Windows.</description>
     <summary>Powerdelivery organizes everything Windows PowerShell can do within a secure, convention-based framework so you can stop being jealous of your linux friends when you deploy to Windows.</summary>
     <language>es-US</language>
-    <iconURL>http://www.powerdelivery.io/img/masters/choco_logo.png</iconURL>
+    <iconUrl>http://www.powerdelivery.io/img/masters/choco_logo.png</iconUrl>
     <dependencies>
       <dependency id="chocolatey" version="0.9.9.11" />
     </dependencies>

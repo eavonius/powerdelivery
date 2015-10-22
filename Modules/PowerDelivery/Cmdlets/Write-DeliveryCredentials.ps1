@@ -22,7 +22,7 @@ function Write-DeliveryCredentials {
     New-Item $credentialsPath -ItemType Directory | Out-Null
   }
 
-  $userNameFile = "$($UserName -replace '\\', '#').credentials"
+  $userNameFile = "$($UserName -replace '\\', '#').credential"
   $userNamePath = Join-Path $credentialsPath $userNameFile
 
   if ((Test-Path $userNamePath) -and (!$Force)) {
