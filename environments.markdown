@@ -157,7 +157,17 @@ The following sections help you use powerdelivery to deploy to nodes that are ph
 
 Powerdelivery uses PowerShell to communicate from the computer running a [target](targets.html) to a remote node. When a fresh copy of Windows is installed on the node, default permissions usually prevent this from occurring. Without a way around this, you will be denied permission to apply roles to it.
 
-To enable deployment to an on-premise node, first login to that node and <a href="https://raw.githubusercontent.com/eavonius/powerdelivery/master/Scripts/Nodes/AllowDelivery.ps1" target="_blank">download this powerdelivery script</a> as *AllowDelivery.ps1*. Open an Administrator PowerShell console and change your working directory to wherever you downloaded it. 
+<br />
+
+<b>Step 1: Add users who can deploy</b>
+
+To enable deployment to a node, first login and add any users that will be permitted to do so to the Windows *Remote Management Users* group. If the user is not a member of that or the *Administrators* group, they will get Access Denied errors when deploying.
+
+<br /> 
+
+<b>Step 2: Allow PowerShell delivery</b>
+
+Second, login to the node again and <a href="https://raw.githubusercontent.com/eavonius/powerdelivery/master/Scripts/Nodes/AllowDelivery.ps1" target="_blank">download this powerdelivery script</a> as *AllowDelivery.ps1* using a web browser. Open an Administrator PowerShell console and change your working directory to wherever you downloaded it. 
 
 <br />
 
