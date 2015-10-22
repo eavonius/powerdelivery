@@ -50,13 +50,16 @@ The contents of Always.ps1 as generated looks like this:
 <div class="row">
   <div class="col-sm-8">
 {% highlight powershell %}
-Delivery:Role {
-  -Up {
-    param($target, $config, $node)
-  }
-  -Down {
-    param($target, $config, $node)
-  }
+Delivery:Role -Up {
+  param($target, $config, $node)
+
+  # Write PowerShell deployment logic here
+
+} -Down {
+  param($target, $config, $node)
+
+  # Write PowerShell rollback logic here (if necessary)
+
 }
 {% endhighlight %}
   </div>
@@ -76,6 +79,9 @@ The example below shows a script with only the default (up) block:
 {% highlight powershell %}
 Delivery:Role {
   param($target, $config, $node)
+
+  # Write PowerShell deployment logic here. 
+  # This role doesn't support rollback.
 }
 {% endhighlight %}
   </div>
