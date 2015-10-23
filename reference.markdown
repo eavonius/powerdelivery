@@ -98,16 +98,16 @@ Starts a run of a [target](targets.html) using powerdelivery. Must be run in the
 	<dd>The name of the target to run. Must match the name of a file in the <i>Targets</i> subdirectory of your powerdelivery project without the file extension.</dd>
 	<dt>-EnvironmentName</dt>
 	<dd>The name of the environment to target during the run. Must match the name of a file in the <i>Environments</i> subdirectory of your powerdelivery project without the file extension.</dd>
-	<dt>-As</dt>
-	<dd>The username of a Windows account to run remote <a href="roles.html">roles</a> as. You will be prompted for the password.</dd>
+	<dt>-Rollback</dt>
+	<dd>Causes powerdelivery to run the <i>-Down</i> block of roles instead of <i>-Up</i>, performing a rollback.</dd>
 </dl>
 <p class="ref-upper">Examples</p>
 
-<p>Example of starting delivery of the <i>MyApp</i> project targeting <i>Release</i> to the <i>Production</i> environment as the <i>DOMAIN\opsuser</i> Windows user account.</p>
+<p>Example of starting delivery of the <i>MyApp</i> project targeting <i>Release</i> to the <i>Production</i> environment.</p>
 {% include console_title.html %}
 <div class="console">
 	{% highlight powershell %}
-PS C:\MyApp> Start-Delivery MyApp Release Production -As "DOMAIN\opsuser"
+PS C:\MyApp> Start-Delivery MyApp Release Production
 {% endhighlight %}
 </div>
 

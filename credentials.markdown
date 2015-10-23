@@ -6,51 +6,21 @@ layout: page
 
 # Credentials
 
-Credentials in powerdelivery are sets of username and password pairs used to impersonate a different user account than you are logged in as when running a [target](targets.html). They can also be used in [role scripts](roles.html) to access credentials needed for secure cloud resources such as Windows Azure accounts.
+Credentials in powerdelivery are sets of username and password pairs used to impersonate a different user account than you are logged in as when running a [target](targets.html). They can also be used in [roles](roles.html) to access credentials needed for secure cloud resources such as Windows Azure accounts.
 
-## Using credentials on remote nodes
+## Using credentials to run roles
 
-Often you may want to deploy using a different set of credentials than the currently logged in user. A common example is when production nodes require a different account than development or test nodes to deploy to. 
+You may encounter a need to execute roles on nodes using a different set of credentials than the currently logged in user. A common example is when production nodes require a different account than development or test nodes to deploy to. 
 
 Additionally, if any of the PowerShell commands in the roles you execute on a remote node in turn access another node (this is known as a *"double-hop"* scenario), your credentials will fail to make it to that "second hop".
 
-You can overcome both of these issues using either of the solutions that follow.
-
-<br />
-
-### Providing credentials at startup
-
-To have powerdelivery apply roles to remote nodes using alternate credentials, pass the *-As* parameter to the [Start-Delivery](reference.html#start_delivery_cmdlet) cmdlet. Powerdelivery will prompt for the password of the username you specify. 
-
-<br />
-For example:
-
-<div class="row">
-	<div class="col-sm-8">
-		{% include console_title.html %}
-		<div class="console">
-{% highlight powershell %}
-PS C:\MyApp> Start-Delivery MyApp Release Production -As "MYDOMAIN\opsuser"
-{% endhighlight %}
-		</div>
-	</div>
-</div>
-
-<br />
-
-Keep in mind that any roles set to run on localhost for your target [environment](environments.html) will still execute under the credentials you are logged into Windows with.
-
-<br />
-
-### Storing credentials for silent execution
-
-The second method of passing credentials is useful for running powerdelivery via a build server that is unable to throw up a prompt at runtime, or sharing a set of credentials with a limited set of people without giving them the password directly. This requires four steps.
+You can overcome both of these issues using the solution that follows. This requires four steps.
 
 <br />
 
 <b>Step 1. Generate a credential key</b>
 
-Powerdelivery can save credentials in an encrypted file so users are not prompted when deployment starts. The file is encrypted using a key file that you must generate. *Whoever has access to the key file will be able to decrypt the credentials stored with your source code*, so record it somewhere safe, don't put it under source control, and only hand it out to those who you trust!
+Powerdelivery can save credentials in an encrypted file so they are used to execute roles. The *credential* file is encrypted using a *key file* that you must generate. *Whoever has access to the key file will be able to decrypt the credentials stored with your source code*, so record it somewhere safe, don't put it under source control, and only hand it out to those who you trust!
 
 <br />
 
@@ -161,7 +131,7 @@ In the example above, when roles are applied to nodes in the *Database* set, Pow
 
 ## Using credentials in roles
 
-You may also find a need to use credentials in a role script, for instance to authenticate with Windows Azure to manipulate cloud resources. To do this create a key and encrypt credentials following the steps above.
+You may also encounter a need to use credentials in a role script, for instance to authenticate with Windows Azure to manipulate cloud resources. To do this create a key and encrypt credentials following the steps above.
 
 In your role script, use the *Credentials* property of the [$target parameter](reference.html#target_parameter) to retrieve your credentials by their username. You may then pass them to other PowerShell cmdlets that expect credentials. 
 

@@ -345,3 +345,12 @@ dl dd {
 	background-color: #333;
 	color: #F2C811;
 }
+
+#features {
+	text-align: center;
+	margin-top: 20px;
+	padding-bottom: 20px;
+	font-size: 16px;
+	color: green;
+	text-transform: uppercase;
+}

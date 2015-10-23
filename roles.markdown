@@ -159,7 +159,6 @@ Lets modify our script we generated at the beginning of this topic by editing th
 
 <br />
 
-
 <div class="row">
   <div class="col-sm-10">
 {% highlight powershell %}
@@ -175,6 +174,7 @@ Delivery:Role {
   }
 }
 {% endhighlight %}
+  <div class="filename">MyAppDelivery\Roles\Chocolatey\Always.ps1</div>
   </div>
 </div>
 
@@ -185,6 +185,109 @@ This role uses the [Test-CommandExists](reference.html#test_commandexists_cmdlet
 <br />
 
 **Tip:** You may use the Web Platform Installer, OneGet, npm, rubygems, or whatever you need to install dependencies - chocolatey is just one example.
+
+<a name="releasing_files"></a>
+
+<br />
+
+### Releasing files to a shared location
+
+A commonly needed task is to deploy files to remote nodes for a release. This is two step process, where first you must copy the files from the computer running powerdelivery to a shared location, and then the [remote nodes download them](#downloading_release_files_to_nodes). The role described in this step would target localhost.
+
+The example role below creates a directory named after the powerdelivery project on a shared drive somewhere on your network. It then creates a release directory with the timestamp of the current release where you can copy or download files needed for nodes to it. Depending on your infrastructure, you may wish to release files instead to a Windows Azure storage container, an Amazon Web Services S3 bucket, or DropBox.
+
+The script below demonstrates releasing files:
+
+<br />
+
+<div class="row">
+  <div class="col-sm-10">
+{% highlight powershell %}
+Delivery:Role -Up {
+  param($target, $config, $node)
+
+  # An example share path.
+  $sharePath = "\\COMPUTERNAME\share"
+
+  # Reference a sub-directory named after the project
+  $projectPath = Join-Path $sharePath $target.ProjectName
+
+  # Create a directory for this release
+  $thisReleasePath = Join-Path $projectPath $target.StartedAt
+  if (!(Test-Path $thisReleasePath)) {
+    New-Item $thisReleasePath -ItemType Directory | Out-Null
+  }
+
+  # TODO: Copy files from the local computer 
+  # into $thisReleasePath here!
+}
+{% endhighlight %}
+  <div class="filename">MyAppDelivery\Roles\ReleaseFiles\Always.ps1</div>
+  </div>
+</div>
+
+<a name="downloading_release_files_to_nodes"></a>
+
+<br />
+
+### Downloading release files to nodes
+
+Once files have been released to a shared location as [described above](#downloading_release_files_to_nodes), nodes that need any of the files should create a directory into which to copy or download them. To support rollback, it is necessary to retain the previous release's files when downloading. This role needs to run on any node that files are being downloaded to.
+
+The example role below creates a directory named after the powerdelivery project within the user's *AppData\Roaming* directory. It then creates a release directory with the timestamp of the current release where you can copy or download files needed on the node. 
+
+At the end of copying any files you'd need, the role links the release directory to a *Current* directory. This allows rollback by linking *Current* to the previous release in the *-Down* block. This role also retains only the previous 5 releases so the drive doesn't get littered with too many releases.
+
+The script below demonstrates creating release directories:
+
+<br />
+
+<div class="row">
+  <div class="col-sm-10">
+{% highlight powershell %}
+Delivery:Role -Up {
+  param($target, $config, $node)
+
+  # Get the path to <Drive>:\Users\<User>\AppData\Roaming
+  $appData = [Environment]::GetFolderPath("ApplicationData")
+
+  # Reference a sub-directory named after the project
+  $projectPath = Join-Path $appData $target.ProjectName
+
+  # Create a directory for this release
+  $thisReleasePath = Join-Path $projectPath $target.StartedAt
+  if (!(Test-Path $thisReleasePath)) {
+    New-Item $thisReleasePath -ItemType Directory | Out-Null
+  }
+
+  # TODO: Download files from somewhere else 
+  # into $thisReleasePath here!
+
+  # Remove old link to current release
+  $currentReleasePath = Join-Path $projectPath "Current"
+  if (Test-Path $currentReleasePath) {
+    & cmd /c "rmdir ""$currentReleasePath"""
+  }
+
+  # Link this release to the current release
+  & cmd /c "mklink /J ""$currentReleasePath"" ""$thisReleasePath""" | Out-Null
+
+  # Get releases
+  $releases = Get-ChildItem -Directory $projectPath -Exclude "Current"
+
+  # Delete releases older than the last 5
+  if ($releases.count -gt 5) {
+    $oldReleaseCount = $releases.count - 5
+    $releases | 
+      Sort-Object -Property LastWriteTime | 
+        Select -First $oldReleaseCount | 
+          Remove-Item -Force -Recurse | Out-Null
+  }
+}
+{% endhighlight %}
+  <div class="filename">MyAppDelivery\Roles\DownloadRelease\Always.ps1</div>
+  </div>
+</div>
 
 <br />
 
