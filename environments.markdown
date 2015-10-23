@@ -207,7 +207,7 @@ that returns the hash of nodes. You'll need to install additional PowerShell mod
 The example below provisions a node at runtime with Windows Azure:
 
 <div class="row">
-  <div class="col-lg-8 col-md-10 col-sm-12">
+  <div class="col-sm-12">
 {% highlight powershell %}
 param($target, $config)
 

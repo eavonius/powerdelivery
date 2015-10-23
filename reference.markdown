@@ -152,6 +152,13 @@ Generates a new powerdelivery role. Must be run in the root directory of your po
 	<dt>-RoleNames</dt>
 	<dd>A comma-separated list of one or more names of roles to create.</dd>
 </dl>
+
+The role will be created at the path:
+
+<pre>
+.\Roles\&lt;RoleName&gt;
+</pre>
+
 <p class="ref-upper">Examples</p>
 
 <p>Example of creating a role named <i>DeployDatabase</i>.</p>

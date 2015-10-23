@@ -203,7 +203,7 @@ The script below demonstrates releasing files:
 <div class="row">
   <div class="col-sm-10">
 {% highlight powershell %}
-Delivery:Role -Up {
+Delivery:Role {
   param($target, $config, $node)
 
   # An example share path.
