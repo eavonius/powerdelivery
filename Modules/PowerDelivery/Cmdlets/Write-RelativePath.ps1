@@ -1,3 +1,16 @@
+<#
+.Synopsis
+Returns an absolute path relative to the current directory.
+
+.Description
+Returns an absolute path relative to the current directory.
+
+.Example
+Write-RelativePath "C:\SomeDir\SomeOtherDir"
+
+.Parameter Path
+The absolute path to return the relative form of.
+#>
 function Write-RelativePath {
   [CmdletBinding()]
   param (

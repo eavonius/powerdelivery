@@ -9,10 +9,10 @@ The New-DeliveryProject cmdlet generates the files needed to work with powerdeli
 New-DeliveryProject MyApp 'Local', 'Test', 'Production'
 
 .Parameter ProjectName
-Required. The name of the project to create.
+The name of the project to create.
 
 .Parameter Environments
-Optional. An array of the names of environments to create configuration variable and environment scripts for.
+An array of the names of environments to create configuration variable and environment scripts for.
 #>
 function New-DeliveryProject {
   [CmdletBinding()]
@@ -20,6 +20,14 @@ function New-DeliveryProject {
     [Parameter(Position=0,Mandatory=1)][Alias('p')][string] $ProjectName,
     [Parameter(Position=1,Mandatory=0)][Alias('e')] $Environments
   )
+
+  ValidateNewFileName -FileName $ProjectName -Description "project name"
+
+  if ($Environments -ne $null) {
+    foreach ($environment in $Environments) {
+      ValidateNewFileName -FileName $environment -Description "environment name"
+    }
+  }
 
   $templatesPath = Join-Path $pow.scriptDir "Templates"
 

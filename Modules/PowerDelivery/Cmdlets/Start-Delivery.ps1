@@ -1,10 +1,33 @@
+<#
+.Synopsis
+Starts deployment or rollback of a target with powerdelivery.
+
+.Description
+Starts deployment or rollback of a target with powerdelivery. Must be run in the parent directory of your powerdelivery project.
+
+.Example
+Start-Delivery MyApp Release Production
+
+.Parameter ProjectName
+The name of the project. Powerdelivery looks for a subdirectory with this name suffixed with "Delivery".
+
+.Parameter TargetName
+The name of the target to run. Must match the name of a file in the Targets subdirectory of your powerdelivery project without the file extension.
+
+.Parameter EnvironmentName
+The name of the environment to target during the run. Must match the name of a file in the Environments subdirectory of your powerdelivery project without the file extension.
+
+.Parameter Rollback
+Switch that when set causes the Down block of roles to be called instead of Up, performing a rollback.
+#>
 function Start-Delivery {
   [CmdletBinding()]
   param (
     [Parameter(Position=0,Mandatory=1)][string] $ProjectName,
     [Parameter(Position=1,Mandatory=1)][string] $TargetName,
     [Parameter(Position=2,Mandatory=1)][string] $EnvironmentName,
-    [Parameter(Position=3,Mandatory=0)][string] $As
+    [Parameter(Position=3,Mandatory=0)][string] $As,
+    [Parameter(Position=4,Mandatory=0)][switch] $Rollback
   )
 
   $ErrorActionPreference = 'Stop'
@@ -36,16 +59,12 @@ function Start-Delivery {
     StartDate = Get-Date;
     StartDir = Get-Location;
     StartedAt = Get-Date -Format "yyyyMMdd_hhmmss";
-    Credentials = New-Object "System.Collections.Generic.Dictionary[String, System.Management.Automation.PSCredential]"
+    Credentials = New-Object "System.Collections.Generic.Dictionary[String, System.Management.Automation.PSCredential]";
+    Secrets = @{}
   }
 
-  $pow.curDir = $pow.target.StartDir
-  $pow.lastAction = ''
   $pow.inBuild = $true
-  $pow.buildFailed = $false
-
   $pow.roles = @{}
-  $pow.variableBlocks = @{}
 
   # Get the running version of powerdelivery
   if (Get-Module powerdelivery)
@@ -146,11 +165,6 @@ function Start-Delivery {
         }
       }
 
-      # Add "As" credentials if specified and none exist in node set
-      if ((!$commandArgs.ContainsKey('Credential')) -and $defaultRemoteCredentials -ne $null) {
-        $commandArgs.Add('Credential', $defaultRemoteCredentials)
-      }
-
       # Add UseSSL if specified
       if ($nodes.ContainsKey('UseSSL')) {
         $commandArgs.Add('UseSSL', 1);
@@ -211,60 +225,67 @@ function Start-Delivery {
 
     $myDocumentsFolder = [Environment]::GetFolderPath("MyDocuments")
 
-    # Test for credentials
-    $credsPath = "$($ProjectName)Delivery\Credentials"
-    if (Test-Path $credsPath) {
+    # Test for secrets
+    $secretsPath = "$($ProjectName)Delivery\Secrets"
+    if (Test-Path $secretsPath) {
 
-      # Iterate credential key directories
-      foreach ($keyDirectory in (Get-ChildItem -Directory $credsPath)) {
-        $keyFilePath = Join-Path $myDocumentsFolder "PowerDelivery\Keys\$keyDirectory.key"
-        if (Test-Path $keyFilePath) {
+      # Iterate secret key directories
+      foreach ($keyDirectory in (Get-ChildItem -Directory $secretsPath)) {
 
-          # Load key file
-          $keyString = Get-Content $keyFilePath
-          $keyBytes = $null
-          try {
-            $keyBytes = [Convert]::FromBase64String($keyString)
-          }
-          catch {
-            throw "Key at $keyFilePath is invalid - $_"
-          }
+        # Try to get the key
+        $keyBytes = GetKeyBytes -ProjectDir $ProjectName -KeyName $keyDirectory
 
-          # Iterate credentials
-          $keyCredsPath = Join-Path $credsPath $keyDirectory
-          foreach ($credentialsFile in (Get-ChildItem $keyCredsPath)) {
+        if ($keyBytes -ne $null) {
 
-            $credsFullPath = Join-Path $keyCredsPath $credentialsFile
+          # Iterate secrets
+          foreach ($secretFile in (Get-ChildItem -File -Filter *.secret $keyDirectory.FullName)) { 
 
-            $password = $null
+            $secretName = [IO.Path]::GetFileNameWithoutExtension($secretFile)
+            $secretFullPath = Join-Path $keyDirectory $secretFile
+
+            # Try to decrypt the secret
+            $secret = $null
             try {
-              $password = Get-Content $credsFullPath | ConvertTo-SecureString -Key $keyBytes
+              $secret = Get-Content $secretFullPath | ConvertTo-SecureString -Key $keyBytes
             }
             catch {
-              throw "Couldn't decrypt $credsFullPath with key in $keyFilePath - $_"
+              throw "Couldn't decrypt $secretFullPath with key $keyDirectory - $_"
             }
 
-            # Fix up the username
-            $credsFileUserName = $credentialsFile -replace '#', '\\'
-            $userName = [IO.Path]::GetFileNameWithoutExtension($credsFileUserName)
+            # Add secret to hash in target
+            $pow.target.Secrets.Add($secretName, $secret)
+          }
 
-            # Create the PowerShell credential
-            $userCredential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $userName, $password
+          # Check whether credentials exist
+          $credsPath = Join-Path $keyDirectory.FullName "Credentials"
+          if (Test-Path $credsPath) {
 
-            # Add credentials to hash in target
-            $pow.target.Credentials.Add($userName.ToLower(), [PSCredential]$userCredential)
+            # Iterate credentials
+            foreach ($credentialsFile in (Get-ChildItem -File -Filter *.credential $credsPath)) {
+
+              $credsFullPath = Join-Path $credsPath $credentialsFile
+
+              # Try to decrypt the password
+              $password = $null
+              try {
+                $password = Get-Content $credsFullPath | ConvertTo-SecureString -Key $keyBytes
+              }
+              catch {
+                throw "Couldn't decrypt $credsFullPath with key $keyDirectory - $_"
+              }
+
+              # Fix up the username
+              $credsFileUserName = $credentialsFile -replace '#', '\\'
+              $userName = [IO.Path]::GetFileNameWithoutExtension($credsFileUserName)
+
+              # Create the PowerShell credential
+              $userCredential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $userName, $password
+
+              # Add credentials to hash in target
+              $pow.target.Credentials.Add($userName.ToLower(), [PSCredential]$userCredential)
+            }
           }
         }
-      }
-    }
-
-    $defaultRemoteCredentials = $null
-
-    # Prompt for credentials if specified
-    if (![String]::IsNullOrWhiteSpace($As)) {
-      $defaultRemoteCredentials = Get-Credential -UserName $As
-      if ($defaultRemoteCredentials -eq $null) {
-        throw "No credentials were specified."
       }
     }
 
@@ -448,8 +469,6 @@ function Start-Delivery {
     }
 
     Set-Location $pow.target.StartDir | Out-Null
-
-    $pow.inBuild = $false
   }
 }
 

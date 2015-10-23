@@ -1,7 +1,28 @@
+<#
+.Synopsis
+Generates a new powerdelivery role.
+
+.Description
+Generates a new powerdelivery role.
+
+The role will be created at the path:
+
+.\Roles\<RoleName>
+
+.Example
+New-DeliveryRole Database
+
+.Parameter RoleNames
+A comma-separated list of one or more names of roles to create.
+#>
 function New-DeliveryRole {
   param(
     [Parameter(Position=1,Mandatory=1)][string[]] $RoleName
   )
+
+  $projectDir = GetProjectDirectory
+
+  ValidateNewFileName -FileName $RoleName -Description "role name"
 
   $templatesPath = Join-Path $pow.scriptDir "Templates"
 

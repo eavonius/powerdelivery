@@ -1,3 +1,2 @@
 * -As in Start-Delivery
-* Credentials in environment files
 * Role migrations
