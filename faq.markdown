@@ -40,7 +40,7 @@ Powerdelivery employs [environment](environments.html) scripts to configure the 
 
 ### I don't want my developers to deploy to test or production!
 
-This is a common concern to achieve SOX compliance and easy with powerdelivery. You can either keep your powerdelivery project's code in a separate source control repository from the main code and have it pull down the product's code (or pre-built packages by the dev team) before deploying, or just use [credentials](credentials.html) to control which accounts can deploy to which environments.
+This is a common concern to achieve SOX compliance and easy with powerdelivery. You can either keep your powerdelivery project's code in a separate source control repository from the main code and have it pull down the product's code (or pre-built packages by the dev team) before deploying, or just use [credentials](secrets.html#using_secrets_for_credentials) to control which accounts can deploy to which environments.
 
 ### Can I modify powerdelivery?
 

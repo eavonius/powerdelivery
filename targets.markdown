@@ -26,7 +26,7 @@ Below is an example target script:
   };
   "Deploying the database" = @{
     Roles = "Database";
-    Nodes = "Database"
+    Nodes = "DatabaseServer"
   }
 }
 {% endhighlight %}
@@ -44,7 +44,7 @@ The *ordered* keyword tells powerdelivery to run these steps in sequence. The ke
 
 Every powerdelivery project comes with an empty target *Release* located at *.\Targets\Release.ps1*. You can put all of your steps in this one target, or create as many other additional target scripts as you like. You may delete the Release target script if it doesn't match your naming conventions.
 
-As an example, you may want to create one target that provisions nodes (spins them up in Azure, AWS, or your local VMWare or Hyper-V virtualized resource pool), and another that performs actual deployments. This could then be controlled through [credentials](credentials.html) to allow operations personnel to provision nodes, but only permit developers to perform deployments of the product.
+As an example, you may want to create one target that provisions nodes (spins them up in Azure, AWS, or your local VMWare or Hyper-V virtualized resource pool), and another that performs actual deployments. This could then be controlled through [credentials](secrets.html#using_secrets_for_credentials) to allow operations personnel to provision nodes, but only permit developers to perform deployments of the product.
 
 ## Running targets
 

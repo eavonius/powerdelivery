@@ -35,7 +35,7 @@ param($target, $config)
   Database = @{
     Hosts = "x.x.x.1"
   };
-  Website = @{
+  Web = @{
     Hosts = "x.x.x.2", "x.x.x.3"
   }
 }
@@ -46,7 +46,7 @@ param($target, $config)
 
 <br />
 
-When powerdelivery deploys to this environment, it will apply any roles in a [target](targets.html) that are set to *Website* to all the listed hosts. You can also use the [$target parameter](reference.html#target_parameter) and [$config parameter](reference.html#config_parameter) to dynamically construct your node host names if necessary.
+When powerdelivery deploys to this environment, it will apply any roles in a [target](targets.html) that are set to *Web* to all the listed hosts. You can also use the [$target parameter](reference.html#target_parameter) and [$config parameter](reference.html#config_parameter) to dynamically construct your node host names if necessary.
 
 <br />
 
@@ -69,7 +69,7 @@ param($target, $config)
   Database = @{
     Connections = "http://mydatabasevm.cloudapp.net:5986/"
   };
-  Website = @{
+  Web = @{
     Connections = "http://mywebsvc.cloudapp.net:5986/", `
                   "http://mywebsvc.cloudapp.net:5987/"
   }
@@ -81,7 +81,7 @@ param($target, $config)
 
 <br />
 
-When powerdelivery deploys to this environment, it will apply any roles in a [target](targets.html) that are set to *Website* using all the listed connection URIs. You can use the [$target parameter](reference.html#target_parameter) and [$config parameter](reference.html#config_parameter) to dynamically construct your node connection URIs if necessary.
+When powerdelivery deploys to this environment, it will apply any roles in a [target](targets.html) that are set to *Web* using all the listed connection URIs. You can use the [$target](reference.html#target_parameter) parameter and [$config](reference.html#config_parameter) parameter to dynamically construct your node connection URIs if necessary.
 
 <br />
 
@@ -89,7 +89,7 @@ When powerdelivery deploys to this environment, it will apply any roles in a [ta
 
 ## Connection settings
 
-Each set of nodes may optionally specify a *Credentials* attribute to refer to [credentials](credentials.html) that will be used to connect to the node remotely with PowerShell. You may also supply an *Authentication* attribute which specifies how these credentials are passed to a remote node. Valid values are Default, Basic, Credssp, Digest, Kerberos,
+Each set of nodes may optionally specify a *Credentials* attribute to refer to [credentials](secrets.html#using_secrets_for_credentials) that will be used to connect to the node remotely with PowerShell. You may also supply an *Authentication* attribute which specifies how these credentials are passed to a remote node. Valid values are Default, Basic, Credssp, Digest, Kerberos,
 Negotiate, and NegotiateWithImplicitCredential. If you don't specify an authentication method, the default value is *Default*. You can read more about these by referring to the the PowerShell documentation for [Invoke-Command](https://technet.microsoft.com/en-us/library/hh849719.aspx).
 
 <br />
@@ -215,35 +215,40 @@ param($target, $config)
 $nodes = @{}
 
 # Get credentials from an environment configuration variable that 
-# your new VM will allow logins from. You'll have to create this 
-# ahead of time in Azure AD or a domain controller.
+# your new VM will allow logins with. You'll have to create this 
+# account ahead of time in Azure AD or a domain controller, and add 
+# this user to the "Remote Management Users" group on your VM image.
 $newVMCredentials = $target.Credentials["powerdelivery@mydomain.com"]
 
 Import-Module Azure
 
-# "Sign-in" to Windows Azure's PowerShell cmdlets with powerdelivery credentials
+# "Sign-in" to Windows Azure's PowerShell cmdlets with credentials 
+# that permit you to administer Windows Azure so you can create VMs.
 Add-AzureAccount -Credential $target.Credentials["admin@mydomain.com"]
 
 # Set the Azure subscription from an environment configuration variable
 Select-AzureSubscription $config.AzureSubscriptionId
 
-# This would use Windows Server 2012. If dynamically provisioning, 
-# don't really do this. You should instead use your own VHD that 
+# Store in a configuration variable a valid image for your own VHD that 
 # has had powerdelivery already configured on it as described in 
 # "Enabling deployment to nodes" above, otherwise powerdelivery 
-# won't be able to connect to it
-$image = "a699494373c04fc0bc8f2bb1389d6106__Windows-Server-2012-Datacenter-201305.01-en.us-127GB.vhd"
+# won't be able to connect to it.
+$image = $config.AzureVMImage
 
 # Create the VM using the image and an admin username and password
+# This password would be added to powerdelivery as a "secret" so it 
+# is not stored in clear text in your code.
 New-AzureVMConfig -Name "TestVM" `
                   -InstanceSize "Small" `
                   -ImageName $image | 
   Add-AzureProvisioningConfig -Windows `
                               -AdminUsername "MYDOMAIN\admin" `
-                              -Password "s@m3p@@sw0rd" |
+                              -Password $target.Secrets.AzureVMAdminPassword |
     New-AzureVM -ServiceName "MyService" -Location "West US" -WaitForBoot 
 
-# Execute the script from microsoft that sets up a VM for PowerShell
+# Execute the script from microsoft that sets up a VM for PowerShell. 
+# You would need to add the script to your source code as a relative 
+# path. This assumes it's in a "Scripts" directory.
 .\Scripts\InstallWinRMCertAzureVM.ps1 -SubscriptionName $config.AzureSubscriptionId `
                                       -ServiceName "MyService" `
                                       -Name "TestVM"
@@ -263,10 +268,7 @@ $nodes
 
 <br />
 
-**Tips**
-
-* Nodes provisioned during deployment must be created from an image that has had the *GrantToDelivery.ps1* script already applied to them as described above.
-* [This article by Michael Washam](http://michaelwasham.com/windows-azure-powershell-reference-guide/introduction-remote-powershell-with-windows-azure/) was crucial for writing the above example. Thanks Michael!
+**Tip:** You can choose to check for the existence of the VM before re-creating it, tear it down on each deploy, or use a naming or tag convention to control how many nodes to spin up.
 
 <br />
 
@@ -276,8 +278,8 @@ $nodes
 
 Deploying to cloud platform resources, such as Windows Azure's Cloud and Mobile services simplifies environment configuration. Because these platform services do not provide direct VM access, use localhost as the node for any [roles](roles.html) that will access cloud resources. These roles' scripts should then use cmdlets provided by the vendor to access cloud platform resources.
 
-Since most cmdlets from cloud platform vendors require [credentials](credentials.html), you can use the *Credentials* property of the [$target parameter](reference.html#target_parameter) in role scripts to retrieve any you've stored using [Write-DeliveryCredentials](reference.html#write_deliverycredentials_cmdlet). This will enable you to securely access cloud resources without storing credentials for provisioning and access in source control. See [using credentials in roles](credentials.html#using_credentials_in_roles) for an example.
+Since most cmdlets from cloud platform vendors require [credentials](secrets.html#using_secrets_for_credentials), you can use the *Credentials* property of the [$target parameter](reference.html#target_parameter) in role scripts to retrieve any you've stored using [New-DeliveryCredential](reference.html#new_deliverycredential_cmdlet). This will enable you to securely access cloud resources without storing credentials for provisioning and access in source control. See [using credentials in scripts](secrets.html#using_credentials_in_scripts) for an example.
 
 <br />
 
-### Next read about [credentials](credentials.html).
+### Next read about [secrets](secrets.html).

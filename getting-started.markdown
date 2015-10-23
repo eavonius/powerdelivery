@@ -8,7 +8,7 @@ layout: page
 
 You want developers to build, test, and deploy a product on their own computers. As often as possible, you want staff with appropriate permissions to deploy it to other environments and eventually on to production without manual changes. You don't want to pay for a bunch of proprietary build tools and train people on IDEs and cloud management consoles just to automate infrastructure. 
 
-If this sounds like you, powerdelivery is what you need. Every good automated release is *custom* so changes to it need to be *fast*. Powerdelivery is designed specifically to allow PowerShell developers to use a standard directory structure, some cmdlets that generate files, and a mechanism for securely sharing credentials to put code they already know to use without learning new APIs.
+If this sounds like you, powerdelivery is what you need. Every good automated release is *custom* so changes to it need to be *fast*. Powerdelivery is designed specifically to allow PowerShell developers to use a standard directory structure, some cmdlets that generate files, and a mechanism for securely sharing secrets to put code they already know to use without learning new APIs.
 
 This page provides a walkthrough of getting setup and building a simple automated build to demonstrate some of the core features of powerdelivery. We'll just scratch the surface - to automate the release of your product, you'll want to read the rest of the topics when you're done here. 
 

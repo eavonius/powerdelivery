@@ -33,15 +33,20 @@ This page contains reference for the script parameters and cmdlets included with
 						<a href="#new_deliveryrolemigration_cmdlet">New-DeliveryRoleMigration</a>
 					</li>
 				</ul>
-				<b>Credentials</b>
+				<b>Secrets</b>
 				<ul class="nav">
 					<li>
 						<a href="#new_deliverykey_cmdlet">New-DeliveryKey</a>
 					</li>
 					<li>
-						<a href="#write_deliverycredentials_cmdlet">Write-DeliveryCredentials</a>
+						<a href="#new_deliverycredential_cmdlet">New-DeliveryCredential</a>
 					</li>
-					<b>In Roles</b>
+					<li>
+						<a href="#new_deliverysecret_cmdlet">New-DeliverySecret</a>
+					</li>
+				</ul>
+				<b>In Roles</b>
+				<ul class="nav">
 					<li>
 						<a href="#invoke_msbuild_cmdlet">Invoke-MSBuild</a>
 					</li>
@@ -188,48 +193,98 @@ Role migration created at ".\MyAppDelivery\Roles\LoadBalancer\Migrations\2015101
 <a name="new_deliverykey_cmdlet"></a>
 
 <p class="ref-item">New-DeliveryKey</p>
-Generates a key file used to encrypt [credentials](credentials.html).
+Generates a key file used to encrypt [secrets](secrets.html).
 
 <p class="ref-upper">Parameters</p>
 <dl>
 	<dt>-KeyName</dt>
 	<dd>The name of the key to generate.</dd>
 </dl>
+
+The key will be created at the path:
+
+<pre>
+&lt;Drive&gt;:\Users\&lt;User&gt;\Documents\PowerDelivery\Keys\&lt;Project&gt;\&lt;KeyName&gt;.key
+</pre>
+
 <p class="ref-upper">Examples</p>
 
-<p>Example of creating a key named <i>MyKey</i> for use in encrypting credentials.</p>
+<p>Example of creating a key named <i>MyKey</i> for use in encrypting secrets.</p>
 {% include console_title.html %}
 <div class="console">
 {% highlight powershell %}
 PS C:\MyApp> New-DeliveryKey MyKey
-Key written to "C:\Users\Jayme\Documents\PowerDelivery\Keys\MyKey.key"
+Key written to "C:\Users\Jayme\Documents\PowerDelivery\Keys\MyApp\MyKey.key"
 {% endhighlight %}
 </div>
 
 <br />
 
-<a name="write_deliverycredentials_cmdlet"></a>
+<a name="new_deliverycredential_cmdlet"></a>
 
-<p class="ref-item">Write-DeliveryCredentials</p>
-Encrypts a set of [credentials](credentials.html) with a key and adds them to a powerdelivery project.
+<p class="ref-item">New-DeliveryCredential</p>
+Encrypts a set of [credentials](secrets.html#using_secrets_for_credentials) with a key and adds them to a powerdelivery project.
 
 <p class="ref-upper">Parameters</p>
 <dl>
 	<dt>-KeyName</dt>
 	<dd>The name of the key to use for encryption.</dd>
 	<dt>-UserName</dt>
-	<dd>The username of the account to store credentials for.</dd>
+	<dd>The username of the account to encrypt the password for.</dd>
 </dl>
+
+The credential will be created at the path:
+
+<pre>
+.\Secrets\&lt;KeyName&gt;\Credentials\&lt;UserName&gt;.credential
+</pre>
+
 <p class="ref-upper">Examples</p>
 
-<p>Example of writing credentials using a key named <i>MyKey</i>.</p>
+<p>Example of creating a credential using a key named <i>MyKey</i>.</p>
 {% include console_title.html %}
 <div class="console">
 {% highlight powershell %}
-PS C:\MyApp\MyAppDelivery> Write-DeliveryCredentials MyKey "MYDOMAIN\myuser"
+PS C:\MyApp\MyAppDelivery> New-DeliveryCredential MyKey "MYDOMAIN\myuser"
 Enter the password for MYDOMAIN\myuser and press ENTER:
 **********
-Credentials written to ".\Credentials\MyKey\MYDOMAIN#myuser.credential"
+Credentials written to ".\Secrets\MyKey\Credentials\MYDOMAIN#myuser.credential"
+{% endhighlight %}
+</div>
+
+<br />
+
+<a name="new_deliverysecret_cmdlet"></a>
+
+<p class="ref-item">New-DeliverySecret</p>
+Encrypts a [secret](secrets.html) with a key and adds it to a powerdelivery project.
+
+<p class="ref-upper">Parameters</p>
+<dl>
+	<dt>-KeyName</dt>
+	<dd>The name of the key to use for encryption.</dd>
+	<dt>-SecretName</dt>
+	<dd>The name of the secret to encrypt.</dd>
+	<dt>-Force</dt>
+	<dd>Switch that forces overwrite of any existing secret file if found.</dd>
+</dl>
+
+The secret will be created at the path:
+
+<pre>
+.\Secrets\&lt;KeyName&gt;\&lt;SecretName&gt;.secret
+</pre>
+
+<p class="ref-upper">Examples</p>
+
+<p>Example of creating a secret using a key named <i>MyKey</i>.</p>
+{% include console_title.html %}
+<div class="console">
+{% highlight powershell %}
+PS C:\MyApp\MyAppDelivery> New-DeliverySecret MyKey MySecret
+Enter the secret value for MySecret and press ENTER:
+**********
+Secret written to ".\Secrets\MyKey\MySecret.secret"
 {% endhighlight %}
 </div>
 
@@ -413,7 +468,9 @@ References the current run of the [target](targets.html). The target parameter i
 	<dt>StartedAt</dt>
 	<dd>A timestamp in the format yyyyMMdd_hhmmss of when the run started.</dd>
 	<dt>Credentials</dt>
-	<dd>A dictionary (hash) containing the usernames of credentials as the key, and <a href="https://msdn.microsoft.com/en-us/library/system.management.automation.pscredential(v=vs.85).aspx" target="_blank">PowerShell Credentials</a> that were loaded at startup (see <a href="credentials.html">credentials</a>) as their value.</dd>
+	<dd>A dictionary (hash) containing the <a href="secrets.html#using_secrets_for_credentials">credentials</a> that were loaded at startup. The key of the hash is the username of the credential.</dd>
+	<dt>Secrets</dt>
+	<dd>A dictionary (hash) containing the <a href="secrets.html">secrets</a> that were loaded during startup. The key of the hash is the name of the secret.
 </dl>
 
 <p class="ref-upper">Examples</p>
@@ -428,6 +485,9 @@ Delivery:Role {
 
   # Lookup credentials using $target
   $opsCredentials = $target.Credentials["DOMAIN\opsuser"]
+
+  # Lookup a secret using $target
+  $facebookAPIKey = $target.Secrets["FacebookAPIKey"]
 }
 {% endhighlight %}
 <div class="filename">MyAppDelivery\Roles\TargetExample\Role.ps1</div>

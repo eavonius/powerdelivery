@@ -13,7 +13,7 @@ title: Devops-friendly Windows releases on-premise or in the cloud.
 	</div>
 </div>
 
-<p id="features">open source | rollback-capable | keep secrets out of code | use any build server</p>
+<p id="features">pure powershell | rolls back | hides your secrets | open source</p>
 
 <h1 style="font-weight: normal">A birds-eye view</h1>
 
@@ -38,7 +38,6 @@ Project successfully created at ".\MyAppDelivery"
 {% highlight powershell %}
 param($target, $shared)
 @{
-  DatabaseName = "MyApp_Development";
   SiteURL = "http://myapp.cloudapp.net";
   ReleasesPath = ".\Releases"
 }
@@ -51,7 +50,6 @@ param($target, $shared)
 {% highlight powershell %}
 param($target, $shared)
 @{
-  DatabaseName = "MyApp";
   SiteURL = "http://www.myapp.com";
   ReleasesPath = "\\MyShare\MyProduct\Releases"
 }
@@ -69,7 +67,7 @@ param($target, $config)
   Build = @{
     Hosts = "localhost"
   };
-  Website = @{
+  Web = @{
     Hosts = "localhost"
   }
 }
@@ -85,7 +83,7 @@ param($target, $config)
   Build = @{
     Hosts = "localhost"
   };
-  Website = @{
+  Web = @{
     Hosts = "x.x.x.3", "x.x.x.4";
     Credential = "MYDOMAIN\ops"
   }
@@ -102,9 +100,9 @@ param($target, $config)
 {% include console_title.html %}
     <div class="console">
 {% highlight powershell %}
-PS C:\MyApp\MyAppDelivery> New-DeliveryRole "Compile", "Website"
+PS C:\MyApp\MyAppDelivery> New-DeliveryRole "Compile", "Webapp"
 Role created at ".\Roles\Compile"
-Role created at ".\Roles\Website"
+Role created at ".\Roles\Webapp"
 {% endhighlight %}
     </div>
   </div>
@@ -139,26 +137,30 @@ Delivery:Role {
   Add-PSSnapin WebAdministration
 
   # Create the web application
-  New-WebApplication $config.Website MyApp $localPath -Force
+  New-WebApplication $config.SiteURL MyApp $localPath -Force
 }
 {% endhighlight %}
-<div class="filename">MyAppDelivery\Roles\Website\Always.ps1</div>
+<div class="filename">MyAppDelivery\Roles\Webapp\Always.ps1</div>
 
 ## Configure a [target](targets.html)
 
+<div class="row">
+  <div class="col-lg-8 col-md-10 col-sm-12">
 {% highlight powershell %}
 [ordered]@{
   "Building the product" = @{
-    Roles = "Build";
+    Roles = "Compile";
     Nodes = "Build"
   };
   "Deploying the website" = @{
-    Roles = "Website";
-    Nodes = "Website"
+    Roles = "Webapp";
+    Nodes = "Web"
   }
 }
 {% endhighlight %}
-<div class="filename">MyAppDelivery\Targets\Release.ps1</div>
+    <div class="filename">MyAppDelivery\Targets\Release.ps1</div>
+  </div>
+</div>
 
 <div class="row">
   <div class="col-lg-8 col-md-10 col-sm-12">
@@ -173,9 +175,9 @@ Target "Release" started by MYDOMAIN\dev
 Delivering "MyApp" to "Local" environment...
 
 [----- Building the product
-[--------- Build -> (localhost)
+[--------- Compile -> (localhost)
 [----- Deploying the website
-[--------- Website -> (localhost)
+[--------- Webapp -> (localhost)
 
 Target "Release" succeeded in 10 sec 453 ms.
 {% endhighlight %}
@@ -196,10 +198,10 @@ Target "Release" started by MYDOMAIN\ops
 Delivering "MyApp" to "Production" environment...
 
 [----- Building the product
-[--------- Build -> (localhost)
+[--------- Compile -> (localhost)
 [----- Deploying the website
-[--------- Website -> (x.x.x.3)
-[--------- Website -> (x.x.x.4)
+[--------- Webapp -> (x.x.x.3)
+[--------- Webapp -> (x.x.x.4)
 
 Target "Release" succeeded in 1m 13 sec 56 ms.
 {% endhighlight %}

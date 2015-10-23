@@ -38,13 +38,13 @@ param($target)
 	</div>
 </div>
 
-You'll notice a [$target parameter](reference.html#target_parameter) in the script. This can be used to reference [credentials](credentials.html) or other properties of the current run of the deployment to use in shared configuration variables.
+You'll notice a [$target](reference.html#target_parameter) parameter in the script. This can be used to reference [secrets](secrets.html) or other properties of the current run of the deployment to use in shared configuration variables.
 
 ## Environment-specific variables
 
 For every environment in your powerdelivery project, you must have a script named the same as the environment in the *Configuration* directory. If you define variables with the same name as those that exist in *Shared.ps1*, these will be **overridden** by the environment-specific definition at deployment time.
 
-Environment-specific variable scripts declare the [$shared parameter](reference.html#shared_parameter) in addition to $target (which is present in the shared configuration script). Powerdelivery will pass the shared configuration variables hash as this parameter, allowing you to reference them. 
+Environment-specific variable scripts declare the [$shared](reference.html#shared_parameter) parameter in addition to $target (which is present in the shared configuration script). Powerdelivery will pass the shared configuration variables hash as this parameter, allowing you to reference them. 
 
 <br />
 
