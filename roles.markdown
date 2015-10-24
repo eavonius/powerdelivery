@@ -248,7 +248,7 @@ The script below demonstrates creating release directories:
 Delivery:Role -Up {
   param($target, $config, $node)
 
-  # Get the path to <Drive>:\Users\<User>\AppData\Roaming
+  # Get the path to &lt;Drive&gt;:\Users\&lt;User&gt;\AppData\Roaming
   $appData = [Environment]::GetFolderPath("ApplicationData")
 
   # Reference a sub-directory named after the project
@@ -279,10 +279,43 @@ Delivery:Role -Up {
   if ($releases.count -gt 5) {
     $oldReleaseCount = $releases.count - 5
     $releases | 
-      Sort-Object -Property LastWriteTime | 
+      Sort-Object -Property Name | 
         Select -First $oldReleaseCount | 
           Remove-Item -Force -Recurse | Out-Null
   }
+} -Down {
+  param($target, $config, $node)
+
+  # Get the path to &lt;Drive&gt;:\Users\&lt;User&gt;\AppData\Roaming
+  $appData = [Environment]::GetFolderPath("ApplicationData")
+
+  # Reference a sub-directory named after the project
+  $projectPath = Join-Path $appData $target.ProjectName
+
+  # If at least one release has occurred
+  if (Test-Path $projectPath) {
+
+    # Get current and previous release
+    $lastRelease = Get-ChildItem -Directory $projectPath -Exclude "Current" | 
+      Sort-Object -Descending -Property Name | Select -First 2
+
+    # Only rollback if we've got a previous release
+    if ($lastRelease.count -eq 2) {
+
+      # Remove link to current release
+      $currentReleasePath = Join-Path $projectPath "Current"
+      if (Test-Path $currentReleasePath) {
+        & cmd /c "rmdir ""$currentReleasePath"""
+      }
+
+      # Link current to previous release
+      & cmd /c "mklink /J ""$currentReleasePath"" ""$($lastRelease[1])""" | Out-Null
+
+      # Delete old current release
+      Remove-Item -Force -Recurse $lastRelease[0] | Out-Null
+
+      # TODO: Do whatever you need with the previous release's files.
+    }
 }
 {% endhighlight %}
   <div class="filename">MyAppDelivery\Roles\DownloadRelease\Always.ps1</div>
