@@ -130,11 +130,9 @@ try {
 
   cd ..\gh-pages
   
-  $pageFile = Join-Path . ".\_layouts\page.html"
+  $pageFile = Join-Path . "_layouts\page.html"
   $pageFileName = [System.IO.Path]::GetFileName($pageFile)
   
-  Write-Host "$pageFileName -> $newVersion..."
-
   $newPageFileContent = (Get-Content $pageFileName) -replace "^.*version.*", "        <div id=`"new-version`">version $newVersion</div>"
   Out-File -Encoding ascii -FilePath $pageFile -Force -InputObject $newPageFileContent
 
