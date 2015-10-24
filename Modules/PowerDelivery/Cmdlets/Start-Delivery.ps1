@@ -17,6 +17,9 @@ The name of the target to run. Must match the name of a file in the Targets subd
 .Parameter EnvironmentName
 The name of the environment to target during the run. Must match the name of a file in the Environments subdirectory of your powerdelivery project without the file extension.
 
+.Parameter Properties
+A hash of properties to pass to the target. Typically used to pass information from build servers.
+
 .Parameter Rollback
 Switch that when set causes the Down block of roles to be called instead of Up, performing a rollback.
 #>
@@ -26,7 +29,7 @@ function Start-Delivery {
     [Parameter(Position=0,Mandatory=1)][string] $ProjectName,
     [Parameter(Position=1,Mandatory=1)][string] $TargetName,
     [Parameter(Position=2,Mandatory=1)][string] $EnvironmentName,
-    [Parameter(Position=3,Mandatory=0)][string] $As,
+    [Parameter(Position=3,Mandatory=0)][hash] $Properties = @{},
     [Parameter(Position=4,Mandatory=0)][switch] $Rollback
   )
 
@@ -59,6 +62,7 @@ function Start-Delivery {
     StartDate = Get-Date;
     StartDir = Get-Location;
     StartedAt = Get-Date -Format "yyyyMMdd_hhmmss";
+    Properties = $Properties;
     Credentials = New-Object "System.Collections.Generic.Dictionary[String, System.Management.Automation.PSCredential]";
     Secrets = @{}
   }

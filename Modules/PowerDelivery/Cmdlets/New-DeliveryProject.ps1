@@ -38,12 +38,12 @@ function New-DeliveryProject {
   }
 
   $configurationDir = "$projectDir\Configuration"
-  $credentialsDir = "$projectDir\Credentials"
   $environmentsDir = "$projectDir\Environments"
   $rolesDir = "$projectDir\Roles"
+  $secretsDir = "$projectDir\Secrets"
   $targetsDir = "$projectDir\Targets"
 
-  $dirsToCreate = @($configurationDir, $credentialsDir, $environmentsDir, $rolesDir, $targetsDir)
+  $dirsToCreate = @($configurationDir, $secretsDir, $environmentsDir, $rolesDir, $targetsDir)
 
   # Create directories
   foreach ($dirToCreate in $dirsToCreate) {

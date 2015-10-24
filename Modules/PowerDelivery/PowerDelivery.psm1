@@ -16,7 +16,7 @@ function GetProjectDirectory {
 
 function ValidateNewFileName($Type, $FileName) {
   $isValidName = "^[a-zA-Z0-9]+$"
-  if (!($FileName -match $isValidKey)) {
+  if (!($FileName -match $isValidName)) {
     throw "Please use a $Type that only includes alphanumeric characters and no spaces."
   }
 }
