@@ -248,7 +248,7 @@ The script below demonstrates creating release directories:
 Delivery:Role -Up {
   param($target, $config, $node)
 
-  # Get the path to &lt;Drive&gt;:\Users\&lt;User&gt;\AppData\Roaming
+  # Get the path to <Drive>:\Users\<User>\AppData\Roaming
   $appData = [Environment]::GetFolderPath("ApplicationData")
 
   # Reference a sub-directory named after the project
@@ -286,7 +286,7 @@ Delivery:Role -Up {
 } -Down {
   param($target, $config, $node)
 
-  # Get the path to &lt;Drive&gt;:\Users\&lt;User&gt;\AppData\Roaming
+  # Get the path to <Drive>:\Users\<User>\AppData\Roaming
   $appData = [Environment]::GetFolderPath("ApplicationData")
 
   # Reference a sub-directory named after the project
