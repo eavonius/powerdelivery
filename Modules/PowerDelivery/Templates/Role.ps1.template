@@ -1,5 +1,4 @@
-# See http://www.powerdelivery.io/roles.html
-#
+<# See http://www.powerdelivery.io/roles.html #>
 Delivery:Role -Up {
   param($target, $config, $node)
 

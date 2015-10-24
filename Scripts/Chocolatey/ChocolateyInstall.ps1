@@ -1,7 +1,8 @@
-# ChocolateyInstall.ps1
-#
-# Installs PowerDelivery 3 with chocolatey.
-#
+<# ChocolateyInstall.ps1
+
+Installs PowerDelivery 3 with chocolatey.
+#>
+
 $ErrorActionPreference 'Stop'
 
 $powerdeliveryDir = Split-Path -parent $MyInvocation.MyCommand.Definition

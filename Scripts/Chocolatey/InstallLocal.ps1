@@ -1,9 +1,10 @@
-# InstallLocal.ps1
-#
-# Installs PowerDelivery 3 locally from source with chocolatey.
-#
-# Used for development only.
-#
+<# InstallLocal.ps1
+
+Installs PowerDelivery 3 locally from source with chocolatey.
+
+Used for development only.
+#>
+
 $ErrorActionPreference = 'Stop'
 
 try {

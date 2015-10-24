@@ -1,10 +1,8 @@
-<#
-PowerDelivery.psm1
+<# PowerDelivery.psm1
 
-powerdelivery - http://eavonius.github.com/powerdelivery
+Script for PowerShell module.
 
-PowerShell module that enables writing build scripts that follow continuous delivery 
-principles and deploy product assets into multiple environments.
+http://www.powerdelivery.io
 #>
 
 function GetProjectDirectory {

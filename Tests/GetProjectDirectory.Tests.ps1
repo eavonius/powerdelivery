@@ -4,7 +4,8 @@ Describe "GetProjectDirectory" {
   InModuleScope PowerDelivery {
 
     It "should validate required directories" {
-      { GetProjectDirectory } | Should Throw "This command must be run from within a powerdelivery project directory."
+      { GetProjectDirectory } | 
+        Should Throw "This command must be run from within a powerdelivery project directory."
     }
 
     It "should return path if valid" {

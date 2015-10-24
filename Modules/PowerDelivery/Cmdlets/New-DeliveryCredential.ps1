@@ -33,7 +33,7 @@ function New-DeliveryCredential {
 
   ValidateNewFileName -FileName $SecretName -Description "secret name"
   
-  $keyBytes = GetKeyBytes -ProjectDir $projectDir -KeyName $KeyName
+  $keyBytes = GetKeyBytes -ProjectDir $projectDir -KeyName $KeyName -ThrowOnError
 
   $credentialsPath = Join-Path (Get-Location) "Credentials\$KeyName"
   if (!(Test-Path $credentialsPath)) {

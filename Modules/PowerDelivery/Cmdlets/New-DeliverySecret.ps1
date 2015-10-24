@@ -33,7 +33,7 @@ function New-DeliverySecret {
 
   ValidateNewFileName -FileName $SecretName -Description "secret name"
   
-  $keyBytes = GetKeyBytes -ProjectDir $projectDir -KeyName $KeyName
+  $keyBytes = GetKeyBytes -ProjectDir $projectDir -KeyName $KeyName -ThrowOnError
 
   $secretsPath = Join-Path (Get-Location) "Secrets\$KeyName"
   if (!(Test-Path $secretsPath)) {

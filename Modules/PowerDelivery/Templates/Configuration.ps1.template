@@ -1,5 +1,4 @@
-# See http://www.powerdelivery.io/variables.html
-#
+<# See http://www.powerdelivery.io/variables.html #>
 param($target, $shared)
 @{
   # Define hash values with environment-specific variables here

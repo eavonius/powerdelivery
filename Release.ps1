@@ -1,5 +1,6 @@
 <# Release.ps1
-Packages up a release, commits changes to git, and pushes to chocolatey.
+
+Creates nuget package, commits changes to git, and pushes to chocolatey.
 #>
 
 function Update-ModuleVersion($file) {
