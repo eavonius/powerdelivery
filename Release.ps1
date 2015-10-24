@@ -130,7 +130,7 @@ try {
 
   cd ..\gh-pages
   
-  $pageFile = Join-Path . .\_layouts\page.html
+  $pageFile = Join-Path . ".\_layouts\page.html"
   $pageFileName = [System.IO.Path]::GetFileName($pageFile)
   
   Write-Host "$pageFileName -> $newVersion..."
