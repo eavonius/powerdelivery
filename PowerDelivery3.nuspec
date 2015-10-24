@@ -32,14 +32,16 @@
     <!-- Cmdlets -->
     <file src="Modules\PowerDelivery\Cmdlets\Enter-DeliveryRole.ps1" target="tools\PowerDelivery\Cmdlets\Enter-DeliveryRole.ps1" />
     <file src="Modules\PowerDelivery\Cmdlets\Invoke-MSBuild.ps1" target="tools\PowerDelivery\Cmdlets\Invoke-MSBuild.ps1" />
+    <file src="Modules\PowerDelivery\Cmdlets\New-DeliveryCredential.ps1" target="tools\PowerDelivery\Cmdlets\New-DeliveryCredential.ps1" />
     <file src="Modules\PowerDelivery\Cmdlets\New-DeliveryKey.ps1" target="tools\PowerDelivery\Cmdlets\New-DeliveryKey.ps1" />
     <file src="Modules\PowerDelivery\Cmdlets\New-DeliveryProject.ps1" target="tools\PowerDelivery\Cmdlets\New-DeliveryProject.ps1" />
     <file src="Modules\PowerDelivery\Cmdlets\New-DeliveryRole.ps1" target="tools\PowerDelivery\Cmdlets\New-DeliveryRole.ps1" />
+    <file src="Modules\PowerDelivery\Cmdlets\New-DeliverySecret.ps1" target="tools\PowerDelivery\Cmdlets\New-DeliverySecret.ps1" />
     <file src="Modules\PowerDelivery\Cmdlets\Publish-AzureDeliveryAssets.ps1" target="tools\PowerDelivery\Cmdlets\Publish-AzureDeliveryAssets.ps1" />
     <file src="Modules\PowerDelivery\Cmdlets\Start-Delivery.ps1" target="tools\PowerDelivery\Cmdlets\Start-Delivery.ps1" />
     <file src="Modules\PowerDelivery\Cmdlets\Test-CommandExists.ps1" target="tools\PowerDelivery\Cmdlets\Test-CommandExists.ps1" />
     <file src="Modules\PowerDelivery\Cmdlets\Test-Verbose.ps1" target="tools\PowerDelivery\Cmdlets\Test-Verbose.ps1" />
-    <file src="Modules\PowerDelivery\Cmdlets\Write-DeliveryCredentials.ps1" target="tools\PowerDelivery\Cmdlets\Write-DeliveryCredentials.ps1" />
+    <file src="Modules\PowerDelivery\Cmdlets\Write-RelativePath.ps1" target="tools\PowerDelivery\Cmdlets\Write-RelativePath.ps1" />
 
     <!-- Chocolatey -->
     <file src="Scripts\Chocolatey\ChocolateyInstall.ps1" target="tools\chocolateyInstall.ps1" />

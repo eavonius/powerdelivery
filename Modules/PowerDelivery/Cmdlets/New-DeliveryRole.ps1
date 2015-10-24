@@ -28,18 +28,20 @@ function New-DeliveryRole {
 
   foreach ($role in $RoleName) {
 
-    $roleDir = ".\Roles\$role"
+    $rolePath = ".\Roles\$role"
+    $roleDir = Join-Path $projectDir "Roles\$role"
+    $migrationsDir = Join-Path $roleDir "Migrations"
 
     if (Test-Path $roleDir) {
-      throw "Directory $roleDir already exists."
+      throw "Directory $rolePath already exists."
     }
 
-    New-Item $roleDir -ItemType Directory | Out-Null
+    New-Item $migrationsDir -ItemType Directory | Out-Null
 
     # Copy the role script
     Copy-Item "$templatesPath\Role.ps1.template" "$roleDir\Always.ps1"
 
-    Write-Host "Role created at ""$roleDir"""
+    Write-Host "Role created at ""$rolePath"""
   }
 }
 

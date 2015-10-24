@@ -1,9 +1,6 @@
-<#
-Test.ps1
-
+<# Test.ps1
 Tests powerdelivery with Pester https://github.com/pester/Pester.
-
-You must install Pester first with chocolatey: cinst pester
+You must install Pester first. With chocolatey: cinst pester
 #>
 $startDir = Get-Location
 

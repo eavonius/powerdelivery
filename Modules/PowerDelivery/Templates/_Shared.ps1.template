@@ -2,5 +2,5 @@
 #
 param($target)
 @{
-	# Define hash values with shared variables here
+  # Define hash values with shared variables here
 }

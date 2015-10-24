@@ -2,12 +2,14 @@
 
 Describe "GetProjectDirectory" {
   InModuleScope PowerDelivery {
+
     It "should validate required directories" {
       { GetProjectDirectory } | Should Throw "This command must be run from within a powerdelivery project directory."
     }
+
     It "should return path if valid" {
       Mock Test-Path { return $true }
-      Mock Get-Location { return "C:\Projects\MyApp\MyAppDelivery" }
+      Mock Get-Location { return "TestDrive:\MyApp\MyAppDelivery" }
       $projectDir = GetProjectDirectory 
       $projectDir | Should Be 'MyAppDelivery'
     }

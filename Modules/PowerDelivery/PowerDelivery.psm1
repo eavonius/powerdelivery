@@ -21,8 +21,12 @@ function ValidateNewFileName($Type, $FileName) {
   }
 }
 
+function GetMyDocumentsFolder {
+  [Environment]::GetFolderPath("MyDocuments")
+}
+
 function GetKeyBytes($ProjectDir, $KeyName, [switch]$ThrowOnError) {
-  $myDocumentsFolder = [Environment]::GetFolderPath("MyDocuments")
+  $myDocumentsFolder = GetMyDocumentsFolder
   $keysFolderPath = Join-Path $myDocumentsFolder "PowerDelivery\Keys\$ProjectDir"
   $keyFilePath = Join-Path $keysFolderPath "$KeyName.key"
 

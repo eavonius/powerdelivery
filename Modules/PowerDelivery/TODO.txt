@@ -1,2 +1,2 @@
-* -As in Start-Delivery
+* Rollback
 * Role migrations

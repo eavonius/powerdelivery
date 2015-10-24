@@ -237,7 +237,7 @@ function Start-Delivery {
       foreach ($keyDirectory in (Get-ChildItem -Directory $secretsPath)) {
 
         # Try to get the key
-        $keyBytes = GetKeyBytes -ProjectDir $ProjectName -KeyName $keyDirectory
+        $keyBytes = GetKeyBytes -ProjectDir "$($ProjectName)Delivery" -KeyName $keyDirectory
 
         if ($keyBytes -ne $null) {
 
