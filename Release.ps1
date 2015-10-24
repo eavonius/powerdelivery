@@ -1,15 +1,90 @@
 <# Release.ps1
 
-Creates nuget package, commits changes to git, and pushes to chocolatey.
+Increments versions, creates nuget packages, 
+commits changes, and pushes to chocolatey.
 #>
 
-function Update-ModuleVersion($file) {
-  $fileName = [System.IO.Path]::GetFileName($file)
-  Write-Host "$fileName -> $newVersion..."
-  $newManifestContent = ((Get-Content $file) -replace "^ModuleVersion = ['|`"].*['|`"]", "ModuleVersion = '$newVersion'")
-  Out-File -FilePath $file -Force -InputObject $newManifestContent
+# Updates the PowerShell module version
+#
+function UpdateModuleVersion($manifestFile, $newVersion) {
+
+  $content = Get-Content $manifestFile
+
+  $newContent = $content -replace "^ModuleVersion = ['|`"].*['|`"]", "ModuleVersion = '$newVersion'")
+
+  Out-File -FilePath $manifestFile -Force -InputObject $newContent
 }
 
+# Inserts file statments into a nuspec for a replacement token
+#
+function InsertNuspecFiles($content, $token, $path) {
+
+  $files = Get-ChildItem -File "Modules\$path"
+  
+  $filesStatement = ""
+  foreach ($file in $files) {
+    $filesStatement += [Environment]::NewLine
+    $filesStatement += "<file src=""Modules\$path\$cmdlet"" target=""tools\$path\$cmdlet"" />"
+  }
+
+  $content -replace $token, $filesStatement
+}
+
+# Generates a nuspec file using a template
+#
+function GenerateNuspec($module, $moduleId, $newVersion) {
+
+  $template = "$moduleId.template.nuspec"
+  $nuspec = "$moduleId.nuspec"
+
+  $content = Get-Content $template
+
+  $newContent = InsertNuspecFiles -Content $content -Token "{{ Cmdlets }}" -Path "$module\Cmdlets"
+  $newContent = InsertNuspecFiles -Content $newContent -Token "{{ Templates }}" -Path "$module\Templates"
+
+  Out-File -FilePath $nuspec -Force -InputObject $newContent
+
+  [xml]$nuspecFile = Get-Content $nuspec
+
+  $namespaces = New-Object Xml.XmlNamespaceManager $nuspecFile.NameTable
+  $namespaces.AddNamespace('nu', 'http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd')
+
+  $versionElement = $nuspecFile.SelectSingleNode('//nu:package/nu:metadata/nu:version', $namespaces)
+  $versionElement.'#text' = "$newVersion"
+
+  $nuspecFullPath = Join-Path (Get-Location) $nuspec
+  $nuspecFile.Save($nuspecFullPath)
+}
+
+# Gets the new version for a release based on what's on chocolatey
+#
+function GetNewModuleVersion {
+  $listCommand = $(clist powerdelivery3)
+
+  $latestVersion = ""
+
+  if ($listCommand.GetType().Name -eq "Object[]") {
+    $listCommand | ForEach-Object {
+      if ($_.StartsWith("PowerDelivery3 ")) {
+        $latestVersion = $_.split(' ')[1].split('.')
+      }
+    }
+  }
+  else {
+    $latestVersion = $listCommand.split(' ')[1].split('.')  
+  }
+
+  if ([String]::IsNullOrEmpty($latestVersion)) {
+    $latestVersion = "3.0.0"
+  }
+
+  $oldVersion = $latestVersion -join '.'
+  $latestVersion[$latestVersion.Length-1] = $(([int]$latestVersion[$latestVersion.Length-1]) + 1)
+  $latestVersion -join '.'
+}
+
+# Syncs changes with git
+#
 function Sync-Git {
   try {
     git add .
@@ -34,53 +109,31 @@ function Sync-Git {
 }
 
 $ErrorActionPreference = "Stop"
-$originalDirectory = Get-Location
 
-"-----------------------------------------"
-"Releasing new version of powerdelivery..."
-"-----------------------------------------"
+$startDir = Get-Location
+
+Write-Host "------------------------------------------"
+Write-Host "Releasing new version of powerdelivery3..."
+Write-Host "------------------------------------------"
 
 del *.nupkg
 
-$listCommand = $(clist powerdelivery3)
+$newVersion = GetNewModuleVersion
 
-$latestVersion = ""
-
-if ($listCommand.GetType().Name -eq "Object[]") {
-  $listCommand | ForEach-Object {
-    if ($_.StartsWith("PowerDelivery3 ")) {
-      $latestVersion = $_.split(' ')[1].split('.')
-    }
-  }
-}
-else {
-  $latestVersion = $listCommand.split(' ')[1].split('.')  
+$modules = @{
+  PowerDelivery = "PowerDelivery3";
+  PowerDeliveryNode = "PowerDelivery3Node"
 }
 
-$oldVersion = $latestVersion -join '.'
-$latestVersion[$latestVersion.Length-1] = $(([int]$latestVersion[$latestVersion.Length-1]) + 1)
-$script:newVersion = $latestVersion -join '.'
-
-"Lastest version on chocolatey is $oldVersion"
-
-$nuspecFullPath = Join-Path (Get-Location) .\PowerDelivery3.nuspec
-
-[xml]$nuspecFile = Get-Content $nuspecFullPath
-
-$namespaces = New-Object Xml.XmlNamespaceManager $nuspecFile.NameTable
-$namespaces.AddNamespace('nu', 'http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd')
-
-$versionElement = $nuspecFile.SelectSingleNode('//nu:package/nu:metadata/nu:version', $namespaces)
-
-"Updating .nuspec to $newVersion..."
-
-$versionElement.'#text' = "$newVersion"
-
-$nuspecFile.Save($nuspecFullPath)
-
-Update-ModuleVersion -file (Join-Path (Get-Location) .\Modules\PowerDelivery\PowerDelivery.psd1)
+foreach ($module in $modules.GetEnumerator()) {
+  $module = $module.Key
+  $moduleId = $module.Value
+  UpdateModuleVersion -manifestFile "Modules\$moduleDir\$moduleDir.psd1" -newVersion $newVersion
+  GenerateNuspec -module $module -moduleId $moduleId -newVersion $newVersion
+}
 
 try {
+  <#
   Sync-Git
 
   cd ..\gh-pages
@@ -116,9 +169,10 @@ try {
   catch {
     throw "Error pushing new package to chocolatey - $_"
   }
+  #>
 }
 finally {
-  Set-Location $originalDirectory
+  Set-Location $startDir
 }
 
-"Powerdelivery successfully released as $newVersion!"
+Write-Host "PowerDelivery3 successfully released as $newVersion!" -ForegroundColor Green

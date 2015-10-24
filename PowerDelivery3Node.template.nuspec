@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>powerdelivery3node</id>
+    <version>3.0.1</version>
+    <title>PowerDelivery 3 Node</title>
+    <authors>Jayme Edwards</authors>
+    <tags>admin</tags>
+    <owners />
+    <projectUrl>http://www.powerdelivery.io/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>PowerShell cmdlets for use on remote nodes being deployed to with PowerDelivery 3.</description>
+    <summary>PowerShell cmdlets for use on remote nodes being deployed to with PowerDelivery 3.</summary>
+    <language>en-US</language>
+    <iconUrl>http://www.powerdelivery.io/img/masters/choco_logo.png</iconUrl>
+    <licenseUrl>http://www.opensource.org/licenses/MIT</licenseUrl>
+    <dependencies>
+      <dependency id="chocolatey" version="0.9.9.11" />
+    </dependencies>
+  </metadata>
+  <files>
+    <!-- Module -->
+    <file src="Modules\PowerDeliveryNode\PowerDeliveryNode.psm1" target="tools\PowerDelivery\PowerDeliveryNode.psm1" />
+    <file src="Modules\PowerDeliveryNode\PowerDeliveryNode.psd1" target="tools\PowerDelivery\PowerDeliveryNode.psd1" />
+    
+    <!-- Templates -->
+    {{ Templates }}
+
+    <!-- Cmdlets -->
+    {{ Cmdlets }}
+
+    <!-- Chocolatey -->
+    <file src="Scripts\Chocolatey\PowerDeliveryNode\ChocolateyInstall.ps1" target="tools\chocolateyInstall.ps1" />
+    <file src="Scripts\Chocolatey\PowerDeliveryNode\ChocolateyUninstall.ps1" target="tools\chocolateyUninstall.ps1" />
+    <file src="Scripts\Chocolatey\PowerDeliveryNode\Init.ps1" target="tools\init.ps1" />
+  </files>
+</package>
