@@ -12,7 +12,7 @@ Whether a physical computer or a virtual machine (on-premise or in the cloud), p
 
 ## Environment scripts
 
-PowerShell scripts in the *Environments* directory of your project are where you tell powerdelivery which nodes will have [roles](roles.html) applied to them when deployment occurs. One script must exist for each environment that you will deploy to. These scripts must return a hash that contains a nested hash with sets of nodes that will be deployed to when the environment named after the script is targeted using the [Start-Delivery](reference.html#start_delivery_cmdlet) cmdlet.
+PowerShell scripts in the *Environments* directory of your project are where you tell powerdelivery which nodes will have [roles](roles.html) applied to them when deployment occurs. One script must exist for each environment that you will deploy to. These scripts must return a hash that contains sets of nodes that will be deployed to when the environment named after the script is targeted using the [Start-Delivery](reference.html#start_delivery_cmdlet) cmdlet.
 
 <br />
 
@@ -155,7 +155,7 @@ The following sections help you use powerdelivery to deploy to nodes that are ph
 
 ### Enabling deployment to nodes
 
-Powerdelivery uses PowerShell to communicate from the computer running a [target](targets.html) to a remote node. When a fresh copy of Windows is installed on the node, default permissions usually prevent this from occurring. Without a way around this, you will be denied permission to apply roles to it.
+Powerdelivery uses PowerShell to communicate from the computer running a [target](targets.html) to a remote node. When a fresh copy of Windows is installed on a remote node, default permissions usually prevent this from occurring. Without a way around this, you will be denied permission to apply roles to it.
 
 <br />
 
@@ -187,7 +187,7 @@ Powerdelivery has been permitted to deploy to this computer.
 
 <br />
 
-**Tip:** If you will be deploying to many nodes with powerdelivery, save yourself some trouble and create an image using sysprep or another imaging tool that has had this script already run on it. This will allow you to provision a new node quickly that is already ready to be deployed to with powerdelivery if you need to scale up your infrastructure.
+**Tip:** If you will be deploying to many nodes with powerdelivery, save yourself some trouble and create an image using sysprep or another imaging tool that has had this script already run on it. Also add a user or group to the *Remote Management Users* PowerShell group. This will allow you to provision a new node quickly that is already ready to be deployed to with powerdelivery if you need to scale up your infrastructure.
 
 <br />
 

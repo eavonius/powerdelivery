@@ -10,7 +10,7 @@ When performing deployment activities with powerdelivery, the real work that app
 
 ## Generating roles
 
-To assist with creating roles, you can use the [New-DeliveryRole](reference.html#new_deliveryrole_cmdlet) cmdlet to generate one for your project. Run this cmdlet in the directory above your powerdelivery project.
+To assist with creating roles, you can use the [New-DeliveryRole](reference.html#new_deliveryrole_cmdlet) cmdlet to generate one for your project.
 
 <br />
 
@@ -37,7 +37,7 @@ After this cmdlet completes it will have added the following to your directory s
     <pre class="directory-tree">
 C:\MyApp\MyAppDelivery\
     |-- Roles\
-        |-- Compile\
+        |-- Chocolatey\
             |-- Always.ps1
             |-- Migrations\</pre>
   </div>
@@ -68,7 +68,7 @@ Delivery:Role -Up {
 
 ## Anatomy of a role script
 
-Every role script must contain the *Delivery:Role* statement. After this statement, an *-Up* block specifies what will happen when a normal deployment occurs applying this role. If specified, a *-Down* block will run when you request a rollback while running the [Start-Delivery](reference.html#start_delivery_cmdlet) cmdlet. The down block is optional, and if you specify just one block without a name, it will be used as the up block.
+Every role script must contain the *Delivery:Role* statement. After this statement, an *-Up* block specifies what will happen when a normal deployment. If specified, a *-Down* block will run when you request a rollback. The down block is optional, and if you specify just one block without a name, it will be used as the up block.
 
 <br />
 
@@ -97,7 +97,7 @@ Every block in a role, whether performing an up or down (rollback), must declare
 
 ## Types of role scripts
 
-There are two types of role scripts, which you can run both of or just one. Read the sections below to decide which makes the most sense for your particular infrastructure and release process.
+There are two types of role scripts. Read the sections below to decide which types make the most sense for your particular infrastructure and release process.
 
 <br />
 
@@ -117,7 +117,7 @@ Migration scripts are important because without them, if someone deploys changes
 
 **Generating a role migration script**
 
-Use the [New-DeliveryRoleMigration](reference.html#new_deliveryrolemigration_cmdlet) cmdlet to add a role migration to an existing role in your project. The role you add the migration to must already have been created by the *New-DeliveryRole* cmdlet. Run this cmdlet in the directory above your powerdelivery project.
+Use the [New-DeliveryRoleMigration](reference.html#new_deliveryrolemigration_cmdlet) cmdlet to add a migration to an existing role in your project. The role you add the migration to must already have been created by the [New-DeliveryRole](reference.html#new_deliveryrole_cmdlet) cmdlet. 
 
 <br />
 
@@ -192,9 +192,9 @@ This role uses the [Test-CommandExists](reference.html#test_commandexists_cmdlet
 
 ### Releasing files to a shared location
 
-A commonly needed task is to deploy files to remote nodes for a release. This is two step process, where first you must copy the files from the computer running powerdelivery to a shared location, and then the [remote nodes download them](#downloading_release_files_to_nodes). The role described in this step would target localhost.
+A commonly needed task is to deploy files to remote nodes for a release. This is two step process, where first you must copy the files from the computer running powerdelivery to a shared location, and then the [remote nodes download them](#downloading_release_files_to_nodes). 
 
-The example role below creates a directory named after the powerdelivery project on a shared drive somewhere on your network. It then creates a release directory with the timestamp of the current release where you can copy or download files needed for nodes to it. Depending on your infrastructure, you may wish to release files instead to a Windows Azure storage container, an Amazon Web Services S3 bucket, or DropBox.
+The example role below creates a directory named after the powerdelivery project on a shared drive somewhere on your network. It then creates a release directory with the timestamp of the current release where you can copy or download files needed for nodes to it. Depending on your infrastructure, you may wish to release files instead to a Windows Azure storage container, an Amazon Web Services S3 bucket, or DropBox. This role should run on localhost.
 
 The script below demonstrates releasing files:
 

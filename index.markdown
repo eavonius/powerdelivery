@@ -13,7 +13,7 @@ title: Devops-friendly Windows releases on-premise or in the cloud.
 	</div>
 </div>
 
-<p id="features">pure powershell | rolls back | hides your secrets | open source</p>
+<p id="features">pure powershell | rollback-capable | encrypts secrets | open source</p>
 
 <h1 style="font-weight: normal">A birds-eye view</h1>
 

@@ -195,7 +195,7 @@ In the example above, when roles are applied to nodes in the *Database* set, Pow
 
 **Tips:** 
 
-* You must add any uses that will deploy using powerdelivery to the Windows *Remote Management Users* or *Administrators* groups. If the user is not a member of one of these two groups, they will get Access Denied errors.
+* You must add any users that will deploy using powerdelivery to the Windows *Remote Management Users* or *Administrators* groups. If the user is not a member of one of these two groups, they will get Access Denied errors.
 * Depending on whether you are using DNS names, NetBIOS names, or IP addresses for hosts; you may need to specify [additional connection settings](environments.html#connection_settings) on your environment nodes if you encounter PowerShell remoting errors. 
 
 <br />

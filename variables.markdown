@@ -69,7 +69,7 @@ param($target, $shared)
 ### Tips
 
 * You can write PowerShell code above the hash to generate variables at runtime.
-* You must make sure any role that expects a variable has it defined as a shared variable, or a varialbe in all environments.
+* You must ensure any role that expects a variable has it defined as a shared variable, or in all environments.
 
 <br />
 

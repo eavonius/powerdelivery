@@ -103,6 +103,8 @@ Starts a run of a [target](targets.html) using powerdelivery. Must be run in the
 	<dd>The name of the target to run. Must match the name of a file in the <i>Targets</i> subdirectory of your powerdelivery project without the file extension.</dd>
 	<dt>-EnvironmentName</dt>
 	<dd>The name of the environment to target during the run. Must match the name of a file in the <i>Environments</i> subdirectory of your powerdelivery project without the file extension.</dd>
+	<dt>-Properties</dt>
+	<dd>A hash of properties to pass to the target. Typically used to pass information from build servers.</dd>
 	<dt>-Rollback</dt>
 	<dd>Causes powerdelivery to run the <i>-Down</i> block of roles instead of <i>-Up</i>, performing a rollback.</dd>
 </dl>
@@ -200,7 +202,7 @@ Role migration created at ".\MyAppDelivery\Roles\LoadBalancer\Migrations\2015101
 <a name="new_deliverykey_cmdlet"></a>
 
 <p class="ref-item">New-DeliveryKey</p>
-Generates a key file used to encrypt [secrets](secrets.html).
+Generates a key file used to encrypt [secrets](secrets.html). 
 
 <p class="ref-upper">Parameters</p>
 <dl>
@@ -230,7 +232,7 @@ Key written to "C:\Users\Jayme\Documents\PowerDelivery\Keys\MyApp\MyKey.key"
 <a name="new_deliverycredential_cmdlet"></a>
 
 <p class="ref-item">New-DeliveryCredential</p>
-Encrypts a set of [credentials](secrets.html#using_secrets_for_credentials) with a key and adds them to a powerdelivery project.
+Encrypts a set of [credentials](secrets.html#using_secrets_for_credentials) with a key and adds them to a powerdelivery project. Must be run in the root directory of your powerdelivery project.
 
 <p class="ref-upper">Parameters</p>
 <dl>
@@ -264,7 +266,7 @@ Credentials written to ".\Secrets\MyKey\Credentials\MYDOMAIN#myuser.credential"
 <a name="new_deliverysecret_cmdlet"></a>
 
 <p class="ref-item">New-DeliverySecret</p>
-Encrypts a [secret](secrets.html) with a key and adds it to a powerdelivery project.
+Encrypts a [secret](secrets.html) with a key and adds it to a powerdelivery project. Must be run in the root directory of your powerdelivery project.
 
 <p class="ref-upper">Parameters</p>
 <dl>
@@ -466,14 +468,14 @@ References the current run of the [target](targets.html). The target parameter i
 	<dd>The name of the target during this run.</dd>
 	<dt>EnvironmentName</dt>
 	<dd>The name of the environment during this run.</dd>
-	<dt>Revision</dt>
-	<dd>Optional. The name of the revision of this run, when specified.</dd>
 	<dt>RequestedBy</dt>
 	<dd>The username of the Windows account that started the run.</dd>
 	<dt>StartDate</dt>
-	<dd>A timestamp as a DateTime of when the run started.</dd>
+	<dd>A timestamp of when the run started as a DateTime object.</dd>
 	<dt>StartedAt</dt>
-	<dd>A timestamp in the format yyyyMMdd_hhmmss of when the run started.</dd>
+	<dd>A timestamp of when the run started in the format yyyyMMdd_hhmmss.</dd>
+	<dt>Properties</dt>
+	<dd>The hash of properties passed into <a href="#start_delivery_cmdlet">Start-Delivery</a>. Typically used to get information from build servers.</dd>
 	<dt>Credentials</dt>
 	<dd>A dictionary (hash) containing the <a href="secrets.html#using_secrets_for_credentials">credentials</a> that were loaded at startup. The key of the hash is the username of the credential.</dd>
 	<dt>Secrets</dt>
@@ -494,7 +496,7 @@ Delivery:Role {
   $opsCredentials = $target.Credentials["DOMAIN\opsuser"]
 
   # Lookup a secret using $target
-  $facebookAPIKey = $target.Secrets["FacebookAPIKey"]
+  $facebookAPIKey = $target.Secrets.FacebookAPIKey
 }
 {% endhighlight %}
 <div class="filename">MyAppDelivery\Roles\TargetExample\Role.ps1</div>

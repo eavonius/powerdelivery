@@ -6,7 +6,7 @@ layout: page
 
 # Getting Started
 
-You want developers to build, test, and deploy a product on their own computers. As often as possible, you want staff with appropriate permissions to deploy it to other environments and eventually on to production without manual changes. You don't want to pay for a bunch of proprietary build tools and train people on IDEs and cloud management consoles just to automate infrastructure. 
+You want developers to build, test, and deploy a product on their own computers. As often as possible, you want staff with appropriate permissions to deploy it to other environments and eventually on to production without manual changes. You are deploying to Windows and you want to use PowerShell code you've written already, or other modules you've found on the web. 
 
 If this sounds like you, powerdelivery is what you need. Every good automated release is *custom* so changes to it need to be *fast*. Powerdelivery is designed specifically to allow PowerShell developers to use a standard directory structure, some cmdlets that generate files, and a mechanism for securely sharing secrets to put code they already know to use without learning new APIs.
 
@@ -21,7 +21,7 @@ Powerdelivery can be run directly from a developer's computer, or you can set it
 * Windows 7, 8.1, or 10; or Windows Server 2008 R2 or 2012
 * PowerShell 3.0 or greater
 * Whatever you need for compiling assets into deliverables (Visual Studio, Java, Grunt, etc.)
-* Open ports in the firewall from the computer to any nodes it will deploy to
+* Open ports in the firewall from your computer to any nodes you will deploy to
 
 ## Install powerdelivery
 
@@ -139,12 +139,12 @@ C:\MyApp\MyAppDelivery\
       |-- Local.ps1
       |-- Test.ps1
       |-- Production.ps1
-  |-- Credentials\
   |-- Environments\
       |-- Local.ps1
       |-- Test.ps1
       |-- Production.ps1
   |-- Roles\
+  |-- Secrets
   |-- Targets\
       |-- Release.ps1</pre>
 	</div>
