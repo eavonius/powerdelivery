@@ -1,6 +1,6 @@
 <# ChocolateyInstall.ps1
 
-Installs PowerDelivery3 with chocolatey.
+Installs PowerDelivery3Node with chocolatey.
 #>
 
 $ErrorActionPreference 'Stop'
@@ -15,7 +15,7 @@ $newEnvVar = $moduleDir
 
 $caseInsensitive = [StringComparison]::InvariantCultureIgnoreCase
 
-$pathSegment = "chocolatey\lib\powerdelivery"
+$pathSegment = "chocolatey\lib\powerdeliverynode"
 
 if (![String]::IsNullOrWhiteSpace($psModulePath)) {
     if ($psModulePath.IndexOf($pathSegment, $caseInsensitive) -lt 0) { # First time installing
@@ -57,6 +57,6 @@ Update-SessionEnvironment
 
 $Env:PSMODULEPATH = "$newEnvVar"
 
-Write-Host "Forcing import of new version of PowerDelivery module into current session..."
+Write-Host "Forcing import of new version of PowerDeliveryNode module into current session..."
 
-Import-Module PowerDelivery -Force
+Import-Module PowerDeliveryNode -Force

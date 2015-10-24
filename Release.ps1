@@ -4,13 +4,24 @@ Increments versions, creates nuget packages,
 commits changes, and pushes to chocolatey.
 #>
 
+$ErrorActionPreference = "Stop"
+
+# Throw if lasterror not zero
+#
+function SafeInvoke($msg, $cmd) {
+  Invoke-Command $cmd
+  if ($lastexitcode -ne 0) {
+    throw $msg
+  }  
+}
+
 # Updates the PowerShell module version
 #
 function UpdateModuleVersion($manifestFile, $newVersion) {
 
   $content = Get-Content $manifestFile
 
-  $newContent = $content -replace "^ModuleVersion = ['|`"].*['|`"]", "ModuleVersion = '$newVersion'")
+  $newContent = $content -replace "^ModuleVersion = ['|`"].*['|`"]", "ModuleVersion = '$newVersion'"
 
   Out-File -FilePath $manifestFile -Force -InputObject $newContent
 }
@@ -24,7 +35,7 @@ function InsertNuspecFiles($content, $token, $path) {
   $filesStatement = ""
   foreach ($file in $files) {
     $filesStatement += [Environment]::NewLine
-    $filesStatement += "<file src=""Modules\$path\$cmdlet"" target=""tools\$path\$cmdlet"" />"
+    $filesStatement += "<file src=""Modules\$path\$file"" target=""tools\$path\$file"" />"
   }
 
   $content -replace $token, $filesStatement
@@ -54,87 +65,68 @@ function GenerateNuspec($module, $moduleId, $newVersion) {
 
   $nuspecFullPath = Join-Path (Get-Location) $nuspec
   $nuspecFile.Save($nuspecFullPath)
+
+  SafeInvoke -msg "Error running cpack" -cmd { 
+    cpack "$nuspecFullPath"
+  }
 }
 
 # Gets the new version for a release based on what's on chocolatey
 #
 function GetNewModuleVersion {
-  $listCommand = $(clist powerdelivery3)
-
-  $latestVersion = ""
-
-  if ($listCommand.GetType().Name -eq "Object[]") {
-    $listCommand | ForEach-Object {
-      if ($_.StartsWith("PowerDelivery3 ")) {
-        $latestVersion = $_.split(' ')[1].split('.')
+  $packages = $(clist powerdelivery3) -split [Environment]::NewLine
+  if ($packages[0] -ne '0 packages found.') {
+    foreach ($package in $packages) {
+      if ($package.StartsWith("powerdelivery3 ")) {
+        $latestVersion = New-Object System.Version -ArgumentList $package.Split(' ')[1]
+        Write-Host "Latest version on chocolatey is $latestVersion"
+        return "$($latestVersion.Major).$($latestVersion.Minor).$($latestVersion.Build + 1)"
       }
     }
   }
   else {
-    $latestVersion = $listCommand.split(' ')[1].split('.')  
+    "3.0.0"
   }
-
-  if ([String]::IsNullOrEmpty($latestVersion)) {
-    $latestVersion = "3.0.0"
-  }
-
-  $oldVersion = $latestVersion -join '.'
-  $latestVersion[$latestVersion.Length-1] = $(([int]$latestVersion[$latestVersion.Length-1]) + 1)
-  $latestVersion -join '.'
 }
 
 # Syncs changes with git
 #
-function Sync-Git {
-  try {
+function Sync-Git($newVersion) {
+
+  SafeInvoke -msg "Error adding changes to git" -cmd { 
     git add .
   }
-  catch {
-    throw "Error adding changes to git - $_"
+
+  SafeInvoke -msg "Error committing changes to git" -cmd { 
+    git commit --allow-empty -m "Chocolatey $newVersion release." 
   }
 
-  try {
-    git commit --allow-empty -m "Chocolatey $newVersion release."
-  }
-  catch {
-    throw "Error committing changes to git - $_"
-  }
-
-  try {
+  SafeInvoke -msg "Error pushing changes to git" -cmd { 
     git push
   }
-  catch {
-    throw "Error pushing changes to git - $_"
-  }
 }
-
-$ErrorActionPreference = "Stop"
 
 $startDir = Get-Location
 
-Write-Host "------------------------------------------"
-Write-Host "Releasing new version of powerdelivery3..."
-Write-Host "------------------------------------------"
-
-del *.nupkg
-
-$newVersion = GetNewModuleVersion
-
-$modules = @{
-  PowerDelivery = "PowerDelivery3";
-  PowerDeliveryNode = "PowerDelivery3Node"
-}
-
-foreach ($module in $modules.GetEnumerator()) {
-  $module = $module.Key
-  $moduleId = $module.Value
-  UpdateModuleVersion -manifestFile "Modules\$moduleDir\$moduleDir.psd1" -newVersion $newVersion
-  GenerateNuspec -module $module -moduleId $moduleId -newVersion $newVersion
-}
-
 try {
-  <#
-  Sync-Git
+  del *.nupkg
+
+  $newVersion = GetNewModuleVersion
+
+  $modules = @{
+    PowerDelivery = "PowerDelivery3";
+    PowerDeliveryNode = "PowerDelivery3Node"
+  }
+
+  foreach ($module in $modules.GetEnumerator()) {
+    $module = $module.Key
+    $moduleId = $modules[$module]
+
+    UpdateModuleVersion -manifestFile "Modules\$module\$module.psd1" -newVersion $newVersion
+    GenerateNuspec -module $module -moduleId $moduleId -newVersion $newVersion
+  }
+
+  Sync-Git -newVersion $newVersion
 
   cd ..\gh-pages
   
@@ -150,15 +142,7 @@ try {
 
   cd ..\master
   
-  Write-Host "$nuspecFullPath -> PowerDelivery.$($newVersion).nupkg"
-  
-  try {
-    cpack "$nuspecFullPath"
-  }
-  catch {
-    throw "Error creating .nupkg - $_"
-  }
-  
+  <#  
   $nuPkgFile = (gci *.nupkg).Name
   
   "$nuPkgFile -> http://www.chocolately.org..."
@@ -170,9 +154,9 @@ try {
     throw "Error pushing new package to chocolatey - $_"
   }
   #>
+
+  Write-Host "PowerDelivery3 successfully released as $newVersion!" -ForegroundColor Green
 }
 finally {
   Set-Location $startDir
 }
-
-Write-Host "PowerDelivery3 successfully released as $newVersion!" -ForegroundColor Green

@@ -1,6 +1,6 @@
 <# ChocolateyUninstall.ps1
 
-Uninstalls PowerDelivery 3 with chocolatey.
+Uninstalls PowerDelivery3 with chocolatey.
 #>
 
 try {

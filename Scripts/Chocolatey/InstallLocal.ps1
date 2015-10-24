@@ -1,6 +1,6 @@
 <# InstallLocal.ps1
 
-Installs PowerDelivery 3 locally from source with chocolatey.
+Installs PowerDelivery3 and PowerDelivery3Node locally from source with chocolatey.
 
 Used for development only.
 #>
@@ -15,8 +15,9 @@ catch {
 }
 
 try {
+  choco install powerdelivery3node -fdv -s $pwd
   choco install powerdelivery3 -fdv -s $pwd
 }
 catch {
-  "Error installing chocolatey package from source - $_"
+  "Error installing chocolatey packages from source - $_"
 }

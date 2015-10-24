@@ -32,7 +32,7 @@
 
     <!-- Chocolatey -->
     <file src="Scripts\Chocolatey\PowerDelivery\ChocolateyInstall.ps1" target="tools\chocolateyInstall.ps1" />
-    <file src="Scripts\Chocolatey\PowerDeliveryChocolateyUninstall.ps1" target="tools\chocolateyUninstall.ps1" />
-    <file src="Scripts\Chocolatey\PowerDeliveryInit.ps1" target="tools\init.ps1" />
+    <file src="Scripts\Chocolatey\PowerDelivery\ChocolateyUninstall.ps1" target="tools\chocolateyUninstall.ps1" />
+    <file src="Scripts\Chocolatey\PowerDelivery\Init.ps1" target="tools\init.ps1" />
   </files>
 </package>
