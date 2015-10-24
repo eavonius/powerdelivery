@@ -126,16 +126,6 @@ try {
     GenerateNuspec -module $module -moduleId $moduleId -newVersion $newVersion
   }
 
-  Sync-Git -newVersion $newVersion
-
-  cd ..\gh-pages 
-  $pageFile = Join-Path . "_layouts\page.html"
-  $newPageFileContent = (Get-Content $pageFile) -replace "^.*version.*", "        <div id=`"new-version`">version $newVersion</div>"
-  Out-File -Encoding ascii -FilePath $pageFile -Force -InputObject $newPageFileContent
-  Sync-Git -newVersion $newVersion
-
-  cd ..\master
-  
   <#  
   $nuPkgFile = (gci *.nupkg).Name
   
@@ -147,6 +137,8 @@ try {
   catch {
     throw "Error pushing new package to chocolatey - $_"
   }
+
+  Sync-Git -newVersion $newVersion
   #>
 
   Write-Host "PowerDelivery3 successfully released as $newVersion!" -ForegroundColor Green
