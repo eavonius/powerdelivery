@@ -128,15 +128,11 @@ try {
 
   Sync-Git -newVersion $newVersion
 
-  cd ..\gh-pages
-  
+  cd ..\gh-pages 
   $pageFile = Join-Path . "_layouts\page.html"
-  $pageFileName = [System.IO.Path]::GetFileName($pageFile)
-  
-  $newPageFileContent = (Get-Content $pageFileName) -replace "^.*version.*", "        <div id=`"new-version`">version $newVersion</div>"
+  $newPageFileContent = (Get-Content $pageFile) -replace "^.*version.*", "        <div id=`"new-version`">version $newVersion</div>"
   Out-File -Encoding ascii -FilePath $pageFile -Force -InputObject $newPageFileContent
-
-  Sync-Git
+  Sync-Git -newVersion $newVersion
 
   cd ..\master
   
