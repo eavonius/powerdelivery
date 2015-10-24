@@ -114,30 +114,47 @@ Role created at ".\Roles\Webapp"
 Delivery:Role {
   param($target, $config, $node)
 
-  # Compile a Visual Studio solution
-  Invoke-MSBuild MyApp.sln
+  # Publish website into a directory
+  Invoke-MSBuild MyApp.sln -properties @{DeployOnBuild = "true"; PublishProfile = "MyApp"}
 
-  # Copy compiled assets to a network drive, 
-  # S3 bucket, or wherever the remote nodes can access
-  Copy-Item . $releasePath -Filter "*.dll;*.pdb;*.xml;*.config;*.sql" -Recurse
+  # \\SHARE\<ProjectName>\<StartedAt>
+  $remotePath = "$($config.ReleasesPath)\$($target.ProjectName)\$($target.StartedAt)"
+
+  # Copy website to a network drive, S3 bucket, 
+  # or wherever the remote nodes can access
+  Copy-Item "MyApp\bin\publish" $remotePath -Recurse
 }
 {% endhighlight %}
 <div class="filename">MyAppDelivery\Roles\Compile\Always.ps1</div>
 {% highlight powershell %}
-Delivery:Role {
+Delivery:Role -Up { 
   param($target, $config, $node)
 
-  $appDataDir = [Environment]::GetFolderPath("ApplicationData")
-  $releasePath = "$($config.ReleasesPath)\MyApp\$($target.StartedAt)\MyApp\publish\"
-  $localPath = "$AppDataDir\MyApp\Site\$($target.StartedAt)"
-
-  # Copy web content from the network drive to the database node
-  Copy-Item $releasePath $localPath -Filter *.* -Recurse
-
+  Import-Module PowerDeliveryNode
   Add-PSSnapin WebAdministration
 
+  # \\SHARE\<ProjectName>\<StartedAt>
+  $remotePath = "$($config.ReleasesPath)\$($target.ProjectName)\$($target.StartedAt)"
+
+  # AppData\Roaming\MyApp\Current
+  # (symlinked to AppData\Roaming\MyApp\yyyyMMdd_hhmmss)
+  $appDataDir = [Environment]::GetFolderPath("ApplicationData")
+  $releasePath = New-DeliveryReleasePath $target $appDataDir
+  
+  # Copy web content from the network drive to the current release
+  Copy-Item $remotePath $releasePath -Filter *.* -Recurse
+
   # Create the web application
-  New-WebApplication $config.SiteURL MyApp $localPath -Force
+  New-WebApplication $config.SiteURL MyApp $releasePath -Force
+
+} -Down { 
+  param($target, $config, $node)
+  
+  Import-Module PowerDeliveryNode
+
+  # Rollback AppData\Roaming\MyApp\Current to previous release
+  $appDataDir = [Environment]::GetFolderPath("ApplicationData")
+  Undo-DeliveryReleasePath $target $appDataDir
 }
 {% endhighlight %}
 <div class="filename">MyAppDelivery\Roles\Webapp\Always.ps1</div>

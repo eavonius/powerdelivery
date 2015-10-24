@@ -51,6 +51,12 @@ This page contains reference for the script parameters and cmdlets included with
 						<a href="#invoke_msbuild_cmdlet">Invoke-MSBuild</a>
 					</li>
 					<li>
+						<a href="#new_deliveryreleasepath_cmdlet">New-DeliveryReleasePath</a>
+					</li>
+					<li>
+						<a href="#undo_deliveryreleasepath_cmdlet">Undo-DeliveryReleasePath</a>
+					</li>
+					<li>
 						<a href="#test_commandexists_cmdlet">Test-CommandExists</a>
 					</li>
 				</ul>
@@ -93,6 +99,9 @@ Cmdlets are PowerShell functions included with powerdelivery generate files and 
 <a name="start_delivery_cmdlet"></a>
 
 <p class="ref-item">Start-Delivery</p>
+
+<p>module: <b>powerdelivery</b></p>
+
 Starts a run of a [target](targets.html) using powerdelivery. Must be run in the parent directory of your powerdelivery project.
 
 <p class="ref-upper">Parameters</p>
@@ -123,6 +132,9 @@ PS C:\MyApp> Start-Delivery MyApp Release Production
 <a name="new_deliveryproject_cmdlet"></a>
 
 <p class="ref-item">New-DeliveryProject</p>
+
+<p>module: <b>powerdelivery</b></p>
+
 Generates a new powerdelivery project. Typically run at the root of a folder with source code (git, TFS, whatever).
 
 <p class="ref-upper">Parameters</p>
@@ -147,6 +159,9 @@ PS C:\MyApp> New-DeliveryProject MyApp "Local", "Test", "Production"
 <a name="new_deliveryrole_cmdlet"></a>
 
 <p class="ref-item">New-DeliveryRole</p>
+
+<p>module: <b>powerdelivery</b></p>
+
 Generates a new powerdelivery role. Must be run in the root directory of your powerdelivery project.
 
 <p class="ref-upper">Parameters</p>
@@ -177,6 +192,9 @@ Role created at ".\MyAppDelivery\Roles\Database"
 <a name="new_deliveryrolemigration_cmdlet"></a>
 
 <p class="ref-item">New-DeliveryRoleMigration</p>
+
+<p>module: <b>powerdelivery</b></p>
+
 Generates a new powerdelivery role migration. Must be run in the root directory of your powerdelivery project.
 
 <p class="ref-upper">Parameters</p>
@@ -202,6 +220,9 @@ Role migration created at ".\MyAppDelivery\Roles\LoadBalancer\Migrations\2015101
 <a name="new_deliverykey_cmdlet"></a>
 
 <p class="ref-item">New-DeliveryKey</p>
+
+<p>module: <b>powerdelivery</b></p>
+
 Generates a key file used to encrypt [secrets](secrets.html). 
 
 <p class="ref-upper">Parameters</p>
@@ -232,6 +253,9 @@ Key written to "C:\Users\Jayme\Documents\PowerDelivery\Keys\MyApp\MyKey.key"
 <a name="new_deliverycredential_cmdlet"></a>
 
 <p class="ref-item">New-DeliveryCredential</p>
+
+<p>module: <b>powerdelivery</b></p>
+
 Encrypts a set of [credentials](secrets.html#using_secrets_for_credentials) with a key and adds them to a powerdelivery project. Must be run in the root directory of your powerdelivery project.
 
 <p class="ref-upper">Parameters</p>
@@ -266,6 +290,9 @@ Credentials written to ".\Secrets\MyKey\Credentials\MYDOMAIN#myuser.credential"
 <a name="new_deliverysecret_cmdlet"></a>
 
 <p class="ref-item">New-DeliverySecret</p>
+
+<p>module: <b>powerdelivery</b></p>
+
 Encrypts a [secret](secrets.html) with a key and adds it to a powerdelivery project. Must be run in the root directory of your powerdelivery project.
 
 <p class="ref-upper">Parameters</p>
@@ -302,6 +329,9 @@ Secret written to ".\Secrets\MyKey\MySecret.secret"
 <a name="invoke_msbuild_cmdlet"></a>
 
 <p class="ref-item">Invoke-MSBuild</p>
+
+<p>module: <b>powerdelivery</b></p>
+
 Compiles a project using msbuild.exe.
 
 <p class="ref-upper">Parameters</p>
@@ -336,9 +366,133 @@ Delivery:Role {
 
 <br />
 
+<a name="new_deliveryreleasepath_cmdlet"></a>
+
+<p class="ref-item">New-DeliveryReleasePath</p>
+
+<p>modules: <b>powerdeliverynode</b></p>
+
+Creates a new release directory on a remote node being deployed to with powerdelivery. 
+A directory will be created within the path you specify and named after the *ProjectName* 
+property of the [$target](#target_parameter) parameter. A directory will be created 
+within it with the timestamp of the current run (*StartedAt* property of *$target*) and 
+symbolicly linked to "Current".
+
+Any releases older than the number in the Keep parameter will be deleted.
+
+<p class="ref-upper">Parameters</p>
+<dl>
+	<dt>-Target</dt>
+	<dd>The hash of target properties for the powerdelivery run.</dd>
+	<dt>-Path</dt>
+	<dd>The parent path into which to create the release path.</dd>
+	<dt>-Keep</dt>
+	<dd>The number of previous releases to keep. Defaults to 5.</dd>
+</dl>
+
+<p class="ref-upper">Returns</p>
+The path to the new release directory. Copy files from your network drive, Azure storage container, S3 bucket, DropBox or whatever you use to get files to the node.
+
+<p class="ref-upper">Examples</p>
+
+<p>Example of creating a release path below AppData\Roaming.</p>
+{% highlight powershell %}
+Delivery:Role -Up {
+  param($target, $config, $node)
+
+  # You must install PowerDeliveryNode using chocolatey 
+  # or something else on the remote node first.
+  Import-Module PowerDeliveryNode
+
+  # $releasePath will be C:\Users\<User>\AppData\Roaming\<Project>\Current
+  # pointing to a yyyyMMdd_hhmmss folder in the same directory.
+  $releasePath = New-DeliveryReleasePath $target [Environment]::GetFolderPath("AppData")
+} -Down {
+  
+  # This will rollback a previous release. If no previous 
+  # release exists it will be the same path as current.
+  $releasePath = Undo-DeliveryReleasePath $target [Environment]::GetFolderPath("AppData")
+}
+{% endhighlight %}
+
+The release will be created at the path:
+
+<pre>
+C:\Users\&lt;User&gt;\AppData\Roaming\&lt;Project&gt;\&lt;StartedAt&gt;
+</pre>
+
+And symlinked to:
+
+<pre>
+C:\Users\&lt;User&gt;\AppData\Roaming\&lt;Project&gt;\Current
+</pre>
+
+<br />
+
+<a name="undo_deliveryreleasepath_cmdlet"></a>
+
+<p class="ref-item">Undo-DeliveryReleasePath</p>
+
+<p>modules: <b>powerdeliverynode</b></p>
+
+Rolls back to a previous release directory on a remote node being deployed to with powerdelivery.
+Modifies the symbolic link pointing to the current release path to point to the previous release 
+and deletes the old current release directory. If no previous release exists, will leave the 
+current release as is and return it.
+
+<p class="ref-upper">Parameters</p>
+<dl>
+	<dt>-Target</dt>
+	<dd>The hash of target properties for the powerdelivery run.</dd>
+	<dt>-Path</dt>
+	<dd>The parent path in which to look for releases.</dd>
+</dl>
+
+<p class="ref-upper">Returns</p>
+The path to the previous release directory. If no previous release was found, will be the current path. Copy files from your network drive, Azure storage container, S3 bucket, DropBox or whatever you use to get files to the node.
+
+<p class="ref-upper">Examples</p>
+
+<p>Example of rolling back a release path below AppData\Roaming.</p>
+{% highlight powershell %}
+Delivery:Role -Up {
+  param($target, $config, $node)
+
+  # You must install PowerDeliveryNode using chocolatey 
+  # or something else on the remote node first.
+  Import-Module PowerDeliveryNode
+
+  # $releasePath will be C:\Users\<User>\AppData\Roaming\<Project>\Current
+  # pointing to a yyyyMMdd_hhmmss folder in the same directory.
+  $releasePath = New-DeliveryReleasePath $target [Environment]::GetFolderPath("AppData")
+} -Down {
+  
+  # This will rollback a previous release. If no previous 
+  # release exists it will be the same path as current.
+  $releasePath = Undo-DeliveryReleasePath $target [Environment]::GetFolderPath("AppData")
+}
+{% endhighlight %}
+
+The releases will be looked for in the path:
+
+<pre>
+C:\Users\&lt;User&gt;\AppData\Roaming\&lt;Project&gt;
+</pre>
+
+And the previous release symlinked to:
+
+<pre>
+C:\Users\&lt;User&gt;\AppData\Roaming\&lt;Project&gt;\Current
+</pre>
+
+<br />
+
 <a name="test_commandexists_cmdlet"></a>
 
 <p class="ref-item">Test-CommandExists</p>
+
+<p>modules: <b>powerdelivery, powerdeliverynode</b></p>
+
 Tests whether a command (PowerShell or regular command line) is available in the PATH. Returns $true if present, $false if not.
 
 <p class="ref-upper">Parameters</p>
