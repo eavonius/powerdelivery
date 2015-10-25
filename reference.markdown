@@ -405,7 +405,7 @@ Delivery:Role -Up {
   Import-Module PowerDeliveryNode
 
   # $releasePath will be C:\Users\<User>\AppData\Roaming\<Project>\Current
-  # pointing to a yyyyMMdd_hhmmss folder in the same directory.
+  # pointing to a yyyyMMdd_HHmmss folder in the same directory.
   $releasePath = New-DeliveryReleasePath $target [Environment]::GetFolderPath("AppData")
 } -Down {
   
@@ -463,7 +463,7 @@ Delivery:Role -Up {
   Import-Module PowerDeliveryNode
 
   # $releasePath will be C:\Users\<User>\AppData\Roaming\<Project>\Current
-  # pointing to a yyyyMMdd_hhmmss folder in the same directory.
+  # pointing to a yyyyMMdd_HHmmss folder in the same directory.
   $releasePath = New-DeliveryReleasePath $target [Environment]::GetFolderPath("AppData")
 } -Down {
   
@@ -627,7 +627,7 @@ References the current run of the [target](targets.html). The target parameter i
 	<dt>StartDate</dt>
 	<dd>A timestamp of when the run started as a DateTime object.</dd>
 	<dt>StartedAt</dt>
-	<dd>A timestamp of when the run started in the format yyyyMMdd_hhmmss.</dd>
+	<dd>A timestamp of when the run started in the format yyyyMMdd_HHmmss.</dd>
 	<dt>Properties</dt>
 	<dd>The hash of properties passed into <a href="#start_delivery_cmdlet">Start-Delivery</a>. Typically used to get information from build servers.</dd>
 	<dt>Credentials</dt>

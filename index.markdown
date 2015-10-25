@@ -137,7 +137,7 @@ Delivery:Role -Up {
   $remotePath = "$($config.ReleasesPath)\$($target.ProjectName)\$($target.StartedAt)"
 
   # AppData\Roaming\MyApp\Current
-  # (symlinked to AppData\Roaming\MyApp\yyyyMMdd_hhmmss)
+  # (symlinked to AppData\Roaming\MyApp\yyyyMMdd_HHmmss)
   $appDataDir = [Environment]::GetFolderPath("ApplicationData")
   $releasePath = New-DeliveryReleasePath $target $appDataDir
   
