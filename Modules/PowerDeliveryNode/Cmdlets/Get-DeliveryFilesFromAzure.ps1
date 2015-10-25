@@ -67,8 +67,15 @@ function Get-DeliveryFilesFromAzure {
 
     # Only download files for the current release
     if ($releaseFile.Name.StartsWith($pathToGet)) {
+
       $targetFile = $releaseFile.Name -replace '/', '\\'
       $targetPath = "$($Destination)\$($targetFile)"
+
+      $targetDir = [IO.Path]::GetDirectoryName($targetPath)
+
+      if (!(Test-Path $targetDir)) {
+        New-Item -ItemType Directory $targetDir | Out-Null
+      }
 
       Get-AzureStorageBlobContent -Blob $releaseFile.Name `
                                   -Container $StorageContainer `
