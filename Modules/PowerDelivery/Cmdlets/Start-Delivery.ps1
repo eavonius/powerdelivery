@@ -152,7 +152,7 @@ function Start-Delivery {
 
       # Check whether a remote node
       if ([String]::IsNullOrWhiteSpace($hostName) -or ($hostName.ToLower() -ne 'localhost')) {
-        
+
         # Set the computer name or connection URI
         if ([String]::IsNullOrWhiteSpace($connectionURI)) {
           $commandArgs.Add('ComputerName', $nodeName)
@@ -227,7 +227,12 @@ function Start-Delivery {
       }
 
       # Run the role
-      Invoke-Command @commandArgs
+      try {
+        Invoke-Command @commandArgs
+      }
+      catch {
+        throw "Error in role ""$role"" on $hostOrConnectionURI" + [Environment]::NewLine, $_
+      }
 
       Set-Location $pow.target.StartDir
     }
