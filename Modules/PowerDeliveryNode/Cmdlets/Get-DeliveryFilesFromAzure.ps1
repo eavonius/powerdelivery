@@ -52,10 +52,11 @@ function Get-DeliveryFilesFromAzure {
                                           -Container $StorageContainer `
                                           -Context $storageContext
 
-  $pathToGet = "$($target.ProjectName)\$($target.StartedAt)"
+  $pathToGet = "$($target.ProjectName)/$($target.StartedAt)"
 
-  if ($Destination -ne ".") {
-    $pathToGet += "\$($Destination)"
+  if ($Path -ne ".") {
+    $extraPath = $Path -replace '\\', '/'
+    $pathToGet += "/$($extraPath)"
   }
 
   foreach ($releaseFile in $allReleaseFiles) {
