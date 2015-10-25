@@ -191,7 +191,7 @@ function Start-Delivery {
 
           # Update authentication of the command if specified on the nodes
           if ($nodes.ContainsKey('Authentication')) {
-            $commandArgs.Add('Authentication', $nodes.Authentication)
+            $authentication = $nodes.Authentication
           } 
 
           # Set authentication of the command
@@ -200,9 +200,12 @@ function Start-Delivery {
           # Setup CredSSP if specified
           if ($authentication.ToLower() -eq 'credssp') {
 
+            $trustedHost = $hostName
+
             # Verify that a host was specified
             if ([String]::IsNullOrWhiteSpace($hostName)) {
-              throw "Role $role cannot use CredSSP authentication with a connection URI."
+              $uri = New-Object System.Uri -ArgumentList $connectionURI
+              $trustedHost = $uri.Host
             }
          
             $credSSP = Get-WSManCredSSP
@@ -213,7 +216,7 @@ function Start-Delivery {
               if ($credSSP.length -gt 0) {
                 $trustedClients = $credSSP[0].Substring($credSSP[0].IndexOf(":") + 2)
                 $trustedClientsList = $trustedClients -split "," | % { $_.Trim() }
-                if ($trustedClientsList.Contains("wsman/$($nodeName.ToLower())")) {
+                if ($trustedClientsList.Contains("wsman/$($trustedHost.ToLower())")) {
                   $nodeExists = $true
                 }
               }
@@ -221,7 +224,7 @@ function Start-Delivery {
 
             # Enable CredSSP to remote node if not found in trusted hosts
             if (!$nodeExists) {
-              Enable-WSManCredSSP -Role Client -DelegateComputer $nodeName.ToLower() -Force | Out-Null
+              Enable-WSManCredSSP -Role Client -DelegateComputer $trustedHost.ToLower() -Force | Out-Null
             }
           }
         }
