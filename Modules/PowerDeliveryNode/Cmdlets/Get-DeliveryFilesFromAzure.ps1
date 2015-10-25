@@ -59,6 +59,12 @@ function Get-DeliveryFilesFromAzure {
     $pathToGet += "/$($extraPath)"
   }
 
+  if ($Destination -ne ".") {
+    if (!(Test-Path $Destination)) {
+      New-Item -ItemType Directory $Destination | Out-Null
+    }
+  }
+
   foreach ($releaseFile in $allReleaseFiles) {
 
     # Only download files for the current release
