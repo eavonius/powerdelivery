@@ -59,26 +59,21 @@ function Get-DeliveryFilesFromAzure {
     $pathToGet += "/$($extraPath)"
   }
 
-  if ($Destination -ne ".") {
-    if (!(Test-Path $Destination)) {
-      New-Item -ItemType Directory $Destination | Out-Null
-    }
+  if (!(Test-Path $Destination)) {
+    New-Item -ItemType Directory $Destination | Out-Null
   }
 
   foreach ($releaseFile in $allReleaseFiles) {
 
     # Only download files for the current release
     if ($releaseFile.Name.StartsWith($pathToGet)) {
-      $targetName = $releaseFile.Name -replace '/', '\\'
-
-      if ($Destination -ne ".") {
-        $targetName = "$($Destination)\$($targetName)"
-      }
+      $targetFile = $releaseFile.Name -replace '/', '\\'
+      $targetPath = "$($Destination)\$($targetFile)"
 
       Get-AzureStorageBlobContent -Blob $releaseFile.Name `
                                   -Container $StorageContainer `
                                   -Context $storageContext `
-                                  -Destination $targetName | Out-Null
+                                  -Destination $targetPath | Out-Null
     }
   }
 }
