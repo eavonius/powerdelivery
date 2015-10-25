@@ -19,7 +19,7 @@ Delivery:Role -Up {
   Import-Module PowerDeliveryNode
 
   # $releasePath will be C:\Users\<User>\AppData\Roaming\<Project>\Current 
-  # pointing to a yyyyMMdd_hhmmss folder in the same directory.
+  # pointing to a yyyyMMdd_HHmmss folder in the same directory.
   $releasePath = New-DeliveryReleasePath $target [Environment]::GetFolderPath("AppData")
 } -Down {
   
@@ -57,30 +57,31 @@ function New-DeliveryReleasePath {
   $projectPath = Join-Path $Path $target.ProjectName
 
   # Create a directory for this release
+  $currentReleasePath = Join-Path $projectPath "Current"
   $thisReleasePath = Join-Path $projectPath $target.StartedAt
+
   if (!(Test-Path $thisReleasePath)) {
     New-Item $thisReleasePath -ItemType Directory | Out-Null
-  }
 
-  # Remove old link to current release
-  $currentReleasePath = Join-Path $projectPath "Current"
-  if (Test-Path $currentReleasePath) {
-    & cmd /c "rmdir ""$currentReleasePath"""
-  }
+    # Remove old link to current release
+    if (Test-Path $currentReleasePath) {
+      & cmd /c "rmdir ""$currentReleasePath"""
+    }
 
-  # Link this release to the current release
-  & cmd /c "mklink /J ""$currentReleasePath"" ""$thisReleasePath""" | Out-Null
+    # Link this release to the current release
+    & cmd /c "mklink /J ""$currentReleasePath"" ""$thisReleasePath""" | Out-Null
 
-  # Get releases
-  $releases = Get-ChildItem -Directory $projectPath -Exclude "Current"
+    # Get releases
+    $releases = Get-ChildItem -Directory $projectPath -Exclude "Current"
 
-  # Delete releases older than the last 5
-  if ($releases.count -gt $Keep) {
-    $oldReleaseCount = $releases.count - $Keep
-    $releases | 
-      Sort-Object -Property Name | 
-        Select -First $oldReleaseCount | 
-          Remove-Item -Force -Recurse | Out-Null
+    # Delete releases older than the last 5
+    if ($releases.count -gt $Keep) {
+      $oldReleaseCount = $releases.count - $Keep
+      $releases | 
+        Sort-Object -Property Name | 
+          Select -First $oldReleaseCount | 
+            Remove-Item -Force -Recurse | Out-Null
+    }
   }
 
   $currentReleasePath

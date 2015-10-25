@@ -63,6 +63,12 @@ function GenerateNuspec($module, $moduleId, $newVersion) {
   $versionElement = $nuspecFile.SelectSingleNode('//nu:package/nu:metadata/nu:version', $namespaces)
   $versionElement.'#text' = "$newVersion"
 
+  # Update the PowerDeliveryNode module dependency if PowerDelivery
+  if ($module -eq 'PowerDelivery') {
+    $nodeDependency = $nuspecFile.SelectSingleNode("//nu:package/nu:metadata/nu:dependencies/nu:dependency[@id='powerdelivery3node']", $namespaces)
+    $nodeDependency.version = "$newVersion"
+  }
+
   $nuspecFullPath = Join-Path (Get-Location) $nuspec
   $nuspecFile.Save($nuspecFullPath)
 
@@ -114,8 +120,8 @@ try {
   $newVersion = GetNewModuleVersion
 
   $modules = @{
-    PowerDelivery = "PowerDelivery3";
-    PowerDeliveryNode = "PowerDelivery3Node"
+    PowerDeliveryNode = "PowerDelivery3Node";
+    PowerDelivery = "PowerDelivery3"
   }
 
   foreach ($module in $modules.GetEnumerator()) {
@@ -124,22 +130,16 @@ try {
 
     UpdateModuleVersion -manifestFile "Modules\$module\$module.psd1" -newVersion $newVersion
     GenerateNuspec -module $module -moduleId $moduleId -newVersion $newVersion
+
+    $nuPkgFile = (gci "$moduleId.*.nupkg").Name
+    Write-Host "$nuPkgFile -> (chocolatey)"
+
+    #SafeInvoke -msg "Error publishing to chocolatey" -cmd { 
+      #cpush $nuPkgFile
+    #}
   }
 
-  <#  
-  $nuPkgFile = (gci *.nupkg).Name
-  
-  "$nuPkgFile -> http://www.chocolately.org..."
-  
-  try {
-    cpush $nuPkgFile
-  }
-  catch {
-    throw "Error pushing new package to chocolatey - $_"
-  }
-
-  Sync-Git -newVersion $newVersion
-  #>
+  #Sync-Git -newVersion $newVersion
 
   Write-Host "PowerDelivery3 successfully released as $newVersion!" -ForegroundColor Green
 }

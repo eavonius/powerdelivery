@@ -61,12 +61,13 @@ function Start-Delivery {
     RequestedBy = (whoami).ToUpper();
     StartDate = Get-Date;
     StartDir = Get-Location;
-    StartedAt = Get-Date -Format "yyyyMMdd_hhmmss";
+    StartedAt = Get-Date -Format "yyyyMMdd_HHmmss";
     Properties = $Properties;
     Credentials = New-Object "System.Collections.Generic.Dictionary[String, System.Management.Automation.PSCredential]";
     Secrets = @{}
   }
 
+  $pow.buildFailed = $false
   $pow.inBuild = $true
   $pow.roles = @{}
 
