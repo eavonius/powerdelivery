@@ -69,10 +69,10 @@ function Get-DeliveryFilesFromAzure {
         $targetName = "$($Destination)\$($targetName)"
       }
 
-      Get-AzureStorageBobContent -Blob $releaseFile.Name `
-                                 -Container $StorageContainer `
-                                 -Context $storageContext `
-                                 -Destination $targetName | Out-Null
+      Get-AzureStorageBlobContent -Blob $releaseFile.Name `
+                                  -Container $StorageContainer `
+                                  -Context $storageContext `
+                                  -Destination $targetName | Out-Null
     }
   }
 }
