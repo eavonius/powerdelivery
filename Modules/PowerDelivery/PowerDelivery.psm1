@@ -9,7 +9,7 @@ function GetProjectDirectory {
   if (!((Test-Path 'Targets') -and (Test-Path 'Environments') -and (Test-Path 'Roles'))) {
     throw "This command must be run from within a powerdelivery project directory."
   }
-  [IO.Path]::GetFileName($(Get-Location))
+  Get-Location
 }
 
 function ValidateNewFileName($Type, $FileName) {

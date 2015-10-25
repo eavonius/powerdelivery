@@ -12,7 +12,7 @@ Describe "GetProjectDirectory" {
       Mock Test-Path { return $true }
       Mock Get-Location { return "TestDrive:\MyApp\MyAppDelivery" }
       $projectDir = GetProjectDirectory 
-      $projectDir | Should Be 'MyAppDelivery'
+      $projectDir | Should Be 'TestDrive:\MyApp\MyAppDelivery'
     }
   }
 }
