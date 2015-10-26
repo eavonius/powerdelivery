@@ -136,9 +136,20 @@ function Get-DeliveryFilesFromAzure {
 
       # Fix up the filename to exclude the release and timestamp
       $targetPath = $releaseFile.Name.Substring($releasePrefix.Length + 1)
+
+      Write-Host "Target Path: $targetPath"
+
       $targetPath = $targetPath -replace '/', '\'
+
+      Write-Host "Target Path Replaced: $targetPath"
+
       $targetPath = Join-Path $Destination $targetPath
+
+      Write-Host "Target Path Appended: $targetPath"
+
       $targetDir = [IO.Path]::GetDirectoryName($targetPath)
+
+      Write-Host "Target Dir: $targetDir"
 
       # Create the directory containing the file if it doesn't exist
       if (!(Test-Path $targetDir)) {
