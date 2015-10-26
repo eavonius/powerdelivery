@@ -12,13 +12,17 @@ current release as is and return it.
 Delivery:Role -Up {
   param($target, $config, $node)
 
-  # You must install PowerDeliveryNode using chocolatey 
-  # or something else on the remote node first.
+  # You must install PowerDeliveryNode using chocolatey in a 
+  # role that has run before this one on the remote node first.
   Import-Module PowerDeliveryNode
 
   # $releasePath will be C:\Users\<User>\AppData\Roaming\<Project>\Current
   $releasePath = New-DeliveryReleasePath $target [Environment]::GetFolderPath("AppData")
 } -Down {
+
+  # You must install PowerDeliveryNode using chocolatey in a 
+  # role that has run before this one on the remote node first.
+  Import-Module PowerDeliveryNode
   
   # This will rollback a previous release. If no previous 
   # release exists it will be the same path as current.

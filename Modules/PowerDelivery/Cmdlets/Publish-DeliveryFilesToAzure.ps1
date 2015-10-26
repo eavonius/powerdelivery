@@ -1,3 +1,65 @@
+<#
+.Synopsis
+Uploads files for a powerdelivery release to Windows Azure for use by nodes that will host the product.
+
+.Description
+Uploads files for a powerdelivery release to Windows Azure for use by nodes that will host the product. 
+All files that are uploaded are prefixed with a path that contains the name of the powerdelivery project and a 
+timestamp of the date and time that the target started.
+
+.Example
+Delivery:Role {
+  param($target, $config, $node)
+  
+  # Recursively uploads files within the folder "MyApp\bin\Release" to a Windows Azure 
+  # storage container below a <ProjectName>\<StartedAt> path.
+  Publish-DeliveryFilesToAzure -Path "MyApp\bin\Debug" `
+                               -Destination "MyApp" `
+                               -Credential $target.Credentials['admin@myazuredomain.com'] `
+                               -SubscriptionId $config.MyAzureSubsciptionId `
+                               -StorageAccountName $config.MyAzureStorageAccountName `
+                               -StorageAccountKey $config.MyAzureStorageAccountKey `
+                               -StorageContainer $config.MyAzureStorageContainer `
+                               -Recurse
+}
+
+.Parameter Path
+The path of files to upload relative to the directory above your powerdelivery project.
+
+.Parameter Destination
+The directory in which to place uploaded files.
+
+.Parameter Credential
+The Windows Azure account credentials to use.
+
+.Parameter SubscriptionId
+A Windows Azure subscription that the account in the Credential parameter is permitted 
+to use.
+
+.Parameter StorageAccountName
+A Windows Azure storage account that the account in the Credential parameter is permitted 
+to access.
+
+.Parameter StorageAccountKey
+A Windows Azure storage account key that matches the StorageAccountName parameter providing 
+read and write access.
+
+.Parameter StorageContainer
+A container within the Windows Azure storage account referred to in the StorageAccountName 
+parameter into which to upload files.
+
+.Parameter Include
+A comma-separated list of paths to include. Others will be excluded.
+
+.Parameter Exclude
+A comma-separated list of paths to exclude. Others will be included.
+
+.Parameter Recurse
+Uploads files in subdirectories below the directory specified by the Path parameter.
+
+.Parameter Keep
+The number of previous releases to keep. Defaults to 5.
+#>
 function Publish-DeliveryFilesToAzure {
   param(
     [Parameter(Position=0,Mandatory=1)][string] $Path,
