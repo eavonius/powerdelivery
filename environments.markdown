@@ -278,7 +278,7 @@ $nodes
 
 Deploying to cloud platform resources, such as Windows Azure's Cloud and Mobile services simplifies environment configuration. Because these platform services do not provide direct VM access, use localhost as the node for any [roles](roles.html) that will access cloud resources. These roles' scripts should then use cmdlets provided by the vendor to access cloud platform resources.
 
-Since most cmdlets from cloud platform vendors require [credentials](secrets.html#using_secrets_for_credentials), you can use the *Credentials* property of the [$target parameter](reference.html#target_parameter) in role scripts to retrieve any you've stored using [New-DeliveryCredential](reference.html#new_deliverycredential_cmdlet). This will enable you to securely access cloud resources without storing credentials for provisioning and access in source control. See [using credentials in scripts](secrets.html#using_credentials_in_scripts) for an example.
+Since most cmdlets from cloud platform vendors require [credentials](secrets.html#using_secrets_for_credentials), you can use the *Credentials* property of the [$target parameter](reference.html#target_parameter) in role scripts to retrieve any you've stored using [New-DeliveryCredential](reference.html#new_deliverycredential_cmdlet). This will enable you to securely access cloud resources without storing credentials for provisioning and access in source control. See [using credentials in local roles](secrets.html#using_credentials_in_local_roles) for an example.
 
 <br />
 

@@ -4,7 +4,10 @@ layout: page
 
 # Reference
 	
-This page contains reference for the script parameters and cmdlets included with powerdelivery.
+This page contains reference for the script parameters and cmdlets included with powerdelivery. 
+Some cmdlets are only available in the *PowerDeliveryNode* module, for use on remote nodes. All 
+cmdlets are available in the *PowerDelivery* module for use when authoring and executing 
+powerdelivery [targets](targets.html).
 
 <br />
 
@@ -15,13 +18,13 @@ This page contains reference for the script parameters and cmdlets included with
 				<div class="panel-title">Cmdlets</div>
 			</div>
 			<div class="panel-body">
-				<b>Commands</b>
+				Commands
 				<ul class="nav">
 					<li>
 						<a href="#start_delivery_cmdlet">Start-Delivery</a>
 					</li>
 				</ul>
-				<b>Generators</b>
+				Generators
 				<ul class="nav">
 					<li>
 						<a href="#new_deliveryproject_cmdlet">New-DeliveryProject</a>
@@ -33,7 +36,7 @@ This page contains reference for the script parameters and cmdlets included with
 						<a href="#new_deliveryrolemigration_cmdlet">New-DeliveryRoleMigration</a>
 					</li>
 				</ul>
-				<b>Secrets</b>
+				Secrets
 				<ul class="nav">
 					<li>
 						<a href="#new_deliverykey_cmdlet">New-DeliveryKey</a>
@@ -45,8 +48,14 @@ This page contains reference for the script parameters and cmdlets included with
 						<a href="#new_deliverysecret_cmdlet">New-DeliverySecret</a>
 					</li>
 				</ul>
-				<b>In Roles</b>
+				In Roles
 				<ul class="nav">
+					<li>
+						<a href="#get_deliveryfilesfromazure_cmdlet">Get-DeliveryFilesFromAzure</a>
+					</li>
+					<li>
+						<a href="#publish_deliveryfilestoazure_cmdlet">Publish-DeliveryFilesToAzure</a>
+					</li>
 					<li>
 						<a href="#invoke_msbuild_cmdlet">Invoke-MSBuild</a>
 					</li>
@@ -326,6 +335,121 @@ Secret written to ".\Secrets\MyKey\MySecret.secret"
 
 <br />
 
+<a name="get_deliveryfilesfromazure_cmdlet"></a>
+
+<p class="ref-item">Get-DeliveryFilesFromAzure</p>
+
+<p>module: <b>powerdeliverynode</b></p>
+
+Downloads files that were published by powerdelivery to Windows Azure 
+during the current run of a target onto a node.
+
+<p class="ref-upper">Parameters</p>
+<dl>
+	<dt>-Target</dt>
+	<dd>The <a href="#target_parameter">$target</a> parameter from the role.</dd>
+	<dt>-Path</dt>
+	<dd>The path of files to download relative to the release directory (&lt;ProjectName&gt;/&lt;StartedAt&gt;) 
+	uploaded to Azure with the <a href="#publish_deliveryfilestoazure_cmdlet">Publish-DeliveryFilesToAzure</a> cmdlet.</dd>
+	<dt>-Destination</dt>
+	<dd>The directory in which to place downloaded files. The <a href="#new_deliveryreleasepath_cmdlet">New-DeliveryReleasePath</a> cmdlet 
+	is recommended to enable rollback via the <a href="#undo_deliveryrelease_cmdlet">Undo-DeliveryReleasePath</a> cmdlet in a Down block.</dd>
+	<dt>-Credential</dt>
+	<dd>The Windows Azure account credentials to use. You must configure the computer running powerdelivery as described in <a href="secrets.html#using_credentials_in_remote_roles">using credentials in remote roles</a> for these to travel from to the node that will download files with this cmdlet.</dd>
+	<dt>-SubscriptionId</dt>
+	<dd>A Windows Azure subscription that the account in the <i>Credential</i> parameter is permitted to use.</dd>
+	<dt>-StorageAccountName</dt>
+	<dd>A Windows Azure storage account that the account in the <i>Credential</i> parameter is permitted to access.</dd>
+	<dt>-StorageAccountName</dt>
+	<dd>A Windows Azure storage account key that matches the <i>StorageAccountName</i> parameter providing read access.</dd>
+	<dt>-StorageContainer</dt>
+	<dd>A container within the Windows Azure storage account referred to in the <i>StorageAccountName</i> parameter that contains files uploaded with the <a href="#publish_deliveryfilestoazure_cmdlet">Publish-DeliveryFilesToAzure</a> cmdlet in a prior role that ran on localhost to create a release.</dd>
+</dl>
+<p class="ref-upper">Examples</p>
+
+<p>Example of getting release files from Windows Azure that were uploaded during the current target run.</p>
+{% highlight powershell %}
+Delivery:Role {
+  param($target, $config, $node)
+
+  # You must install PowerDeliveryNode using chocolatey in a 
+  # role that has run before this one on the remote node first.
+  Import-Module PowerDeliveryNode
+
+  # $releasePath will be C:\Users\<User>\AppData\Roaming\<Project>\Current 
+  # pointing to a yyyyMMdd_HHmmss folder in the same directory.
+  $releasePath = New-DeliveryReleasePath $target [Environment]::GetFolderPath("AppData")
+  
+  # Downloads files within the folder "MyApp" that were uploaded to Azure
+  # into a local directory for the release on the node created above.
+  Get-DeliveryFilesFromAzure -Target $target `
+                             -Path "MyApp" `
+                             -Destination $releasePath `
+                             -Credential $target.Credentials['admin@myazuredomain.com'] `
+                             -SubscriptionId $config.MyAzureSubsciptionId `
+                             -StorageAccountName $config.MyAzureStorageAccountName `
+                             -StorageAccountKey $config.MyAzureStorageAccountKey `
+                             -StorageContainer $config.MyAzureStorageContainer
+}
+{% endhighlight %}
+
+<br />
+
+<a name="publish_deliveryfilestoazure_cmdlet"></a>
+
+<p class="ref-item">Publish-DeliveryFilesToAzure</p>
+
+<p>module: <b>powerdeliverynode</b></p>
+
+Uploads files for a powerdelivery release to Windows Azure for use by nodes that will host the product. All files that are uploaded are prefixed with a path that contains the name of the powerdelivery project and a timestamp of the date and time that the target started.
+
+<p class="ref-upper">Parameters</p>
+<dl>
+	<dt>-Path</dt>
+	<dd>The path of files to upload relative to the directory above your powerdelivery project.</dd>
+	<dt>-Destination</dt>
+	<dd>The directory in which to place uploaded files.</dd>
+	<dt>-Credential</dt>
+	<dd>The Windows Azure account credentials to use.</dd>
+	<dt>-SubscriptionId</dt>
+	<dd>A Windows Azure subscription that the account in the <i>Credential</i> parameter is permitted to use.</dd>
+	<dt>-StorageAccountName</dt>
+	<dd>A Windows Azure storage account that the account in the <i>Credential</i> parameter is permitted to access.</dd>
+	<dt>-StorageAccountName</dt>
+	<dd>A Windows Azure storage account key that matches the <i>StorageAccountName</i> parameter providing read and write access.</dd>
+	<dt>-StorageContainer</dt>
+	<dd>A container within the Windows Azure storage account referred to in the <i>StorageAccountName</i> parameter into which to upload files.</dd>
+	<dt>-Include</dt>
+	<dd>A comma-separated list of paths to include. Others will be excluded.</dd>
+	<dt>-Exclude</dt>
+	<dd>A comma-separated list of paths to exclude. Others will be included.</dd>
+	<dt>-Recurse</dt>
+	<dd>Uploads files in subdirectories below the directory specified by the <i>Path</i> parameter.</dd>
+	<dt>-Keep</dt>
+	<dd>The number of previous releases to keep. Defaults to 5.</dd>
+</dl>
+<p class="ref-upper">Examples</p>
+
+<p>Example of uploading release files to Windows Azure that were compiled during the current target run.</p>
+{% highlight powershell %}
+Delivery:Role {
+  param($target, $config, $node)
+  
+  # Recursively uploads files within the folder "MyApp\bin\Release" to a Windows Azure 
+  # storage container below a <ProjectName>\<StartedAt> path.
+  Publish-DeliveryFilesToAzure -Path "MyApp\bin\Debug" `
+                               -Destination "MyApp" `
+                               -Credential $target.Credentials['admin@myazuredomain.com'] `
+                               -SubscriptionId $config.MyAzureSubsciptionId `
+                               -StorageAccountName $config.MyAzureStorageAccountName `
+                               -StorageAccountKey $config.MyAzureStorageAccountKey `
+                               -StorageContainer $config.MyAzureStorageContainer `
+                               -Recurse
+}
+{% endhighlight %}
+
+<br />
+
 <a name="invoke_msbuild_cmdlet"></a>
 
 <p class="ref-item">Invoke-MSBuild</p>
@@ -391,7 +515,7 @@ Any releases older than the number in the Keep parameter will be deleted.
 </dl>
 
 <p class="ref-upper">Returns</p>
-The path to the new release directory. Copy files from your network drive, Azure storage container, S3 bucket, DropBox or whatever you use to get files to the node.
+The path to the new release directory. Copy files from your network drive, [Azure storage container](#get_deliveryfilesfromazure_cmdlet), S3 bucket, DropBox or whatever you use to get files to the node.
 
 <p class="ref-upper">Examples</p>
 
@@ -400,14 +524,18 @@ The path to the new release directory. Copy files from your network drive, Azure
 Delivery:Role -Up {
   param($target, $config, $node)
 
-  # You must install PowerDeliveryNode using chocolatey 
-  # or something else on the remote node first.
+  # You must install PowerDeliveryNode using chocolatey in a 
+  # role that has run before this one on the remote node first.
   Import-Module PowerDeliveryNode
 
   # $releasePath will be C:\Users\<User>\AppData\Roaming\<Project>\Current
   # pointing to a yyyyMMdd_HHmmss folder in the same directory.
   $releasePath = New-DeliveryReleasePath $target [Environment]::GetFolderPath("AppData")
 } -Down {
+
+	# You must install PowerDeliveryNode using chocolatey in a 
+  # role that has run before this one on the remote node first.
+  Import-Module PowerDeliveryNode
   
   # This will rollback a previous release. If no previous 
   # release exists it will be the same path as current.
@@ -458,14 +586,18 @@ The path to the previous release directory. If no previous release was found, wi
 Delivery:Role -Up {
   param($target, $config, $node)
 
-  # You must install PowerDeliveryNode using chocolatey 
-  # or something else on the remote node first.
+  # You must install PowerDeliveryNode using chocolatey in a 
+  # role that has run before this one on the remote node first.
   Import-Module PowerDeliveryNode
 
   # $releasePath will be C:\Users\<User>\AppData\Roaming\<Project>\Current
   # pointing to a yyyyMMdd_HHmmss folder in the same directory.
   $releasePath = New-DeliveryReleasePath $target [Environment]::GetFolderPath("AppData")
 } -Down {
+
+	# You must install PowerDeliveryNode using chocolatey in a 
+  # role that has run before this one on the remote node first.
+  Import-Module PowerDeliveryNode
   
   # This will rollback a previous release. If no previous 
   # release exists it will be the same path as current.
@@ -493,13 +625,17 @@ C:\Users\&lt;User&gt;\AppData\Roaming\&lt;Project&gt;\Current
 
 <p>modules: <b>powerdelivery, powerdeliverynode</b></p>
 
-Tests whether a command (PowerShell or regular command line) is available in the PATH. Returns $true if present, $false if not.
+Tests whether a command (PowerShell or regular command line) is available in the PATH.
 
 <p class="ref-upper">Parameters</p>
 <dl>
 	<dt>-CommandName</dt>
 	<dd>The name of the command to test for the presence of.</dd>
 </dl>
+
+<p class="ref-upper">Returns</p>
+Returns $true if the command is present, or $false if not.
+
 <p class="ref-upper">Examples</p>
 
 <p>Example of testing for the presence of the nodejs package manager.</p>

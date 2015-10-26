@@ -119,11 +119,9 @@ Credentials are username and password pairs that identify a user. They can be us
 
 <br />
 
-### Using credentials on nodes
+### Applying roles to nodes using credentials
 
-You may encounter a need to execute roles on nodes using a different set of credentials than the currently logged in user. A common example is when production nodes require a different account than development or test nodes to deploy to. Additionally, if any of the PowerShell commands in the roles you execute on a remote node in turn access another node (this is known as a *"double-hop"* scenario), your credentials will fail to make it to that "second hop".
-
-You can overcome both of these issues using the solution that follows.
+If a remote node is only accessible using a different Windows account than the user running powerdelivery, you can use credentials to connect to it. A common scenario where this occurs is when the user running powerdelivery is not on the same domain as the nodes they are deploying to.
 
 <br />
 
@@ -200,33 +198,29 @@ In the example above, when roles are applied to nodes in the *Database* set, Pow
 
 <br />
 
-<a name="using_credentials_in_scripts"></a>
+<a name="using_credentials_in_local_roles"></a>
 
-### Using credentials in scripts
+### Using credentials in local roles
 
-You may also encounter a need to use credentials in a script, for instance to authenticate with Windows Azure to manipulate cloud resources. To do this create a key file and encrypt credentials following the steps above.
+You may also encounter a need to use credentials in the role script itself, for instance to authenticate with Windows Azure to manipulate cloud resources. To do this create a key file and encrypt credentials following the steps above.
 
-In your script, use the *Credentials* property of the [$target](reference.html#target_parameter) parameter to retrieve your credentials by username. You may then pass them to other PowerShell cmdlets that expect credentials. 
+In your role script, use the *Credentials* property of the [$target](reference.html#target_parameter) parameter to retrieve your credentials by username. You may then pass them to other PowerShell cmdlets that expect credentials. 
 
 <br />
 
-The example role script below uses credentials for *me@somewhere.com*:
+The example local role script below uses credentials for *me@somewhere.com*:
 
 {% highlight powershell %}
 Delivery:Role {
   param($target, $config, $role)
 
-  # Don't do this when running on localhost
-  if ($target.EnvironmentName -ne "Local") {
+  # Get Azure credentials encrypted by powerdelivery
+  $azureCredentials = $target.Credentials["me@somewhere.com"]
 
-    # Get Azure credentials encrypted by powerdelivery
-    $azureCredentials = $target.Credentials["me@somewhere.com"]
+  Import-Module Azure
 
-    Import-Module Azure
-
-    # Add my credentials so I can use other Azure cmdlets!
-    Add-AzureAccount -Credential $azureCredentials
-  }
+  # Add my credentials so I can use other Azure cmdlets!
+  Add-AzureAccount -Credential $azureCredentials
 }
 {% endhighlight %}
 <div class="filename">MyAppDelivery\Roles\AzureExample\Role.ps1</div>
@@ -237,6 +231,70 @@ Delivery:Role {
 
 * If you find that your credentials aren't available, you may be missing the key file needed. Powerdelivery attempts to decrypt all credentials it finds in the *Credentials* subdirectory, but those for which keys are not present will be unavailable when the role executes.
 * If you need to use different credentials in the role depending on which [environment](environments.html) is being targeted, consider using a [configuration variable](variables.html) for the username.
+
+<br />
+
+<a name="using_credentials_in_remote_roles"></a>
+
+### Using credentials in remote roles
+
+If you need to use credentials in the role script itself but this will run on a remote node, the credentials will be blocked from traveling to the remote node unless you configure a local security policy setting on the computer running powerdelivery.
+
+<br />
+
+<b>Step 1: Locate the local security policy to change</b>
+
+On the computer running powerdelivery (whether an individual's computer or a build server), run *gpedit.msc*. This will open the Group Policy editor. Expand the tree that appears on the left to locate the folder:
+
+<br />
+
+<i>Computer Configuration</i> -> <i>Administrative Templates</i> -> <i>System</i> -> <i>Credentials Delegation</i>
+
+<br />
+
+Once you've located the folder, double-click *Allow delegating fresh credentials with NTLM-only server authentication* as shown in the screenshot below:
+
+<br />
+
+<img src="img/gpedit_delegating.png" />
+
+<div class="small"><i>Figure: Locating the security policy with gpedit</i></div>
+
+<br />
+
+<b>Step 2: Update the policy setting to contain the nodes</b>
+
+From the dialog that appears, toggle the radio button to *Enabled* and click the *Show Contents* button. Add entries to the list for each node where credentials will be used in a role script in the form *WSMAN/hostname*. You can use IP addresses, computer names (if powerdelivery is running on the same network), fully-qualified domain names, or wildcards here for a domain such as *WSMAN/\*.mydomain.com*.
+
+<br />
+
+<img src="img/gpedit_servers.png" />
+
+<div class="small"><i>Figure: Adding nodes to the policy</i></div>
+
+<br />
+
+Once the servers have been added, click OK and close gpedit. 
+
+<br />
+
+<b>Step 3: Update environment to use CredSSP authentication</b>
+
+When role scripts that run on these nodes use credentials in their PowerShell commands, they will be passed correctly as long as the *Authentication* in the [environment settings](environments.html#connection_settings) for those nodes is set to *CredSSP*. 
+
+<br />
+
+The environment script below demonstrates this for the example configured above:
+{% highlight powershell %}
+$@ {
+  MyNodes = @{
+    Hosts = "server.domain.com",
+    Authentication = "CredSSP",
+    Credential = "someone@domain.com"
+  }
+}
+{% endhighlight %}
+<div class="filename">MyAppDelivery\Environments\Production.ps1</div>
 
 <br />
 
