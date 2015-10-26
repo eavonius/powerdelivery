@@ -124,7 +124,7 @@ function Get-DeliveryFilesFromAzure {
 
   # Append the source path if not the entire directory
   if ($Path -ne ".") {
-    $extraPath = $Path -replace '\', '/'
+    $extraPath = $Path -replace '\\', '/'
     $pathToGet = Join-Path $releasePrefix $extraPath
   }
 
