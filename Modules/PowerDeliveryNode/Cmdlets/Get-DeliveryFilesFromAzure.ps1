@@ -124,7 +124,7 @@ function Get-DeliveryFilesFromAzure {
 
   # Append the source path if not the entire directory
   if ($Path -ne ".") {
-    $extraPath = $Path -replace '\\', '/'
+    $extraPath = $Path -replace '\', '/'
     $pathToGet = Join-Path $releasePrefix $extraPath
   }
 
@@ -135,8 +135,8 @@ function Get-DeliveryFilesFromAzure {
     if ($releaseFile.Name.StartsWith($pathToGet)) {
 
       # Fix up the filename to exclude the release and timestamp
-      $targetPath = $releaseFile.Name.Substring($releasePrefix.Length)
-      $targetPath = $targetPath -replace '/', '\\'
+      $targetPath = $releaseFile.Name.Substring($releasePrefix.Length + 1)
+      $targetPath = $targetPath -replace '/', '\'
       $targetPath = Join-Path $Destination $targetPath
       $targetDir = [IO.Path]::GetDirectoryName($targetPath)
 
