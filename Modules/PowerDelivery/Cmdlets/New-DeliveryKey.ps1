@@ -23,13 +23,12 @@ function New-DeliveryKey {
 
   ValidateNewFileName -FileName $KeyName -Description "key name"
   $projectDir = GetProjectDirectory
+  $projectName = [IO.Path]::GetFileName($projectDir)
 
-  $key = New-Object Byte[] 32
-  [Security.Cryptography.RNGCryptoServiceProvider]::Create().GetBytes($key)
-  $keyString = [Convert]::ToBase64String($key)
+  $keyString = GetNewKey
 
-  $myDocumentsFolder = [Environment]::GetFolderPath("MyDocuments")
-  $keysFolderPath = Join-Path $myDocumentsFolder "PowerDelivery\Keys\$projectDir"
+  $myDocumentsFolder = GetMyDocumentsFolder
+  $keysFolderPath = Join-Path $myDocumentsFolder "PowerDelivery\Keys\$projectName"
   $keyFilePath = Join-Path $keysFolderPath "$KeyName.key"
 
   if (Test-Path $keyFilePath) {

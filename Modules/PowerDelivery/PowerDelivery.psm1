@@ -45,6 +45,12 @@ function GetKeyBytes($ProjectDir, $KeyName, [switch]$ThrowOnError) {
   }
 }
 
+function GetNewKey {
+  $key = New-Object Byte[] 32
+  [Security.Cryptography.RNGCryptoServiceProvider]::Create().GetBytes($key)
+  [Convert]::ToBase64String($key)
+}
+
 # Load cmdlets
 $cmdletsDir = (Join-Path $PSScriptRoot "Cmdlets")
 gci $cmdletsDir -Filter "*.ps1" | ForEach-Object { . (Join-Path $cmdletsDir $_.Name) }
