@@ -57,6 +57,9 @@ powerdelivery [targets](targets.html).
 						<a href="#publish_deliveryfilestoazure_cmdlet">Publish-DeliveryFilesToAzure</a>
 					</li>
 					<li>
+						<a href="#publish_deliveryfilestos3_cmdlet">Publish-DeliveryFilesToS3</a>
+					</li>
+					<li>
 						<a href="#invoke_msbuild_cmdlet">Invoke-MSBuild</a>
 					</li>
 					<li>
@@ -399,7 +402,7 @@ Delivery:Role {
 
 <p class="ref-item">Publish-DeliveryFilesToAzure</p>
 
-<p>module: <b>powerdeliverynode</b></p>
+<p>module: <b>powerdelivery</b></p>
 
 Uploads files for a powerdelivery release to Windows Azure for use by nodes that will host the product. All files that are uploaded are prefixed with a path that contains the name of the powerdelivery project and a timestamp of the date and time that the target started.
 
@@ -419,6 +422,8 @@ Uploads files for a powerdelivery release to Windows Azure for use by nodes that
 	<dd>A Windows Azure storage account key that matches the <i>StorageAccountName</i> parameter providing read and write access.</dd>
 	<dt>-StorageContainer</dt>
 	<dd>A container within the Windows Azure storage account referred to in the <i>StorageAccountName</i> parameter into which to upload files.</dd>
+	<dt>-Filter</dt>
+	<dd>A comma-separated list of file extensions to filter for. Others will be excluded.</dd>
 	<dt>-Include</dt>
 	<dd>A comma-separated list of paths to include. Others will be excluded.</dd>
 	<dt>-Exclude</dt>
@@ -445,6 +450,58 @@ Delivery:Role {
                                -StorageAccountKey $config.MyAzureStorageAccountKey `
                                -StorageContainer $config.MyAzureStorageContainer `
                                -Recurse
+}
+{% endhighlight %}
+
+<br />
+
+<a name="publish_deliveryfilestos3_cmdlet"></a>
+
+<p class="ref-item">Publish-DeliveryFilesToS3</p>
+
+<p>module: <b>powerdelivery</b></p>
+
+Uploads files for a powerdelivery release to AWS Simple Storage Service for use by nodes that will host the product. All files that are uploaded are prefixed with a path that contains the name of the powerdelivery project and a timestamp of the date and time that the target started.
+
+<p class="ref-upper">Parameters</p>
+<dl>
+	<dt>-Path</dt>
+	<dd>The path of files to upload relative to the directory above your powerdelivery project.</dd>
+	<dt>-Destination</dt>
+	<dd>The directory in which to place uploaded files.</dd>
+	<dt>-Credential</dt>
+	<dd>The Windows Azure account credentials to use.</dd>
+	<dt>-ProfileName</dt>
+	<dd>The name of the <a href="https://docs.aws.amazon.com/powershell/latest/userguide/specifying-your-aws-credentials.html" target="_blank">AWS profile containing credentials</a> to use.</dd>
+	<dt>-BucketName</dt>
+	<dd>The name of the S3 bucket to publish the release to.</dd>
+	<dt>-Filter</dt>
+	<dd>A comma-separated list of file extensions to filter for. Others will be excluded.</dd>
+	<dt>-Include</dt>
+	<dd>A comma-separated list of paths to include. Others will be excluded.</dd>
+	<dt>-Exclude</dt>
+	<dd>A comma-separated list of paths to exclude. Others will be included.</dd>
+	<dt>-Recurse</dt>
+	<dd>Uploads files in subdirectories below the directory specified by the <i>Path</i> parameter.</dd>
+	<dt>-Keep</dt>
+	<dd>The number of previous releases to keep. Defaults to 5.</dd>
+	<dt>-ProfilesLocation</dt>
+	<dd>The location to look in for the AWS profile containing credentials.</dd>
+</dl>
+<p class="ref-upper">Examples</p>
+
+<p>Example of uploading release files to S3 that were compiled during the current target run.</p>
+{% highlight powershell %}
+Delivery:Role {
+  param($target, $config, $node)
+  
+  # Recursively uploads files within the folder "MyApp\bin\Release" 
+  # to an AWS S3 bucket below a <ProjectName>\<StartedAt> path.
+  Publish-DeliveryFilesToS3 -Path "MyApp\bin\Debug" `
+                            -Destination "MyApp" `
+                            -ProfileName "MyProfile" `
+                            -BucketName "MyAppReleases" `
+                            -Recurse
 }
 {% endhighlight %}
 
