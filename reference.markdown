@@ -54,6 +54,9 @@ powerdelivery [targets](targets.html).
 						<a href="#get_deliveryfilesfromazure_cmdlet">Get-DeliveryFilesFromAzure</a>
 					</li>
 					<li>
+						<a href="#get_deliveryfilesfromazure_cmdlet">Get-DeliveryFilesFromS3</a>
+					</li>
+					<li>
 						<a href="#publish_deliveryfilestoazure_cmdlet">Publish-DeliveryFilesToAzure</a>
 					</li>
 					<li>
@@ -393,6 +396,59 @@ Delivery:Role {
                              -StorageAccountName $config.MyAzureStorageAccountName `
                              -StorageAccountKey $config.MyAzureStorageAccountKey `
                              -StorageContainer $config.MyAzureStorageContainer
+}
+{% endhighlight %}
+
+<br />
+
+<a name="get_deliveryfilesfroms3_cmdlet"></a>
+
+<p class="ref-item">Get-DeliveryFilesFromS3</p>
+
+<p>module: <b>powerdeliverynode</b></p>
+
+Downloads files that were published by powerdelivery to an AWS Simple Storage Service bucket 
+during the current run of a target onto a node.
+
+<p class="ref-upper">Parameters</p>
+<dl>
+	<dt>-Target</dt>
+	<dd>The <a href="#target_parameter">$target</a> parameter from the role.</dd>
+	<dt>-Path</dt>
+	<dd>The path of files to download relative to the release directory (&lt;ProjectName&gt;/&lt;StartedAt&gt;) 
+	uploaded to S3 with the <a href="#publish_deliveryfilestos3_cmdlet">Publish-DeliveryFilesToS3</a> cmdlet.</dd>
+	<dt>-Destination</dt>
+	<dd>The directory in which to place downloaded files. The <a href="#new_deliveryreleasepath_cmdlet">New-DeliveryReleasePath</a> cmdlet 
+	is recommended to enable rollback via the <a href="#undo_deliveryrelease_cmdlet">Undo-DeliveryReleasePath</a> cmdlet in a Down block.</dd>
+	<dt>-ProfileName</dt>
+	<dd>The name of the <a href="https://docs.aws.amazon.com/powershell/latest/userguide/specifying-your-aws-credentials.html" target="_blank">AWS profile containing credentials</a> to use.</dd>
+	<dt>-BucketName</dt>
+	<dd>The name of the S3 bucket that contains files uploaded with the <a href="#publish_deliveryfilestos3_cmdlet">Publish-DeliveryFilesToS3</a> cmdlet in a prior role that ran on localhost to create a release.</dd>
+	<td>-ProfilesLocation</td>
+	<dd>The location to look in for the AWS profile containing credentials.</dd>
+</dl>
+<p class="ref-upper">Examples</p>
+
+<p>Example of getting release files from S3 that were uploaded during the current target run.</p>
+{% highlight powershell %}
+Delivery:Role {
+  param($target, $config, $node)
+
+  # You must install PowerDeliveryNode using chocolatey in a 
+  # role that has run before this one on the remote node first.
+  Import-Module PowerDeliveryNode
+
+  # $releasePath will be C:\Users\<User>\AppData\Roaming\<Project>\Current 
+  # pointing to a yyyyMMdd_HHmmss folder in the same directory.
+  $releasePath = New-DeliveryReleasePath $target [Environment]::GetFolderPath("AppData")
+  
+  # Downloads files within the folder "MyApp" that were uploaded to S3
+  # into a local directory for the release on the node created above.
+  Get-DeliveryFilesFromS3 -Target $target `
+                          -Path "MyApp" `
+                          -Destination $releasePath `
+                          -ProfileName "MyProfile" `
+                          -BucketName "MyAppReleases"
 }
 {% endhighlight %}
 
