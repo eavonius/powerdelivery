@@ -48,6 +48,9 @@ read and write access.
 A container within the Windows Azure storage account referred to in the StorageAccountName 
 parameter into which to upload files.
 
+.Parameter Filter
+A comma-separated list of file extensions to filter for. Others will be excluded.
+
 .Parameter Include
 A comma-separated list of paths to include. Others will be excluded.
 
