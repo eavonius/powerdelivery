@@ -5,6 +5,6 @@ Uninstalls PowerDelivery3 with chocolatey.
 
 try {
   Remove-Module PowerDelivery | Out-Null
-  Update-SessionEnvironment
+  Update-SessionEnvironment -Full
 }
 catch {}

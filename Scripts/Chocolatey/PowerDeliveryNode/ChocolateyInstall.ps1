@@ -3,11 +3,12 @@
 Installs PowerDelivery3Node with chocolatey.
 #>
 
-$ErrorActionPreference 'Stop'
+$ErrorActionPreference = 'Stop'
 
 $moduleDir = Split-Path -parent $MyInvocation.MyCommand.Definition
+$moduleDir = "$moduleDir\"
 
-Write-Host "Updating PSModulePath to include $moduleDir..."
+Write-Host "Updating PSMODULEPATH to include $moduleDir..."
 
 $psModulePath = (Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PSModulePath).PSModulePath
 
@@ -15,7 +16,7 @@ $newEnvVar = $moduleDir
 
 $caseInsensitive = [StringComparison]::InvariantCultureIgnoreCase
 
-$pathSegment = "chocolatey\lib\powerdeliverynode"
+$pathSegment = "chocolatey\lib\powerdelivery3node\"
 
 if (![String]::IsNullOrWhiteSpace($psModulePath)) {
     if ($psModulePath.IndexOf($pathSegment, $caseInsensitive) -lt 0) { # First time installing
@@ -51,12 +52,8 @@ Write-Host "Updating PSMODULEPATH in current session to include $moduleDir..."
 
 $Env:PSMODULEPATH = "$newEnvVar"
 
-Update-SessionEnvironment
+Update-SessionEnvironment -Full
 
-[Environment]::SetEnvironmentVariable("PSMODULEPATH", $newEnvVar, [EnvironmentVariableTarget]::Machine)
-
-$Env:PSMODULEPATH = "$newEnvVar"
-
-Write-Host "Forcing import of new version of PowerDeliveryNode module into current session..."
+Write-Host "Forcing import of new version of PowerDelivery3Node module into current session..."
 
 Import-Module PowerDeliveryNode -Force

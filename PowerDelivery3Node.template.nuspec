@@ -20,8 +20,8 @@
   </metadata>
   <files>
     <!-- Module -->
-    <file src="Modules\PowerDeliveryNode\PowerDeliveryNode.psm1" target="tools\PowerDelivery\PowerDeliveryNode.psm1" />
-    <file src="Modules\PowerDeliveryNode\PowerDeliveryNode.psd1" target="tools\PowerDelivery\PowerDeliveryNode.psd1" />
+    <file src="Modules\PowerDeliveryNode\PowerDeliveryNode.psm1" target="tools\PowerDeliveryNode\PowerDeliveryNode.psm1" />
+    <file src="Modules\PowerDeliveryNode\PowerDeliveryNode.psd1" target="tools\PowerDeliveryNode\PowerDeliveryNode.psd1" />
     
     <!-- Templates -->
     {{ Templates }}

@@ -5,6 +5,6 @@ Uninstalls PowerDelivery3Node with chocolatey.
 
 try {
   Remove-Module PowerDeliveryNode | Out-Null
-  Update-SessionEnvironment
+  Update-SessionEnvironment -Full
 }
 catch {}
