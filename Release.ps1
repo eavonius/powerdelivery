@@ -73,26 +73,25 @@ function GenerateNuspec($module, $moduleId, $newVersion) {
   $nuspecFile.Save($nuspecFullPath)
 
   SafeInvoke -msg "Error running cpack" -cmd { 
-    cpack "$nuspecFullPath"
+    choco pack "$nuspecFullPath"
   }
 }
 
 # Gets the new version for a release based on what's on chocolatey
 #
-function GetNewModuleVersion {
+function GetNewModuleVersion($moduleId) {
   $packages = $(clist powerdelivery3) -split [Environment]::NewLine
   if ($packages[0] -ne '0 packages found.') {
     foreach ($package in $packages) {
-      if ($package.StartsWith("powerdelivery3 ")) {
+      if ($package.StartsWith("$moduleId ", [System.StringComparison]::InvariantCultureIgnoreCase)) {
         $latestVersion = New-Object System.Version -ArgumentList $package.Split(' ')[1]
         Write-Host "Latest version on chocolatey is $latestVersion"
         return "$($latestVersion.Major).$($latestVersion.Minor).$($latestVersion.Build + 1)"
       }
     }
   }
-  else {
-    "3.0.0"
-  }
+
+  "3.0.0"
 }
 
 # Syncs changes with git
@@ -117,8 +116,6 @@ $startDir = Get-Location
 try {
   del *.nupkg
 
-  $newVersion = GetNewModuleVersion
-
   $modules = @{
     PowerDeliveryNode = "PowerDelivery3Node";
     PowerDelivery = "PowerDelivery3"
@@ -128,11 +125,12 @@ try {
     $module = $module.Key
     $moduleId = $modules[$module]
 
+    $newVersion = GetNewModuleVersion -moduleId $moduleId
+
     UpdateModuleVersion -manifestFile "Modules\$module\$module.psd1" -newVersion $newVersion
     GenerateNuspec -module $module -moduleId $moduleId -newVersion $newVersion
 
     $nuPkgFile = (gci "$moduleId.*.nupkg").Name
-    Write-Host "$nuPkgFile -> (chocolatey)"
 
     #SafeInvoke -msg "Error publishing to chocolatey" -cmd { 
       #cpush $nuPkgFile
