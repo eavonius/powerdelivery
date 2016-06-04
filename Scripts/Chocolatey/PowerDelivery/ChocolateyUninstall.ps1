@@ -3,8 +3,10 @@
 Uninstalls PowerDelivery3 with chocolatey.
 #>
 
-try {
-  Remove-Module PowerDelivery | Out-Null
-  Update-SessionEnvironment -Full
-}
-catch {}
+$ErrorActionPreference = 'Stop'
+
+$moduleDir = Split-Path -parent $MyInvocation.MyCommand.Definition
+
+. (Join-Path $moduleDir 'chocolateyPowerDeliveryUtils.ps1')
+
+Uninstall-PowerDeliveryModule -moduleDir $moduleDir -moduleName PowerDelivery -packageId powerdelivery3
