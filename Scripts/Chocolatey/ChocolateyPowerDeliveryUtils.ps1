@@ -44,6 +44,9 @@ function Install-PowerDeliveryModule {
         }
     }
   }
+  else {
+    $newEnvVar = "%PSMODULEPATH%;$newEnvVar"
+  }
 
   [Environment]::SetEnvironmentVariable("PSMODULEPATH", $newEnvVar, [EnvironmentVariableTarget]::Machine)
   $Env:PSMODULEPATH = $newEnvVar
