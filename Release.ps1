@@ -132,14 +132,14 @@ try {
 
     $nuPkgFile = (gci "$moduleId.*.nupkg").Name
 
-    #SafeInvoke -msg "Error publishing to chocolatey" -cmd { 
-      #cpush $nuPkgFile
-    #}
+    SafeInvoke -msg "Error publishing to chocolatey" -cmd { 
+      cpush $nuPkgFile
+    }
+
+    Write-Host "$moduleId successfully released as $newVersion!" -ForegroundColor Green
   }
 
-  #Sync-Git -newVersion $newVersion
-
-  Write-Host "PowerDelivery3 successfully released as $newVersion!" -ForegroundColor Green
+  Sync-Git -newVersion $newVersion
 }
 finally {
   Set-Location $startDir
