@@ -15,7 +15,7 @@
     <iconUrl>http://www.powerdelivery.io/img/masters/choco_logo.png</iconUrl>
     <licenseUrl>http://www.opensource.org/licenses/MIT</licenseUrl>
     <dependencies>
-      <dependency id="chocolatey" version="0.9.9.11" />
+      <dependency id="chocolatey" version="0.9.10" />
       <dependency id="powerdelivery3node" version="3.0.1" />
     </dependencies>
   </metadata>
