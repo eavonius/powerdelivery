@@ -8,6 +8,11 @@
     <tags>admin</tags>
     <owners />
     <projectUrl>http://www.powerdelivery.io/</projectUrl>
+    <docsUrl>http://www.powerdelivery.io/</docsUrl>
+    <packageSourceUrl>https://github.com/eavonius/powerdelivery</packageSourceUrl>
+    <projectSourceUrl>https://github.com/eavonius/powerdelivery</projectSourceUrl>
+    <bugTrackerUrl>https://github.com/eavonius/powerdelivery/issues</bugTrackerUrl>
+    <releaseNotes>http://www.powerdelivery.io/releasenotes.html</releaseNotes>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>PowerShell cmdlets for use on remote nodes being deployed to with PowerDelivery 3.</description>
     <summary>PowerShell cmdlets for use on remote nodes being deployed to with PowerDelivery 3.</summary>

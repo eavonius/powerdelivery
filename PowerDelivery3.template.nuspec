@@ -8,6 +8,11 @@
     <tags>admin</tags>
     <owners />
     <projectUrl>http://www.powerdelivery.io/</projectUrl>
+    <docsUrl>http://www.powerdelivery.io/</docsUrl>
+    <packageSourceUrl>https://github.com/eavonius/powerdelivery</packageSourceUrl>
+    <projectSourceUrl>https://github.com/eavonius/powerdelivery</projectSourceUrl>
+    <bugTrackerUrl>https://github.com/eavonius/powerdelivery/issues</bugTrackerUrl>
+    <releaseNotes>http://www.powerdelivery.io/releasenotes.html</releaseNotes>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Inspired by ansible and rails, powerdelivery organizes everything Windows PowerShell can do within a secure, convention-based framework so you can stop being jealous of your linux friends when you deploy to Windows.</description>
     <summary>Powerdelivery organizes everything Windows PowerShell can do within a secure, convention-based framework so you can stop being jealous of your linux friends when you deploy to Windows.</summary>
