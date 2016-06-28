@@ -133,7 +133,7 @@ Use the procedure described in [generating a secret key](#generating_a_secret_ke
 
 <b>Step 2. Encrypt credentials with the key</b>
 
-Pass the name of a key to the [New-DeliveryCredentials](reference.html#new_delivery_credentials_cmdlet) cmdlet with the username of an account. This must be run from the directory containing your project. The cmdlet will prompt for the password and write it to an encrypted file under the *Secrets\\[KeyName]\Credentials* directory.
+Pass the name of a key to the [New-DeliveryCredential](reference.html#new_delivery_credential_cmdlet) cmdlet with the username of an account. This must be run from the directory containing your project. The cmdlet will prompt for the password and write it to an encrypted file under the *Secrets\\[KeyName]\Credentials* directory.
 
 <br />
 
@@ -143,7 +143,7 @@ The PowerShell session below demonstrates writing credentials to a file using a 
 	<div class="col-sm-12">
 		{% include console_title.html %}
 		<div class="console">{% highlight powershell %}
-PS C:\MyApp\MyAppDelivery> New-DeliveryCredentials MyKey "MYDOMAIN\opsuser"
+PS C:\MyApp\MyAppDelivery> New-DeliveryCredential MyKey "MYDOMAIN\opsuser"
 Enter the password for MYDOMAIN\opsuser and press ENTER:
 **********
 Credentials written to ".\Secrets\MyKey\Credentials\MYDOMAIN#opsuser.credential"
