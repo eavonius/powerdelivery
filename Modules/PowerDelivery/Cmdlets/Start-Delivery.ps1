@@ -156,7 +156,7 @@ function Start-Delivery {
 
         # Set the computer name or connection URI
         if ([String]::IsNullOrWhiteSpace($connectionURI)) {
-          $commandArgs.Add('ComputerName', $nodeName)
+          $commandArgs.Add('ComputerName', $hostName)
         }
         else {
           $commandArgs.Add('ConnectionURI', $connectionURI) 
