@@ -30,17 +30,20 @@ function New-DeliveryCredential {
   )
 
   $projectDir = GetProjectDirectory
+  $projectName = [IO.Path]::GetFileName($projectDir)
 
-  ValidateNewFileName -FileName $SecretName -Description "secret name"
+  $userFileName = $UserName -replace '\\', '#'
+
+  ValidateNewFileName -FileName $userFileName -Description "username"
   
-  $keyBytes = GetKeyBytes -ProjectDir $projectDir -KeyName $KeyName -ThrowOnError
+  $keyBytes = GetKeyBytes -ProjectDir $projectName -KeyName $KeyName -ThrowOnError
 
   $credentialsPath = Join-Path (Get-Location) "Credentials\$KeyName"
   if (!(Test-Path $credentialsPath)) {
     New-Item $credentialsPath -ItemType Directory | Out-Null
   }
 
-  $userNameFile = "$($UserName -replace '\\', '#').credential"
+  $userNameFile = "$($userFileName).credential"
   $userNamePath = Join-Path $credentialsPath $userNameFile
 
   if ((Test-Path $userNamePath) -and (!$Force)) {

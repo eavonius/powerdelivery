@@ -30,10 +30,11 @@ function New-DeliverySecret {
   )
 
   $projectDir = GetProjectDirectory
+  $projectName = [IO.Path]::GetFileName($projectDir)
 
   ValidateNewFileName -FileName $SecretName -Description "secret name"
   
-  $keyBytes = GetKeyBytes -ProjectDir $projectDir -KeyName $KeyName -ThrowOnError
+  $keyBytes = GetKeyBytes -ProjectDir $projectName -KeyName $KeyName -ThrowOnError
 
   $secretsPath = Join-Path (Get-Location) "Secrets\$KeyName"
   if (!(Test-Path $secretsPath)) {

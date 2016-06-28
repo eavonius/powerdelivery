@@ -283,35 +283,46 @@ function Start-Delivery {
             # Add secret to hash in target
             $pow.target.Secrets.Add($secretName, $secret)
           }
+        }
+      }
+    }
 
-          # Check whether credentials exist
-          $credsPath = Join-Path $keyDirectory.FullName "Credentials"
-          if (Test-Path $credsPath) {
 
-            # Iterate credentials
-            foreach ($credentialsFile in (Get-ChildItem -File -Filter *.credential $credsPath)) {
+    # Check whether credentials exist
+    $credsPath = "$($ProjectName)Delivery\Credentials"
+    if (Test-Path $credsPath) {
 
-              $credsFullPath = Join-Path $credsPath $credentialsFile
+      # Iterate secret key directories
+      foreach ($keyDirectory in (Get-ChildItem -Directory $credsPath)) {
 
-              # Try to decrypt the password
-              $password = $null
-              try {
-                $password = Get-Content $credsFullPath | ConvertTo-SecureString -Key $keyBytes
-              }
-              catch {
-                throw "Couldn't decrypt $credsFullPath with key $keyDirectory - $_"
-              }
+        # Try to get the key
+        $keyBytes = GetKeyBytes -ProjectDir "$($ProjectName)Delivery" -KeyName $keyDirectory
 
-              # Fix up the username
-              $credsFileUserName = $credentialsFile -replace '#', '\\'
-              $userName = [IO.Path]::GetFileNameWithoutExtension($credsFileUserName)
+        if ($keyBytes -ne $null) {
 
-              # Create the PowerShell credential
-              $userCredential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $userName, $password
+          # Iterate credentials
+          foreach ($credentialsFile in (Get-ChildItem -File -Filter *.credential $keyDirectory.FullName)) {
 
-              # Add credentials to hash in target
-              $pow.target.Credentials.Add($userName.ToLower(), [PSCredential]$userCredential)
+            $credsFullPath = Join-Path $keyDirectory.FullName $credentialsFile
+
+            # Try to decrypt the password
+            $password = $null
+            try {
+              $password = Get-Content $credsFullPath | ConvertTo-SecureString -Key $keyBytes
             }
+            catch {
+              throw "Couldn't decrypt $credsFullPath with key $keyDirectory - $_"
+            }
+
+            # Fix up the username
+            $credsFileName = [IO.Path]::GetFileNameWithoutExtension($credentialsFile)
+            $userName = $credsFileName -replace '#', '\'
+
+            # Create the PowerShell credential
+            $userCredential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $userName, $password
+
+            # Add credentials to hash in target
+            $pow.target.Credentials.Add($userName, [PSCredential]$userCredential)
           }
         }
       }
