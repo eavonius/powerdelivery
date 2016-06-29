@@ -38,7 +38,7 @@ function New-DeliveryCredential {
   
   $keyBytes = GetKeyBytes -ProjectDir $projectName -KeyName $KeyName -ThrowOnError
 
-  $credentialsPath = Join-Path (Get-Location) "Credentials\$KeyName"
+  $credentialsPath = Join-Path (Get-Location) "Secrets\$KeyName\Credentials"
   if (!(Test-Path $credentialsPath)) {
     New-Item $credentialsPath -ItemType Directory | Out-Null
   }
@@ -53,7 +53,7 @@ function New-DeliveryCredential {
   Write-Host "Enter the password for $userName and press ENTER:"
   try {
     Read-Host -AsSecureString | ConvertFrom-SecureString -Key $keyBytes | Out-File $userNamePath -Force
-    Write-Host "Credential written to "".\Credentials\$keyName\$userNameFile"""
+    Write-Host "Credential written to "".\Secrets\$KeyName\Credentials\$userNameFile"""
   }
   catch {
     "Key $KeyName appears to be invalid - $_"
