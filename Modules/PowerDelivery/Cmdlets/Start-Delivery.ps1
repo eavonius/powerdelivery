@@ -160,7 +160,6 @@ function Start-Delivery {
         }
         else {
           $commandArgs.Add('ConnectionURI', $connectionURI) 
-
           if ($nodes.ContainsKey('UseSSL')) {
             throw "Role $role cannot set UseSSL and Connection together."
           }
@@ -175,6 +174,7 @@ function Start-Delivery {
             throw "Role $role requires credential $credentialName which were not loaded. Are you missing the key file?"
           }
           else {
+            Write-Host "Using credentials $credentialName"
             $commandArgs.Add('Credential', $pow.target.Credentials.Item($credentialName))
           }
         }
@@ -215,8 +215,9 @@ function Start-Delivery {
             if ($credSSP -ne $null) {
               if ($credSSP.length -gt 0) {
                 $trustedClients = $credSSP[0].Substring($credSSP[0].IndexOf(":") + 2)
-                $trustedClientsList = $trustedClients -split "," | % { $_.Trim() }
+                $trustedClientsList = $trustedClients -split "," | % { $_.Trim().ToLower() }
                 if ($trustedClientsList.Contains("wsman/$($trustedHost.ToLower())")) {
+                  Write-host """$($trustedHost)"" is trusted for CredSSP delegation."
                   $nodeExists = $true
                 }
               }
@@ -224,7 +225,8 @@ function Start-Delivery {
 
             # Enable CredSSP to remote node if not found in trusted hosts
             if (!$nodeExists) {
-              Enable-WSManCredSSP -Role Client -DelegateComputer $trustedHost.ToLower() -Force | Out-Null
+              Write-Host "Enabling CredSSP delegation to ""$($trustedHost)""..."
+              Enable-WSManCredSSP -Role Client -DelegateComputer $trustedHost -Force | Out-Null
             }
           }
         }
