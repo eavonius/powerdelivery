@@ -16,7 +16,7 @@ if ($(get-host).version.major -lt 3) {
   exit
 }
 
-$localComputer = gc env:computername
+$localComputer = Get-ChildItem env:computername
 
 $currentUser = [Security.Principal.WindowsIdentity]::GetCurrent()
 if (!(New-Object Security.Principal.WindowsPrincipal $currentUser).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)) {
@@ -32,8 +32,8 @@ $isMemberOfAdminGroup = $false
 
 "Checking if $buildUserDomain\$buildUserName is a member of the local Administrators group..."
 
-$localAdminGroupMembers | foreach {
-    if ($_.GetType().InvokeMember("Name", 'GetProperty', $null, $_, $null) -eq "$buildUserDomain\$buildUserName") {
+foreach ($member in $localAdminGroupMembers) {
+    if ($member.GetType().InvokeMember("Name", 'GetProperty', $null, $member, $null) -eq "$buildUserDomain\$buildUserName") {
         $isMemberOfAdminGroup = $true
     }
 }

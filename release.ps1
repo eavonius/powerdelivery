@@ -32,16 +32,16 @@ $originalDirectory = Get-Location
 "Releasing new version of powerdelivery..."
 "-----------------------------------------"
 
-del *.nupkg
+Remove-Item *.nupkg
 
-$listCommand = $(clist powerdelivery)
+$listCommand = $(choco find powerdelivery)
 
 $latestVersion = ""
 
 if ($listCommand.GetType().Name -eq "Object[]") {
-	$listCommand | ForEach-Object {
-		if ($_.StartsWith("PowerDelivery ")) {
-			$latestVersion = $_.split(' ')[1].split('.')
+	foreach ($cmd in $listCommand) {
+		if ($cmd.StartsWith("PowerDelivery ")) {
+			$latestVersion = $cmd.split(' ')[1].split('.')
 		}
 	}
 }
@@ -80,7 +80,7 @@ try {
 
 	Sync-Git
 
-	cd ..\gh-pages
+	Set-Location ..\gh-pages
 	
 	$indexFile = Join-Path . .\index.html
 	$indexFileName = [System.IO.Path]::GetFileName($indexFile)
@@ -90,7 +90,7 @@ try {
 
 	Sync-Git
 
-	cd ..\master
+	Set-Location ..\master
 	
 	"$nuspecFullPath -> PowerDelivery.$($newVersion).nupkg"
 	
@@ -98,7 +98,7 @@ try {
 		cpack "$nuspecFullPath"
 	}
 	
-	$nuPkgFile = (gci *.nupkg).Name
+	$nuPkgFile = (Get-ChildItem *.nupkg).Name
 	
 	"$nuPkgFile -> http://www.chocolately.org..."
 	
